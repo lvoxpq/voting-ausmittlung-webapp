@@ -1,0 +1,37 @@
+<div class="content">
+  <vo-ausm-ballot-count-input header="ELECTION.BALLOT_CARD"
+                              [eVoting]="eVoting"
+                              [readonly]="readonly || !isErfassungElectionAdmin"
+                              [totalCountOfVoters]="resultDetail.totalCountOfVoters"
+                              [participationLabel]="'ELECTION.VOTER_PARTICIPATION'"
+                              [countOfVoters]="resultDetail.countOfVoters"
+                              (countOfVotersChange)="countOfVotersChange.emit()"></vo-ausm-ballot-count-input>
+  <div class="detail" *ngIf="showDetailsLink">
+    <div class="detail-icon-link"
+         [class.disabled]="!isErfassungElectionAdmin && !isMonitoringElectionAdmin"
+         (click)="openBallotGroups()">
+      <span translate>MAJORITY_ELECTION.BY_BALLOT_GROUPS</span>
+      <span
+        class="number pr-2">{{!resultDetail?.conventionalCountOfBallotGroupVotes ? '-' : resultDetail?.conventionalCountOfBallotGroupVotes | number }}</span>
+      <bc-icon icon="arrow-right"></bc-icon>
+    </div>
+    <div class="detail-icon-link" (click)="openBundles()">
+      <span translate>MAJORITY_ELECTION.BY_BUNDLE</span>
+      <span
+        class="number pr-2">{{!resultDetail?.conventionalCountOfDetailedEnteredBallots ? '-' : resultDetail?.conventionalCountOfDetailedEnteredBallots | number }}</span>
+      <bc-icon icon="arrow-right"></bc-icon>
+    </div>
+  </div>
+</div>
+
+<div class="content results">
+  <vo-ausm-contest-majority-election-result [accountedBallots]="resultDetail.countOfVoters.totalAccountedBallots"
+                                            [eVoting]="eVoting"
+                                            [result]="resultDetail"></vo-ausm-contest-majority-election-result>
+  <vo-ausm-contest-majority-election-result *ngFor="let result of resultDetail.secondaryMajorityElectionResults"
+                                            class="mt-3"
+                                            [showElectionHeader]="true"
+                                            [eVoting]="eVoting"
+                                            [accountedBallots]="resultDetail.countOfVoters.totalAccountedBallots"
+                                            [result]="result"></vo-ausm-contest-majority-election-result>
+</div>

@@ -1,0 +1,25 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.answer-container {
+  @extend .p-3;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 15rem));
+  grid-gap: 1rem;
+  border-left: 2px solid transparent;
+}
+
+.answer-container.active {
+  border-left: 2px solid $color-primary;
+}
+
+.tie-break-answers {
+  grid-template-columns: repeat(3, minmax(0, 15rem));
+  grid-auto-flow: column;
+}
+
+.question {
+  @extend .mx-2;
+  @extend .mb-0;
+}

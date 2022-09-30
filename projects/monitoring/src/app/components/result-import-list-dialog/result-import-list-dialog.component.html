@@ -1,0 +1,39 @@
+<vo-lib-dialog [contentLoading]="loading">
+  <div header>
+    <h3 translate>RESULT_IMPORT.LIST_TITLE</h3>
+    <div *ngIf="contestEVotingResultsImported">
+      <bc-button [label]="'RESULT_IMPORT.DELETE' | translate" color="error" (buttonClick)="deleteResults()"></bc-button>
+    </div>
+  </div>
+
+  <div content>
+    <bc-advanced-table [dataSource]="resultImports">
+      <ng-container bcColumnDef="fileName">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.FILENAME' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.deleted ? ('RESULT_IMPORT.DELETED_FILE_NAME' | translate) : element.fileName }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="importType">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.E_CH_STANDARD' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.deleted ? '' : ('RESULT_IMPORT.ECH_0222' | translate) }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="startedBy">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.STARTED_BY' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.startedBy.fullName }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="started">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.STARTED' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.started | date: 'dd.MM.yyyy - HH:mm' }}</td>
+      </ng-container>
+
+      <tr bc-header-row *bcHeaderRowDef="columns"></tr>
+      <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"></tr>
+    </bc-advanced-table>
+  </div>
+
+  <div footer class="mr-3">
+    <vo-lib-button-bar footer
+                       [saveLabel]="'RESULT_IMPORT.IMPORT' | translate"
+                       (save)="showImportDialog()"
+                       (cancel)="close()"></vo-lib-button-bar>
+  </div>
+</vo-lib-dialog>

@@ -1,0 +1,18 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  display: flex;
+
+  > *:not(:first-child) {
+    @extend .ml-3;
+  }
+
+  bc-label {
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .numeric {
+    max-width: 8rem;
+  }
+}

@@ -1,0 +1,12 @@
+.count-of-voters {
+  display: flex;
+
+  > *:not(:first-child) {
+    margin-left: 0.2rem;
+  }
+
+  > bc-number {
+    // force input fields to be smaller than they like to be, otherwise it overflows
+    min-width: 0;
+  }
+}

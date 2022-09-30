@@ -1,0 +1,13 @@
+<p>
+  <bc-icon [icon]="result.isOptional ? 'exclamation-circle' : result.isValid ? 'check-circle' : 'times-circle'"
+
+           [class.invalid]="!result.isValid"
+           [class.optional]="result.isOptional"></bc-icon>
+  <span>{{ 'VALIDATION.VALUES.' + result.translationId + '.' + (result.isValid ? 'VALID' : 'INVALID') | translate : result.data }}</span>
+</p>
+
+<ul *ngIf="result.translationListItemsCount" class="my-0">
+  <li *ngFor="let _ of [].constructor(result.translationListItemsCount); let index = index">
+    {{ 'VALIDATION.VALUES.' + result.translationId + '.LIST_ITEMS.' + index | translate : result.data }}
+  </li>
+</ul>

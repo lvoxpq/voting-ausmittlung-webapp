@@ -1,0 +1,50 @@
+<bc-number
+  class="numeric"
+  [label]="'ELECTION.RESULT_ENTRY.BALLOT_BUNDLE_SIZE' | translate"
+  [min]="1"
+  [error]="resultEntryParams.ballotBundleSize < 1"
+  [required]="true"
+  [allowUndefined]="false"
+  [value]="resultEntryParams.ballotBundleSize"
+  (valueChange)="resultEntryParams.ballotBundleSize = +$event"
+></bc-number>
+<bc-number
+  class="numeric"
+  [label]="'ELECTION.RESULT_ENTRY.BALLOT_BUNDLE_SAMPLE_SIZE' | translate"
+  [min]="0"
+  [max]="resultEntryParams.ballotBundleSize"
+  [required]="true"
+  [allowUndefined]="false"
+  [error]="
+    resultEntryParams.ballotBundleSampleSize < 0 ||
+    resultEntryParams.ballotBundleSampleSize > resultEntryParams.ballotBundleSize
+  "
+  [value]="resultEntryParams.ballotBundleSampleSize"
+  (valueChange)="resultEntryParams.ballotBundleSampleSize = +$event"
+></bc-number>
+<div>
+  <bc-label [label]="'ELECTION.RESULT_ENTRY.BALLOT_BUNDLE_NUMBER_GENERATION.TITLE' | translate"> </bc-label>
+  <bc-checkbox
+    [checked]="resultEntryParams.automaticBallotBundleNumberGeneration"
+    [label]="'ELECTION.RESULT_ENTRY.BALLOT_BUNDLE_NUMBER_GENERATION.AUTOMATIC' | translate"
+    (checkedChange)="updateAutomaticBallotBundleNumberGeneration($event)"
+  >
+  </bc-checkbox>
+</div>
+<vo-ausm-ballot-number-generation-selector
+  [disabled]="!resultEntryParams.automaticBallotBundleNumberGeneration"
+  [(ballotNumberGeneration)]="resultEntryParams.ballotNumberGeneration"
+></vo-ausm-ballot-number-generation-selector>
+<div>
+  <bc-radio-button-group
+    [label]="'ELECTION.RESULT_ENTRY.AUTOMATIC_EMPTY_VOTE_COUNTING.TITLE' | translate"
+    orientation="vertical"
+    [items]="automaticEmptyVoteCountingChoices"
+    [(value)]="resultEntryParams.automaticEmptyVoteCounting"
+    [disabled]="enforceEmptyVoteCounting"
+  >
+  </bc-radio-button-group>
+</div>
+<div>
+  <ng-content></ng-content>
+</div>

@@ -1,0 +1,34 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.question-results {
+  display: flex;
+
+  > :not(:first-child) {
+    @extend .ml-4;
+  }
+
+  .result-entry {
+    bc-number {
+      width: 5rem;
+    }
+
+    p {
+      margin-bottom: 0;
+      font-size: 1rem;
+      color: $color-grey-3;
+    }
+
+    .input-container {
+      display: flex;
+
+      > :not(:first-child) {
+        @extend .ml-2;
+      }
+    }
+  }
+}

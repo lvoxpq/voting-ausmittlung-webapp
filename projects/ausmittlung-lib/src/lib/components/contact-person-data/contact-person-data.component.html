@@ -1,0 +1,8 @@
+<div *ngIf="contactPerson">
+  <span *ngIf="contactPerson.firstName || contactPerson.familyName">
+    {{contactPerson.firstName}} {{contactPerson.familyName}}
+  </span>
+  <span *ngIf="contactPerson.email">{{contactPerson.email}}</span>
+  <span *ngIf="contactPerson.phone">{{contactPerson.phone}}</span>
+  <span *ngIf="contactPerson.mobilePhone">{{contactPerson.mobilePhone}}</span>
+</div>

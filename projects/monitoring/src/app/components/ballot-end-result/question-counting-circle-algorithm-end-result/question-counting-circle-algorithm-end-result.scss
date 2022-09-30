@@ -1,0 +1,32 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  @extend .mb-4;
+
+  display: block;
+}
+
+.counting-circle-results-container {
+  display: flex;
+
+  > :not(:first-child) {
+    @extend .ml-5;
+  }
+
+  .title {
+    font-size: 1.2rem;
+    font-weight: 300;
+    align-self: flex-end;
+
+    @extend .mb-2;
+
+    &.result-accepted {
+      color: $color-info;
+    }
+
+    &:not(.result-accepted) {
+      color: $color-error;
+    }
+  }
+}

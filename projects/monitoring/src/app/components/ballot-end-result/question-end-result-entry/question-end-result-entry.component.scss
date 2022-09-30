@@ -1,0 +1,24 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 300;
+
+  @extend .mb-2;
+}
+
+.vote-count-container {
+  display: flex;
+
+  > :not(:first-child) {
+    @extend .ml-4;
+  }
+
+  .vote-count {
+    @extend .mt-1;
+  }
+}
+
+div > p {
+  margin-bottom: 0;
+}

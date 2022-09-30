@@ -1,0 +1,106 @@
+<bc-advanced-table [dataSource]="dataSource">
+  <ng-container bcColumnDef="number">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'POLITICAL_BUSINESS.BUNDLE_NUMBER' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">{{ element.number }}</td>
+  </ng-container>
+
+  <ng-container bcColumnDef="bundleSize">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.BUNDLE_SIZE' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">{{ bundleSize | number }}</td>
+  </ng-container>
+
+  <ng-container bcColumnDef="createdBy">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.BUNDLE_CREATED_BY' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">{{ element.createdBy.fullName }}</td>
+  </ng-container>
+
+  <ng-container bcColumnDef="countOfBallots">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'VOTE.COUNT_OF_LISTS' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">{{ element.countOfBallots }}</td>
+  </ng-container>
+
+  <ng-container bcColumnDef="state">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'APP.STATE' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">
+      <vo-ausm-election-bundle-state-chip [state]="element.state"></vo-ausm-election-bundle-state-chip>
+    </td>
+  </ng-container>
+
+  <ng-container bcColumnDef="reviewedBy">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.BUNDLE_REVIEWED_BY' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">{{ element.reviewedBy?.fullName }}</td>
+  </ng-container>
+
+  <ng-container bcColumnDef="actions">
+    <th bc-header-cell class="actions-header" *bcHeaderCellDef></th>
+    <td bc-cell *bcCellDef="let bundle">
+      <vo-lib-action-menu *ngIf="!readOnly; else readOnlyActionMenu">
+        <vo-lib-action-menu-item
+          *ngIf="(bundle.state === bundleStates.BALLOT_BUNDLE_STATE_IN_PROCESS
+              || bundle.state === bundleStates.BALLOT_BUNDLE_STATE_IN_CORRECTION)
+            && (isErfassungElectionAdmin || (isErfassungCreator && bundle.createdBy.secureConnectId === currentUser?.secureConnectId))"
+          icon="edit"
+          text="ACTIONS.EDIT"
+          (click)="selectBundle(bundle)">
+        </vo-lib-action-menu-item>
+        <vo-lib-action-menu-item
+          *ngIf="isMonitoringElectionAdmin || (bundle.state !== bundleStates.BALLOT_BUNDLE_STATE_IN_PROCESS
+            && bundle.state !== bundleStates.BALLOT_BUNDLE_STATE_IN_CORRECTION
+            && (isErfassungElectionAdmin  || (isErfassungCreator && bundle.createdBy.secureConnectId === currentUser?.secureConnectId)))"
+          icon="info"
+          text="ELECTION.SHOW_BALLOT"
+          (click)="selectBundle(bundle)">
+        </vo-lib-action-menu-item>
+        <vo-lib-action-menu-item
+          *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
+            && (isErfassungElectionAdmin || isErfassungCreator)
+            && bundle.createdBy.secureConnectId !== currentUser?.secureConnectId
+            && reviewProcedure === reviewProcedures.VOTE_REVIEW_PROCEDURE_ELECTRONICALLY"
+          icon="search"
+          text="ELECTION.BALLOT_DETAIL.REVIEW"
+          (click)="reviewBundle.emit(bundle)">
+        </vo-lib-action-menu-item>
+        <ng-container
+          *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
+            && (isErfassungElectionAdmin || isErfassungCreator)
+            && bundle.createdBy.secureConnectId !== currentUser?.secureConnectId
+            && reviewProcedure === reviewProcedures.VOTE_REVIEW_PROCEDURE_PHYSICALLY">
+          <vo-lib-action-menu-item
+            icon="print"
+            text="ELECTION.BALLOT_DETAIL.REVIEW"
+            (click)="reviewBundle.emit(bundle)">
+          </vo-lib-action-menu-item>
+          <vo-lib-action-menu-item
+            icon="checkmark"
+            text="ELECTION.BALLOT_DETAIL.SUCCEED_REVIEW"
+            (click)="succeedBundleReview.emit(bundle)">
+          </vo-lib-action-menu-item>
+          <vo-lib-action-menu-item
+            icon="cancel"
+            text="ELECTION.BALLOT_DETAIL.REJECT_REVIEW"
+            (click)="rejectBundleReview.emit(bundle)">
+          </vo-lib-action-menu-item>
+        </ng-container>
+        <vo-lib-action-menu-item
+          *ngIf="isErfassungElectionAdmin && bundle.state !== bundleStates.BALLOT_BUNDLE_STATE_DELETED"
+          icon="trash"
+          text="ACTIONS.DELETE"
+          (click)="deleteBundle.emit(bundle)">
+        </vo-lib-action-menu-item>
+      </vo-lib-action-menu>
+      <ng-template #readOnlyActionMenu>
+        <vo-lib-action-menu>
+          <vo-lib-action-menu-item icon="info"
+                                   text="ELECTION.SHOW_BALLOT"
+                                   (click)="selectBundle(bundle)"></vo-lib-action-menu-item>
+        </vo-lib-action-menu>
+      </ng-template>
+    </td>
+  </ng-container>
+
+  <tr bc-header-row *bcHeaderRowDef="columns"></tr>
+  <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"
+      [selectable]="rowSelectable"
+      (rowSelected)="selectBundle(row)"></tr>
+</bc-advanced-table>
+<bc-table-paginator *ngIf="enablePagination" [pageSize]="10" [showFirstLastButtons]="true" [tooltips]="false"></bc-table-paginator>

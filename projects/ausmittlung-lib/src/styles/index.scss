@@ -1,0 +1,14 @@
+@forward '~normalize.css/normalize';
+@forward '@abraxas/voting-lib/style';
+@forward 'detailIconLink';
+@forward 'stateColors';
+@forward 'typography';
+@forward 'dialog';
+@forward 'tab';
+@forward 'flex';
+@forward 'table';
+@forward 'iconButton';
+
+.page > .container > .content {
+  overflow: hidden;
+}

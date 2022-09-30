@@ -1,0 +1,13 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  @extend .py-2;
+
+  display: flex;
+  border-top: 1px solid $color-grey-4;
+
+  > * {
+    @extend .mx-3;
+  }
+}

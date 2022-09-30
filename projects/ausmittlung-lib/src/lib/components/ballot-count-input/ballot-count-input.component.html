@@ -1,0 +1,60 @@
+<h4 class="mb-2">{{ header | translate }}</h4>
+<div class="input-container">
+  <bc-label [class.col-2]="eVoting" [label]="'BALLOT_COUNT.RECEIVED' | translate"></bc-label>
+  <bc-label [label]="'BALLOT_COUNT.BLANK' | translate"></bc-label>
+  <bc-label [label]="'BALLOT_COUNT.INVALID' | translate"></bc-label>
+  <bc-label [label]="'BALLOT_COUNT.VALID' | translate"></bc-label>
+  <bc-label class="col-6 align-right" [label]="participationLabel | translate"></bc-label>
+  <bc-label *ngIf="eVoting" class="col-1" [label]="'VOTING_DATA_SOURCE.CONVENTIONAL' | translate"></bc-label>
+  <bc-number
+    #receivedFormfield
+    [class.col-1]="!eVoting"
+    [disabled]="readonly"
+    [min]="0"
+    [error]="countOfVoters.conventionalReceivedBallots !== undefined && countOfVoters.conventionalReceivedBallots < 0"
+    [(value)]="countOfVoters.conventionalReceivedBallots"
+    (valueChange)="changed()"
+  ></bc-number>
+  <bc-number
+    [disabled]="readonly"
+    [min]="0"
+    [error]="countOfVoters.conventionalBlankBallots !== undefined && countOfVoters.conventionalBlankBallots < 0"
+    [(value)]="countOfVoters.conventionalBlankBallots"
+    (valueChange)="changed()"
+  ></bc-number>
+  <bc-number
+    [disabled]="readonly"
+    [min]="0"
+    [error]="countOfVoters.conventionalInvalidBallots !== undefined && countOfVoters.conventionalInvalidBallots < 0"
+    [(value)]="countOfVoters.conventionalInvalidBallots"
+    (valueChange)="changed()"
+  ></bc-number>
+  <bc-number
+    [disabled]="readonly"
+    [min]="0"
+    [error]="countOfVoters.conventionalAccountedBallots !== undefined && countOfVoters.conventionalAccountedBallots < 0"
+    [(value)]="countOfVoters.conventionalAccountedBallots"
+    (valueChange)="changed()"
+  ></bc-number>
+  <ng-container *ngIf="eVoting">
+    <bc-label class="col-1" [label]="'VOTING_DATA_SOURCE.E_VOTING' | translate"></bc-label>
+    <bc-number [disabled]="true" [tabIndex]="-1" [value]="countOfVoters.eVotingReceivedBallots"></bc-number>
+    <bc-number
+      class="col-5"
+      [disabled]="true"
+      [tabIndex]="-1"
+      [value]="countOfVoters.eVotingReceivedBallots"
+    ></bc-number>
+    <bc-label class="col-1" [label]="'VOTING_DATA_SOURCE.TOTAL' | translate"></bc-label>
+    <bc-number [disabled]="true" [tabIndex]="-1" [value]="countOfVoters.totalReceivedBallots"></bc-number>
+    <bc-number [disabled]="true" [tabIndex]="-1" [(value)]="countOfVoters.conventionalBlankBallots"></bc-number>
+    <bc-number [disabled]="true" [tabIndex]="-1" [(value)]="countOfVoters.conventionalInvalidBallots"></bc-number>
+    <bc-number [disabled]="true" [tabIndex]="-1" [value]="countOfVoters.totalAccountedBallots"></bc-number>
+  </ng-container>
+  <bc-text
+    class="col-6 align-right"
+    [disabled]="true"
+    [tabIndex]="-1"
+    [value]="!countOfVoters.voterParticipation ? '-' : (countOfVoters.voterParticipation | percent: '1.2-2')"
+  ></bc-text>
+</div>

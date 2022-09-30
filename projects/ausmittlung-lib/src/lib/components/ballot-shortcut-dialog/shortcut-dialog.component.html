@@ -1,0 +1,16 @@
+<vo-lib-dialog>
+  <h3 header>{{title | translate}}</h3>
+
+  <div content>
+    <div class="shortcuts">
+      <ng-container *ngFor="let shortcut of shortcuts">
+        <div>{{shortcut.text | translate}}</div>
+        <div>{{shortcut.combination | translate}}</div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div footer class="buttons align-right">
+    <bc-button variant="primary" [label]="confirmText | translate" mat-dialog-close></bc-button>
+  </div>
+</vo-lib-dialog>

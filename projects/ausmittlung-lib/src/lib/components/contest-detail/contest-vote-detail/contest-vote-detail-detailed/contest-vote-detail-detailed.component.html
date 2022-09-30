@@ -1,0 +1,36 @@
+<div *ngFor="let ballotResult of resultDetail.results">
+  <div class="content">
+    <vo-ausm-ballot-count-input header="VOTE.BALLOT_CARD"
+                                [eVoting]="eVoting"
+                                [readonly]="readonly"
+                                [totalCountOfVoters]="totalCountOfVoters"
+                                [participationLabel]="'VOTE.VOTER_PARTICIPATION'"
+                                [countOfVoters]="ballotResult.countOfVoters"
+                                (countOfVotersChange)="countOfVotersChange.emit()"></vo-ausm-ballot-count-input>
+
+    <div class="vote-result-ballot-detail">
+      <div class="detail-icon-link" (click)="openBundles(resultDetail.id, ballotResult.id)">
+        <span translate>VOTE.BY_BUNDLE</span>
+        <span class="number pr-2">{{!ballotResult.conventionalCountOfDetailedEnteredBallots ? '-' : ballotResult.conventionalCountOfDetailedEnteredBallots | number }}</span>
+        <bc-icon size="4rem" icon="arrow-right"></bc-icon>
+      </div>
+      <h4 class="mb-2">{{ballotResult.ballot.description || 'VOTE.BALLOT.TITLE' | translate }}</h4>
+      <div *ngFor="let questionResult of ballotResult.questionResults"
+           class="mb-4">
+        <vo-ausm-contest-vote-detail-question [eVoting]="eVoting"
+                                              [readonly]="true"
+                                              [ballotNumberOfQuestions]="ballotResult.questionResults.length"
+                                              [result]="questionResult"></vo-ausm-contest-vote-detail-question>
+      </div>
+      <div *ngFor="let tieBreakQuestionResult of ballotResult.tieBreakQuestionResults"
+           class="mb-4">
+        <vo-ausm-contest-vote-detail-question [eVoting]="eVoting"
+                                              [readonly]="true"
+                                              [isTieBreakQuestion]="true"
+                                              [ballotNumberOfQuestions]="ballotResult.questionResults.length"
+                                              [result]="tieBreakQuestionResult"></vo-ausm-contest-vote-detail-question>
+      </div>
+    </div>
+
+  </div>
+</div>

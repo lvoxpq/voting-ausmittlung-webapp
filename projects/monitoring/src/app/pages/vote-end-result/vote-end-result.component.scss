@@ -1,0 +1,8 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.align-right {
+  @extend .mr-5;
+
+  display: flex;
+  justify-content: flex-end;
+}

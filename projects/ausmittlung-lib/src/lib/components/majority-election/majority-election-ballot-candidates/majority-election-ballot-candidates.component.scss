@@ -1,0 +1,20 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+.candidate-list {
+  display: grid;
+  grid-gap: 0.4rem 0.8rem;
+  grid-template-columns: repeat(3, auto) minmax(5rem, auto);
+  align-items: center;
+
+  .title {
+    align-self: start;
+
+    &.first {
+      grid-column-start: 2;
+    }
+  }
+
+  span.clickable {
+    cursor: pointer;
+  }
+}

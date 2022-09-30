@@ -1,0 +1,10 @@
+[content] {
+  width: 70vw;
+  height: 100%;
+  display: grid;
+  grid-template-rows: min-content minmax(0, 1fr);
+}
+
+mat-horizontal-stepper {
+  margin-bottom: -2rem; // compensate for unused content space
+}

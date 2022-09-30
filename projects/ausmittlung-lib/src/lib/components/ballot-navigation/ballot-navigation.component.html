@@ -1,0 +1,28 @@
+<bc-number
+  [label]="labelBallotNumber | translate"
+  [required]="true"
+  [allowUndefined]="false"
+  [min]="minBallotNumber"
+  [max]="maxBallotNumber"
+  [error]="ballotNumberValue < minBallotNumber || ballotNumberValue > maxBallotNumber"
+  [disabled]="readonly"
+  [value]="ballotNumberValue"
+  (valueChange)="ballotNumberValue = +$event"
+  (blur)="emitNewBallotNumber()"
+  (keydown.enter)="emitNewBallotNumber()"
+></bc-number>
+<div class="nav-buttons">
+  <bc-icon
+    [iconColor]="readonly || ballotNumberValue <= minBallotNumber ? 'basic' : 'info'"
+    (click)="emitNewBallotNumber(-1)"
+    icon="angle-left"
+  >
+  </bc-icon>
+  <bc-icon
+    [iconColor]="readonly || ballotNumberValue >= maxBallotNumber ? 'basic' : 'info'"
+    class="ml-1"
+    (click)="emitNewBallotNumber(1)"
+    icon="angle-right"
+  >
+  </bc-icon>
+</div>

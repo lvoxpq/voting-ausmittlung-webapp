@@ -1,0 +1,5 @@
+.voting-cards {
+  display: grid;
+  grid-template-columns: repeat(var(--voting-cards-per-row), auto);
+  grid-column-gap: 0.2rem;
+}

@@ -1,0 +1,53 @@
+<vo-lib-page [contentLoading]="loading"
+             [enableSidebar]="true"
+             [sidebarTemplate]="sidebar"
+             [sidebarOpen]="true"
+             [header]="'CONTEST.DETAIL.TITLE' | translate">
+  <vo-lib-page-header header>
+    <div left>
+      <vo-ausm-breadcrumbs [items]="breadcrumbs"></vo-ausm-breadcrumbs>
+    </div>
+    <vo-ausm-contest-header center [contest]="resultList?.contest"></vo-ausm-contest-header>
+    <div right *ngIf="!!resultList">
+      <bc-button
+        *ngIf="!contentReadonly
+          && resultList.currentTenantIsResponsible
+          && !resultList.contest.locked
+          && resultList.contest.eVotingResultsImported
+          && resultList.hasUnmappedEVotingWriteIns
+          && isErfassungElectionAdmin"
+        class="mx-2"
+        variant="tertiary"
+        [label]="'CONTEST.DETAIL.MAP_WRITE_INS' | translate"
+        (buttonClick)="mapWriteIns()">
+      </bc-button>
+      <bc-button variant="tertiary" (buttonClick)="export()" [label]="'CONTEST.DETAIL.EXPORT' | translate"></bc-button>
+    </div>
+  </vo-lib-page-header>
+
+  <div *ngIf="resultList">
+    <vo-ausm-contest-info [resultList]="resultList" [showStateActions]="showStateActions"></vo-ausm-contest-info>
+
+    <div class="political-business-list">
+      <div *ngFor="let result of resultList.results">
+        <vo-ausm-contest-political-business-detail
+          [contentReadonly]="contentReadonly || !resultList.currentTenantIsResponsible"
+          [contestLocked]="resultList?.contest.locked"
+          [isResponsibleMonitorAuthority]="tenant?.id === result.politicalBusiness.domainOfInfluence.secureConnectId"
+          [contestCountingCircleDetails]="resultList.details"
+          [result]="result"></vo-ausm-contest-political-business-detail>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #sidebar>
+    <vo-ausm-contest-detail-sidebar
+      [resultList]="resultList"
+      (saved)="updateCountOfVoters($event)"
+      [readonly]="contentReadonly
+        || sidebarReadonly
+        || !resultList?.currentTenantIsResponsible
+        || !isErfassungElectionAdmin">
+    </vo-ausm-contest-detail-sidebar>
+  </ng-template>
+</vo-lib-page>

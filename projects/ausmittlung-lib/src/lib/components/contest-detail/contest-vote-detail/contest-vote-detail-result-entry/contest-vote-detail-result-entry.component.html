@@ -1,0 +1,44 @@
+<div *ngIf="!readonly; else readonlyContent">
+  <ng-container *ngIf="!confirmationRequested; else confirmContent">
+    <bc-radio-button-group [(value)]="resultEntry"
+                           orientation="vertical"
+                           [label]="'POLITICAL_BUSINESS.RESULTS_ENTRY.QUESTION' | translate"
+                           [items]="resultEntryVariants"></bc-radio-button-group>
+
+    <vo-ausm-contest-vote-detail-result-entry-params *ngIf="resultEntry === resultEntries.VOTE_RESULT_ENTRY_DETAILED"
+                                                     class="entry-params"
+                                                     [resultEntryParams]="resultEntryParams"
+                                                     [enforceReviewProcedure]="vote.enforceReviewProcedureForCountingCircles"></vo-ausm-contest-vote-detail-result-entry-params>
+    <bc-button class="mr-2"
+               *ngIf="!isInitialSetup"
+               [disabled]="isUpdatingResultEntry"
+               [label]="'COMMON.CANCEL' | translate"
+               (buttonClick)="cancel(true)"></bc-button>
+    <vo-lib-inline-spinner [loading]="isUpdatingResultEntry">
+      <bc-button variant="primary"
+                 [label]="'VOTE.RESULT_ENTRY.SELECT' | translate"
+                 [disabled]="isUpdatingResultEntry || (resultEntry === resultEntries.VOTE_RESULT_ENTRY_DETAILED && (resultEntryParams.ballotBundleSampleSizePercent < 0 || resultEntryParams.ballotBundleSampleSizePercent > 100))"
+                 (buttonClick)="save()">
+      </bc-button>
+    </vo-lib-inline-spinner>
+  </ng-container>
+</div>
+
+<ng-template #confirmContent>
+  <h4 translate>POLITICAL_BUSINESS.RESULTS_ENTRY.CONFIRM_CHANGE</h4>
+  <p translate>POLITICAL_BUSINESS.RESULTS_ENTRY.CONFIRM_CHANGE_DETAIL</p>
+  <bc-button [disabled]="isUpdatingResultEntry"
+             [label]="'COMMON.CANCEL' | translate"
+             (buttonClick)="cancel()"></bc-button>
+  <vo-lib-inline-spinner [loading]="isUpdatingResultEntry">
+    <bc-button (buttonClick)="save()"
+               [disabled]="isUpdatingResultEntry"
+               color="error"
+               [label]="'APP.NEXT' | translate"
+               class="ml-2"></bc-button>
+  </vo-lib-inline-spinner>
+</ng-template>
+
+<ng-template #readonlyContent>
+  <span translate>POLITICAL_BUSINESS.RESULTS_ENTRY.NOT_SELECTED</span>
+</ng-template>

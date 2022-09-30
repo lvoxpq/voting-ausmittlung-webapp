@@ -1,0 +1,28 @@
+<vo-ausm-contest-detail-voting-cards-expansion-panel
+  [header]="'DOMAIN_OF_INFLUENCE.TYPE' | translate: { type: ('DOMAIN_OF_INFLUENCE_TYPES.' + doiType | translate) }">
+  <div class="voting-cards"
+       voAusmBindCssVar="voting-cards-per-row"
+       [voAusmBindCssVarValue]="votingCardDetailsValue.length % 2 === 0 && !hasInvalidVotingCardChannel ? 3 : 2">
+    <ng-container *ngFor="let votingCardDetail of votingCardDetailsValue; let i = index">
+      <bc-number
+        [disabled]="readonly"
+        [required]="true"
+        [min]="0"
+        [value]="votingCardDetail.countOfReceivedVotingCards"
+        (valueChange)="update(votingCardDetail, $event)"
+        [label]="'CONTEST.DETAIL.VOTING_CARDS.' + votingCardDetail.channel + '_' + (votingCardDetail.valid ? 'VALID' : 'INVALID') | translate"></bc-number>
+      <div *ngIf="i === 1 && votingCardDetailsValue.length === 4 && !hasInvalidVotingCardChannel"></div>
+    </ng-container>
+    <div *ngIf="votingCardDetailsValue.length % 2 !== 0 && hasInvalidVotingCardChannel"></div>
+    <bc-number *ngIf="hasInvalidVotingCardChannel && votingCardDetailsValue.length > 1"
+                  [disabled]="true"
+               [required]="true"
+                  [value]="totalValid"
+                  [label]="'CONTEST.DETAIL.VOTING_CARDS.TOTAL_VALID' | translate"></bc-number>
+    <bc-number *ngIf="votingCardDetailsValue.length > 1"
+                  [disabled]="true"
+               [required]="true"
+                  [value]="total"
+                  [label]="'CONTEST.DETAIL.VOTING_CARDS.TOTAL' | translate"></bc-number>
+  </div>
+</vo-ausm-contest-detail-voting-cards-expansion-panel>

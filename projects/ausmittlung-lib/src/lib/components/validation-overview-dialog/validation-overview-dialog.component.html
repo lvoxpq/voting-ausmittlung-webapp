@@ -1,0 +1,29 @@
+<vo-lib-dialog>
+  <h3 header>{{ header | translate }}</h3>
+
+  <div content>
+    <div class="my-2">
+      <p *ngIf="!!validationResultsLabel" class="mb-2">
+        {{ validationResultsLabel | translate }}
+      </p>
+      <vo-ausm-validation-result *ngFor="let result of validationOverview.requiredValidationResults" [result]="result">
+      </vo-ausm-validation-result>
+
+      <ng-container *ngIf="validationOverview.optionalValidationResults.length > 0">
+        <p class="mt-3 mb-2" translate>VALIDATION.PLAUSIBILISATION.HEADER</p>
+        <vo-ausm-validation-result
+          *ngFor="let result of validationOverview.optionalValidationResults"
+          [result]="result">
+        </vo-ausm-validation-result>
+      </ng-container>
+    </div>
+  </div>
+
+  <div footer>
+    <vo-lib-button-bar [sticky]="false"
+                       [cancelLabel]="'APP.CLOSE' | translate"
+                       [saveLabel]="saveLabel | translate"
+                       (save)="save()"
+                       (cancel)="close()"></vo-lib-button-bar>
+  </div>
+</vo-lib-dialog>

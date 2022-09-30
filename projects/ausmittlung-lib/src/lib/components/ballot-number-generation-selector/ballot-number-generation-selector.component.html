@@ -1,0 +1,9 @@
+<bc-radio-button-group
+  [label]="'ELECTION.RESULT_ENTRY.BALLOT_NUMBER_GENERATION.TITLE' | translate"
+  orientation="vertical"
+  [items]="ballotNumberGenerationChoices"
+  [(value)]="ballotNumberGeneration"
+  (valueChange)="ballotNumberGenerationChange.emit($event)"
+  [disabled]="disabled"
+>
+</bc-radio-button-group>

@@ -1,0 +1,15 @@
+:host {
+  display: contents;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-field {
+  display: flex;
+
+  > *:not(:first-child) {
+    margin-left: 0.4rem;
+  }
+}

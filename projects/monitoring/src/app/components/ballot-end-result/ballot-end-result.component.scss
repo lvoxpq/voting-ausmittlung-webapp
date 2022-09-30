@@ -1,0 +1,20 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  @extend .mt-4;
+
+  display: block;
+}
+
+.wrapper {
+  display: flex;
+
+  app-ballot-end-result-count-of-voters {
+    flex: 1;
+  }
+
+  .ballot-results {
+    flex: 2;
+    margin-left: 2rem;
+  }
+}

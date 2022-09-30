@@ -1,0 +1,35 @@
+<p
+  class="whitespace-pre-wrap mb-2">{{endResult.question | translateVoteQuestion: isTieBreakQuestion:'question':ballotNumberOfQuestions}}</p>
+<div class="question-results">
+  <app-question-end-result-entry title="VOTE.COUNT_OF_VOTES.UNKNOWN"
+                                 [labelLeft]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+                                 [voteCountLeft]="endResult.conventionalSubTotal.totalCountOfAnswer1"
+                                 [labelRight]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions"
+                                 [voteCountRight]="endResult.conventionalSubTotal.totalCountOfAnswer2"
+                                 [voteCountUnspecified]="endResult.conventionalSubTotal.totalCountOfAnswerUnspecified"
+                                 [hasUnspecifiedVoteCount]="ballotNumberOfQuestions > 1">
+  </app-question-end-result-entry>
+  <ng-container *ngIf="eVoting">
+    <app-question-end-result-entry title="VOTE.COUNT_OF_VOTES.E_VOTING"
+                                   [labelLeft]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+                                   [voteCountLeft]="endResult.eVotingSubTotal.totalCountOfAnswer1"
+                                   [labelRight]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions"
+                                   [voteCountRight]="endResult.eVotingSubTotal.totalCountOfAnswer2"
+                                   [voteCountUnspecified]="endResult.eVotingSubTotal.totalCountOfAnswerUnspecified"
+                                   [hasUnspecifiedVoteCount]="ballotNumberOfQuestions > 1">
+    </app-question-end-result-entry>
+    <app-question-end-result-entry title="VOTE.COUNT_OF_VOTES.TOTAL"
+                                   [labelLeft]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+                                   [voteCountLeft]="endResult.totalCountOfAnswer1"
+                                   [labelRight]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions"
+                                   [voteCountRight]="endResult.totalCountOfAnswer2"
+                                   [voteCountUnspecified]="endResult.totalCountOfAnswerUnspecified"
+                                   [hasUnspecifiedVoteCount]="ballotNumberOfQuestions > 1">
+    </app-question-end-result-entry>
+  </ng-container>
+  <div class="spacer"></div>
+  <vo-ausm-vote-results-graph [countLeft]="endResult.totalCountOfAnswer1"
+                              [countRight]="endResult.totalCountOfAnswer2"
+                              [resultLabelLeft]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+                              [resultLabelRight]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions"></vo-ausm-vote-results-graph>
+</div>

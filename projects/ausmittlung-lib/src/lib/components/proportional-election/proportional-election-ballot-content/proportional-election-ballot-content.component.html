@@ -1,0 +1,41 @@
+<div class="content">
+  <div class="ballot-stats">
+    <vo-ausm-proportional-election-ballot-candidate-modify
+      *ngIf="!readonly"
+      [showRemoveRange]="showRemoveRange"
+      [readonly]="disabled"
+      [canAddCandidate]="ballotUiData.emptyVoteCount > 0"
+      [addableCandidatesByNumber]="ballotUiData.addableCandidatesByNumber"
+      [removableCandidatesByNumber]="ballotUiData.removableCandidatesByNumber"
+      (addCandidate)="addCandidate($event)"
+      (removeCandidate)="removeCandidate($event)"
+      (removeCandidateRange)="removeCandidateRange($event)"
+      (contentCompleted)="emptyVotesInput.readonly ? contentCompleted.emit($event) : undefined">
+    </vo-ausm-proportional-election-ballot-candidate-modify>
+
+    <bc-number
+      #emptyVotesInput
+      [label]="'ELECTION.BALLOT_DETAIL.EMPTY' | translate"
+      [min]="0"
+      [max]="electionResult.election.numberOfMandates"
+      [readonly]="readonly || electionResult.entryParams.automaticEmptyVoteCounting"
+      [disabled]="disabled"
+      [error]="!ballotUiData.emptyVoteCountValid"
+      [value]="ballotUiData.userEnteredEmptyVoteCount"
+      (valueChange)="updateEmptyVotes(+$event)"
+      [required]="true"
+      [allowUndefined]="false"
+      [tabIndex]="readonly || electionResult.entryParams.automaticEmptyVoteCounting ? -1 : 0"
+      (keydown.enter)="contentCompleted.emit($event)">
+    </bc-number>
+  </div>
+  <div class="spacer"></div>
+  <div>
+    <vo-ausm-proportional-election-ballot-candidates [positions]="ballotUiData.listPositions"
+                                                     [readonly]="disabled || readonly"
+                                                     (addCandidate)="addCandidateAtPosition($event)"
+                                                     (removeCandidate)="removeCandidateAtPosition($event)">
+    </vo-ausm-proportional-election-ballot-candidates>
+  </div>
+  <div class="spacer"></div>
+</div>

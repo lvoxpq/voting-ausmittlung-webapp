@@ -1,0 +1,12 @@
+<vo-lib-page [contentLoading]="loading" header="CONTEST.TITLE">
+  <vo-ausm-contest-list [contests]="contests"
+                        (openDetail)="openDetail.emit($event)"></vo-ausm-contest-list>
+
+  <h2 translate>CONTEST.PAST_CONTESTS</h2>
+  <vo-ausm-contest-list [contests]="pastContests"
+                        (openDetail)="openDetail.emit($event)"></vo-ausm-contest-list>
+
+  <h2 translate>CONTEST.ARCHIVED_CONTESTS</h2>
+  <vo-ausm-contest-list [contests]="archivedContests"
+                        (openDetail)="openDetail.emit($event)"></vo-ausm-contest-list>
+</vo-lib-page>

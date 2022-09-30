@@ -1,0 +1,17 @@
+<bc-text
+  #startInput
+  [tabIndex]="-1"
+  optionalText=""
+  [disabled]="readonly"
+  [(ngModel)]="start"
+  (keydown.tab)="endInput.setFocus(); $event.preventDefault()"
+  [label]="'ELECTION.BALLOT_DETAIL.REMOVE_RANGE.START' | translate"
+></bc-text>
+<bc-text
+  #endInput
+  [disabled]="readonly"
+  [tabIndex]="-1"
+  optionalText=""
+  [(ngModel)]="end"
+  [label]="'ELECTION.BALLOT_DETAIL.REMOVE_RANGE.END' | translate"
+></bc-text>

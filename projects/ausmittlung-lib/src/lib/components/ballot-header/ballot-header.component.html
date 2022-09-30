@@ -1,0 +1,21 @@
+<div class="ballot-header-content">
+  <vo-ausm-ballot-navigation
+    class="ml-1"
+    [readonly]="disabled || !canNavigate || actionExecuting"
+    [ballotNumber]="ballotNumber || 1"
+    [minBallotNumber]="minBallotNumber"
+    [maxBallotNumber]="maxBallotNumber"
+    [labelBallotNumber]="labelBallotNumber"
+    (ballotNumberChange)="ballotNumberChange.emit($event)"
+  ></vo-ausm-ballot-navigation>
+  <bc-button
+    *ngIf="!readonly"
+    class="error mb-2"
+    variant="tertiary"
+    [class.disabled]="disabled || actionExecuting || !canDeleteBallot"
+    [label]="labelDelete | translate"
+    (buttonClick)="confirmDeleteBallot()"
+  ></bc-button>
+  <ng-content></ng-content>
+  <bc-spinner *ngIf="actionExecuting"></bc-spinner>
+</div>

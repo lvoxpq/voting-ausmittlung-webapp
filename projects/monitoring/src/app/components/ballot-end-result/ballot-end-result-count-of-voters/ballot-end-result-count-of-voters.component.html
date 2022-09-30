@@ -1,0 +1,52 @@
+<h3 translate>VOTE.BALLOT_CARD</h3>
+
+<ng-container *ngIf="eVoting; else conventional">
+  <div class="wrapper-evoting">
+    <span></span>
+    <span translate>VOTING_DATA_SOURCE.CONVENTIONAL</span>
+    <span translate>VOTING_DATA_SOURCE.E_VOTING</span>
+    <span translate>VOTING_DATA_SOURCE.TOTAL</span>
+
+    <span translate>BALLOT_COUNT.RECEIVED</span>
+    <span>{{ countOfVoters.conventionalReceivedBallots | number }}</span>
+    <span>{{ countOfVoters.eVotingReceivedBallots | number }}</span>
+    <span>{{ countOfVoters.totalReceivedBallots | number }}</span>
+
+    <span translate>BALLOT_COUNT.BLANK</span>
+    <span>{{ countOfVoters.conventionalBlankBallots | number }}</span>
+    <span></span>
+    <span>{{ countOfVoters.conventionalBlankBallots | number }}</span>
+
+    <span translate>BALLOT_COUNT.INVALID</span>
+    <span>{{ countOfVoters.conventionalInvalidBallots | number }}</span>
+    <span></span>
+    <span>{{ countOfVoters.conventionalInvalidBallots | number }}</span>
+
+    <span translate>BALLOT_COUNT.VALID</span>
+    <span>{{ countOfVoters.conventionalAccountedBallots | number }}</span>
+    <span>{{ countOfVoters.eVotingReceivedBallots | number }}</span>
+    <span>{{ countOfVoters.totalAccountedBallots | number }}</span>
+
+    <span translate>VOTE.VOTER_PARTICIPATION</span>
+    <span>{{ countOfVoters.voterParticipation | percent: '1.2-2' }}</span>
+  </div>
+</ng-container>
+
+<ng-template #conventional>
+  <div class="wrapper-conventional">
+    <span translate>BALLOT_COUNT.RECEIVED</span>
+    <span>{{ countOfVoters.totalReceivedBallots | number }}</span>
+
+    <span translate>BALLOT_COUNT.BLANK</span>
+    <span>{{ countOfVoters.conventionalBlankBallots | number }}</span>
+
+    <span translate>BALLOT_COUNT.INVALID</span>
+    <span>{{ countOfVoters.conventionalInvalidBallots | number }}</span>
+
+    <span translate>BALLOT_COUNT.VALID</span>
+    <span>{{ countOfVoters.totalAccountedBallots | number }}</span>
+
+    <span translate>VOTE.VOTER_PARTICIPATION</span>
+    <span>{{ countOfVoters.voterParticipation | percent: '1.2-2' }}</span>
+  </div>
+</ng-template>

@@ -1,0 +1,23 @@
+$states: (
+  // initial
+  1: #e0e0e0,
+  // in Erfassung
+  2: #fcc900,
+  // zur Korrektur
+  3: #c60000,
+  // Erfassung beendet
+  4: #1c9048,
+  // Korrektur beendet
+  5: #4cc1ae,
+  // Vorläufig geprüft
+  6: #1c69ce,
+  // Alles plausibilisiert
+  7: #893b67
+);
+
+@each $name, $color in $states {
+  .result-state-#{$name} {
+    background-color: $color;
+    color: #fff;
+  }
+}

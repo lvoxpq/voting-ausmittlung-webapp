@@ -1,0 +1,8 @@
+.mat-dialog-container {
+  overflow: visible !important;
+
+  // custom dialog component needs to be flex to have a fixed child height
+  > * {
+    display: flex;
+  }
+}

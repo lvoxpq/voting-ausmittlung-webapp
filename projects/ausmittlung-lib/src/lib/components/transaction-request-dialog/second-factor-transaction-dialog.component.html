@@ -1,0 +1,20 @@
+<vo-lib-dialog>
+  <h3 header>{{ 'SECOND_FACTOR_TRANSACTION.TITLE' | translate }}</h3>
+
+  <div content>
+    <ng-container *ngIf="!hasError; else error">
+      <p class="my-0">
+        {{ 'SECOND_FACTOR_TRANSACTION.INFO' | translate: { code } }}
+      </p>
+      <bc-spinner class="my-5" *ngIf="!hasError"></bc-spinner>
+    </ng-container>
+  </div>
+
+  <div footer>
+    <bc-button (buttonClick)="cancel()" [label]="(hasError ? 'APP.CLOSE' : 'COMMON.CANCEL') | translate"></bc-button>
+  </div>
+</vo-lib-dialog>
+
+<ng-template #error>
+  <vo-ausm-admonition class="my-5" [type]="'error'" [title]="'SECOND_FACTOR_TRANSACTION.ERROR' | translate"></vo-ausm-admonition>
+</ng-template>

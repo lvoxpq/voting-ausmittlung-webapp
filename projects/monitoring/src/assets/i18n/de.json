@@ -1,0 +1,164 @@
+{
+  "APP": {
+    "TITLE": "VOTING Ausmittlung Monitoring",
+    "CONFIRM": "Bestätigen"
+  },
+  "MONITORING_COCKPIT": {
+    "TITLE": "Monitoring Cockpit",
+    "TAB_TO_CHECK": "Zu prüfen ({{count}})",
+    "TAB_CHECKED": "Geprüft ({{count}})",
+    "FILTER_COUNTING_CIRCLE": "Auszählungskreise",
+    "NO_DATA": "Keine Daten vorhanden.",
+    "PLAUSIBILISE_ALL": "Alle plausibilisieren",
+    "RESET_ALL_TO_AUDIT_TENTATIVELY": "Alle Vorläufig geprüft setzen",
+    "VIEW_END_RESULTS": "Ergebnisübersicht anzeigen"
+  },
+  "CONTEST": {
+    "POLITICAL_BUSINESSES": "Geschäfte zum Monitoring",
+    "DETAIL": {
+      "TITLE": "Ergebnisse prüfen",
+      "IMPORT": "Importieren…",
+      "EXPORT_COCKPIT": "Export-Cockpit…"
+    }
+  },
+  "EXPORT_COCKPIT": {
+    "TITLE": "Export-Cockpit",
+    "DESCRIPTION": "Schnittstelle",
+    "NO_CONFIGS": "Keine Schnittstellen-Konfigurationen ausgewählt",
+    "TRIGGER_MANUAL": "Übermittlung manuell anstossen",
+    "TRIGGERED": "Manuelle Übermittlung gestartet…",
+    "TRIGGER_MODE_MANUAL": "Manuell",
+    "TRIGGER_MODE_AUTO": "Automatisch",
+    "INTERVAL": "Export-Intervall (in Minuten)"
+  },
+  "END_RESULT": {
+    "OVERVIEW": "Ergebnisübersicht",
+    "POLITICAL_BUSINESS": "Geschäft",
+    "COUNT_OF_VOTERS": "Stimmberechtigte",
+    "COUNTING_DONE": "Ausgezählt",
+    "COUNTING_DONE_OF": "{{countOfDoneCountingCircles}} von {{totalCountOfCountingCircles}}",
+    "ELECTION": {
+      "LOT_DECISION": {
+        "OPEN": "Losentscheide fällen",
+        "REQUIRED_IS_MISSING": {
+          "TITLE": "Validierung fehlgeschlagen",
+          "MSG": "Alle notwendigen Losentscheide müssen getroffen werden."
+        },
+        "DUPLICATE_RANK": {
+          "TITLE": "Validierung fehlgeschlagen",
+          "MSG": "Es darf kein Rang in der selben Wahl mehrmals vorkommen."
+        }
+      },
+      "BALLOT_COUNT": {
+        "RECEIVED": "eingegangene WZ",
+        "BLANK": "leere WZ",
+        "VALID": "gültige WZ",
+        "INVALID": "ungültige WZ"
+      }
+    },
+    "MAJORITY_ELECTION": {
+      "CONFIRM": {
+        "TITLE": "Schlussergebnis setzen?",
+        "MESSAGE": "Mit der Bestätigung wird das Wahlergebnis sowie der Ausmittlungsstand in den Exports als \"Schlussergebnis\" ausgewiesen."
+      }
+    },
+    "PROPORTIONAL_ELECTION": {
+      "CONFIRM": {
+        "TITLE": "Schlussergebnis setzen und Sitzverteilung auslösen?",
+        "MESSAGE": "Mit der Bestätigung lösen Sie die Sitzverteilung aus. Der Ausmittlungsstand \"Schlussergebnis\" wird in verschiedenen Exports ausgewiesen."
+      }
+    }
+  },
+  "ELECTION": {
+    "NR_OF_MANDATES": "{{numberOfMandates}} Sitze",
+    "NR_OF_MANDATES_TITLE": "Anzahl Sitze",
+    "BALLOT_CARD": "Wahlzettel",
+    "VOTER_PARTICIPATION": "Wahlbeteiligung",
+    "CANDIDATE": {
+      "RANK": "Rang",
+      "RANK_AFTER_LOT_DECISION": "Rang (nach Losentscheid)",
+      "NUMBER": "K-Nr.",
+      "CANDIDACY": "Kandidat/in",
+      "PARTY": "Partei",
+      "INCUMBENT": "Bisher",
+      "STATE": "Ergebnis",
+      "LOT_DECISION": "Losentscheid",
+      "STATES": {
+        "0": "Pendent",
+        "1": "Pendent",
+        "2": "Absolutes Mehr erreicht und gewählt",
+        "3": "Absolutes Mehr erreicht / als überzählig ausgeschieden",
+        "4": "Absolutes Mehr verpasst / nicht gewählt",
+        "5": "Gewählt",
+        "6": "Nicht gewählt",
+        "7": "Nicht wählbar"
+      }
+    }
+  },
+  "MAJORITY_ELECTION": {
+    "TITLE": "Majorzwahl"
+  },
+  "PROPORTIONAL_ELECTION": {
+    "TITLE": "Proporzwahl",
+    "LIST": {
+      "LIST_VOTES_COUNT": "Kandidatenstimmen",
+      "BLANK_ROWS_COUNT": "Zusatzstimmen",
+      "TOTAL_VOTE_COUNT": "Total Stimmen"
+    },
+    "CANDIDATE": {
+      "STATES": {
+        "1": "Pendent",
+        "2": "Gewählt",
+        "3": "Nicht gewählt"
+      }
+    },
+    "LIST_UNION": {
+      "LIST_UNION_ABBREVIATION": "LV"
+    },
+    "SUB_LIST_UNION": {
+      "SUB_LIST_UNION_ABBREVIATION": "LUV"
+    }
+  },
+  "VOTE_END_RESULT": {
+    "UNANIMITY_YES": "Einstimmigkeit erreicht",
+    "UNANIMITY_NO": "Einstimmigkeit nicht erreicht",
+    "MAJORITY_YES": "Mehrheit erreicht",
+    "MAJORITY_NO": "Mehrheit nicht erreicht",
+    "COUNTING_CIRCLE_TITLE": "Ergebnisse Auszählungskreise",
+    "COUNTING_CIRCLE_YES": "Angenommen",
+    "COUNTING_CIRCLE_NO": "Abgelehnt",
+    "TIE_BREAK_QUESTION_END_RESULT": {
+      "UNDEFINED": "Mehrheit nicht erreicht",
+      "QN_MAJORITY": "Mehrheit Frage {{questionNumberWithMajority}}"
+    },
+    "CONFIRM": {
+      "TITLE": "Schlussergebnis setzen?",
+      "MESSAGE": "Mit der Bestätigung wird der Ausmittlungsstand in den Exports als Schlussergebnis ausgewiesen."
+    }
+  },
+  "ERROR_MESSAGES": {
+    "CountingCircleResultInInvalidStateForEVotingImportException": "eVoting Resultate können nur importiert werden, wenn noch kein Resultat geprüft wurde.",
+    "EVotingNotActiveException": "eVoting ist auf mind. einem Auszählungskreis mit zu importierenden Resultaten nicht aktiv."
+  },
+  "RESULT_IMPORT": {
+    "LIST_TITLE": "Importierte Ergebnisse",
+    "TITLE": "Ergebnisse importieren",
+    "IMPORT": "Ergebnisse importieren",
+    "SELECT_FILE": "Datei auswählen",
+    "E_CH_STANDARD": "eCH-Datenstandard",
+    "ECH_0222": "eCH-0222 - Schnittstelle Rohdaten Wahlen und Abstimmungen",
+    "DRAG_FILE": "Datei hierher ziehen",
+    "OR": "oder…",
+    "CHOOSE_FILE": "Datei zum Hochladen auswählen",
+    "CHOSEN_FILES": "Ausgewählte Dateien",
+    "FILENAME": "Dateiname",
+    "IMPORT_DONE": "Import wird verarbeitet…",
+    "STARTED_BY": "Importiert durch",
+    "STARTED": "Datum/Uhrzeit",
+    "DELETED_FILE_NAME": "Importierte Ergebnisse gelöscht",
+    "DELETE": "Importierte Ergebnisse löschen",
+    "DELETE_CONFIRM_TITLE": "Sind Sie sicher?",
+    "DELETE_CONFIRM_MSG": "Sind Sie sicher, dass Sie die importierten Ergebnisse wieder löschen wollen?",
+    "DELETE_SUCCESS": "Import-Daten werden gelöscht…"
+  }
+}

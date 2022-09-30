@@ -1,0 +1,45 @@
+<vo-lib-page [contentLoading]="loading"
+             header="ELECTION.BUNDLE_OVERVIEW">
+  <ng-container *ngIf="result">
+    <vo-ausm-majority-election-info [electionResult]="result.politicalBusinessResult"></vo-ausm-majority-election-info>
+    <div class="my-4">
+      <div class="shortcut-container">
+        <bc-icon class="clickable-icon" size="2rem" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
+      </div>
+
+      <h3 translate>ELECTION.BUNDLE_TABLES.OPEN</h3>
+      <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: openBundles}"></ng-container>
+
+      <h3 translate>ELECTION.BUNDLE_TABLES.REVIEWED</h3>
+      <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: reviewedBundles}"></ng-container>
+
+      <h3 translate>ELECTION.BUNDLE_TABLES.DELETED</h3>
+      <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: deletedBundles}"></ng-container>
+
+      <ng-template #bundleTable let-bundles="bundles">
+        <vo-ausm-majority-election-bundle-table [bundles]="bundles"
+                                                [bundleSize]="result.politicalBusinessResult.entryParams!.ballotBundleSize"
+                                                [rowSelectable]="true"
+                                                [enablePagination]="true"
+                                                [enableActions]="true"
+                                                [readOnly]="resultReadOnly"
+                                                (openDetail)="openBundle($event)"
+                                                (reviewBundle)="reviewBundle($event)"
+                                                (succeedBundleReview)="succeedBundleReview($event)"
+                                                (rejectBundleReview)="rejectBundleReview($event)"
+                                                (deleteBundle)="deleteBundle($event)"
+                                                [reviewProcedure]="result.politicalBusinessResult.entryParams?.reviewProcedure">
+        </vo-ausm-majority-election-bundle-table>
+      </ng-template>
+    </div>
+    <div class="sticky-buttons">
+      <vo-lib-button-bar [cancelLabel]="'APP.BACK' | translate"
+                         [hasSaveButton]="(isErfassungUser | async) === true && !resultReadOnly"
+                         [saveLabel]="'ELECTION.NEW_BUNDLE' | translate"
+                         [canSave]="true"
+                         [saving]="isCreatingBundle"
+                         (cancel)="back()"
+                         (save)="createNewBundle()"></vo-lib-button-bar>
+    </div>
+  </ng-container>
+</vo-lib-page>

@@ -1,0 +1,61 @@
+<h4 translate>CONTEST.DETAIL.COUNT_OF_VOTERS</h4>
+
+<bc-label *ngIf="swissAbroadHaveVotingRightsOnAnyBusiness" [label]="'CONTEST.DETAIL.SWISS' | translate"></bc-label>
+<div class="count-of-voters mb-2">
+  <bc-number
+    #maleFormfield
+    [disabled]="readonly"
+    [required]="true"
+    [min]="0"
+    [(value)]="getDetail(voterTypes.VOTER_TYPE_SWISS, sexTypes.SEX_TYPE_MALE).countOfVoters"
+    (valueChange)="updateTotal()"
+    [label]="'CONTEST.DETAIL.MEN' | translate"
+  ></bc-number>
+
+  <bc-number
+    [disabled]="readonly"
+    [required]="true"
+    [min]="0"
+    [(value)]="getDetail(voterTypes.VOTER_TYPE_SWISS, sexTypes.SEX_TYPE_FEMALE).countOfVoters"
+    (valueChange)="updateTotal()"
+    [label]="'CONTEST.DETAIL.WOMEN' | translate"
+  ></bc-number>
+
+  <bc-number [disabled]="true"
+             [required]="true"
+             [value]="totalSwiss"
+             [label]="'CONTEST.DETAIL.TOTAL' | translate">
+  </bc-number>
+</div>
+
+<div class="my-2" *ngIf="swissAbroadHaveVotingRightsOnAnyBusiness">
+  <bc-label [label]="'CONTEST.DETAIL.SWISS_ABROAD' | translate"></bc-label>
+  <div class="count-of-voters">
+    <bc-number
+      [disabled]="readonly"
+      [required]="true"
+      [min]="0"
+      [(value)]="getDetail(voterTypes.VOTER_TYPE_SWISS_ABROAD, sexTypes.SEX_TYPE_MALE).countOfVoters"
+      (valueChange)="updateTotal()"
+      [label]="'CONTEST.DETAIL.MEN' | translate"
+    ></bc-number>
+
+    <bc-number
+      [disabled]="readonly"
+      [required]="true"
+      [min]="0"
+      [(value)]="getDetail(voterTypes.VOTER_TYPE_SWISS_ABROAD, sexTypes.SEX_TYPE_FEMALE).countOfVoters"
+      (valueChange)="updateTotal()"
+      [label]="'CONTEST.DETAIL.WOMEN' | translate"
+    ></bc-number>
+
+    <bc-number
+      [disabled]="true"
+      [required]="true"
+      [value]="totalSwissAbroad"
+      [label]="'CONTEST.DETAIL.TOTAL' | translate">
+    </bc-number>
+  </div>
+</div>
+
+<bc-checkbox [disabled]="true" [label]="'CONTEST.DETAIL.E_VOTING_ACTIVE' | translate" [checked]="eVoting"></bc-checkbox>

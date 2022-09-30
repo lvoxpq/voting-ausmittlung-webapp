@@ -1,0 +1,39 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+:host {
+  display: block;
+}
+
+.result-container {
+  border: 1px solid $color-grey-4;
+}
+
+.candidate-results {
+  display: grid;
+
+  // variable workaround due to angular bug https://github.com/angular/angular/issues/28897
+  grid-template-columns: repeat(var(--candidate-results-column-count), fit-content(15rem)) 10rem;
+  grid-gap: 0.5rem 0.8rem;
+  margin-top: 0.5rem;
+
+  .candidate-number {
+    grid-column-start: 1;
+  }
+
+  .candidate-candidacy {
+    grid-column-start: 2;
+  }
+
+  .candidate-vote-count {
+    text-align: right;
+  }
+
+  .vote-percent-indicator {
+    height: 1rem;
+
+    div {
+      height: 1rem;
+      background-color: $color-grey-4;
+    }
+  }
+}

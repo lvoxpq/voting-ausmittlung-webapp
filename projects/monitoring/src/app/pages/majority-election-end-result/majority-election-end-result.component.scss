@@ -1,0 +1,9 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.additional-infos {
+  @extend .mt-4, .mb-2, .mr-5;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}

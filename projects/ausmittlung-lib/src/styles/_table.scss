@@ -1,0 +1,9 @@
+table td:not(.action-menu) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Action column should only take a small width
+th.actions-header {
+  width: 2rem;
+}

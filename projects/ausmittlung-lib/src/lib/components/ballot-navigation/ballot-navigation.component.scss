@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+}
+
+bc-number {
+  max-width: 5rem;
+
+  ::ng-deep label {
+    white-space: nowrap;
+  }
+}
+
+.nav-buttons {
+  margin-left: 0.3rem;
+  margin-top: 1.2rem;
+  display: flex;
+}

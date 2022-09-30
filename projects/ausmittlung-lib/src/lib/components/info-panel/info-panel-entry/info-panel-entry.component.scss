@@ -1,0 +1,10 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+.entry {
+  margin-right: 3rem;
+
+  .label {
+    color: $color-grey-2;
+    margin-bottom: 0.2rem;
+  }
+}

@@ -1,0 +1,16 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+.no-data {
+  font-style: italic;
+  color: $color-grey-2;
+}
+
+bc-number.label-no-wrap bc-label label {
+  white-space: nowrap;
+}
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

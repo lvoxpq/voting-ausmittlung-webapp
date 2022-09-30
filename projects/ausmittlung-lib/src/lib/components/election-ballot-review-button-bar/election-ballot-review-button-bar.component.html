@@ -1,0 +1,13 @@
+<bc-button (buttonClick)="back.emit()" [label]="'APP.BACK' | translate"></bc-button>
+<vo-lib-inline-spinner [loading]="actionExecuting"
+                       position="right">
+  <bc-button [disabled]="disabled || actionExecuting || !canSucceed"
+             variant="primary"
+             [label]="'ELECTION.REVIEW_BALLOT_DETAIL.SUCCEED' | translate"
+             (buttonClick)="succeedBundleReview.emit()"></bc-button>
+  <bc-button class="error ml-3"
+             variant="tertiary"
+             [class.disabled]="disabled || actionExecuting"
+             [label]="'ELECTION.REVIEW_BALLOT_DETAIL.REJECT' | translate"
+             (buttonClick)="rejectBundleReview.emit()"></bc-button>
+</vo-lib-inline-spinner>

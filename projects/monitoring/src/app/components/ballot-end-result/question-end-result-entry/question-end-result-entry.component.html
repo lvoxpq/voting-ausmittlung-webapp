@@ -1,0 +1,18 @@
+<p class="title">{{title | translate}}</p>
+
+<div class="vote-count-container">
+  <div>
+    <p>{{ labelLeft }}</p>
+    <p class="vote-count">{{voteCountLeft | number}}</p>
+  </div>
+
+  <div>
+    <p>{{ labelRight }}</p>
+    <p class="vote-count">{{voteCountRight | number}}</p>
+  </div>
+
+  <div *ngIf="hasUnspecifiedVoteCount">
+    <p>{{ 'VOTE.BALLOT.ANSWER.UNSPECIFIED_SHORT' | translate }}</p>
+    <p class="vote-count">{{voteCountUnspecified | number}}</p>
+  </div>
+</div>

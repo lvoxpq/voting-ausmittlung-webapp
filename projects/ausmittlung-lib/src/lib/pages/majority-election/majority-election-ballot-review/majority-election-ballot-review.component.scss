@@ -1,0 +1,11 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+.content {
+  > *:not(:first-child) {
+    margin-top: 2rem;
+  }
+}
+
+.content-box {
+  max-width: 50rem;
+}

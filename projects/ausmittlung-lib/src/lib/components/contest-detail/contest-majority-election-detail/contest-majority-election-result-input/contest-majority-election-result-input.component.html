@@ -1,0 +1,81 @@
+<div [class.result-container]="showElectionHeader">
+  <vo-ausm-majority-election-secondary-info
+    *ngIf="showElectionHeader"
+    [centeredTitle]="true"
+    [election]="result.election"
+  ></vo-ausm-majority-election-secondary-info>
+  <div class="p-3">
+    <div class="candidate-results" #candidateResultsContainer [class.large-ml]="showElectionHeader">
+      <bc-label [label]="'CANDIDATE.NR' | translate"></bc-label>
+      <bc-label [label]="'CANDIDATE.CANDIDACY' | translate"></bc-label>
+      <bc-label [label]="'MAJORITY_ELECTION.PARTY' | translate"></bc-label>
+      <bc-label *ngIf="eVotingValue" [label]="'ELECTION.VOTE_COUNT_CONVENTIONAL' | translate"></bc-label>
+      <bc-label *ngIf="eVotingValue" [label]="'ELECTION.VOTE_COUNT_E_VOTING' | translate"></bc-label>
+      <bc-label [label]="'ELECTION.VOTE_COUNT' | translate"></bc-label>
+      <ng-container *ngFor="let candidate of result.candidateResults">
+        <span class="candidate-number">{{ candidate.candidate.number }}</span>
+        <span>{{ candidate.candidate.politicalLastName }} {{ candidate.candidate.politicalFirstName }}</span>
+        <span>{{ candidate.candidate.party }}</span>
+        <bc-number
+          [disabled]="readonly"
+          [value]="candidate.conventionalVoteCount"
+          [min]="0"
+          [error]="candidate.conventionalVoteCount < 0"
+          (valueChange)="setConventionalVoteCount(candidate, $event); contentChanged.emit()"
+        ></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="candidate.eVotingVoteCount"></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="candidate.voteCount"></bc-number>
+      </ng-container>
+
+      <span translate class="candidate-candidacy">MAJORITY_ELECTION.INDIVIDUAL</span>
+      <span><!-- party --></span>
+      <bc-number
+        [disabled]="readonly"
+        [value]="result.conventionalSubTotal.individualVoteCount"
+        [min]="0"
+        [error]="
+          result.conventionalSubTotal.individualVoteCount !== undefined &&
+          result.conventionalSubTotal.individualVoteCount < 0
+        "
+        (valueChange)="setConventionalIndividualVoteCount($event); contentChanged.emit()"
+      ></bc-number>
+      <bc-number
+        *ngIf="eVotingValue"
+        [disabled]="true"
+        [value]="result.eVotingSubTotal.individualVoteCount"
+      ></bc-number>
+      <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.individualVoteCount"></bc-number>
+
+      <span translate class="candidate-candidacy">MAJORITY_ELECTION.EMPTY_VOTES</span>
+      <span><!-- party --></span>
+      <bc-number
+        [disabled]="readonly"
+        [value]="result.conventionalSubTotal.emptyVoteCount"
+        [min]="0"
+        [error]="
+          result.conventionalSubTotal.emptyVoteCount !== undefined && result.conventionalSubTotal.emptyVoteCount < 0
+        "
+        (valueChange)="setConventionalEmptyVoteCount($event); contentChanged.emit()"
+      ></bc-number>
+      <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.eVotingSubTotal.emptyVoteCount"></bc-number>
+      <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.emptyVoteCount"></bc-number>
+
+      <ng-container *ngIf="showInvalidVotes">
+        <span translate class="candidate-candidacy">MAJORITY_ELECTION.INVALID_VOTES</span>
+        <span><!-- party --></span>
+        <bc-number
+          [disabled]="readonly"
+          [value]="result.conventionalSubTotal.invalidVoteCount"
+          [min]="0"
+          [error]="
+            result.conventionalSubTotal.invalidVoteCount !== undefined &&
+            result.conventionalSubTotal.invalidVoteCount < 0
+          "
+          (valueChange)="setConventionalInvalidVoteCount($event); contentChanged.emit()"
+        ></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.eVotingSubTotal.invalidVoteCount"></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.invalidVoteCount"></bc-number>
+      </ng-container>
+    </div>
+  </div>
+</div>

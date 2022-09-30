@@ -1,0 +1,27 @@
+<div class="content">
+  <vo-ausm-ballot-count-input header="VOTE.BALLOT_CARD"
+                              [readonly]="readonly"
+                              [eVoting]="eVoting"
+                              [totalCountOfVoters]="totalCountOfVoters"
+                              [participationLabel]="'VOTE.VOTER_PARTICIPATION'"
+                              [countOfVoters]="ballotResult.countOfVoters"
+                              (countOfVotersChange)="countOfVotersChange.emit()"></vo-ausm-ballot-count-input>
+  <div class="vote-result-ballot-detail">
+    <h4 class="mb-2" translate>VOTE.BALLOT.TITLE</h4>
+    <div *ngFor="let questionResult of ballotResult.questionResults"
+         class="mb-4">
+      <vo-ausm-contest-vote-detail-question [eVoting]="eVoting"
+                                            [readonly]="readonly"
+                                            [ballotNumberOfQuestions]="ballotResult.questionResults.length"
+                                            [result]="questionResult"></vo-ausm-contest-vote-detail-question>
+    </div>
+    <div *ngFor="let tieBreakQuestionResult of ballotResult.tieBreakQuestionResults"
+         class="mb-4">
+      <vo-ausm-contest-vote-detail-question [eVoting]="eVoting"
+                                            [readonly]="readonly"
+                                            [isTieBreakQuestion]="true"
+                                            [ballotNumberOfQuestions]="ballotResult.questionResults.length"
+                                            [result]="tieBreakQuestionResult"></vo-ausm-contest-vote-detail-question>
+    </div>
+  </div>
+</div>

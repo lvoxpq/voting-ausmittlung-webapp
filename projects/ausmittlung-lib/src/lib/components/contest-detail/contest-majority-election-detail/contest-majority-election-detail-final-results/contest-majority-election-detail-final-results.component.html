@@ -1,0 +1,29 @@
+<div class="content">
+  <vo-ausm-ballot-count-input header="ELECTION.BALLOT_CARD"
+                              [eVoting]="eVoting"
+                              [readonly]="readonly"
+                              [totalCountOfVoters]="resultDetail.totalCountOfVoters"
+                              [participationLabel]="'ELECTION.VOTER_PARTICIPATION'"
+                              [countOfVoters]="resultDetail.countOfVoters"
+                              (countOfVotersChange)="countOfVotersChange.emit()"></vo-ausm-ballot-count-input>
+  <vo-ausm-contest-majority-election-result-input [result]="resultDetail"
+                                                  [eVoting]="eVoting"
+                                                  class="primary-result-input"
+                                                  [countOfAccountedBallots]="resultDetail.countOfVoters.conventionalAccountedBallots"
+                                                  [readonly]="readonly"
+                                                  [showInvalidVotes]="election.invalidVotes"
+                                                  (contentChanged)="candidateResultChange.emit()"></vo-ausm-contest-majority-election-result-input>
+</div>
+
+<div class="content">
+  <vo-ausm-contest-majority-election-result-input
+    *ngFor="let result of resultDetail.secondaryMajorityElectionResults"
+    class="secondary-result-input"
+    [showElectionHeader]="true"
+    [showInvalidVotes]="election.invalidVotes"
+    [eVoting]="eVoting"
+    [result]="result"
+    [countOfAccountedBallots]="resultDetail.countOfVoters.conventionalAccountedBallots"
+    [readonly]="readonly"
+    (contentChanged)="candidateResultChange.emit()"></vo-ausm-contest-majority-election-result-input>
+</div>

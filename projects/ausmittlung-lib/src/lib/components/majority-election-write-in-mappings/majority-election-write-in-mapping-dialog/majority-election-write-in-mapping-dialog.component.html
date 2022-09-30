@@ -1,0 +1,38 @@
+<vo-lib-dialog>
+  <h3 header translate>RESULT_IMPORT.WRITE_INS.TITLE</h3>
+
+  <div content>
+    <bc-spinner *ngIf="loading; else content"></bc-spinner>
+    <ng-template #content>
+      <mat-horizontal-stepper *ngIf="elections.length > 1"
+                              labelPosition="bottom"
+                              [linear]="false"
+                              [selectedIndex]="selectedElectionIndex"
+                              (selectionChange)="$event.previouslySelectedStep.interacted = false; selectedElectionChange($event.selectedIndex)">
+        <ng-template matStepperIcon="number"></ng-template>
+        <ng-template matStepperIcon="edit"></ng-template>
+        <mat-step *ngFor="let election of elections; let i = index"
+                  [editable]="!saving"
+                  [state]="i === selectedElectionIndex ? 'edit' : 'number'"
+                  [label]="election.title">
+        </mat-step>
+      </mat-horizontal-stepper>
+
+      <vo-ausm-majority-election-write-in-mapping
+        [canShowNextElection]="elections.length > 1 && selectedElectionIndex < elections.length - 1"
+        [readOnly]="saving"
+        [election]="selectedElection"
+        [invalidVotes]="hasInvalidVotes"
+        [writeInMappings]="mappings"
+        (writeInMappingsChange)="setMappings($event)"
+        (showNextElection)="selectedElectionChange(selectedElectionIndex + 1)"></vo-ausm-majority-election-write-in-mapping>
+    </ng-template>
+  </div>
+
+  <div footer class="mr-3">
+    <vo-lib-button-bar [saveLabel]="(selectedElectionIndex === elections.length - 1 ? 'RESULT_IMPORT.WRITE_INS.COMPLETE' : 'RESULT_IMPORT.WRITE_INS.NEXT_ELECTION') | translate"
+                       (save)="selectedElectionChange(selectedElectionIndex + 1)"
+                       [saving]="saving"
+                       (cancel)="close()"></vo-lib-button-bar>
+  </div>
+</vo-lib-dialog>

@@ -1,0 +1,24 @@
+<vo-lib-page [contentLoading]="loading">
+  <vo-lib-page-header header *ngIf="resultOverview">
+    <vo-ausm-breadcrumbs left [items]="[{name: 'MONITORING_COCKPIT.TITLE'}]"></vo-ausm-breadcrumbs>
+    <vo-ausm-contest-header center [contest]="resultOverview?.contest"></vo-ausm-contest-header>
+    <div right>
+      <bc-button *ngIf="resultOverview && !resultOverview.contest.locked"
+                 variant="tertiary"
+                 [label]="'CONTEST.DETAIL.EXPORT_COCKPIT' | translate"
+                 (buttonClick)="exportCockpit()"></bc-button>
+      <bc-button class="ml-2"
+                 variant="tertiary"
+                 [label]="'CONTEST.DETAIL.EXPORT' | translate"
+                 (buttonClick)="export()"></bc-button>
+      <bc-button *ngIf="resultOverview && !resultOverview.contest.locked && resultOverview.contest.eVoting"
+                 class="ml-2"
+                 variant="tertiary"
+                 [label]="'CONTEST.DETAIL.IMPORT' | translate"
+                 (buttonClick)="import()"></bc-button>
+    </div>
+  </vo-lib-page-header>
+
+  <app-monitoring-cockpit-grid *ngIf="resultOverview"
+                               [resultOverview]="resultOverview"></app-monitoring-cockpit-grid>
+</vo-lib-page>

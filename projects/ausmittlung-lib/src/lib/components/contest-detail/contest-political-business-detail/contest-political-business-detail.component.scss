@@ -1,0 +1,37 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+::ng-deep.header-content {
+  width: 100%;
+}
+
+::ng-deep.mat-expansion-panel-header {
+  font-size: 1rem;
+}
+
+div[header] {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+
+  h4 {
+    margin-bottom: 0;
+
+    &.not-responsible {
+      font-style: italic;
+      color: $color-grey-4;
+    }
+  }
+
+  > :first-child {
+    flex-grow: 1;
+  }
+
+  .header-icon {
+    width: 2rem;
+  }
+}
+
+vo-ausm-result-state-box {
+  min-width: 10rem;
+}

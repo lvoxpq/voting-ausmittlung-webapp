@@ -1,0 +1,9 @@
+$political-business-gutter: 1.8rem;
+
+.political-business-list > * {
+  margin-top: $political-business-gutter;
+
+  &:last-child {
+    margin-bottom: $political-business-gutter;
+  }
+}

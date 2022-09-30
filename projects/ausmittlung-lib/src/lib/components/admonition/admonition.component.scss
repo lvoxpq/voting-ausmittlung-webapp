@@ -1,0 +1,51 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use 'sass:list';
+
+$classes: (
+  success: (
+    $color-success,
+    $color-success-25,
+  ),
+  info: (
+    $color-info,
+    $color-info-25,
+  ),
+  warning: (
+    $color-warning,
+    $color-warning-25,
+  ),
+  error: (
+    $color-error,
+    $color-error-25,
+  ),
+);
+
+:host {
+  display: block;
+}
+
+.admonition {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 4px;
+
+  .title {
+    margin-left: 0.25rem;
+    font-weight: normal;
+  }
+
+  .message {
+    margin-left: 0.25rem;
+  }
+
+  @each $class, $colors in $classes {
+    $color: list.nth($colors, 1);
+
+    &.#{$class} {
+      border: 1px solid $color;
+      background-color: list.nth($colors, 2);
+      color: $color;
+    }
+  }
+}

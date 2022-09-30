@@ -1,0 +1,24 @@
+<vo-lib-dialog>
+  <h3 header translate>END_RESULT.ELECTION.LOT_DECISION.OPEN</h3>
+
+  <div content>
+    <ng-container *ngIf="!loading && availableLotDecisions; else spinner">
+      <app-majority-election-lot-decision-list [lotDecisions]="availableLotDecisions"></app-majority-election-lot-decision-list>
+
+      <ng-container *ngFor="let secondaryLotDecisions of availableLotDecisions.secondaryLotDecisions">
+        <app-majority-election-lot-decision-list [lotDecisions]="secondaryLotDecisions"
+                                                 [showTitle]="true"></app-majority-election-lot-decision-list>
+      </ng-container>
+    </ng-container>
+    <ng-template #spinner>
+      <bc-spinner></bc-spinner>
+    </ng-template>
+  </div>
+
+  <div footer>
+    <vo-lib-button-bar (save)="save()"
+                       [sticky]="false"
+                       [cancelLabel]="'APP.CLOSE' | translate"
+                       (cancel)="close()"></vo-lib-button-bar>
+  </div>
+</vo-lib-dialog>

@@ -1,0 +1,23 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  @extend .mb-4;
+
+  display: block;
+}
+
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+}
+
+p {
+  margin-bottom: 0;
+}
+
+.question-results {
+  display: flex;
+
+  > :not(:first-child) {
+    @extend .ml-5;
+  }
+}

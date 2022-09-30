@@ -1,0 +1,42 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+.file-container {
+  min-height: 15rem;
+  border: 2px dashed $color-grey-6;
+  border-radius: 10px;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.dragging {
+    border-color: $color-grey-3;
+  }
+
+  div {
+    text-align: center;
+  }
+
+  input[type='file'] {
+    display: none;
+  }
+}
+
+.inline-action {
+  align-self: center;
+  margin-left: -1rem;
+
+  bc-icon {
+    color: $color-primary;
+
+    &:hover {
+      cursor: pointer;
+      color: $color-primary-50;
+    }
+  }
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

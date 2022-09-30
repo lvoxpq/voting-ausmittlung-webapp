@@ -1,0 +1,10 @@
+<vo-ausm-result-export-dialog [loading]="loading"
+                              [resultExportTemplates]="resultExportTemplates"
+                              [contestId]="contestId"
+                              [politicalBusinesses]="politicalBusinesses"
+                              [politicalBusinessUnions]="politicalBusinessUnions || []"
+                              (selectedPoliticalBusinessChange)="selectedPoliticalBusinessChanged($event)"
+                              (selectedPoliticalBusinessUnionChange)="selectedPoliticalBusinessUnionChanged($event)"
+                              (selectedTabChange)="selectedTabChanged($event)"
+                              (done)="done()">
+</vo-ausm-result-export-dialog>

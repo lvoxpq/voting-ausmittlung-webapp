@@ -1,0 +1,16 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.footer {
+  display: flex;
+  align-items: flex-end;
+
+  @extend .mt-2;
+
+  > :first-child {
+    flex-grow: 1;
+  }
+
+  .buttons :not(:first-child) {
+    @extend .ml-2;
+  }
+}

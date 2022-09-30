@@ -1,0 +1,64 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+.candidate-list {
+  display: grid;
+  grid-gap: 0.4rem 0.8rem;
+  grid-template-columns: repeat(3, auto) minmax(6.5rem, auto) repeat(3, auto) minmax(6.5rem, auto);
+  align-items: center;
+
+  .title {
+    align-self: start;
+  }
+
+  .replacement-candidate-row {
+    grid-column: 5 / span 4;
+  }
+
+  .empty-vote {
+    color: $color-grey-4;
+    grid-column: 2 / span 2;
+
+    &.replacement-candidate {
+      grid-column: 6 / span 2;
+    }
+  }
+
+  .candidate-toggle {
+    cursor: not-allowed;
+
+    &.clickable {
+      cursor: pointer;
+    }
+
+    &.removed-from-list {
+      text-decoration: line-through;
+      color: $color-grey-4;
+    }
+  }
+
+  .checkmarks {
+    letter-spacing: -0.3rem; // overlay the unicode checkmarks so they look like one double checkmark icon
+  }
+
+  bc-checkbox {
+    &:not(.clickable) {
+      cursor: not-allowed;
+
+      ::ng-deep label,
+      ::ng-deep label::before,
+      ::ng-deep label::after {
+        cursor: not-allowed !important;
+      }
+    }
+
+    .clickable {
+      cursor: pointer;
+
+      ::ng-deep label,
+      ::ng-deep label::before,
+      ::ng-deep label::after {
+        cursor: pointer !important;
+      }
+    }
+  }
+}

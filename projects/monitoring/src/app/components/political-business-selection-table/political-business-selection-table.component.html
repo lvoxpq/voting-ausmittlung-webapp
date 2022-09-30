@@ -1,0 +1,40 @@
+<bc-advanced-table [dataSource]="politicalBusinesses">
+  <ng-container bcColumnDef="select">
+    <th bc-header-cell *bcHeaderCellDef>
+      <bc-checkbox
+        class="ml-2 mb-0"
+        (checkedChange)="toggleAllRows($event)"
+        [checked]="selection.hasValue() && isAllSelected"
+        [indeterminate]="selection.hasValue() && !isAllSelected"
+      >
+      </bc-checkbox>
+    </th>
+    <td bc-cell *bcCellDef="let element">
+      <bc-checkbox
+        class="ml-2"
+        (checkedChange)="toggleRowWithValue(element, $event)"
+        [checked]="selection.isSelected(element)"
+      >
+      </bc-checkbox>
+    </td>
+  </ng-container>
+  <ng-container bcColumnDef="politicalBusinessNumber">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'POLITICAL_BUSINESS.NR' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">{{ element.politicalBusinessNumber }}</td>
+  </ng-container>
+  <ng-container bcColumnDef="shortDescription">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'POLITICAL_BUSINESS.SHORT_DESCRIPTION' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">{{ element.shortDescription }}</td>
+  </ng-container>
+  <ng-container bcColumnDef="doiType">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'DOMAIN_OF_INFLUENCE.TITLE' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">{{ 'DOMAIN_OF_INFLUENCE_TYPES.' + element.domainOfInfluence.type | translate }}</td>
+  </ng-container>
+  <ng-container bcColumnDef="politicalBusinessType">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'POLITICAL_BUSINESS.TYPE.TITLE' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">{{ 'POLITICAL_BUSINESS.TYPE.' + element.businessType | translate }}</td>
+  </ng-container>
+
+  <tr bc-header-row *bcHeaderRowDef="columns"></tr>
+  <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"></tr>
+</bc-advanced-table>

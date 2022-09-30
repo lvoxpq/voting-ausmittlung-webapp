@@ -1,0 +1,56 @@
+<h4 class="mb-0" translate>ELECTION.REVIEW_BALLOT_DETAIL.SAMPLES.TITLE</h4>
+<p class="subtitle">{{ labelSamplesDescription | translate }}</p>
+<div class="stepper">
+  <mat-horizontal-stepper labelPosition="bottom"
+                          [disableRipple]="disabled"
+                          (selectionChange)="selectionChanged($event.selectedIndex)">
+    <ng-template matStepperIcon="number" let-index="index">
+      <ng-container *ngTemplateOutlet="stepperHeader; context: {$implicit: index}"></ng-container>
+    </ng-template>
+    <ng-template matStepperIcon="edit" let-index="index">
+      <ng-container *ngTemplateOutlet="stepperHeader; context: {$implicit: index}"></ng-container>
+    </ng-template>
+    <mat-step *ngFor="let reviewBallot of reviewBallotsValue"
+              [hasError]="reviewBallot.state === reviewStates.FIXED"
+              [completed]="reviewBallot.state !== reviewStates.NOT_REVIEWED"
+              [editable]="true">
+      <ng-template matStepLabel>
+        <span [ngClass]="'ballot-state-' + reviewBallot.state">{{reviewBallot.ballotNumber}}</span>
+      </ng-template>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>
+<div class="ballot-title-bar">
+  <h2 *ngIf="ballotTitle" class="mb-0">{{ballotTitle}}</h2>
+  <div class="spacer"></div>
+  <ng-container *ngIf="correctionOngoing; else reviewButtons">
+    <bc-button [disabled]="disabled"
+               [label]="'ELECTION.REVIEW_BALLOT_DETAIL.FIX_CANCEL' | translate"
+               (buttonClick)="cancelCorrection.emit()">
+    </bc-button>
+    <bc-button variant="primary"
+               [disabled]="disabled"
+               [label]="'ELECTION.REVIEW_BALLOT_DETAIL.FIX_DONE' | translate"
+               (buttonClick)="submitCorrection.emit()">
+    </bc-button>
+  </ng-container>
+  <ng-template #reviewButtons>
+    <bc-button [disabled]="disabled"
+               [label]="'ELECTION.REVIEW_BALLOT_DETAIL.FIX' | translate"
+               (buttonClick)="startCorrection.emit()">
+    </bc-button>
+    <bc-button variant="primary"
+               [disabled]="disabled"
+               [label]="'ELECTION.REVIEW_BALLOT_DETAIL.OK' | translate"
+               (buttonClick)="setStateAndNavigate(reviewStates.OK)">
+    </bc-button>
+  </ng-template>
+</div>
+
+<ng-template #stepperHeader let-index>
+  <ng-container [ngSwitch]="reviewBallotsValue[index].state">
+    <mat-icon class="ballot-state-ok" *ngSwitchCase="reviewStates.OK">done</mat-icon>
+    <mat-icon class="ballot-state-fixed" *ngSwitchCase="reviewStates.FIXED">warning</mat-icon>
+    <mat-icon class="ballot-state-notReviewed" *ngSwitchCase="reviewStates.NOT_REVIEWED">trip_origin</mat-icon>
+  </ng-container>
+</ng-template>

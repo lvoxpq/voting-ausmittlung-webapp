@@ -1,0 +1,9 @@
+<div class="header" (click)="expanded = !expanded;">
+  <div class="header-content">
+    <bc-icon [icon]="expanded ? 'angle-up' : 'angle-down'"></bc-icon>
+    <p class="px-2 m-0">{{ header }}</p>
+  </div>
+</div>
+<div *ngIf="expanded">
+  <ng-content></ng-content>
+</div>

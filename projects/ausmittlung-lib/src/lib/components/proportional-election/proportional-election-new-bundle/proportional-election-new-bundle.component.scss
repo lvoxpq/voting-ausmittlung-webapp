@@ -1,0 +1,15 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+.align-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.field-number {
+  max-width: 8rem;
+}
+
+.form-container {
+  display: flex;
+  align-items: flex-start;
+}

@@ -1,0 +1,73 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+$color-left: $color-info;
+$color-right: $color-error;
+
+.results-graph {
+  display: flex;
+  height: 100%;
+  min-width: 12.5rem;
+
+  .results-graph-container {
+    display: flex;
+
+    .results-graph-numbers {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .progress-container {
+      text-align: center;
+      width: 3.1rem;
+      display: flex;
+      flex-direction: column;
+
+      span {
+        text-overflow: ellipsis;
+      }
+
+      .progress {
+        margin-top: 0.3rem;
+        flex-grow: 1;
+
+        div {
+          background-color: $color-white;
+        }
+      }
+    }
+
+    &.left {
+      .results-graph-numbers {
+        text-align: right;
+      }
+
+      .progress-container {
+        @extend .ml-2;
+        @extend .mr-1;
+
+        .progress {
+          background-color: $color-left;
+        }
+      }
+    }
+
+    &.right .progress-container {
+      @extend .ml-1;
+      @extend .mr-2;
+
+      .progress {
+        background-color: $color-right;
+      }
+    }
+
+    &.looses {
+      color: $color-grey-3;
+
+      .progress-container .progress {
+        background-color: $color-grey-5;
+      }
+    }
+  }
+}

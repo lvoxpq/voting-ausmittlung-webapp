@@ -1,0 +1,29 @@
+<vo-ausm-info-panel>
+  <vo-ausm-info-panel-entry label="CONTEST.DETAIL.INFO.CONTEST">
+    {{'CONTEST.DETAIL.DATE_TITLE' | translate:{date: (resultList.contest.date | date: 'longDate') || ''} }}
+  </vo-ausm-info-panel-entry>
+  <vo-ausm-info-panel-entry label="CONTEST.DETAIL.INFO.COUNTING_CIRCLE">
+    {{resultList.countingCircle.name}}
+  </vo-ausm-info-panel-entry>
+  <vo-ausm-info-panel-entry label="CONTEST.DETAIL.INFO.TOTAL_COUNT_OF_VOTERS">
+    <span *ngIf="resultList.details.countOfVotersInformation.totalCountOfVoters; else noValue">
+      {{resultList.details.countOfVotersInformation.totalCountOfVoters | number: '1.0-0'}}
+    </span>
+  </vo-ausm-info-panel-entry>
+  <vo-ausm-info-panel-entry label="APP.STATE">
+    <div class="state-container">
+      <vo-ausm-result-state-box [state]="resultList.state"></vo-ausm-result-state-box>
+      <vo-lib-inline-spinner *ngIf="showStateActions" [loading]="isActionExecuting" position="right">
+        <bc-button
+          [class.disabled]="!canSetAllToAuditedTentatively || isActionExecuting"
+          variant="tertiary"
+          [label]="'CONTEST.DETAIL.STATE_ACTION.ALL_TO_AUDIT_TENTATIVELY' | translate"
+          (buttonClick)="executeStateUpdate(countingCircleResultStates.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY)">
+        </bc-button>
+      </vo-lib-inline-spinner>
+    </div>
+  </vo-ausm-info-panel-entry>
+</vo-ausm-info-panel>
+<ng-template #noValue>
+  <span>-</span>
+</ng-template>

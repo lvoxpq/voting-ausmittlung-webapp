@@ -1,0 +1,23 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.content {
+  @extend .mb-3;
+
+  display: flex;
+  justify-content: space-between;
+
+  &.results {
+    display: block;
+  }
+
+  vo-ausm-ballot-count-input {
+    @extend .mr-3;
+  }
+
+  .detail {
+    @extend .mx-4;
+
+    margin-top: 2rem;
+    min-width: 32rem;
+  }
+}

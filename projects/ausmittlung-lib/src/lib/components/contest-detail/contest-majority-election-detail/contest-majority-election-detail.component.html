@@ -1,0 +1,49 @@
+<ng-container *ngIf="!loading && resultDetail; else spinner">
+  <div *ngIf="!resultDetail.entry || selectResultEntry; else content">
+    <vo-ausm-contest-majority-election-detail-result-entry [electionResultId]="resultDetail.id"
+                                                           [election]="resultDetail.election"
+                                                           [(resultEntry)]="resultDetail.entry"
+                                                           [(resultEntryParams)]="resultDetail.entryParams"
+                                                           (done)="selectResultEntry = false; setFocus()"
+                                                           (resetResults)="resetResults()"
+                                                           [readonly]="contestLocked || contentReadonly || !isErfassungElectionAdmin">
+    </vo-ausm-contest-majority-election-detail-result-entry>
+  </div>
+
+  <ng-template #content>
+    <vo-ausm-contest-majority-election-detail-detailed *ngIf="resultDetail.entry === entryVariants.MAJORITY_ELECTION_RESULT_ENTRY_DETAILED || resultReadonly; else finalResultsContent"
+                                                       [resultDetail]="resultDetail"
+                                                       [readonly]="resultReadonly"
+                                                       [eVoting]="eVoting && !resultDetail.hasUnmappedWriteIns"
+                                                       [showDetailsLink]="resultDetail.entry === entryVariants.MAJORITY_ELECTION_RESULT_ENTRY_DETAILED"
+                                                       (countOfVotersChange)="hasEdits = true; updateCountOfVotersValid()"
+                                                       [isErfassungElectionAdmin]="isErfassungElectionAdmin"
+                                                       [isMonitoringElectionAdmin]="isMonitoringElectionAdmin"
+    ></vo-ausm-contest-majority-election-detail-detailed>
+
+    <ng-template #finalResultsContent>
+      <vo-ausm-contest-majority-election-detail-final-results [readonly]="resultReadonly || !isErfassungElectionAdmin"
+                                                              [eVoting]="eVoting && !resultDetail.hasUnmappedWriteIns"
+                                                              [election]="resultDetail.election"
+                                                              (countOfVotersChange)="hasEdits = true; updateCountOfVotersValid()"
+                                                              (candidateResultChange)="hasEdits = true; updateCandidateResultsValid()"
+                                                              [resultDetail]="resultDetail"></vo-ausm-contest-majority-election-detail-final-results>
+    </ng-template>
+
+    <vo-ausm-contest-political-business-detail-footer *ngIf="!contestLocked && (!contentReadonly || isResponsibleMonitorAuthority)"
+                                                      [entryDescriptionDetail]="{name: ('MAJORITY_ELECTION.RESULT_ENTRY.SHORT.' + resultDetail.entry | translate)}"
+                                                      [canSelectResultEntry]="!resultDetail.election.enforceResultEntryForCountingCircles || resultDetail.election.resultEntry === entryVariants.MAJORITY_ELECTION_RESULT_ENTRY_DETAILED"
+                                                      (selectResultEntry)="selectResultEntry = true"
+                                                      (validateAndSave)="validateAndSave()"
+                                                      (stateUpdate)="stateUpdate($event)"
+                                                      [isResponsibleMonitorAuthority]="isResponsibleMonitorAuthority"
+                                                      [isActionExecuting]="isActionExecuting"
+                                                      [state]="result.state"
+                                                      [canValidateAndSave]="!contentReadonly && hasEdits && candidateResultsValid && countOfVotersValid"
+                                                      [canSubmit]="!contentReadonly && !hasEdits">
+    </vo-ausm-contest-political-business-detail-footer>
+  </ng-template>
+</ng-container>
+<ng-template #spinner>
+  <bc-spinner></bc-spinner>
+</ng-template>

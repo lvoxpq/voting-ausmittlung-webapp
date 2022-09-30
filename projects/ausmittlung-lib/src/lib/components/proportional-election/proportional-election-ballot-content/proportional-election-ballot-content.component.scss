@@ -1,0 +1,28 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  display: block;
+}
+
+.content {
+  display: flex;
+
+  > :not(.spacer) {
+    @extend .px-3;
+  }
+
+  .ballot-stats {
+    flex-shrink: 0;
+    width: 15rem;
+  }
+
+  vo-ausm-proportional-election-ballot-candidate-modify {
+    @extend .mb-3;
+
+    display: block;
+  }
+
+  vo-ausm-proportional-election-ballot-candidates {
+    flex-grow: 1;
+  }
+}

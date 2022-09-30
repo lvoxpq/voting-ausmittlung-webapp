@@ -1,0 +1,17 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.content {
+  > *:not(:first-child) {
+    margin-top: 2rem;
+  }
+}
+
+.content-box {
+  max-width: 85rem;
+}
+
+.clickable-icon {
+  @extend .mb-3, .mr-2;
+
+  margin-left: auto;
+}

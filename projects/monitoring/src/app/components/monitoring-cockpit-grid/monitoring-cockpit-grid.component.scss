@@ -1,0 +1,57 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.tabs-wrapper {
+  @extend .mb-3;
+}
+
+.cockpit-grid {
+  display: grid;
+  grid-gap: 8px;
+  align-items: center;
+}
+
+.filter {
+  @extend .p-2;
+
+  background-color: $color-grey-7;
+  border: 1px solid $color-grey-6;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+
+  &.large {
+    font-size: 1.1rem;
+  }
+
+  &.active {
+    background-color: $color-primary;
+    color: $color-white;
+  }
+}
+
+.counting-circle-filter {
+  min-width: 13rem;
+}
+
+.skip-col-1 {
+  grid-column-start: 2;
+}
+
+.state-colorbox {
+  border-radius: 4px;
+  width: 1.7rem;
+  height: 1.7rem;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.tabs-disabled {
+  cursor: not-allowed;
+
+  bc-tab-bar {
+    pointer-events: none;
+  }
+}

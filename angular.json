@@ -1,0 +1,300 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "monitoring": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/monitoring",
+      "sourceRoot": "projects/monitoring/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "projects/monitoring/dist",
+            "index": "projects/monitoring/src/index.html",
+            "main": "projects/monitoring/src/main.ts",
+            "polyfills": "projects/monitoring/src/polyfills.ts",
+            "tsConfig": "projects/monitoring/tsconfig.app.json",
+            "assets": [
+              "projects/monitoring/src/favicon.ico",
+              "projects/monitoring/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@abraxas/base-components/src/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@abraxas/voting-lib/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/ausmittlung-lib/assets",
+                "output": "assets"
+              }
+            ],
+            "styles": [
+              "projects/monitoring/src/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/"
+              ]
+            },
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "aot": true,
+            "optimization": false,
+            "namedChunks": true
+          },
+          "configurations": {
+            "local-sta": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/monitoring/src/environments/environment.ts",
+                  "with": "projects/monitoring/src/environments/environment.local-sta.ts"
+                }
+              ]
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/monitoring/src/environments/environment.ts",
+                  "with": "projects/monitoring/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false
+                }
+              },
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "5mb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "monitoring:build",
+            "hmr": true
+          },
+          "configurations": {
+            "local-sta": {
+              "browserTarget": "monitoring:build:local-sta"
+            },
+            "production": {
+              "browserTarget": "monitoring:build:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/monitoring/src/**/*.ts", "projects/monitoring/src/**/*.component.html"]
+          }
+        }
+      }
+    },
+    "erfassung": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/erfassung",
+      "sourceRoot": "projects/erfassung/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "projects/erfassung/dist",
+            "index": "projects/erfassung/src/index.html",
+            "main": "projects/erfassung/src/main.ts",
+            "polyfills": "projects/erfassung/src/polyfills.ts",
+            "tsConfig": "projects/erfassung/tsconfig.app.json",
+            "assets": [
+              "projects/erfassung/src/favicon.ico",
+              "projects/erfassung/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@abraxas/base-components/src/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@abraxas/voting-lib/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/ausmittlung-lib/assets",
+                "output": "assets"
+              }
+            ],
+            "styles": [
+              "projects/erfassung/src/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/"
+              ]
+            },
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "aot": true,
+            "optimization": false,
+            "namedChunks": true
+          },
+          "configurations": {
+            "local-sta": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/erfassung/src/environments/environment.ts",
+                  "with": "projects/erfassung/src/environments/environment.local-sta.ts"
+                }
+              ]
+            },
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/erfassung/src/environments/environment.ts",
+                  "with": "projects/erfassung/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false
+                }
+              },
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "7mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "erfassung:build",
+            "hmr": true
+          },
+          "configurations": {
+            "local-sta": {
+              "browserTarget": "erfassung:build:local-sta"
+            },
+            "production": {
+              "browserTarget": "erfassung:build:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/erfassung/src/**/*.ts", "projects/erfassung/src/**/*.component.html"]
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "erfassung:build"
+          }
+        }
+      }
+    },
+    "ausmittlung-lib": {
+      "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/ausmittlung-lib",
+      "sourceRoot": "projects/ausmittlung-lib/src",
+      "prefix": "vo-ausm",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ausmittlung-lib/tsconfig.lib.json",
+            "project": "projects/ausmittlung-lib/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ausmittlung-lib/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/ausmittlung-lib/src/**/*.ts", "projects/ausmittlung-lib/src/**/*.component.html"]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "erfassung"
+}

@@ -1,0 +1,17 @@
+/*!
+ * (c) Copyright 2022 by Abraxas Informatik AG
+ * For license information see LICENSE file
+ */
+
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ProportionalElectionResult } from '../../../models';
+
+@Component({
+  selector: 'vo-ausm-proportional-election-info',
+  templateUrl: './proportional-election-info.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ProportionalElectionInfoComponent {
+  @Input()
+  public electionResult!: ProportionalElectionResult;
+}

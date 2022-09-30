@@ -1,0 +1,14 @@
+<vo-lib-dialog>
+  <h3 header translate>RESULT_IMPORT.TITLE</h3>
+
+  <app-import-file-select content (fileChange)="file = $event"></app-import-file-select>
+
+  <div footer class="mr-3">
+    <vo-lib-button-bar footer
+                       [saveLabel]="'RESULT_IMPORT.IMPORT' | translate"
+                       (save)="import()"
+                       [canSave]="!!file"
+                       [saving]="importing"
+                       (cancel)="close()"></vo-lib-button-bar>
+  </div>
+</vo-lib-dialog>

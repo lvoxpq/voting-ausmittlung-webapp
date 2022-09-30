@@ -1,0 +1,77 @@
+<div *ngIf="isSecondaryElection" class="py-2">
+  <vo-ausm-majority-election-secondary-info [election]="ballot.election"> </vo-ausm-majority-election-secondary-info>
+</div>
+<div class="content">
+  <div class="ballot-stats">
+    <div class="candidate-modify" *ngIf="!readonly">
+      <div>
+        <bc-text
+          #toggleCandidateInput
+          [focusOnLoad]="!isSecondaryElection"
+          [label]="
+            (isSecondaryElection
+              ? 'ELECTION.BALLOT_DETAIL.TOGGLE_CANDIDATE'
+              : 'ELECTION.BALLOT_DETAIL.TOGGLE_CANDIDATE_SHORTCUT'
+            ) | translate
+          "
+          [disabled]="readonly || disabled"
+          [(ngModel)]="toggleCandidateValue"
+          [hint]="'ELECTION.BALLOT_DETAIL.EDIT_CANDIDATE_HINT' | translate"
+          (ngModelChange)="tryToggleCandidate($event)"
+        ></bc-text>
+      </div>
+    </div>
+    <bc-number
+      *ngIf="showInvalidVotes"
+      [label]="'MAJORITY_ELECTION.INVALID_VOTES' | translate"
+      [min]="0"
+      [max]="ballot.election.numberOfMandates"
+      [required]="true"
+      [allowUndefined]="false"
+      [readonly]="readonly"
+      [disabled]="disabled"
+      [error]="ballot.invalidVoteCount < 0 || ballot.invalidVoteCount > ballot.election.numberOfMandates"
+      [value]="ballot.invalidVoteCount"
+      (valueChange)="ballot.invalidVoteCount = +$event; contentChanged.emit(); updateEmptyVoteCount()"
+    ></bc-number>
+    <bc-number
+      [label]="'MAJORITY_ELECTION.INDIVIDUAL' | translate"
+      [min]="0"
+      [max]="ballot.election.numberOfMandates"
+      [required]="true"
+      [allowUndefined]="false"
+      [readonly]="readonly"
+      [disabled]="disabled"
+      [error]="ballot.individualVoteCount < 0 || ballot.individualVoteCount > ballot.election.numberOfMandates"
+      [value]="ballot.individualVoteCount"
+      (valueChange)="ballot.individualVoteCount = +$event; contentChanged.emit(); updateEmptyVoteCount()"
+      (keydown.enter)="emptyVoteFormfield.readonly ? contentCompleted.emit($event) : undefined"
+    ></bc-number>
+    <bc-number
+      #emptyVoteFormfield
+      [label]="'ELECTION.BALLOT_DETAIL.EMPTY' | translate"
+      [min]="0"
+      [max]="ballot.election.numberOfMandates - 1"
+      [required]="true"
+      [allowUndefined]="false"
+      [readonly]="readonly || automaticEmptyVoteCounting"
+      [disabled]="disabled"
+      [error]="ballot.computedEmptyVoteCount !== ballot.emptyVoteCount || ballot.emptyVoteCount < 0"
+      [value]="ballot.emptyVoteCount"
+      (valueChange)="updateManualEmptyVoteCount(+$event)"
+      [tabIndex]="readonly || automaticEmptyVoteCounting ? -1 : 0"
+      (keydown.enter)="contentCompleted.emit($event)"
+    ></bc-number>
+  </div>
+  <div class="spacer"></div>
+  <div>
+    <vo-ausm-majority-election-ballot-candidates
+      [readonly]="disabled || readonly"
+      [candidates]="ballot.candidates"
+      [hasEmptyVotes]="ballot.computedEmptyVoteCount > 0"
+      (toggleCandidate)="toggleCandidate($event)"
+    >
+    </vo-ausm-majority-election-ballot-candidates>
+  </div>
+  <div class="spacer"></div>
+</div>

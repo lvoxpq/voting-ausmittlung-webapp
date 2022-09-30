@@ -1,0 +1,34 @@
+<app-end-result-page [loading]="loading"
+                     [contest]="endResult?.contest"
+                     [domainOfInfluenceDetails]="endResult?.domainOfInfluenceDetails"
+                     [domainOfInfluenceType]="endResult?.vote?.domainOfInfluence?.type"
+                     [swissAbroadHaveVotingRights]="endResult?.vote.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE"
+                     (export)="export()">
+  <ng-container *ngIf="endResult">
+    <vo-ausm-info-panel>
+      <vo-ausm-info-panel-entry label="END_RESULT.POLITICAL_BUSINESS">
+        {{endResult.vote.title}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.COUNT_OF_VOTERS">
+        {{endResult.domainOfInfluenceDetails?.countOfVotersInformation.totalCountOfVoters | number}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.COUNTING_DONE">
+        {{'END_RESULT.COUNTING_DONE_OF' | translate: endResult}}
+      </vo-ausm-info-panel-entry>
+    </vo-ausm-info-panel>
+    <div class="align-right">
+      <vo-lib-inline-spinner [loading]="finalizing"
+                             position="right">
+        <app-end-result-type-selector [finalized]="endResult.finalized"
+                                      (finalizedChange)="setFinalized($event)"
+                                      [disabled]="!endResult.allCountingCirclesDone || endResult.contest.locked || finalizing"></app-end-result-type-selector>
+      </vo-lib-inline-spinner>
+    </div>
+    <div *ngFor="let ballotEndResult of endResult.ballotEndResults">
+      <app-ballot-end-result [endResult]="ballotEndResult"
+                             [eVoting]="endResult.contest.eVoting"
+                             [voteResultAlgorithm]="endResult.vote.resultAlgorithm">
+      </app-ballot-end-result>
+    </div>
+  </ng-container>
+</app-end-result-page>

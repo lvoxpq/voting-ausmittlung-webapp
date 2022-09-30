@@ -1,0 +1,35 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  display: block;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+
+  .ballot-stats {
+    flex-shrink: 0;
+    width: 15rem;
+
+    .candidate-modify {
+      @extend .mt-0;
+
+      bc-text {
+        width: 100%;
+      }
+    }
+
+    > *:not(:first-child) {
+      @extend .mt-2;
+    }
+  }
+
+  > :not(.spacer) {
+    @extend .px-3;
+  }
+
+  vo-ausm-majority-election-ballot-candidates {
+    flex-grow: 1;
+  }
+}

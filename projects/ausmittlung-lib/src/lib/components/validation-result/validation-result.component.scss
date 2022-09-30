@@ -1,0 +1,29 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  display: block;
+}
+
+p {
+  @extend .my-0;
+
+  display: flex;
+  align-items: center;
+
+  bc-icon {
+    color: $color-success;
+
+    &.invalid {
+      color: $color-error;
+
+      &.optional {
+        color: $color-warning;
+      }
+    }
+
+    &.optional:not(.invalid) {
+      visibility: hidden;
+    }
+  }
+}

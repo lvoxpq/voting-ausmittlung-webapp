@@ -1,0 +1,69 @@
+<vo-lib-dialog>
+  <h3 header translate>END_RESULT.ELECTION.LOT_DECISION.OPEN</h3>
+
+  <div content>
+    <mat-horizontal-stepper #stepper
+                            labelPosition="bottom"
+                            (selectionChange)="selectionChanged($event.selectedIndex)">
+      <ng-template matStepperIcon="number" let-index="index">
+        <ng-container *ngTemplateOutlet="stepperHeader; context: {$implicit: index}"></ng-container>
+      </ng-template>
+      <ng-template matStepperIcon="edit" let-index="index">
+        <ng-container *ngTemplateOutlet="stepperHeader; context: {$implicit: index}"></ng-container>
+      </ng-template>
+      <mat-step *ngFor="let list of lists"
+                [completed]="!!lotDecisionsByListId[list.list.id]"
+                [editable]="true"
+                [label]="list.list.orderNumber">
+      </mat-step>
+    </mat-horizontal-stepper>
+
+    <ng-container *ngIf="!loading; else spinner">
+      <ng-container *ngIf="availableLotDecisions && availableLotDecisions?.lotDecisions.length > 0">
+        <div class="candidate-results">
+          <bc-label [label]="'ELECTION.CANDIDATE.RANK' | translate"></bc-label>
+          <bc-label [label]="'ELECTION.CANDIDATE.NUMBER' | translate"></bc-label>
+          <bc-label class="candidate-name" [label]="'ELECTION.CANDIDATE.CANDIDACY' | translate"></bc-label>
+          <bc-label [label]="'ELECTION.VOTE_COUNT' | translate"></bc-label>
+          <bc-label [label]="'ELECTION.CANDIDATE.RANK_AFTER_LOT_DECISION' | translate"></bc-label>
+
+          <ng-container *ngFor="let lotDecision of availableLotDecisions.lotDecisions">
+            <span>{{lotDecision.originalRank}}</span>
+            <span>{{lotDecision.candidate.number}}</span>
+            <span
+              class="candidate-name">{{lotDecision.candidate.politicalLastName}} {{lotDecision.candidate.politicalFirstName}}</span>
+            <span>{{lotDecision.voteCount}}</span>
+            <ng-container *ngTemplateOutlet="rankDropdownTemplate; context: {$implicit: lotDecision}"></ng-container>
+          </ng-container>
+        </div>
+
+        <ng-template #rankDropdownTemplate let-lotDecision>
+          <span>
+            <bc-dropdown [(value)]="lotDecision.selectedRank"
+                         (valueChange)="updateHasOpenRequiredLotDecisions()"
+                         [items]="lotDecision.selectableRanks"></bc-dropdown>
+          </span>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+    <ng-template #spinner>
+      <bc-spinner></bc-spinner>
+    </ng-template>
+  </div>
+
+  <div footer>
+    <vo-lib-button-bar (save)="save()"
+                       [sticky]="false"
+                       [canSave]="!hasAnyOpenRequiredLotDecisions"
+                       [saveLabel]="(isLast ? 'COMMON.SAVE' : 'APP.NEXT') | translate"
+                       [cancelLabel]="'APP.CLOSE' | translate"
+                       (cancel)="close()"></vo-lib-button-bar>
+  </div>
+</vo-lib-dialog>
+
+<ng-template #stepperHeader let-index>
+  <mat-icon *ngIf="lists[index].hasOpenRequiredLotDecisions; else done">trip_origin</mat-icon>
+  <ng-template #done>
+    <mat-icon>done</mat-icon>
+  </ng-template>
+</ng-template>

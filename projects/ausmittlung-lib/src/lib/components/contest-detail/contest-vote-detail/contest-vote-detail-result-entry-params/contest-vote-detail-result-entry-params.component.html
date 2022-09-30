@@ -1,0 +1,22 @@
+<bc-number
+  class="numeric"
+  [label]="'VOTE.RESULT_ENTRY.BALLOT_BUNDLE_SAMPLE_SIZE_PERCENT' | translate"
+  [min]="0"
+  [max]="100"
+  [required]="true"
+  [allowUndefined]="false"
+  [error]="resultEntryParams.ballotBundleSampleSizePercent < 0 || resultEntryParams.ballotBundleSampleSizePercent > 100"
+  [value]="resultEntryParams.ballotBundleSampleSizePercent"
+  (valueChange)="resultEntryParams.ballotBundleSampleSizePercent = +$event">
+</bc-number>
+<bc-radio-button-group [label]="'VOTE.RESULT_ENTRY.BALLOT_BUNDLE_NUMBER_GENERATION.TITLE' | translate"
+                       orientation="vertical"
+                       [items]="automaticBallotBundleNumberGenerationChoices"
+                       [(value)]="resultEntryParams.automaticBallotBundleNumberGeneration">
+</bc-radio-button-group>
+<bc-radio-button-group [label]="'VOTE.RESULT_ENTRY.REVIEW_PROCEDURE.TITLE' | translate"
+                       orientation="vertical"
+                       [items]="reviewProcedureChoices"
+                       [(value)]="resultEntryParams.reviewProcedure"
+                       [disabled]="enforceReviewProcedure">
+</bc-radio-button-group>

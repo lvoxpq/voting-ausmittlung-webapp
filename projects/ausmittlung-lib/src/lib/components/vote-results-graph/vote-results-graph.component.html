@@ -1,0 +1,28 @@
+<div class="results-graph">
+  <ng-container *ngIf="countLeft > 0 || countRight > 0">
+    <div class="results-graph-container left" [class.looses]="rightWins">
+      <div class="results-graph-numbers">
+        <span>{{countLeft | number: '1.0-0'}}</span>
+        <span>{{ratioLeft | percent: '1.2-2'}}</span>
+      </div>
+      <div class="progress-container">
+        <span>{{resultLabelLeft | translate}}</span>
+        <div class="progress">
+          <div [style.height]="(100 - ratioLeft * 100) + '%'"></div>
+        </div>
+      </div>
+    </div>
+    <div class="results-graph-container right" [class.looses]="leftWins">
+      <div class="progress-container">
+        <span>{{resultLabelRight | translate}}</span>
+        <div class="progress">
+          <div [style.height]="(100 - ratioRight * 100) + '%'"></div>
+        </div>
+      </div>
+      <div class="results-graph-numbers">
+        <span>{{countRight | number: '1.0-0'}}</span>
+        <span>{{ratioRight | percent: '1.2-2'}}</span>
+      </div>
+    </div>
+  </ng-container>
+</div>

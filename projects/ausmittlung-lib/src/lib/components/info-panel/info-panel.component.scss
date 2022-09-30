@@ -1,0 +1,19 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.info-panel {
+  @extend .px-4;
+
+  background-color: $color-grey-7;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 4px;
+  padding-bottom: 1rem;
+
+  h4 {
+    margin-bottom: 0;
+    margin-right: 5rem;
+    display: inline-flex;
+    align-items: center;
+  }
+}

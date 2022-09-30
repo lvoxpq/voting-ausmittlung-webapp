@@ -1,0 +1,81 @@
+<div class="candidate-list">
+  <span></span>
+  <bc-label class="title" [label]="'APP.NR' | translate"></bc-label>
+  <bc-label class="title" [label]="'ELECTION.BALLOT_DETAIL.CANDIDATE_ON_LIST' | translate"></bc-label>
+  <bc-label class="title" [label]="'PROPORTIONAL_ELECTION.CUMULATED' | translate"></bc-label>
+  <bc-label class="title replacement-candidate-row" [label]="'ELECTION.BALLOT_DETAIL.CANDIDATE_ON_BALLOT' | translate"></bc-label>
+  <ng-container *ngFor="let position of positions">
+    <ng-container *ngIf="position.listCandidate; else emptyRowSlot">
+      <bc-checkbox class="m-0 candidate-toggle"
+                   [tabIndex]="-1"
+                   [class.clickable]="!readonly && (!position.listCandidate.removedFromList || !position.listCandidate.accumulated)"
+                   [checked]="!position.listCandidate.removedFromList"
+                   [disabled]="position.listCandidate.removedFromList"
+                   (click)="toggleCandidate(position, position.listCandidate); $event.preventDefault()"></bc-checkbox>
+      <span class="candidate-toggle"
+            [class.removed-from-list]="position.listCandidate.removedFromList"
+            [class.clickable]="!readonly && (!position.listCandidate.removedFromList || !position.listCandidate.accumulated)"
+            (click)="toggleCandidate(position, position.listCandidate)">{{position.listCandidate.numberIncludingList}}</span>
+      <span class="candidate-toggle"
+            [class.removed-from-list]="position.listCandidate.removedFromList"
+            [class.clickable]="!readonly && (!position.listCandidate.removedFromList || !position.listCandidate.accumulated)"
+            (click)="toggleCandidate(position, position.listCandidate)">{{position.listCandidate.politicalLastName}} {{position.listCandidate.politicalFirstName}}</span>
+      <div>
+        <ng-container *ngIf="position.listCandidate.accumulated && !position.listCandidate.removedFromList"
+                      [ngTemplateOutlet]="accumulatedCheckmarks"></ng-container>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="position.replacementCandidate; else noReplacementCandidate">
+      <!-- disabled is used to match style requirements, use click instead of checkedChange to make it work while disabled-->
+      <bc-checkbox class="m-0 candidate-toggle"
+                   [tabIndex]="-1"
+                   [class.clickable]="!readonly"
+                   [checked]="true"
+                   [disabled]="position.isSlotAvailable"
+                   (click)="toggleCandidate(position, position.replacementCandidate); $event.preventDefault()"></bc-checkbox>
+      <span class="candidate-toggle"
+            [class.clickable]="!readonly"
+            (click)="toggleCandidate(position, position.replacementCandidate)">{{position.replacementCandidate.numberIncludingList}}</span>
+      <span class="candidate-toggle"
+            [class.clickable]="!readonly"
+            (click)="toggleCandidate(position, position.replacementCandidate)">{{position.replacementCandidate.politicalLastName}} {{position.replacementCandidate.politicalFirstName}}</span>
+      <div>
+        <ng-container *ngIf="position.replacementCandidate.accumulated" [ngTemplateOutlet]="accumulatedCheckmarks"></ng-container>
+      </div>
+    </ng-container>
+
+    <ng-template #noReplacementCandidate>
+      <ng-container *ngIf="position.isSlotAvailable && position.listCandidate; else emptyReplacementCandidateRow"
+                    [ngTemplateOutlet]="emptyRowSlot"
+                    [ngTemplateOutletContext]="{isReplacementCandidate: true}"></ng-container>
+    </ng-template>
+
+    <ng-template #emptyRowSlot let-isReplacementCandidate="isReplacementCandidate">
+      <bc-checkbox class="m-0 candidate-toggle clickable"
+                   [tabIndex]="-1"
+                   [checked]="true"
+                   [disabled]="true"
+                   (click)="addNewCandidate(position); $event.preventDefault()"></bc-checkbox>
+      <span class="empty-vote candidate-toggle"
+            [class.replacement-candidate]="isReplacementCandidate"
+            [class.clickable]="!readonly"
+            (click)="addNewCandidate(position); $event.preventDefault()">{{'PROPORTIONAL_ELECTION.EMPTY_VOTE_SLOT' | translate}}</span>
+      <div>
+        <bc-button *ngIf="position.isSlotAvailable && !readonly"
+                   variant="tertiary"
+                   [label]="'ELECTION.BALLOT_DETAIL.ADD_CANDIDATE' | translate"
+                   (buttonClick)="addNewCandidate(position)"></bc-button>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
+
+<ng-template #emptyReplacementCandidateRow>
+  <span class="replacement-candidate-row"></span>
+</ng-template>
+
+<ng-template #accumulatedCheckmarks>
+  <!-- unicode checkmarks -->
+  <span class="checkmarks">&#10003;&#10003;</span>
+</ng-template>

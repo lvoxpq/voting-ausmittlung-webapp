@@ -1,0 +1,42 @@
+<vo-lib-page [contentLoading]="loading"
+             [enableSidebar]="true"
+             [sidebarTemplate]="sidebar"
+             [sidebarOpen]="true"
+             header="END_RESULT.OVERVIEW">
+
+  <vo-lib-page-header header>
+    <div left>
+      <bc-breadcrumbs>
+        <bc-breadcrumb-item link="../../contests">{{'CONTEST.DETAIL.CONTESTS_TITLE' | translate}}</bc-breadcrumb-item>
+        <bc-breadcrumb-item [link]="'../../contests/' + contest?.id">
+          {{'MONITORING_COCKPIT.TITLE' | translate}}
+        </bc-breadcrumb-item>
+        <bc-breadcrumb-item>{{'END_RESULT.OVERVIEW' | translate}}</bc-breadcrumb-item>
+      </bc-breadcrumbs>
+    </div>
+    <vo-ausm-contest-header center [contest]="contest"></vo-ausm-contest-header>
+    <bc-button right variant="tertiary" (buttonClick)="export.emit()" [label]="'CONTEST.DETAIL.EXPORT' | translate"></bc-button>
+  </vo-lib-page-header>
+
+  <ng-content></ng-content>
+
+  <ng-template #sidebar>
+    <ng-container *ngIf="!loading; else spinner">
+      <ng-container *ngIf="domainOfInfluenceDetails && contest">
+        <vo-ausm-contest-detail-count-of-voters [readonly]="true"
+                                                [eVoting]="contest.eVoting"
+                                                [swissAbroadHaveVotingRightsOnAnyBusiness]="swissAbroadHaveVotingRights"
+                                                [details]="domainOfInfluenceDetails"></vo-ausm-contest-detail-count-of-voters>
+
+        <vo-ausm-contest-detail-voting-cards *ngIf="domainOfInfluenceType !== undefined"
+                                             [readonly]="true"
+                                             [domainOfInfluenceTypes]="[domainOfInfluenceType]"
+                                             [details]="domainOfInfluenceDetails"></vo-ausm-contest-detail-voting-cards>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #spinner>
+      <bc-spinner></bc-spinner>
+    </ng-template>
+  </ng-template>
+</vo-lib-page>

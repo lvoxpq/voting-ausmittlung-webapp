@@ -1,0 +1,893 @@
+{
+  "APP": {
+    "LOGOUT": "Logout",
+    "RELOAD": "Neu laden",
+    "NO_PERMISSION": "Keine Berechtigung",
+    "NEXT": "Weiter",
+    "YES": "Ja",
+    "NO": "Nein",
+    "SAVE_AND_NEXT": "Speichern und weiter",
+    "SAVED": "Gespeichert",
+    "DELETED": "Gelöscht",
+    "COMMENT": "Kommentar",
+    "STATE": "Status",
+    "NR": "Nr",
+    "COUNT": "Anzahl",
+    "TOTAL": "Total",
+    "BACK": "Zurück",
+    "DELETE": "Löschen",
+    "CHANGES": {
+      "TITLE": "Änderungen",
+      "MSG": "Nicht gespeicherte Änderungen gehen verloren."
+    },
+    "RESULT": "Ergebnis",
+    "CLOSE": "Schliessen",
+    "CONTINUE": "Weiter",
+    "SHORTCUT_TITLE": "Tastenkombinationen"
+  },
+  "CONTEST": {
+    "TITLE": "Urnengänge",
+    "PAST_CONTESTS": "Vergangene Urnengänge",
+    "ARCHIVED_CONTESTS": "Archivierte Urnengänge",
+    "DATE": "Datum",
+    "END_OF_TESTING_PHASE": "Testphase bis",
+    "PAST_LOCKED": "Urnengang gesperrt",
+    "PAST_UNLOCKED": "Urnengang entsperrt bis 23:59 Uhr",
+    "PAST_UNLOCK": {
+      "OPEN": "(Freigeben...)",
+      "TITLE": "Urnengang entsperren?",
+      "DESCRIPTION": "Der Urnengang wurde am {{date}} um 23.59 Uhr für die Erfassung gesperrt. Zu diesem Zeitpunkt wurde der Signaturprozess ausgesetzt/beendet. Damit die Nachvollziehbarkeit gewährleistet ist, muss der Urnengang aktiv freigegeben werden. Möchten Sie den Urnengang entsperren und den Signaturprozess erneut bis heute um 23.59 Uhr starten?",
+      "REDIRECT_NOTE": "Sie müssen den Urnengang in den VOTING Basis-Services entsperren.",
+      "REDIRECT": "Zu den Basis-Services wechseln"
+    },
+    "CHOOSE_COUNTING_CIRCLE": {
+      "TITLE": "Auszählungskreis wählen"
+    },
+    "DETAIL": {
+      "CONTESTS_TITLE": "Übersicht Urnengänge",
+      "EXPORT": "Exportieren…",
+      "DATE_TITLE": "Urnengang vom {{date}}",
+      "COUNT_OF_VOTERS": "Stimmberechtigte",
+      "MEN": "Männer",
+      "WOMEN": "Frauen",
+      "TOTAL": "Total",
+      "SWISS": "Inlandschweizer",
+      "NOT_ACTIVE": "Geschäft nicht zur Erfassung freigegeben.",
+      "SWISS_ABROAD": "Auslandschweizer",
+      "E_VOTING_ACTIVE": "E-Voting aktiviert",
+      "COUNTING_CIRCLE_DETAILS_SAVED": "Stimmberechtigte und Stimmrechtsausweise erfolgreich gespeichert.",
+      "MAP_WRITE_INS": "Write-Ins zuordnen…",
+      "VOTING_CARDS": {
+        "TITLE": "Stimmrechtsausweise",
+        "1_VALID": "Urne",
+        "2_VALID": "brieflich gültig",
+        "2_INVALID": "brieflich ungültig",
+        "3_VALID": "E-Voting",
+        "4_VALID": "vorzeitig",
+        "TOTAL_VALID": "Total gültige",
+        "TOTAL": "Total"
+      },
+      "INFO": {
+        "CONTEST": "Urnengang",
+        "COUNTING_CIRCLE": "Auszählungskreis",
+        "TOTAL_COUNT_OF_VOTERS": "Stimmberechtigte"
+      },
+      "CONTACT_DATA": {
+        "TITLE": "Kontaktdaten",
+        "TITLE_AUTHORITY": "Kontaktdaten der zuständigen Behörde",
+        "TITLE_DETAILS": "Kontakt Oberbehörde",
+        "NO_DATA": "Keine Kontaktdaten erfasst",
+        "PHONE": "Telefon",
+        "EMAIL": "E-Mail",
+        "MOBILE_PHONE": "Mobile",
+        "FAMILY_NAME": "Name",
+        "FIRST_NAME": "Vorname",
+        "DURING_EVENT": "Vor und während der Abstimmung/Wahl",
+        "SAME_CONTACT_PERSON": "gleiche Kontaktdaten wie vor/während der Abstimmung/Wahl",
+        "AFTER_EVENT": "Nach dem Schliessen des Wahlbüros",
+        "EDIT": "Kontaktdaten bearbeiten…",
+        "UPDATE_FOR_CONTEST": "Bitte aktualisieren Sie die Kontaktdaten für den Urnengang",
+        "UPDATE_REMARK": "Die folgenden Anpassungen an den Kontaktdaten sind nur temporär für den aktuellen Urnengang gültig. Die permanenten Kontaktdaten können innerhalb der VOTING Basis-Services angepasst werden."
+      },
+      "STATE_ACTION": {
+        "ALL_TO_AUDIT_TENTATIVELY": "Alle auf vorläufig geprüft"
+      }
+    }
+  },
+  "POLITICAL_BUSINESS": {
+    "NOT_SUBMITTED": "Ergebnisse wurden noch nicht erfasst.",
+    "RESULTS_ENTRY": {
+      "EDIT": "(anpassen…)",
+      "QUESTION": "Bitte wählen Sie die Methode aus, wie die Ergebnisse erfasst werden sollen",
+      "SELECT": "Variante festlegen",
+      "NOT_SELECTED": "Die Erfassungsweise ist nicht eingestellt. Bitte kontaktieren Sie den zuständigen Wahlverantwortlichen.",
+      "SELECTED": "Erfassungsvariante: {{name}}",
+      "CONFIRM_CHANGE": "Sind Sie sicher, dass Sie die Erfassungsweise umstellen möchten?",
+      "CONFIRM_CHANGE_DETAIL": "Alle bereits erfassten Stimmen des Geschäfts werden gelöscht."
+    },
+    "TYPE": {
+      "TITLE": "Geschäftstyp",
+      "1": "Abstimmung",
+      "2": "Majorzwahl",
+      "3": "Proporzwahl",
+      "4": "Majorzwahl"
+    },
+    "REUSE_BUNDLE_NUMBER": {
+      "TITLE": "Bundnummer bereits in Verwendung",
+      "MSG": "Die Nummer ist bereits einem gelöschten Bund zugeordnet.\nWollen Sie die Bundnummer wiederverwenden?"
+    },
+    "BUNDLE_DELETE_CONFIRM": {
+      "TITLE": "Löschen?",
+      "MSG": "Sind Sie sicher, dass Sie den Bund löschen wollen?"
+    },
+    "NEW_BUNDLE_TITLE": "Neuen Bund erfassen",
+    "BUNDLE_NUMBER": "Bund-Nr.",
+    "DUPLICATED_BUNDLE_NUMBER": "Diese Bundnummer wird bereits verwendet.",
+    "CREATE_BUNDLE": "Bund erstellen",
+    "NR": "Geschäfts-Nr",
+    "SHORT_DESCRIPTION": "Kurzbezeichnung",
+    "SHORTCUT": {
+      "NEW_BUNDLE": {
+        "TEXT": "Neuen Bund erfassen",
+        "COMBINATION": "Ctrl + Alt + Q"
+      },
+      "SUBMIT_BUNDLE": {
+        "TEXT": "Bund abschliessen",
+        "COMBINATION": "Ctrl + Alt + W"
+      }
+    }
+  },
+  "VOTE": {
+    "RESULT_ENTRY": {
+      "LONG": {
+        "1": "Endresultate (Die Resultate werden direkt von den Wahlverantwortlichen erfasst)",
+        "2": "Detailerfassung (Bundweise Erfassung einzelner Stimmzettel durch mehrere Erfasserinnen und Erfasser)"
+      },
+      "SHORT": {
+        "1": "Endresultate",
+        "2": "Detailerfassung"
+      },
+      "BALLOT_BUNDLE_SAMPLE_SIZE_PERCENT": "Stichprobengrösse in Prozent",
+      "BALLOT_BUNDLE_NUMBER_GENERATION": {
+        "TITLE": "Vergabe Bundnummer",
+        "AUTOMATIC": "Automatisch",
+        "MANUAL": "Manuell"
+      },
+      "REVIEW_PROCEDURE": {
+        "TITLE": "Erfassungsweise (Kontrolle)",
+        "TYPES": {
+          "1": "Elektronisch",
+          "2": "Physisch"
+        }
+      },
+      "SELECT": "Erfassungsvariante festlegen",
+      "COUNTING_CIRCLE": "Auszählungskreis"
+    },
+    "BALLOT_CARD": "Stimmzettel",
+    "VOTER_PARTICIPATION": "Stimmbeteiligung",
+    "BALLOT": {
+      "TITLE": "Vorlage",
+      "ANSWER": {
+        "YES": "Ja",
+        "NO": "Nein",
+        "UNSPECIFIED_SHORT": "oAntw.",
+        "UNSPECIFIED": "Ohne Antwort"
+      },
+      "QUESTION_COUNT": {
+        "1": {
+          "QUESTION_1": {
+            "QUESTION": "Frage: {{question}}"
+          }
+        },
+        "2": {
+          "QUESTION_1": {
+            "QUESTION": "Initiative / Variante {{number}}: {{question}}"
+          },
+          "QUESTION_2": {
+            "QUESTION": "Gegenvorschlag / Variante {{number}}: {{question}}"
+          },
+          "TIE_BREAK_1": {
+            "QUESTION": "Stichfrage: {{question}}",
+            "ANSWER_1": "Initiative / Variante 1",
+            "ANSWER_1_SHORT": "Ini/Var1",
+            "ANSWER_2": "Gegenvorschlag / Variante 2",
+            "ANSWER_2_SHORT": "Gv/Var2"
+          }
+        },
+        "3": {
+          "QUESTION_1": {
+            "QUESTION": "Initiative / Variante {{number}}: {{question}}"
+          },
+          "QUESTION_2": {
+            "QUESTION": "Gegenvorschlag 1 / Variante {{number}}: {{question}}"
+          },
+          "QUESTION_3": {
+            "QUESTION": "Gegenvorschlag 2 / Variante {{number}}: {{question}}"
+          },
+          "TIE_BREAK_1": {
+            "QUESTION": "Stichfrage {{number}}: {{question}}",
+            "ANSWER_1": "Initiative / Variante 1",
+            "ANSWER_1_SHORT": "Ini/Var1",
+            "ANSWER_2": "Gegenvorschlag 1 / Variante 2",
+            "ANSWER_2_SHORT": "Gv1/Var2"
+          },
+          "TIE_BREAK_2": {
+            "QUESTION": "Stichfrage {{number}}: {{question}}",
+            "ANSWER_1": "Initiative / Variante 1",
+            "ANSWER_1_SHORT": "Ini/Var2",
+            "ANSWER_2": "Gegenvorschlag 2 / Variante 3",
+            "ANSWER_2_SHORT": "Gv2/Var3"
+          },
+          "TIE_BREAK_3": {
+            "QUESTION": "Stichfrage {{number}}: {{question}}",
+            "ANSWER_1": "Gegenvorschlag 1 / Variante 2",
+            "ANSWER_1_SHORT": "Gv1/Var2",
+            "ANSWER_2": "Gegenvorschlag 2 / Variante 3",
+            "ANSWER_2_SHORT": "Gv2/Var3"
+          }
+        }
+      }
+    },
+    "COUNT_OF_VOTES": {
+      "UNKNOWN": "Stimmen",
+      "E_VOTING": "E-Voting",
+      "TOTAL": "Total"
+    },
+    "BY_BUNDLE": "Einzelne Stimmzettel erfassen und Bundkontrolle",
+    "BUNDLE_OVERVIEW": "Bundeübersicht und einzelne Stimmzettel erfassen",
+    "NEW_BUNDLE": "+ Neuen Bund erfassen",
+    "BUNDLE_TABLES": {
+      "OPEN": "Bunde in Bearbeitung / zur Kontrolle",
+      "REVIEWED": "Bunde kontrolliert",
+      "DELETED": "Bunde gelöscht"
+    },
+    "BALLOT_DETAIL": {
+      "TITLE": "Stimmzettel erfassen",
+      "DELETE": "Stimmzettel löschen",
+      "NEW": "+ Nächsten Stimmzettel erfassen",
+      "CONFIRM_DELETE": "Sind Sie sicher, dass der Stimmzettel gelöscht werden soll?",
+      "BALLOT_NR": "Stimmzettel-Nr.",
+      "NO_BALLOTS": "Kein Stimmzettel vorhanden",
+      "DELETED": "Stimmzettel gelöscht",
+      "SET_ANSWER": {
+        "YES": "Ja-Stimme setzen",
+        "NO": "Nein-Stimme setzen",
+        "UNSPECIFIED": "Ohne Antwort setzen"
+      },
+      "UNCHANGED_BALLOT": {
+        "TITLE": "Stimmzettel unverändert",
+        "MSG": "Ein Stimmzettel ohne Antwort kann nicht gespeichert werden."
+      },
+      "SHORTCUT": {
+        "SET_YES": {
+          "TEXT": "Ja-Stimme setzen",
+          "COMBINATION": "Ctrl + Alt + 1"
+        },
+        "SET_NO": {
+          "TEXT": "Nein-Stimme setzen",
+          "COMBINATION": "Ctrl + Alt + 2"
+        },
+        "SET_ANSWER_UNSPECIFIED": {
+          "TEXT": "Ohne Antwort setzen",
+          "COMBINATION": "Ctrl + Alt + 3"
+        },
+        "BALLOT_DELETE": {
+          "TEXT": "Stimmzettel löschen",
+          "COMBINATION": "Ctrl + Alt + Q"
+        },
+        "BALLOT_NEW": {
+          "TEXT": "Nächsten Stimmzettel erfassen",
+          "COMBINATION": "Ctrl + Alt + D"
+        }
+      }
+    },
+    "REVIEW_BALLOT_DETAIL": {
+      "TITLE": "Stimmzettel kontrollieren",
+      "SAMPLES": {
+        "DESCRIPTION": "Bitte prüfen Sie die folgenden Stimmzettel-Nummern"
+      },
+      "BALLOT_TITLE": "Stimmzettel-Nr. {{number}}"
+    },
+    "COUNT_OF_LISTS": "Anzahl Stimmzettel"
+  },
+  "ELECTION": {
+    "RESULT_ENTRY": {
+      "BALLOT_BUNDLE_SIZE": "Bundgrösse",
+      "BALLOT_BUNDLE_SAMPLE_SIZE": "Stichprobengrösse",
+      "AUTOMATIC_EMPTY_VOTE_COUNTING": {
+        "TITLE": "Erfassung leere Zeilen",
+        "AUTOMATIC": "Automatisch",
+        "MANUAL": "Manuell"
+      },
+      "BALLOT_BUNDLE_NUMBER_GENERATION": {
+        "TITLE": "Vergabe Bundnummer",
+        "AUTOMATIC": "Automatisch"
+      },
+      "BALLOT_NUMBER_GENERATION": {
+        "TITLE": "Vergabe Wahlzettelnummer",
+        "TYPES": {
+          "1": "Neubeginn bei jedem Bund (z.B. 1-25)",
+          "2": "Fortlaufend über alle Bunde (z.B. 1-25, 26-50, 51-75, …)"
+        }
+      },
+      "COUNTING_CIRCLE": "Auszählungskreis"
+    },
+    "NR_OF_MANDATES": "{{numberOfMandates}} Sitze",
+    "VOTER_PARTICIPATION": "Wahlbeteiligung",
+    "BALLOT_CARD": "Wahlzettel",
+    "BUNDLE_OVERVIEW": "Bundeübersicht und einzelne Wahlzettel erfassen",
+    "NEW_BUNDLE": "+ Neuen Bund erfassen",
+    "BUNDLE_SIZE": "Bund-Grösse",
+    "BUNDLE_CREATED_BY": "Erstellt von",
+    "BUNDLE_REVIEWED_BY": "Kontrolliert von",
+    "BUNDLE_STATES": {
+      "1": "In Bearbeitung",
+      "2": "zur Korrektur",
+      "3": "Kontrolle offen",
+      "4": "Kontrolliert",
+      "5": "Gelöscht"
+    },
+    "BUNDLE_TABLES": {
+      "OPEN": "Bunde in Bearbeitung / zur Kontrolle",
+      "REVIEWED": "Bunde kontrolliert",
+      "DELETED": "Bunde gelöscht"
+    },
+    "BALLOT_DETAIL": {
+      "TITLE": "Wahlzettel erfassen",
+      "DELETE": "Wahlzettel löschen",
+      "NEW": "+ Nächsten Wahlzettel erfassen",
+      "SUBMIT_BUNDLE": "Bund abschliessen",
+      "BALLOT_NR": "Wahlzettel-Nr.",
+      "EMPTY": "Leere Zeilen",
+      "INVALID_EMPTY_VOTE_COUNT": {
+        "TITLE": "Wahlzettel ungültig",
+        "MSG": "Anz. leere Zeilen ungültig. Wahlzettel kann nicht gespeichert werden."
+      },
+      "UNCHANGED_BALLOT": {
+        "TITLE": "Wahlzettel unverändert",
+        "MSG": "Ein unveränderter Wahlzettel kann nicht gespeichert werden."
+      },
+      "NO_BALLOTS": "Kein Wahlzettel vorhanden",
+      "EDIT_CANDIDATE_HINT": "Nr eingeben",
+      "REPLACE_CANDIDATE": "Kandidat/in ersetzen",
+      "REPLACE_CANDIDATE_NO_REPLACEMENT": "Listenplatz leer lassen",
+      "REPLACE_CANDIDATE_SEARCH_AND_REPLACE": "Kandidat suchen und hinzufügen",
+      "REMOVE_ALL_CANDIDATES": "Wahlzettel leeren",
+      "RESET": "Änderungen zurücksetzen",
+      "ADD_CANDIDATE_SHORTCUT": "Kandidat/in hinzufügen",
+      "ADD_CANDIDATE": "Kandidat/in hinzufügen",
+      "REMOVE_CANDIDATE": "Kandidat/in entfernen",
+      "TOGGLE_CANDIDATE": "Kandidat/in direkt setzen",
+      "TOGGLE_CANDIDATE_SHORTCUT": "Kandidat/in direkt setzen",
+      "DELETED": "Wahlzettel gelöscht",
+      "CONFIRM_DELETE": "Sind Sie sicher, dass der Wahlzettel gelöscht werden soll?",
+      "CONFIRM_BUNDLE_NOT_FULL": {
+        "TITLE": "Bund fertigstellen",
+        "MSG": "Die Bundgrösse von {{ballotBundleSize}} ist noch nicht erreicht.",
+        "CONTINUE": "Als Restbund abschliessen"
+      },
+      "CANDIDATE": "Kandidat/in",
+      "CANDIDATE_ON_LIST": "Kandidat/in gemäss Liste",
+      "CANDIDATE_ON_BALLOT": "Kandidat/in gemäss Wahlzettel",
+      "REVIEW": "Bund kontrollieren",
+      "REJECT_REVIEW": "Bund zurück zur Überprüfung",
+      "SUCCEED_REVIEW": "Bund auf kontrolliert",
+      "WITHOUT_LIST": "Wahlzettel ohne Parteibezeichnung",
+      "REMOVE_RANGE": {
+        "START": "Kandidat/in entfernen von",
+        "END": "bis"
+      },
+      "SHORTCUT": {
+        "BALLOT_DELETE": {
+          "TEXT": "Wahlzettel löschen",
+          "COMBINATION": "Ctrl + Alt + Q"
+        },
+        "BALLOT_NEW": {
+          "TEXT": "Nächsten Wahlzettel erfassen",
+          "COMBINATION": "Ctrl + Alt + D"
+        }
+      }
+    },
+    "REVIEW_BALLOT_DETAIL": {
+      "TITLE": "Wahlzettel kontrollieren",
+      "SAMPLES": {
+        "TITLE": "Stichproben prüfen",
+        "DESCRIPTION": "Bitte prüfen Sie die folgenden Wahlzettel-Nummern"
+      },
+      "OK": "In Ordnung",
+      "FIX": "Korrigieren",
+      "FIX_CANCEL": "Korrektur abbrechen",
+      "FIX_DONE": "Korrektur übernehmen",
+      "REJECT": "Bund zurück zur Überprüfung",
+      "SUCCEED": "Bund auf kontrolliert",
+      "BALLOT_TITLE": "Wahlzettel-Nr. {{number}}"
+    },
+    "SHOW_BALLOT": "Wahlzettel einsehen",
+    "VOTE_COUNT": "Stimmen",
+    "VOTE_COUNT_E_VOTING": "Elektronisch",
+    "VOTE_COUNT_CONVENTIONAL": "Konventionell"
+  },
+  "MAJORITY_ELECTION": {
+    "TITLE": "Majorzwahl",
+    "BY_BALLOT_GROUPS": "Nach Wahlzettelgruppen erfassen",
+    "BY_BUNDLE": "Einzelne Wahlzettel erfassen und Bundkontrolle",
+    "RESULT_ENTRY": {
+      "SELECT": "Erfassungsvariante festlegen",
+      "NOT_SELECTED": "Die Erfassungsvariante sind nicht eingestellt. Bitte kontaktieren Sie den zuständigen Auszählungsverantwortlichen.",
+      "EDIT": "Erfassungsvariante anpassen…",
+      "LONG": {
+        "1": "Endresultate (Das Total der Kandidierenden-Stimmen wird direkt von den Wahlverantwortlichen erfasst)",
+        "2": "Detailerfassung (Bundweise Erfassung einzelner Wahlzettel und Erfassung von Wahlzettel-Gruppen)"
+      },
+      "SHORT": {
+        "1": "Endresultate",
+        "2": "Detailerfassung"
+      },
+      "REVIEW_PROCEDURE": {
+        "TITLE": "Erfassungsweise (Kontrolle)",
+        "TYPES": {
+          "1": "Elektronisch",
+          "2": "Physisch"
+        }
+      }
+    },
+    "PARTY": "Partei",
+    "BALLOT_GROUP": {
+      "TITLE": "Nach Wahlzettelgruppen erfassen",
+      "SIDEBAR_TITLE": "Details zur Wahlzettelgruppe",
+      "SHORT_DESCRIPTION": "Wahlzettelgruppe",
+      "NO_ENTRIES": "Keine Wahlzettelgruppe ausgewählt",
+      "NO_CANDIDATES": "Keine Kandidaturen"
+    },
+    "INDIVIDUAL": "Vereinzelte",
+    "EMPTY_VOTES": "Leere Zeilen",
+    "INVALID_VOTES": "Ungültige Stimmen",
+    "BALLOT_DETAIL": {
+      "SHORTCUT": {
+        "ADD_CANDIDATE": {
+          "TEXT": "Kandidat/in hinzufügen",
+          "COMBINATION": "Ctrl + Alt + R"
+        }
+      }
+    }
+  },
+  "PROPORTIONAL_ELECTION": {
+    "RESULT_ENTRY": {
+      "SELECT": "Erfassungsparameter festlegen",
+      "NOT_SELECTED": "Die Erfassungsparameter sind nicht eingestellt. Bitte kontaktieren Sie den zuständigen Auszählungsverantwortlichen.",
+      "CONFIRM_CHANGE": "Sind Sie sicher, dass Sie die Erfassungsparameter umstellen möchten?",
+      "EDIT": "Erfassungsparameter anpassen…",
+      "REVIEW_PROCEDURE": {
+        "TITLE": "Erfassungsweise (Kontrolle)",
+        "TYPES": {
+          "1": "Elektronisch",
+          "2": "Physisch"
+        }
+      }
+    },
+    "RESULTS": "Ergebnisübersicht",
+    "SHOW_RESULTS": "Zur Ergebnisübersicht",
+    "MODIFIED_LISTS": "Einzelne Wahlzettel erfassen und Bundkontrolle",
+    "UNMODIFIED_LISTS": "Unveränderte Wahlzettel erfassen",
+    "TITLE": "Proporzwahl",
+    "LISTS": "Listen",
+    "LIST": {
+      "NONE_SELECTED": "Keine Liste ausgewählt",
+      "ORDER_NUMBER": "Ordnungs-Nr.",
+      "ORDER_NUMBER_ABBREVIATION": "O-Nr.",
+      "DESCRIPTION": "Listenbezeichnung",
+      "DESCRIPTION_ABBREVIATION": "Bezeichnung",
+      "SHORT_DESCRIPTION": "Listenkurzbezeichnung",
+      "UNMODIFIED_LISTS_COUNT": "Unv. WZ",
+      "UNMODIFIED_LIST_VOTES_COUNT": "UnvWZ: Stimmen",
+      "UNMODIFIED_LIST_BLANK_ROWS_COUNT": "UnvWZ: Leere Zeilen",
+      "MODIFIED_LISTS_COUNT": "Ver. WZ",
+      "MODIFIED_LIST_VOTES_COUNT": "VerWZ: Stimmen",
+      "MODIFIED_LIST_BLANK_ROWS_COUNT": "VerWZ: Leere Zeilen"
+    },
+    "CANDIDATES": "Kandidaturen",
+    "CANDIDATE": {
+      "CANDIDATE_NUMBER_ABBREVIATION": "K-Nr.",
+      "FIRST_NAME": "Vorname",
+      "LAST_NAME": "Nachname",
+      "UNMODIFIED_LIST_VOTES_COUNT": "UnvWZ: Stimmen",
+      "MODIFIED_LIST_VOTES_COUNT": "VerWZ: Stimmen",
+      "COUNT_OF_VOTES_ON_OTHER_LISTS": "Panaschierte",
+      "COUNT_OF_VOTES_FROM_ACCUMULATIONS": "Kumulierte",
+      "TOTAL_VOTES_COUNT": "Total Stimmen"
+    },
+    "SELECT_LIST": "Liste auswählen",
+    "SELECT_LIST_FOR_BUNDLE": "Liste für neuen Bund auswählen",
+    "BALLOT_WITHOUT_LIST": "Wahlzettel ohne Parteibezeichnung",
+    "BALLOT_WITHOUT_LIST_SHORT": "WoP",
+    "COUNT_OF_LISTS": "Anzahl Wahlzettel",
+    "CUMULATED": "kumuliert",
+    "EMPTY_VOTE_SLOT": "Leerer Listenplatz",
+    "ENTER_LIST_NUMBER": "Listen-Nr. eingeben",
+    "BALLOT_DETAIL": {
+      "ADD_CANDIDATE_HINT": "Nr eingeben (xx.xx)",
+      "REMOVE_CANDIDATE_HINT": "Nr eingeben (xx)",
+      "SHORTCUT": {
+        "ADD_CANDIDATE": {
+          "TEXT": "Kandidat/in hinzufügen",
+          "COMBINATION": "Ctrl + Alt + R"
+        },
+        "RESET": {
+          "TEXT": "Änderungen zurücksetzen",
+          "COMBINATION": "Ctrl + Alt + T"
+        },
+        "REMOVE_ALL_CANDIDATES": {
+          "TEXT": "Wahlzettel leeren",
+          "COMBINATION": "Ctrl + Alt + A"
+        },
+        "REMOVE_CANDIDATE": {
+          "TEXT": "Kandidat/in entfernen",
+          "COMBINATION": "Ctrl + Alt + F"
+        },
+        "REMOVE_RANGE_CANDIDATE": {
+          "TEXT": "Kandidat/in entfernen von",
+          "COMBINATION": "Ctrl + Alt + G"
+        }
+      }
+    }
+  },
+  "BALLOT_COUNT": {
+    "RECEIVED": "eingegangen",
+    "BLANK": "leer",
+    "VALID": "gültig",
+    "INVALID": "ungültig"
+  },
+  "END_RESULTS": {
+    "FINALIZED": "Schlussergebnis",
+    "NOT_FINALIZED": "Zwischenergebnis"
+  },
+  "ACTIONS": {
+    "EDIT": "Bearbeiten",
+    "DELETE": "Löschen",
+    "VALIDATE_AND_SAVE": "Speichern",
+    "SUBMISSION_DONE": "Prüfen und Erfassung beenden",
+    "CORRECTION_DONE": "Korrektur beenden",
+    "FLAG_FOR_CORRECTION": "zur Korrektur",
+    "AUDIT_TENTATIVELY": "Vorläufig geprüft",
+    "PLAUSIBILISED": "Plausibilisiert",
+    "RESET_TO_SUBMISSION_DONE": "Status auf 'Erfassung beendet'",
+    "RESET_TO_AUDIT_TENTATIVELY": "Vorläufig geprüft",
+    "SUBMISSION_DONE_CONFIRM": {
+      "TITLE": "Erfassung beenden?",
+      "MSG": "Wenn Sie die Erfassung beenden, werden die Ergebnisse dieses Geschäfts zur Prüfung an die zuständige Behörde übermittelt.\nDie Ergebnisse des Geschäfts können dann nicht mehr geändert werden.",
+      "OK": "Erfassung beenden"
+    },
+    "CORRECTION_DONE_CONFIRM": {
+      "TITLE": "Korrektur beenden?",
+      "MSG": "Wenn Sie die Korrektur beenden, werden die Ergebnisse dieses Geschäfts zur Prüfung an die zuständige Behörde übermittelt.\nDie Ergebnisse des Geschäfts können dann nicht mehr geändert werden.",
+      "OK": "Korrektur beenden"
+    },
+    "FLAG_FOR_CORRECTION_CONFIRM": {
+      "TITLE": "Zur Korrektur",
+      "MSG": "Wenn Sie die den Status 'Zur Korrektur' setzen, wird das Geschäft erneut für die Erfassung freigegeben.\nSie können optional einen Kommentar mitschicken.",
+      "OK": "Status ändern"
+    }
+  },
+  "CANDIDATE": {
+    "NR": "Nr",
+    "LAST_NAME": "Nachname",
+    "FIRST_NAME": "Vorname",
+    "OFFICIAL_LAST_NAME": "Amtlicher Nachname",
+    "OFFICIAL_FIRST_NAME": "Amtlicher Vorname",
+    "POLITICAL_LAST_NAME": "Politischer Nachname",
+    "POLITICAL_FIRST_NAME": "Politischer Vorname",
+    "CANDIDACY": "Kandidatur"
+  },
+  "COMMENTS": {
+    "TITLE": "Kommentare"
+  },
+  "ELECTION_GROUPS": {
+    "TITLE": "Wahlgruppe",
+    "SECONDARY_ELECTION": "Nebenwahlen",
+    "SECONDARY_ELECTION_SINGLE": "Nebenwahl"
+  },
+  "EXPORTS": {
+    "TITLE": "Exportieren",
+    "SELECTED": "Ausgewählte Exports",
+    "SAVE": "Auswahl exportieren",
+    "TABS": {
+      "SINGLE_POLITICAL_BUSINESS": "Nach Geschäft",
+      "MULTIPLE_POLITICAL_BUSINESS": "Mehrere Geschäfte",
+      "CONTEST": "Urnengang",
+      "SINGLE_POLITICAL_BUSINESS_UNION": "Nach Geschäftsverbindung"
+    },
+    "POLITICAL_BUSINESS": "Geschäft",
+    "DESCRIPTION": "Bezeichnung",
+    "POLITICAL_BUSINESS_TYPE": "Geschäftstyp",
+    "FORMAT": "Format",
+    "EXPORT": "Export",
+    "EXPORTS": "Exports"
+  },
+  "DOMAIN_OF_INFLUENCE": {
+    "TYPE": "Ebene {{type}}",
+    "TITLE": "Geschäftsebene"
+  },
+  "VOTING_CHANNELS": {
+    "1": "Urne",
+    "2": "brieflich",
+    "3": "E-Voting",
+    "4": "vorzeitig"
+  },
+  "VOTING_DATA_SOURCE": {
+    "CONVENTIONAL": "Konventionell",
+    "E_VOTING": "E-Voting",
+    "TOTAL": "Total"
+  },
+  "VALIDATION": {
+    "CONTEST_COUNTING_CIRCLE_DETAILS": {
+      "HEADER": {
+        "VALID": "Speichern?",
+        "INVALID": "Speichern nicht möglich."
+      }
+    },
+    "COUNTING_CIRCLE_RESULT": {
+      "HEADER": {
+        "FINISHING_OPERATION": {
+          "VALID": "Erfassung beenden?",
+          "INVALID": "Erfassung beenden nicht möglich"
+        },
+        "SAVE_OPERATION": {
+          "VALID": "Eingaben speichern?",
+          "INVALID": "Nicht valide Werte speichern?"
+        }
+      },
+      "DESCRIPTION": {
+        "INVALID": "Nicht alle für dieses Geschäft erfassten Werte sind rechnerisch valide."
+      }
+    },
+    "PLAUSIBILISATION": {
+      "HEADER": "Die Plausibilisierung ergibt folgende Ergebnisse:"
+    },
+    "VALUES": {
+      "1": {
+        "VALID": "Die Anzahl Stimmberechtigte ist vollständig erfasst.",
+        "INVALID": "Die Anzahl Stimmberechtigte ist noch nicht vollständig erfasst."
+      },
+      "2": {
+        "VALID": "Die Anzahl Stimmrechtsausweise ist vollständig erfasst.",
+        "INVALID": "Die Anzahl Stimmrechtsausweise ist noch nicht vollständig erfasst."
+      },
+      "3": {
+        "VALID": "Total Stimmrechtsausweise darf Total Stimmberechtigte nicht übersteigen.",
+        "INVALID": "Total Stimmrechtsausweise darf Total Stimmberechtigte nicht übersteigen."
+      },
+      "8": {
+        "VALID": "Die Stimmen dieses Geschäfts sind vollständig erfasst.",
+        "INVALID": "Die Stimmen dieses Geschäfts sind noch nicht vollständig erfasst."
+      },
+      "9": {
+        "1": {
+          "VALID": "Die Stimmen der Frage 1 sind vollständig erfasst.",
+          "INVALID": "Die Stimmen der Frage 1 sind noch nicht vollständig erfasst."
+        },
+        "2": {
+          "VALID": "Die Stimmen der Frage 2 (Gegenvorschlag / Variante 2) sind vollständig erfasst.",
+          "INVALID": "Die Stimmen der Frage 2 (Gegenvorschlag / Variante 2) sind noch nicht vollständig erfasst."
+        },
+        "3": {
+          "VALID": "Die Stimmen der Frage 3 (Gegenvorschlag / Variante 3) sind vollständig erfasst.",
+          "INVALID": "Die Stimmen der Frage 3 (Gegenvorschlag / Variante 3) sind noch nicht vollständig erfasst."
+        }
+      },
+      "12": {
+        "1": {
+          "VALID": "Die Stimmen der Stichfrage 1 (Frage 1 / Frage 2) sind vollständig erfasst.",
+          "INVALID": "Die Stimmen der Stichfrage 1 (Frage 1 / Frage 2) sind noch nicht vollständig erfasst."
+        },
+        "2": {
+          "VALID": "Die Stimmen der Stichfrage 2 (Frage 1 / Frage 3) sind vollständig erfasst.",
+          "INVALID": "Die Stimmen der Stichfrage 2 (Frage 1 / Frage 3) sind noch nicht vollständig erfasst."
+        },
+        "3": {
+          "VALID": "Die Stimmen der Stichfrage 3 (Frage 2 / Frage 3) sind vollständig erfasst.",
+          "INVALID": "Die Stimmen der Stichfrage 3 (Frage 2 / Frage 3) sind noch nicht vollständig erfasst."
+        }
+      },
+      "14": {
+        "1": {
+          "VALID": "Die Anzahl Stimmzettel ist vollständig erfasst.",
+          "INVALID": "Die Anzahl Stimmzettel ist noch nicht vollständig erfasst."
+        },
+        "2": {
+          "VALID": "Die Anzahl Wahlzettel ist vollständig erfasst.",
+          "INVALID": "Die Anzahl Wahlzettel ist noch nicht vollständig erfasst."
+        },
+        "3": {
+          "VALID": "Die Anzahl Wahlzettel ist vollständig erfasst.",
+          "INVALID": "Die Anzahl Wahlzettel ist noch nicht vollständig erfasst."
+        }
+      },
+      "15": {
+        "1": {
+          "VALID": "Die Anzahl eingegangener Stimmzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen.",
+          "INVALID": "Die Anzahl eingegangener Stimmzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen."
+        },
+        "2": {
+          "VALID": "Die Anzahl eingegangener Wahlzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen.",
+          "INVALID": "Die Anzahl eingegangener Wahlzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen."
+        },
+        "3": {
+          "VALID": "Die Anzahl eingegangener Wahlzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen.",
+          "INVALID": "Die Anzahl eingegangener Wahlzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen."
+        }
+      },
+      "16": {
+        "1": {
+          "VALID": "Die Anzahl gültige Stimmzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen.",
+          "INVALID": "Die Anzahl gültige Stimmzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen."
+        },
+        "2": {
+          "VALID": "Die Anzahl gültige Wahlzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen.",
+          "INVALID": "Die Anzahl gültige Wahlzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen."
+        },
+        "3": {
+          "VALID": "Die Anzahl gültige Wahlzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen.",
+          "INVALID": "Die Anzahl gültige Wahlzettel darf die Anzahl gültiger Stimmrechtsausweise nicht übersteigen."
+        }
+      },
+      "17": {
+        "1": {
+          "VALID": "Die Anzahl gültige Stimmzettel entspricht der eingegangenen minus den leeren und ungültigen Stimmzetteln.",
+          "INVALID": "Die Anzahl gültige Stimmzettel entspricht nicht der eingegangenen minus den leeren und ungültigen Stimmzetteln."
+        },
+        "2": {
+          "VALID": "Die Anzahl gültige Wahlzettel entspricht der eingegangenen minus den leeren und ungültigen Wahlzettel.",
+          "INVALID": "Die Anzahl gültige Wahlzettel entspricht nicht der eingegangenen minus den leeren und ungültigen Wahlzettel."
+        },
+        "3": {
+          "VALID": "Die Anzahl gültige Wahlzettel entspricht der eingegangenen minus den leeren und ungültigen Wahlzettel.",
+          "INVALID": "Die Anzahl gültige Wahlzettel entspricht nicht der eingegangenen minus den leeren und ungültigen Wahlzettel."
+        }
+      },
+      "18": {
+        "VALID": "Stimmen-Total entspricht der Anzahl gültige Stimmzettel.",
+        "INVALID": "Stimmen-Total entspricht nicht der Anzahl gültige Stimmzettel."
+      },
+      "19": {
+        "1": {
+          "VALID": "Stimmen-Total für Frage 1 entspricht der Anzahl gültige Stimmzettel.",
+          "INVALID": "Stimmen-Total für Frage 1 entspricht nicht der Anzahl gültige Stimmzettel."
+        },
+        "2": {
+          "VALID": "Stimmen-Total für Frage 2 (Gegenvorschlag / Variante 2) entspricht der Anzahl gültige Stimmzettel.",
+          "INVALID": "Stimmen-Total für Frage 2 (Gegenvorschlag / Variante 2) entspricht nicht der Anzahl gültige Stimmzettel."
+        },
+        "3": {
+          "VALID": "Stimmen-Total für Frage 3 (Gegenvorschlag / Variante 3) entspricht der Anzahl gültige Stimmzettel.",
+          "INVALID": "Stimmen-Total für Frage 3 (Gegenvorschlag / Variante 3) entspricht nicht der Anzahl gültige Stimmzettel."
+        }
+      },
+      "22": {
+        "1": {
+          "VALID": "Stimmen-Total für Stichfrage 1 (Frage 1 / Frage 2) entspricht der Anzahl gültige Stimmzettel.",
+          "INVALID": "Stimmen-Total für Stichfrage 1 (Frage 1 / Frage 2) entspricht nicht der Anzahl gültige Stimmzettel."
+        },
+        "2": {
+          "VALID": "Stimmen-Total für Stichfrage 2 (Frage 1 / Frage 3) entspricht der Anzahl gültige Stimmzettel.",
+          "INVALID": "Stimmen-Total für Stichfrage 2 (Frage 1 / Frage 3) entspricht nicht der Anzahl gültige Stimmzettel."
+        },
+        "3": {
+          "VALID": "Stimmen-Total für Stichfrage 3 (Frage 2 / Frage 3) entspricht der Anzahl gültige Stimmzettel.",
+          "INVALID": "Stimmen-Total für Stichfrage 3 (Frage 2 / Frage 3) entspricht nicht der Anzahl gültige Stimmzettel."
+        }
+      },
+      "27": {
+        "VALID": "Die Kandidierenden-Stimmen sind vollständig erfasst.",
+        "INVALID": "Die Kandidierenden-Stimmen sind noch nicht vollständig erfasst."
+      },
+      "28": {
+        "VALID": "Die leeren Zeilen sind vollständig erfasst.",
+        "INVALID": "Die leeren Zeilen sind noch nicht vollständig erfasst."
+      },
+      "29": {
+        "VALID": "Die ungültigen Stimmen sind vollständig erfasst.",
+        "INVALID": "Die ungültigen Stimmen sind noch nicht vollständig erfasst."
+      },
+      "36": {
+        "VALID": "Die Kandidierenden-Stimmen dieses Geschäfts sind vollständig erfasst. Leere Zeilen ({{ emptyVoteCount }}) + Ungültige Stimmen ({{ invalidVoteCount }}) + Kandidierenden-Stimmen ({{ candidateVotesInclIndividual }}) = {{ sumVoteCount }}. Vergleich: Mandate ({{ numberOfMandates }}) x Gültige Wahlzettel ({{ totalAccountedBallots }}) = {{ numberOfMandatesTimesAccountedBallots }}",
+        "INVALID": "Die Kandidierenden-Stimmen dieses Geschäfts sind noch nicht vollständig erfasst. Leere Zeilen ({{ emptyVoteCount }}) + Ungültige Stimmen ({{ invalidVoteCount }}) + Kandidierenden-Stimmen ({{ candidateVotesInclIndividual }}) = {{ sumVoteCount }}. Vergleich: Mandate ({{ numberOfMandates }}) x Gültige Wahlzettel ({{ totalAccountedBallots }}) = {{ numberOfMandatesTimesAccountedBallots }}"
+      },
+      "37": {
+        "VALID": "Eine Kandidatin oder ein Kandidat darf nicht mehr Stimmen haben als die Anzahl gültiger Wahlzettel.",
+        "INVALID": "Eine Kandidatin oder ein Kandidat hat mehr Stimmen als die Anzahl gültiger Wahlzettel."
+      },
+      "43": {
+        "VALID": "Total kontrollierte veränderte Wahlzettel ({{ totalCountOfBallots }}) + unveränderte Wahlzettel ({{ totalCountOfUnmodifiedLists }}) = ({{ sumBallotsAndUnmodifiedLists }}) stimmt mit der Anzahl gültiger Wahlzettel ({{ totalAccountedBallots }}) überein.",
+        "INVALID": "Total kontrollierte veränderte Wahlzettel ({{ totalCountOfBallots }}) + unveränderte Wahlzettel ({{ totalCountOfUnmodifiedLists }}) = ({{ sumBallotsAndUnmodifiedLists }}) stimmt nicht mit der Anzahl gültiger Wahlzettel ({{ totalAccountedBallots }}) überein."
+      },
+      "50": {
+        "VALID": "Es sind keine Bunde mehr in Arbeit.",
+        "INVALID": "Es sind noch Bunde in Arbeit."
+      },
+      "51": {
+        "VALID": "eVoting Resultate wurden importiert.",
+        "INVALID": "eVoting Resultate wurden noch nicht importiert."
+      },
+      "52": {
+        "VALID": "Write-Ins wurden zugeordnet oder es sind keine vorhanden.",
+        "INVALID": "Write-Ins wurden noch nicht zugeordnet."
+      },
+      "1150": {
+        "VALID": "Die Abweichung der Stimmbeteiligung zum Geschäft mit der höchsten Abweichung der Stimmbeteiligung der Ebene {{ domainOfInfluenceTypeString }} ist nicht auffällig:",
+        "INVALID": "Die Abweichung der Stimmbeteiligung zum Geschäft mit der höchsten Abweichung der Stimmbeteiligung der Ebene {{ domainOfInfluenceTypeString }} ist auffällig:",
+        "LIST_ITEMS": {
+          "0": "Ist: {{ deviationPercentString }}",
+          "1": "Schwellenwert: {{ thresholdPercentString }}"
+        }
+      },
+      "1151": {
+        "VALID": "Die Anzahl erfasster Stimmberechtigter ist nicht auffällig:",
+        "INVALID": "Die Anzahl erfasster Stimmberechtigter ist auffällig:",
+        "LIST_ITEMS": {
+          "0": "Heute haben Sie erfasst = {{ currentCount }}",
+          "1": "Am {{ previousDateString }} waren es = {{ previousCount }}",
+          "2": "Die Differenz beträgt = {{ deviation }} ({{ deviationPercentString }}, Schwellenwert {{ thresholdPercentString }})"
+        }
+      },
+      "1152": {
+        "VALID": "Die Anzahl eingegangener Stimmrechtsausweise via Stimmkanal {{ votingChannelString }} ist nicht auffällig:",
+        "INVALID": "Die Anzahl eingegangener Stimmrechtsausweise via Stimmkanal {{ votingChannelString }} ist auffällig:",
+        "LIST_ITEMS": {
+          "0": "Heute haben Sie erfasst = {{ currentCount }}",
+          "1": "Am {{ previousDateString }} waren es = {{ previousCount }}",
+          "2": "Die Differenz beträgt = {{ deviation }} ({{ deviationPercentString }}, Schwellenwert {{ thresholdPercentString }})"
+        }
+      },
+      "1153": {
+        "1": {
+          "VALID": "Die relative Differenz der gültigen Stimmrechtsausweise zur Anzahl gültiger Stimmzettel ist nicht auffällig",
+          "INVALID": "Die relative Differenz der gültigen Stimmrechtsausweise zur Anzahl gültiger Stimmzettel ist auffällig",
+          "LIST_ITEMS": {
+            "0": "Ist: {{ deviationPercentString }}",
+            "1": "Schwellenwert: {{ thresholdPercentString }}"
+          }
+        },
+        "2": {
+          "VALID": "Die relative Differenz der gültigen Stimmrechtsausweise zur Anzahl gültiger Wahlzettel ist nicht auffällig",
+          "INVALID": "Die relative Differenz der gültigen Stimmrechtsausweise zur Anzahl gültiger Wahlzettel ist auffällig",
+          "LIST_ITEMS": {
+            "0": "Ist: {{ deviationPercentString }}",
+            "1": "Schwellenwert: {{ thresholdPercentString }}"
+          }
+        },
+        "3": {
+          "VALID": "Die relative Differenz der gültigen Stimmrechtsausweise zur Anzahl gültiger Wahlzettel ist nicht auffällig",
+          "INVALID": "Die relative Differenz der gültigen Stimmrechtsausweise zur Anzahl gültiger Wahlzettel ist auffällig",
+          "LIST_ITEMS": {
+            "0": "Ist: {{ deviationPercentString }}",
+            "1": "Schwellenwert: {{ thresholdPercentString }}"
+          }
+        }
+      }
+    }
+  },
+  "RESULT_IMPORT": {
+    "WRITE_INS": {
+      "TITLE": "Write-Ins zuordnen",
+      "TITLE_MISSING_MAPPINGS": "Write-Ins (vorgruppiert)",
+      "TITLE_CANDIDATES": "Kandidierende",
+      "NO_MORE_DATA": "Keine weiteren Write-Ins vorhanden",
+      "NEXT_ELECTION": "Nächste Wahl",
+      "COUNT_OF_WRITE_INS": "Anz. Write-Ins",
+      "ADDED_TO_CANDIDATE": "Write-Ins zu Kandidat/in {{number}} {{politicalFirstName}} {{politicalLastName}} hinzugefügt.",
+      "NO_CANDIDATE_SELECTED": "Keine Write-Ins ausgewählt…",
+      "COULD_NOT_FIND_CANDIDATE": "Kein/e Kandidat/in mit der Nummer {{number}} gefunden…",
+      "ASSIGN_SHORTCUT": "CTRL+Zahl um Write-In zuzuordnen",
+      "COMPLETE": "Abschliessen"
+    }
+  },
+  "SECOND_FACTOR_TRANSACTION": {
+    "TITLE": "Transaktionsbestätigung",
+    "INFO": "Bitte bestätigen Sie die Transaktion in Ihrer Authentifizierungs-App mit dem Code {{code}}.",
+    "ERROR": "Es ist ein Fehler aufgetreten. Bitte führen Sie die Aktion erneut aus."
+  },
+  "ERROR_MESSAGES": {
+    "SecondFactorTransactionDataChangedException": "Die Daten wurden in der Zwischenzeit geändert, somit muss die Aktion erneut ausgeführt werden.",
+    "SecondFactorTransactionNotVerifiedException": "Die Transaktionsbestätigung wurde abgebrochen. Bitte führen Sie die Aktion erneut aus."
+  }
+}

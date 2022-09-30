@@ -1,0 +1,93 @@
+<vo-lib-page [contentLoading]="loading"
+             header="VOTE.BALLOT_DETAIL.TITLE">
+  <div *ngIf="politicalBusinessResult && politicalBusinessResult.entryParams && bundle && politicalBusinessResult" class="content">
+    <vo-ausm-vote-info [voteResult]="politicalBusinessResult"></vo-ausm-vote-info>
+
+    <div>
+      <vo-ausm-vote-bundle-table [bundles]="[bundle]"></vo-ausm-vote-bundle-table>
+    </div>
+
+    <div class="content-box">
+      <vo-ausm-ballot-header
+        #header
+        [disabled]="loadingBallot"
+        [readonly]="(isErfassungUser | async) !== true || !bundleInProcessOrCorrection || politicalBusinessResult.vote.contest!.locked"
+        [ballotNumber]="ballot?.number || 1"
+        [minBallotNumber]="minBallotNumber"
+        [maxBallotNumber]="currentMaxBallotNumber"
+        [actionExecuting]="actionExecuting"
+        [canDeleteBallot]="!!ballot && ballot.number === currentMaxBallotNumber"
+        [canNavigate]="true"
+        [labelDelete]="'VOTE.BALLOT_DETAIL.DELETE'"
+        [labelConfirmDelete]="'VOTE.BALLOT_DETAIL.CONFIRM_DELETE'"
+        [labelBallotNumber]="'VOTE.BALLOT_DETAIL.BALLOT_NR'"
+        (ballotNumberChange)="navigateToBallot($event)"
+        (deleteBallot)="deleteBallotAndNavigate()">
+        <div
+          *ngIf="!loadingBallot
+            && !!ballot
+            && bundleInProcessOrCorrection
+            && (isErfassungUser | async) === true
+            && !politicalBusinessResult.vote.contest!.locked"
+          class="mb-2">
+          <bc-button class="mx-2"
+                     [class.disabled]="actionExecuting"
+                     variant="tertiary"
+                     [label]="'VOTE.BALLOT_DETAIL.SET_ANSWER.YES' | translate"
+                     (buttonClick)="setAnswerYes()"></bc-button>
+          <bc-button class="mx-2"
+                     [class.disabled]="actionExecuting"
+                     variant="tertiary"
+                     [label]="'VOTE.BALLOT_DETAIL.SET_ANSWER.NO' | translate"
+                     (buttonClick)="setAnswerNo()"></bc-button>
+          <bc-button *ngIf="!!ballotResult && ballotResult.ballot.ballotType === BallotType.BALLOT_TYPE_VARIANTS_BALLOT"
+                     class="mx-2"
+                     variant="tertiary"
+                     [class.disabled]="actionExecuting"
+                     [label]="'VOTE.BALLOT_DETAIL.SET_ANSWER.UNSPECIFIED' | translate"
+                     (buttonClick)="setAnswerUnspecified()"></bc-button>
+        </div>
+        <bc-icon *ngIf="!header.readonly" class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
+      </vo-ausm-ballot-header>
+      <ng-container *ngIf="!loadingBallot && !!ballot; else noBallot">
+        <vo-ausm-vote-ballot-content
+          *ngIf="ballotResult"
+          (contentChanged)="contentChanged()"
+          [ballot]="ballot"
+          [ballotResult]="ballotResult"
+          [loadingBallot]="loadingBallot"
+          [disabled]="actionExecuting"
+          [activeAnswer]="activeAnswer"
+          [readonly]="!bundleInProcessOrCorrection || (isErfassungUser | async) !== true || politicalBusinessResult.vote.contest!.locked">
+        </vo-ausm-vote-ballot-content>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-container page-footer>
+    <vo-ausm-political-business-ballot-button-bar
+      class="content-box"
+      *ngIf="politicalBusinessResult && politicalBusinessResult.entryParams && bundle"
+      [disabled]="loadingBallot"
+      [actionExecuting]="actionExecuting"
+      [readonly]="(isErfassungUser | async) !== true || !bundleInProcessOrCorrection || politicalBusinessResult.vote.contest!.locked"
+      [canSubmitBundle]="bundle.countOfBallots > 0"
+      [canCreateBallot]="true"
+      [labelCreate]="'VOTE.BALLOT_DETAIL.NEW'"
+      (createBallot)="createBallot()"
+      (back)="saveAndBack()"
+      (submitBundle)="submitBundleAndNavigate()"></vo-ausm-political-business-ballot-button-bar>
+  </ng-container>
+</vo-lib-page>
+
+<ng-template #noBallot>
+  <div *ngIf="!loadingBallot; else spinner"
+       class="no-data ml-1 my-3"
+       translate>VOTE.BALLOT_DETAIL.NO_BALLOTS
+  </div>
+</ng-template>
+
+<ng-template #spinner>
+  <bc-spinner></bc-spinner>
+</ng-template>
+

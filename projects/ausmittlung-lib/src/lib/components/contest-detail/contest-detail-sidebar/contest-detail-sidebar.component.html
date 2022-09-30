@@ -1,0 +1,37 @@
+<ng-container *ngIf="resultListValue; else spinner">
+  <vo-ausm-contest-detail-count-of-voters [readonly]="readonly"
+                                          [eVoting]="resultListValue.details.eVoting"
+                                          [swissAbroadHaveVotingRightsOnAnyBusiness]="resultListValue.swissAbroadHaveVotingRightsOnAnyBusiness"
+                                          [details]="resultListValue.details"></vo-ausm-contest-detail-count-of-voters>
+
+  <vo-ausm-contest-detail-voting-cards [readonly]="readonly"
+                                       [details]="resultListValue.details"
+                                       [enabledVotingCardChannels]="resultListValue.enabledVotingCardChannels"
+                                       [domainOfInfluenceTypes]="domainOfInfluenceTypes"></vo-ausm-contest-detail-voting-cards>
+
+  <vo-lib-inline-spinner *ngIf="!readonly" [loading]="saving">
+    <bc-button class="my-3"
+               [disabled]="saving"
+               [label]="'COMMON.SAVE' | translate"
+               (buttonClick)="save()"></bc-button>
+  </vo-lib-inline-spinner>
+
+  <h4 translate class="mt-4">CONTEST.DETAIL.CONTACT_DATA.TITLE</h4>
+  <p class="subtitle">{{resultListValue.countingCircle.name}}</p>
+  <vo-ausm-contact-person-data [contactPerson]="resultListValue.countingCircle.contactPersonDuringEvent">
+  </vo-ausm-contact-person-data>
+  <ng-container *ngIf="!resultListValue.countingCircle.contactPersonSameDuringEventAsAfter">
+    <p class="subtitle" translate>CONTEST.DETAIL.CONTACT_DATA.AFTER_EVENT</p>
+    <vo-ausm-contact-person-data [contactPerson]="resultListValue.countingCircle.contactPersonAfterEvent">
+    </vo-ausm-contact-person-data>
+  </ng-container>
+
+  <bc-button *ngIf="resultListValue.currentTenantIsResponsible && (isErfassungElectionAdmin | async) && !resultListValue.contest.locked"
+             class="mt-2"
+             [label]="'CONTEST.DETAIL.CONTACT_DATA.EDIT' | translate"
+             (buttonClick)="openContactPersonEdit()"></bc-button>
+</ng-container>
+
+<ng-template #spinner>
+  <bc-spinner></bc-spinner>
+</ng-template>

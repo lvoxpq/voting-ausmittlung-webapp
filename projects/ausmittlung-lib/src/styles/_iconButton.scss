@@ -1,0 +1,10 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+bc-icon.clickable-icon {
+  color: $color-primary;
+
+  &:hover {
+    cursor: pointer;
+    color: $color-primary-50;
+  }
+}

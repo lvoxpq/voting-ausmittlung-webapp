@@ -1,0 +1,8 @@
+<vo-ausm-info-panel [mainEntry]="voteResult.vote.title">
+  <vo-ausm-info-panel-entry label="APP.STATE">
+    <vo-ausm-result-state-box [state]="voteResult.state"></vo-ausm-result-state-box>
+  </vo-ausm-info-panel-entry>
+  <vo-ausm-info-panel-entry label="VOTE.RESULT_ENTRY.COUNTING_CIRCLE">
+    {{voteResult.countingCircle.name}}
+  </vo-ausm-info-panel-entry>
+</vo-ausm-info-panel>

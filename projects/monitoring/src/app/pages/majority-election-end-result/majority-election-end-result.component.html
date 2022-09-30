@@ -1,0 +1,62 @@
+<app-end-result-page [loading]="loading"
+                     [contest]="endResult?.contest"
+                     [domainOfInfluenceDetails]="endResult?.domainOfInfluenceDetails"
+                     [domainOfInfluenceType]="endResult?.election?.domainOfInfluence?.type"
+                     [swissAbroadHaveVotingRights]="endResult?.election.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE"
+                     (export)="export()">
+  <ng-container *ngIf="endResult">
+    <vo-ausm-info-panel>
+      <vo-ausm-info-panel-entry label="END_RESULT.POLITICAL_BUSINESS">
+        {{endResult.election.title}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="MAJORITY_ELECTION.TITLE">
+        {{'ELECTION.NR_OF_MANDATES' | translate:endResult.election}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.COUNT_OF_VOTERS">
+        {{endResult.domainOfInfluenceDetails?.countOfVotersInformation.totalCountOfVoters | number}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.COUNTING_DONE">
+        {{'END_RESULT.COUNTING_DONE_OF' | translate: endResult}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.ELECTION.BALLOT_COUNT.RECEIVED">
+        {{endResult.countOfVoters.totalReceivedBallots}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.ELECTION.BALLOT_COUNT.BLANK">
+        {{endResult.countOfVoters.conventionalBlankBallots}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.ELECTION.BALLOT_COUNT.VALID">
+        {{endResult.countOfVoters.totalAccountedBallots}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.ELECTION.BALLOT_COUNT.INVALID">
+        {{endResult.countOfVoters.conventionalInvalidBallots}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="ELECTION.VOTER_PARTICIPATION">
+        <span>{{endResult.countOfVoters.voterParticipation | percent: '1.2-2'}}</span>
+      </vo-ausm-info-panel-entry>
+    </vo-ausm-info-panel>
+
+    <div class="additional-infos">
+      <vo-lib-inline-spinner [loading]="finalizing"
+                             position="right">
+        <app-end-result-type-selector *ngIf="endResult"
+                                      [finalized]="endResult.finalized"
+                                      (finalizedChange)="setFinalized($event)"
+                                      [disabled]="!endResult.allCountingCirclesDone || endResult.contest.locked || hasOpenRequiredLotDecisions || finalizing"></app-end-result-type-selector>
+      </vo-lib-inline-spinner>
+      <bc-button *ngIf="hasLotDecisions && endResult.allCountingCirclesDone && !endResult.contest.locked"
+                 [label]="'END_RESULT.ELECTION.LOT_DECISION.OPEN' | translate"
+                 (buttonClick)="openUpdateLotDecisions()">
+      </bc-button>
+    </div>
+
+    <app-majority-election-end-result-candidates-list [endResult]="endResult"
+                                                      [eVoting]="endResult.contest.eVoting"
+                                                      [showLotDecision]="!hasOpenRequiredLotDecisions && hasLotDecisions"></app-majority-election-end-result-candidates-list>
+    <ng-container *ngFor="let secondaryMajorityElectionEndResult of endResult.secondaryMajorityElectionEndResults">
+      <app-majority-election-end-result-candidates-list [endResult]="secondaryMajorityElectionEndResult"
+                                                        [eVoting]="endResult.contest.eVoting"
+                                                        [showLotDecision]="!hasOpenRequiredLotDecisions && hasLotDecisions"
+                                                        [showTitle]="true"></app-majority-election-end-result-candidates-list>
+    </ng-container>
+  </ng-container>
+</app-end-result-page>

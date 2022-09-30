@@ -1,0 +1,100 @@
+<vo-lib-page [contentLoading]="loading"
+             header="ELECTION.BALLOT_DETAIL.TITLE">
+  <ng-container *ngIf="politicalBusinessResult && bundle">
+    <div class="content">
+      <vo-ausm-proportional-election-info [electionResult]="politicalBusinessResult"></vo-ausm-proportional-election-info>
+
+      <div>
+        <vo-ausm-proportional-election-bundle-table [bundleSize]="politicalBusinessResult.entryParams.ballotBundleSize"
+                                                    [bundles]="[bundle]"></vo-ausm-proportional-election-bundle-table>
+      </div>
+
+      <div class="content-box">
+        <h4 *ngIf="!bundle.list" translate>ELECTION.BALLOT_DETAIL.WITHOUT_LIST</h4>
+        <vo-ausm-ballot-header
+          #header
+          [canNavigate]="emptyVoteCountValid"
+          [ballotNumber]="ballot?.number"
+          [minBallotNumber]="minBallotNumber"
+          [maxBallotNumber]="currentMaxBallotNumber"
+          [disabled]="loadingBallot"
+          [actionExecuting]="actionExecuting"
+          [readonly]="(isErfassungUser | async) !== true
+            || !bundleInProcessOrCorrection
+            || politicalBusinessResult.election.contest!.locked"
+          [canDeleteBallot]="!!ballot && ballot.number === currentMaxBallotNumber"
+          (back)="saveAndBack()"
+          (deleteBallot)="deleteBallotAndNavigate()"
+          (ballotNumberChange)="navigateToBallot($event)">
+          <bc-button
+            *ngIf="!loadingBallot
+              && !!ballot
+              && bundleInProcessOrCorrection
+              && (isErfassungUser | async) === true
+              && !politicalBusinessResult.election.contest!.locked"
+            class="mx-2 mb-2"
+            variant="tertiary"
+            [label]="'ELECTION.BALLOT_DETAIL.REMOVE_ALL_CANDIDATES' | translate"
+            [class.disabled]="actionExecuting"
+            (buttonClick)="removeAllCandidates()">
+          </bc-button>
+          <bc-button
+            *ngIf="!loadingBallot
+              && !!ballot
+              && bundleInProcessOrCorrection
+              && (isErfassungUser | async) === true
+              && !politicalBusinessResult.election.contest!.locked"
+            class="mx-2 mb-2"
+            variant="tertiary"
+            [class.disabled]="actionExecuting || !hasChanges"
+            [label]="'ELECTION.BALLOT_DETAIL.RESET' | translate"
+            (buttonClick)="resetBallot()">
+          </bc-button>
+          <bc-icon *ngIf="!header.readonly" class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
+        </vo-ausm-ballot-header>
+        <ng-container *ngIf="!loadingBallot && !!ballot; else noBallot">
+          <vo-ausm-proportional-election-ballot-content
+            class="my-3"
+            [showRemoveRange]="!!bundle.list"
+            [electionResult]="politicalBusinessResult"
+            [ballot]="ballot"
+            [ballotUiData]="ballotUiData"
+            [disabled]="actionExecuting"
+            (contentChanged)="contentChanged()"
+            [readonly]="!bundleInProcessOrCorrection
+              || (isErfassungUser | async) !== true
+              || politicalBusinessResult.election.contest!.locked"
+            (contentCompleted)="ballotBundleSize && bundle.countOfBallots !== ballotBundleSize
+              ? footer.emitCreateBallot($event)
+              : submitBundleAndNavigate()">
+          </vo-ausm-proportional-election-ballot-content>
+        </ng-container>
+      </div>
+    </div>
+
+    <ng-container page-footer>
+      <vo-ausm-political-business-ballot-button-bar
+        #footer
+        class="content-box"
+        [disabled]="loadingBallot"
+        [actionExecuting]="actionExecuting"
+        [readonly]="(isErfassungUser | async) !== true || !bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
+        [canSubmitBundle]="bundle.countOfBallots > 0"
+        [canCreateBallot]="bundle.countOfBallots < politicalBusinessResult.entryParams.ballotBundleSize"
+        (createBallot)="createBallot()"
+        (back)="saveAndBack()"
+        (submitBundle)="submitBundleAndNavigate()"></vo-ausm-political-business-ballot-button-bar>
+    </ng-container>
+  </ng-container>
+</vo-lib-page>
+
+<ng-template #noBallot>
+  <div *ngIf="!loadingBallot; else spinner"
+       class="no-data ml-1 my-3"
+       translate>ELECTION.BALLOT_DETAIL.NO_BALLOTS
+  </div>
+</ng-template>
+
+<ng-template #spinner>
+  <bc-spinner></bc-spinner>
+</ng-template>

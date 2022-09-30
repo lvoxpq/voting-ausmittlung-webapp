@@ -1,0 +1,30 @@
+<div>
+  <bc-text
+    #removeCandidateInput
+    [focusOnLoad]="true"
+    optionalText=""
+    [label]="'ELECTION.BALLOT_DETAIL.REMOVE_CANDIDATE' | translate"
+    [disabled]="readonly"
+    [hint]="'PROPORTIONAL_ELECTION.BALLOT_DETAIL.REMOVE_CANDIDATE_HINT' | translate"
+    [(value)]="removeCandidateValue"
+    (valueChange)="tryRemoveCandidate($event)"
+  ></bc-text>
+</div>
+<div class="mt-3 ml-3" *ngIf="showRemoveRange">
+  <vo-ausm-proportional-election-ballot-candidate-remove-range
+    (removeRange)="removeCandidateRange.emit($event)"
+    [readonly]="readonly"
+  ></vo-ausm-proportional-election-ballot-candidate-remove-range>
+</div>
+<div class="mt-3">
+  <bc-text
+    #addCandidateInput
+    optionalText=""
+    [label]="'ELECTION.BALLOT_DETAIL.ADD_CANDIDATE_SHORTCUT' | translate"
+    [disabled]="readonly || !canAddCandidate"
+    [(ngModel)]="addCandidateValue"
+    [hint]="'PROPORTIONAL_ELECTION.BALLOT_DETAIL.ADD_CANDIDATE_HINT' | translate"
+    (ngModelChange)="tryAddCandidate($event)"
+    (keydown.enter)="contentCompleted.emit($event)"
+  ></bc-text>
+</div>

@@ -1,0 +1,92 @@
+<p class="whitespace-pre-wrap">{{ result.question | translateVoteQuestion: isTieBreakQuestion:'question':ballotNumberOfQuestions }}</p>
+<div class="question-results">
+  <div class="result-entry">
+    <p translate>VOTE.COUNT_OF_VOTES.UNKNOWN</p>
+    <div class="input-container">
+      <bc-number class="label-no-wrap"
+                    [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+                    [min]="0"
+                    [required]="true"
+                    [disabled]="readonly"
+                    [error]="result.conventionalSubTotal.totalCountOfAnswer1 !== undefined && result.conventionalSubTotal.totalCountOfAnswer1 < 0"
+                    [(value)]="result.conventionalSubTotal.totalCountOfAnswer1"
+                    (valueChange)="updateTotal()"></bc-number>
+      <bc-number class="label-no-wrap"
+                    [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions"
+                    [min]="0"
+                    [required]="true"
+                    [disabled]="readonly"
+                    [error]="result.conventionalSubTotal.totalCountOfAnswer2 !== undefined && result.conventionalSubTotal.totalCountOfAnswer2 < 0"
+                    [(value)]="result.conventionalSubTotal.totalCountOfAnswer2"
+                    (valueChange)="updateTotal()"></bc-number>
+      <bc-number class="label-no-wrap"
+                    [label]="'VOTE.BALLOT.ANSWER.UNSPECIFIED_SHORT' | translate"
+                    [min]="0"
+                    *ngIf="ballotNumberOfQuestions > 1"
+                    [required]="true"
+                    [disabled]="readonly"
+                    [error]="result.conventionalSubTotal.totalCountOfAnswerUnspecified !== undefined && result.conventionalSubTotal.totalCountOfAnswerUnspecified < 0"
+                    [(value)]="result.conventionalSubTotal.totalCountOfAnswerUnspecified"
+                    (valueChange)="updateTotal()"></bc-number>
+    </div>
+  </div>
+  <ng-container *ngIf="eVoting">
+    <div class="result-entry">
+      <p translate>VOTE.COUNT_OF_VOTES.E_VOTING</p>
+        <div class="input-container">
+          <bc-number
+            class="label-no-wrap"
+            [disabled]="true"
+            [required]="true"
+            [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+            [value]="result.eVotingSubTotal.totalCountOfAnswer1"></bc-number>
+          <bc-number
+            class="label-no-wrap"
+            [disabled]="true"
+            [required]="true"
+            [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions"
+            [value]="result.eVotingSubTotal.totalCountOfAnswer2"></bc-number>
+          <bc-number
+            class="label-no-wrap"
+            [disabled]="true"
+            [label]="'VOTE.BALLOT.ANSWER.UNSPECIFIED_SHORT' | translate"
+            [min]="0"
+            *ngIf="ballotNumberOfQuestions > 1"
+            [required]="true"
+            [(value)]="result.eVotingSubTotal.totalCountOfAnswerUnspecified"
+            (valueChange)="updateTotal()"></bc-number>
+        </div>
+      </div>
+      <div class="result-entry">
+        <p translate>VOTE.COUNT_OF_VOTES.TOTAL</p>
+          <div class="input-container">
+            <bc-number
+              class="label-no-wrap"
+              [disabled]="true"
+              [required]="true"
+              [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+              [value]="result.totalCountOfAnswer1"></bc-number>
+            <bc-number
+              class="label-no-wrap"
+              [disabled]="true"
+              [required]="true"
+              [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions"
+              [value]="result.totalCountOfAnswer2"></bc-number>
+            <bc-number
+              class="label-no-wrap"
+              [disabled]="true"
+              [required]="true"
+              *ngIf="ballotNumberOfQuestions > 1"
+              [label]="'VOTE.BALLOT.ANSWER.UNSPECIFIED_SHORT' | translate"
+              [value]="result.totalCountOfAnswerUnspecified"></bc-number>
+          </div>
+        </div>
+      </ng-container>
+      <div class="spacer"></div>
+      <vo-ausm-vote-results-graph
+        [countLeft]="result.totalCountOfAnswer1"
+        [countRight]="result.totalCountOfAnswer2"
+        [resultLabelLeft]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+        [resultLabelRight]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions">
+      </vo-ausm-vote-results-graph>
+    </div>

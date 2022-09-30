@@ -1,0 +1,29 @@
+<ng-container *ngIf="lotDecisions.lotDecisions.length > 0">
+  <h4 *ngIf="showTitle" class="mt-4 mb-2">{{lotDecisions.election.title}}</h4>
+
+  <div class="candidate-results">
+    <bc-label [label]="'ELECTION.CANDIDATE.RANK' | translate"></bc-label>
+    <bc-label [label]="'ELECTION.CANDIDATE.NUMBER' | translate"></bc-label>
+    <bc-label class="candidate-name" [label]="'ELECTION.CANDIDATE.CANDIDACY' | translate"></bc-label>
+    <bc-label [label]="'ELECTION.CANDIDATE.PARTY' | translate"></bc-label>
+    <bc-label [label]="'ELECTION.VOTE_COUNT' | translate"></bc-label>
+    <bc-label [label]="'ELECTION.CANDIDATE.RANK_AFTER_LOT_DECISION' | translate"></bc-label>
+
+    <ng-container *ngFor="let lotDecision of lotDecisions.lotDecisions">
+      <span>{{lotDecision.originalRank}}</span>
+      <span>{{lotDecision.candidate.number}}</span>
+      <span class="candidate-name">{{lotDecision.candidate.politicalLastName}} {{lotDecision.candidate.politicalFirstName}}</span>
+      <span>{{lotDecision.candidate.party}}</span>
+      <span>{{lotDecision.voteCount}}</span>
+      <ng-container *ngTemplateOutlet="rankDropdownTemplate; context: {$implicit: lotDecision}"></ng-container>
+    </ng-container>
+  </div>
+
+  <ng-template #rankDropdownTemplate let-lotDecision>
+    <span>
+      <bc-dropdown #rankDropdownInput
+                   [(value)]="lotDecision.selectedRank"
+                   [items]="lotDecision.selectableRanks"></bc-dropdown>
+    </span>
+  </ng-template>
+</ng-container>

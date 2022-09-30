@@ -1,0 +1,44 @@
+<p class="whitespace-pre-wrap question">
+  {{ question | translateVoteQuestion: isTieBreakQuestion:'question':ballotNumberOfQuestions}}
+</p>
+<div class="answer-container" [class.tie-break-answers]="isTieBreakQuestion" [class.active]="active">
+  <vo-ausm-vote-ballot-question-answer-button
+    [class.selected-yes]="answer === BallotQuestionAnswer.BALLOT_QUESTION_ANSWER_YES
+      || answer === TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_Q1"
+    [selected]="answer === BallotQuestionAnswer.BALLOT_QUESTION_ANSWER_YES
+      || answer === TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_Q1"
+    [text]="question | translateVoteQuestion: isTieBreakQuestion:'answer1':ballotNumberOfQuestions"
+    (clicked)="updateAnswer(isTieBreakQuestion
+      ? TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_Q1
+      : BallotQuestionAnswer.BALLOT_QUESTION_ANSWER_YES)"
+    [disabled]="disabled"
+    [readonly]="readonly"
+  ></vo-ausm-vote-ballot-question-answer-button>
+
+  <vo-ausm-vote-ballot-question-answer-button
+    [class.selected-no]="answer === BallotQuestionAnswer.BALLOT_QUESTION_ANSWER_NO
+      || answer === TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_Q2"
+    [selected]="answer === BallotQuestionAnswer.BALLOT_QUESTION_ANSWER_NO
+      || answer === TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_Q2"
+    [text]="question | translateVoteQuestion: isTieBreakQuestion:'answer2':ballotNumberOfQuestions"
+    (clicked)="updateAnswer(isTieBreakQuestion
+      ? TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_Q2
+      : BallotQuestionAnswer.BALLOT_QUESTION_ANSWER_NO)"
+    [disabled]="disabled"
+    [readonly]="readonly"
+  ></vo-ausm-vote-ballot-question-answer-button>
+
+  <vo-ausm-vote-ballot-question-answer-button
+    *ngIf="ballotNumberOfQuestions > 1"
+    [class.selected-unspecified]="answer === BallotQuestionAnswer.BALLOT_QUESTION_ANSWER_UNSPECIFIED
+      || answer === TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_UNSPECIFIED"
+    [selected]="answer === BallotQuestionAnswer.BALLOT_QUESTION_ANSWER_UNSPECIFIED
+      || answer === TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_UNSPECIFIED"
+    [text]="'VOTE.BALLOT.ANSWER.UNSPECIFIED' | translate"
+    (clicked)="updateAnswer(isTieBreakQuestion
+      ? TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_UNSPECIFIED
+      : BallotQuestionAnswer.BALLOT_QUESTION_ANSWER_UNSPECIFIED)"
+    [disabled]="disabled"
+    [readonly]="readonly"
+  ></vo-ausm-vote-ballot-question-answer-button>
+</div>

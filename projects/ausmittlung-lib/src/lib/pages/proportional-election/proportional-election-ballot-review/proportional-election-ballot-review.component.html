@@ -1,0 +1,48 @@
+<vo-lib-page [contentLoading]="loading"
+             header="ELECTION.REVIEW_BALLOT_DETAIL.TITLE">
+  <div *ngIf="electionResult && bundle" class="content">
+    <vo-ausm-proportional-election-info [electionResult]="electionResult"></vo-ausm-proportional-election-info>
+
+    <div>
+      <vo-ausm-proportional-election-bundle-table [bundleSize]="electionResult.entryParams.ballotBundleSize"
+                                                  [bundles]="[bundle]"></vo-ausm-proportional-election-bundle-table>
+    </div>
+
+    <div class="content-box">
+      <vo-ausm-ballot-review-stepper [reviewBallots]="reviewBallots"
+                                     [disabled]="loadingBallot || !ballot || actionExecuting"
+                                     [correctionOngoing]="correctionOngoing"
+                                     [ballotTitle]="'ELECTION.REVIEW_BALLOT_DETAIL.BALLOT_TITLE' | translate:ballot"
+                                     (startCorrection)="startCorrection()"
+                                     (cancelCorrection)="cancelCorrection()"
+                                     (submitCorrection)="submitCorrection()"
+                                     (ballotNumberSelected)="loadBallot($event)"
+                                     (reviewBallotChange)="updateState()"></vo-ausm-ballot-review-stepper>
+
+      <ng-container *ngIf="!loadingBallot && !!ballot; else spinner">
+        <vo-ausm-proportional-election-ballot-content class="mb-3"
+                                                      [showRemoveRange]="!!bundle.list"
+                                                      [ballotUiData]="ballotUiData"
+                                                      [readonly]="!correctionOngoing"
+                                                      [disabled]="actionExecuting"
+                                                      [ballot]="ballot"
+                                                      [electionResult]="electionResult"></vo-ausm-proportional-election-ballot-content>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-container page-footer>
+    <vo-ausm-election-ballot-review-button-bar class="content-box"
+                                               *ngIf="electionResult && bundle"
+                                               (back)="back()"
+                                               (rejectBundleReview)="rejectBundleReview()"
+                                               (succeedBundleReview)="succeedBundleReview()"
+                                               [actionExecuting]="actionExecuting"
+                                               [disabled]="loadingBallot || !ballot"
+                                               [canSucceed]="canSucceed"></vo-ausm-election-ballot-review-button-bar>
+  </ng-container>
+</vo-lib-page>
+
+<ng-template #spinner>
+  <bc-spinner *ngIf="loadingBallot"></bc-spinner>
+</ng-template>

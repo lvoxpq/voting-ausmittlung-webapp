@@ -1,0 +1,145 @@
+<app-end-result-page [loading]="loading"
+                     [contest]="endResult?.contest"
+                     [domainOfInfluenceDetails]="endResult?.domainOfInfluenceDetails"
+                     [domainOfInfluenceType]="endResult?.election?.domainOfInfluence?.type"
+                     [swissAbroadHaveVotingRights]="endResult?.election.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE"
+                     (export)="export()">
+  <ng-container *ngIf="endResult">
+    <vo-ausm-info-panel>
+      <vo-ausm-info-panel-entry label="END_RESULT.POLITICAL_BUSINESS">
+        {{endResult.election.title}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="PROPORTIONAL_ELECTION.TITLE">
+        {{'ELECTION.NR_OF_MANDATES' | translate:endResult.election}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.COUNT_OF_VOTERS">
+        {{endResult.domainOfInfluenceDetails?.countOfVotersInformation.totalCountOfVoters | number}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.COUNTING_DONE">
+        {{'END_RESULT.COUNTING_DONE_OF' | translate: endResult}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.ELECTION.BALLOT_COUNT.RECEIVED">
+        {{endResult.countOfVoters.totalReceivedBallots}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.ELECTION.BALLOT_COUNT.BLANK">
+        {{endResult.countOfVoters.conventionalBlankBallots}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.ELECTION.BALLOT_COUNT.VALID">
+        {{endResult.countOfVoters.totalAccountedBallots}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="END_RESULT.ELECTION.BALLOT_COUNT.INVALID">
+        {{endResult.countOfVoters.conventionalInvalidBallots}}
+      </vo-ausm-info-panel-entry>
+      <vo-ausm-info-panel-entry label="ELECTION.VOTER_PARTICIPATION">
+        <span>{{endResult.countOfVoters.voterParticipation | percent: '1.2-2'}}</span>
+      </vo-ausm-info-panel-entry>
+    </vo-ausm-info-panel>
+  </ng-container>
+
+  <div class="additional-infos" *ngIf="endResult">
+    <vo-lib-inline-spinner [loading]="finalizing"
+                           position="right">
+      <app-end-result-type-selector [finalized]="endResult.finalized"
+                                    (finalizedChange)="setFinalized($event)"
+                                    [disabled]="hasOpenRequiredLotDecisions || !endResult.allCountingCirclesDone || endResult.contest.locked || finalizing"></app-end-result-type-selector>
+    </vo-lib-inline-spinner>
+    <bc-button *ngIf="hasLotDecisions && endResult.allCountingCirclesDone && !endResult.contest.locked"
+               [label]="'END_RESULT.ELECTION.LOT_DECISION.OPEN' | translate"
+               (buttonClick)="openUpdateLotDecisions()">
+    </bc-button>
+  </div>
+
+  <vo-ausm-voting-data-source-tabs *ngIf="endResult && endResult.contest.eVoting"
+                                   class="mt-2 mb-2"
+                                   (dataSourceChange)="setDataPrefix($event)"></vo-ausm-voting-data-source-tabs>
+  <vo-lib-split-screen [class.mt-2]="endResult && !endResult.contest.eVoting">-->
+    <bc-advanced-table
+      left
+      *ngIf="endResult"
+      class="pr-4"
+      [dataSource]="endResult.listEndResults">
+
+      <ng-container bcColumnDef="orderNumber">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.LIST.ORDER_NUMBER_ABBREVIATION' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.list.orderNumber }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="description">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.LIST.DESCRIPTION_ABBREVIATION' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.list.description }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="listVotesCount">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.LIST.LIST_VOTES_COUNT' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ (dataPrefix ? element[dataPrefix] : element).listVotesCount }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="blankRowsCount">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.LIST.BLANK_ROWS_COUNT' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ (dataPrefix ? element[dataPrefix] : element).blankRowsCount }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="totalVoteCount">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.LIST.TOTAL_VOTE_COUNT' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ (dataPrefix ? element[dataPrefix] : element).totalVoteCount }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="nrOfMandates">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.NR_OF_MANDATES_TITLE' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.numberOfMandates }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="listUnion">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.LIST_UNION.LIST_UNION_ABBREVIATION' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.listUnion?.description }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="subListUnion">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.SUB_LIST_UNION.SUB_LIST_UNION_ABBREVIATION' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.subListUnion?.description }}</td>
+      </ng-container>
+
+      <tr bc-header-row *bcHeaderRowDef="listColumns"></tr>
+      <tr bc-advanced-table-row *bcRowDef="let row; columns: listColumns"
+          [selectable]="true"
+          (rowSelected)="selectListEndResult(row)"></tr>
+    </bc-advanced-table>
+
+    <div right class="pl-4">
+      <bc-advanced-table
+        *ngIf="endResult && selectedListEndResult; else nothingSelected"
+        [dataSource]="candidateEndResults">
+
+        <ng-container bcColumnDef="number">
+          <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.CANDIDATE.CANDIDATE_NUMBER_ABBREVIATION' | translate }}</th>
+          <td bc-cell *bcCellDef="let element">{{ element.candidate.number }}</td>
+        </ng-container>
+        <ng-container bcColumnDef="lastName">
+          <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.CANDIDATE.LAST_NAME' | translate }}</th>
+          <td bc-cell *bcCellDef="let element">{{ element.candidate.politicalLastName }}</td>
+        </ng-container>
+        <ng-container bcColumnDef="firstName">
+          <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.CANDIDATE.FIRST_NAME' | translate }}</th>
+          <td bc-cell *bcCellDef="let element">{{ element.candidate.politicalFirstName }}</td>
+        </ng-container>
+        <ng-container bcColumnDef="voteCount">
+          <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.VOTE_COUNT' | translate }}</th>
+          <td bc-cell *bcCellDef="let element">{{ (dataPrefix ? element[dataPrefix] : element).voteCount }}</td>
+        </ng-container>
+        <ng-container bcColumnDef="rank">
+          <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.CANDIDATE.RANK' | translate }}</th>
+          <td bc-cell *bcCellDef="let element">{{ element.rank }}</td>
+        </ng-container>
+        <ng-container bcColumnDef="state">
+          <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.CANDIDATE.STATE' | translate }}</th>
+          <td bc-cell *bcCellDef="let element">
+            <span class="candidate-state">{{'PROPORTIONAL_ELECTION.CANDIDATE.STATES.' + element.state | translate}}</span>
+          </td>
+        </ng-container>
+        <ng-container bcColumnDef="lotDecision">
+          <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.CANDIDATE.LOT_DECISION' | translate }}</th>
+          <td bc-cell *bcCellDef="let element">{{(element.lotDecision ? 'APP.YES' : 'APP.NO') | translate}}</td>
+        </ng-container>
+
+        <tr bc-header-row *bcHeaderRowDef="candidateColumns"></tr>
+        <tr bc-advanced-table-row *bcRowDef="let row; columns: candidateColumns"></tr>
+      </bc-advanced-table>
+      <ng-template #nothingSelected>
+        <p class="no-data mt-2" translate>PROPORTIONAL_ELECTION.LIST.NONE_SELECTED</p>
+      </ng-template>
+    </div>
+  </vo-lib-split-screen>
+</app-end-result-page>

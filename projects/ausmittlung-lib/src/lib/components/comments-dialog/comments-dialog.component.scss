@@ -1,0 +1,22 @@
+.content {
+  min-width: 20rem;
+}
+
+::ng-deep.message {
+  width: 100%;
+}
+
+.message-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .wrap {
+    white-space: pre-wrap;
+  }
+
+  .author {
+    align-self: flex-end;
+    font-style: italic;
+  }
+}

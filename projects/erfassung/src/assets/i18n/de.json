@@ -1,0 +1,11 @@
+{
+  "APP": {
+    "TITLE": "VOTING Ausmittlung Erfassung"
+  },
+  "CONTEST": {
+    "POLITICAL_BUSINESSES": "Geschäfte zur Erfassung",
+    "DETAIL": {
+      "TITLE": "Ergebnisse erfassen"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+<h4 class="mt-4" translate>CONTEST.DETAIL.VOTING_CARDS.TITLE</h4>
+<vo-ausm-contest-detail-voting-cards-doi-type *ngFor="let doiType of domainOfInfluenceTypes"
+                                              [readonly]="readonly"
+                                              [doiType]="doiType"
+                                              [votingCardDetails]="votingCardsByDoiType[doiType]!">
+</vo-ausm-contest-detail-voting-cards-doi-type>

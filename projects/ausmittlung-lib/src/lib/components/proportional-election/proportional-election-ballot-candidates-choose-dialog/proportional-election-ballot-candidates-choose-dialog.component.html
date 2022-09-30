@@ -1,0 +1,26 @@
+<vo-lib-dialog>
+  <h3 header>{{ 'ELECTION.BALLOT_DETAIL.REPLACE_CANDIDATE' | translate }}</h3>
+
+  <div content>
+    <bc-button
+      variant="tertiary"
+      [label]="'ELECTION.BALLOT_DETAIL.REPLACE_CANDIDATE_NO_REPLACEMENT' | translate"
+      (buttonClick)="done()"
+    ></bc-button>
+
+    <bc-text
+      [label]="'ELECTION.BALLOT_DETAIL.REPLACE_CANDIDATE_SEARCH_AND_REPLACE' | translate"
+      (valueChange)="search($event)"
+      optionalText=""
+    ></bc-text>
+
+    <div class="candidate-list">
+      <vo-ausm-proportional-election-ballot-candidates-choose-entry
+        *ngFor="let candidate of candidates"
+        (click)="done(candidate)"
+        [candidate]="candidate"
+      >
+      </vo-ausm-proportional-election-ballot-candidates-choose-entry>
+    </div>
+  </div>
+</vo-lib-dialog>

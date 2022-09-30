@@ -1,0 +1,29 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  @extend .py-1;
+  @extend .px-2;
+
+  display: block;
+  cursor: pointer;
+  font-size: 1rem;
+
+  &:hover,
+  &.active {
+    background-color: $color-grey-7;
+  }
+
+  .candidate-number {
+    display: inline-block;
+    width: 5em;
+  }
+
+  .candidate-list {
+    @extend .pl-2;
+
+    float: right;
+    display: inline-block;
+    color: $color-grey-3;
+  }
+}

@@ -1,0 +1,20 @@
+<ng-container *ngIf="!readOnly">
+  <bc-button class="full-width my-2"
+             *ngIf="!canResetAllToAuditedTentatively"
+             (buttonClick)="updateAllStates.emit(states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED)"
+             [label]="'MONITORING_COCKPIT.PLAUSIBILISE_ALL' | translate"
+             [disabled]="disabled || !canPlausibiliseAll">
+  </bc-button>
+  <bc-button class="full-width my-2"
+             *ngIf="canResetAllToAuditedTentatively"
+             (buttonClick)="updateAllStates.emit(states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY)"
+             [label]="'MONITORING_COCKPIT.RESET_ALL_TO_AUDIT_TENTATIVELY' | translate"
+             [disabled]="disabled">
+  </bc-button>
+</ng-container>
+<bc-button
+  variant="tertiary"
+  class="my-2"
+  (buttonClick)="navigateToEndResults(politicalBusiness)"
+  [label]="'MONITORING_COCKPIT.VIEW_END_RESULTS' | translate">
+</bc-button>
