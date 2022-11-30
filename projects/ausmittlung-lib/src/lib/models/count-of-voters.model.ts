@@ -42,8 +42,10 @@ export function updateCountOfVotersCalculatedFields(
   totalCountOfVoters?: number,
 ): void {
   countOfVoters.totalReceivedBallots = (countOfVoters.conventionalReceivedBallots ?? 0) + countOfVoters.eVotingReceivedBallots;
-  countOfVoters.totalAccountedBallots = (countOfVoters.conventionalAccountedBallots ?? 0) + countOfVoters.eVotingReceivedBallots;
-  countOfVoters.totalUnaccountedBallots = (countOfVoters.conventionalBlankBallots ?? 0) + (countOfVoters.conventionalInvalidBallots ?? 0);
+  countOfVoters.totalAccountedBallots = (countOfVoters.conventionalAccountedBallots ?? 0) + countOfVoters.eVotingAccountedBallots;
+  countOfVoters.totalUnaccountedBallots =
+    (countOfVoters.conventionalBlankBallots ?? 0) + (countOfVoters.conventionalInvalidBallots ?? 0) + countOfVoters.eVotingInvalidBallots;
+  countOfVoters.totalInvalidBallots = (countOfVoters.conventionalInvalidBallots ?? 0) + countOfVoters.eVotingInvalidBallots;
   if (!countOfVoters.totalReceivedBallots || !totalCountOfVoters) {
     countOfVoters.voterParticipation = 0;
     return;

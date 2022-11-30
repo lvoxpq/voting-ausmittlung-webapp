@@ -9,5 +9,7 @@
 import { AUDIENCE_CLIENTID_PREFIX, DEFAULT_SCOPE } from '@abraxas/base-components';
 
 export function buildScope(clientIdErfassung: string, clientIdMonitoring: string): string {
-  return DEFAULT_SCOPE + ' ' + AUDIENCE_CLIENTID_PREFIX + clientIdErfassung + ' ' + AUDIENCE_CLIENTID_PREFIX + clientIdMonitoring;
+  return (
+    DEFAULT_SCOPE + ' offline_access ' + AUDIENCE_CLIENTID_PREFIX + clientIdErfassung + ' ' + AUDIENCE_CLIENTID_PREFIX + clientIdMonitoring
+  );
 }

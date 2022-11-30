@@ -10,7 +10,7 @@
         [min]="0"
         [value]="votingCardDetail.countOfReceivedVotingCards"
         (valueChange)="update(votingCardDetail, $event)"
-        [label]="'CONTEST.DETAIL.VOTING_CARDS.' + votingCardDetail.channel + '_' + (votingCardDetail.valid ? 'VALID' : 'INVALID') | translate"></bc-number>
+        [label]="'CONTEST.DETAIL.VOTING_CARDS.' + votingCardDetail.channel + (hasInvalidVotingCardChannel && votingCardDetail.channel === votingChannels.VOTING_CHANNEL_BY_MAIL ? '_' + (votingCardDetail.valid ? 'VALID' : 'INVALID') : '') | translate"></bc-number>
       <div *ngIf="i === 1 && votingCardDetailsValue.length === 4 && !hasInvalidVotingCardChannel"></div>
     </ng-container>
     <div *ngIf="votingCardDetailsValue.length % 2 !== 0 && hasInvalidVotingCardChannel"></div>

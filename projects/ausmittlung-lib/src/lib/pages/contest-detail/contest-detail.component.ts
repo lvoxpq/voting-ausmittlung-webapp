@@ -19,11 +19,12 @@ import {
   ResultImportWriteInMappingDialogData,
   // eslint-disable-next-line max-len
 } from '../../components/majority-election-write-in-mappings/majority-election-write-in-mapping-dialog/majority-election-write-in-mapping-dialog.component';
-import { ContestCountingCircleDetails, CountingCircleResultState, ResultList } from '../../models';
+import { ContestCountingCircleDetails, CountingCircleResultState, ResultList, ResultListResult } from '../../models';
 import { BreadcrumbItem, BreadcrumbsService } from '../../services/breadcrumbs.service';
 import { PoliticalBusinessResultService } from '../../services/political-business-result.service';
 import { ResultService } from '../../services/result.service';
 import { RoleService } from '../../services/role.service';
+import { groupBySingle } from '../../services/utils/array.utils';
 
 @Component({
   selector: 'vo-ausm-contest-detail',
@@ -38,7 +39,10 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
   public contentReadonly: boolean = true;
 
   @Input()
-  public showStateActions: boolean = false;
+  public showSetAllAuditedTentatively: boolean = false;
+
+  @Input()
+  public showResetResultsInTestingPhase: boolean = false;
 
   public sidebarReadonly: boolean = true;
 
@@ -54,13 +58,14 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
   private readonly isErfassungElectionAdminSubscription: Subscription;
   private readonly routeParamsSubscription: Subscription;
   private readonly routeQueryParamsSubscription: Subscription;
-  private readonly politicalBusinessesResultChangedSubscription: Subscription;
   private politicalBusinessesDetailsChangeSubscription?: Subscription;
+  private stateChangesSubscription?: Subscription;
 
   @ViewChild(ContestDetailSidebarComponent)
   private contestDetailSidebarComponent?: ContestDetailSidebarComponent;
 
   private politicalBusinessIdToExpand?: string;
+  private resultsById: Record<string, ResultListResult> = {};
 
   constructor(
     roleService: RoleService,
@@ -85,9 +90,6 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     );
     this.routeParamsSubscription = this.route.params.subscribe(({ contestId, countingCircleId }) =>
       this.loadData(contestId, countingCircleId),
-    );
-    this.politicalBusinessesResultChangedSubscription = this.politicalBusinessResultService.resultStateChanged$.subscribe(
-      ({ resultId, newState, comment }) => this.stateUpdated(resultId, newState, comment),
     );
   }
 
@@ -141,7 +143,7 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     this.routeQueryParamsSubscription?.unsubscribe();
     this.politicalBusinessesDetailsChangeSubscription?.unsubscribe();
     this.isErfassungElectionAdminSubscription?.unsubscribe();
-    this.politicalBusinessesResultChangedSubscription.unsubscribe();
+    this.stateChangesSubscription?.unsubscribe();
   }
 
   public updateCountOfVoters(newData: ContestCountingCircleDetails): void {
@@ -165,7 +167,7 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const result = this.resultList.results.find(r => r.id === resultId);
+    const result = this.resultsById[resultId] || {};
     if (!result) {
       return;
     }
@@ -178,6 +180,7 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
 
     this.resultList.state = Math.min(...this.resultList.results.map(r => r.state));
     this.updateSidebarReadonly();
+    this.politicalBusinessResultService.resultStateChanged(result.id, newState);
   }
 
   private async loadData(contestId: string, countingCircleId: string): Promise<void> {
@@ -188,6 +191,12 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
       this.tenant = await this.auth.getActiveTenant();
       this.tryExpandPoliticalBusinesses();
       this.mapWriteIns();
+      this.resultsById = groupBySingle(
+        this.resultList.results,
+        x => x.id,
+        x => x,
+      );
+      this.startChangesListener();
 
       // detect changes to make sure that all components are visible
       this.cd.detectChanges();
@@ -223,5 +232,16 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
       CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_INITIAL,
     );
     this.sidebarReadonly = maxResultListState >= CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE;
+  }
+
+  private startChangesListener(): void {
+    if (!this.resultList || !this.resultList.contest) {
+      return;
+    }
+
+    this.stateChangesSubscription?.unsubscribe();
+    this.stateChangesSubscription = this.resultService
+      .getStateChanges(this.resultList.contest.id)
+      .subscribe(({ id, newState }) => this.stateUpdated(id, newState));
   }
 }

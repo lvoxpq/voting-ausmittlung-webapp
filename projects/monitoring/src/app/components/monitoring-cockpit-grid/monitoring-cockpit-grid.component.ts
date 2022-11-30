@@ -194,7 +194,7 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
   }
 
   private updateState(id: string, newState: CountingCircleResultState): void {
-    const { result, countingCircleResults } = this.resultsById[id];
+    const { result, countingCircleResults } = this.resultsById[id] || {};
     if (!result || result.state === newState) {
       return;
     }

@@ -85,7 +85,7 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     protected readonly politicalBusinessResultService: PoliticalBusinessResultService,
     protected readonly cd: ChangeDetectorRef,
     roleService: RoleService,
-    parent: ContestPoliticalBusinessDetailComponent,
+    private readonly parent: ContestPoliticalBusinessDetailComponent,
   ) {
     this.parentExpandedSubscription = parent.expanded$.pipe(filter(x => x)).subscribe(() => this.expanded());
 
@@ -95,7 +95,7 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
 
     this.stateChangeSubscription = this.politicalBusinessResultService.resultStateChanged$
       .pipe(filter(({ resultId }) => this.result.id === resultId))
-      .subscribe(() => this.setResultReadonly());
+      .subscribe(state => this.resultStateUpdated(state.newState));
 
     this.isErfassungElectionAdminSubscription = roleService.isErfassungElectionAdmin.subscribe(x => (this.isErfassungElectionAdmin = x));
     this.isMonitoringElectionAdminSubscription = roleService.isMonitoringElectionAdmin.subscribe(x => (this.isMonitoringElectionAdmin = x));
@@ -262,5 +262,18 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
       this.contentReadonly ||
       (this.result.state !== this.states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING &&
         this.result.state !== this.states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION);
+  }
+
+  private resultStateUpdated(newState: CountingCircleResultState): void {
+    this.setResultReadonly();
+
+    if (newState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING) {
+      if (this.parent.expanded) {
+        this.parent.expanded = false;
+      }
+
+      delete this.resultDetail;
+      this.isDataLoaded = false;
+    }
   }
 }

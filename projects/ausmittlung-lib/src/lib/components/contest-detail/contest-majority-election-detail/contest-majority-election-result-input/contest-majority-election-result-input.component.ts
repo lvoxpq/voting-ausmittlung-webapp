@@ -27,6 +27,9 @@ export class ContestMajorityElectionResultInputComponent {
   public showInvalidVotes: boolean = false;
 
   @Input()
+  public showEmptyVotes: boolean = true;
+
+  @Input()
   public readonly: boolean = true;
 
   @Output()

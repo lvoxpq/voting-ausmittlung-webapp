@@ -26,7 +26,12 @@
   </vo-lib-page-header>
 
   <div *ngIf="resultList">
-    <vo-ausm-contest-info [resultList]="resultList" [showStateActions]="showStateActions"></vo-ausm-contest-info>
+    <vo-ausm-contest-info
+      [resultList]="resultList"
+      [isResponsibleErfassungElectionAdmin]="resultList?.currentTenantIsResponsible && isErfassungElectionAdmin"
+      [showResetResultsInTestingPhase]="showResetResultsInTestingPhase"
+      [showSetAllAuditedTentatively]="showSetAllAuditedTentatively">
+    </vo-ausm-contest-info>
 
     <div class="political-business-list">
       <div *ngFor="let result of resultList.results">

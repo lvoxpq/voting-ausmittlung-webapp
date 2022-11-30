@@ -8,6 +8,7 @@ import {
   GetResultListRequest,
   GetResultOverviewRequest,
   GetResultStateChangesRequest,
+  ResetCountingCircleResultsRequest,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/result_requests_pb';
 import { ResultServiceClient, ResultServicePromiseClient } from '@abraxas/voting-ausmittlung-service-proto/grpc/result_service_grpc_web_pb';
 import { GrpcBackendService, GrpcEnvironment, GrpcStreamingService, retryForeverWithBackoff } from '@abraxas/voting-lib';
@@ -81,6 +82,13 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
       req,
       r => r.toObject(),
     ).pipe(retryForeverWithBackoff());
+  }
+
+  public resetCountingCircleResults(contestId: string, countingCircleId: string): Promise<void> {
+    const req = new ResetCountingCircleResultsRequest();
+    req.setContestId(contestId);
+    req.setCountingCircleId(countingCircleId);
+    return this.requestEmptyResp(c => c.resetCountingCircleResults, req);
   }
 
   private mapToResultList(data: ResultListProto): ResultList {

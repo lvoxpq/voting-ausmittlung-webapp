@@ -67,6 +67,9 @@ export class ContestPoliticalBusinessDetailComponent {
   }
 
   public expandedChanged(expanded: boolean): void {
+    // bc does not update its internal state after a click on the nested panel
+    this.expansionPanel.expanded = expanded;
+
     // detect changes to make sure that all components are visible
     this.cd.detectChanges();
     this.expandedSubject.next(expanded);

@@ -34,8 +34,8 @@ export class ContestDetailVotingCardsDoiTypeComponent {
     this.updateTotals();
   }
 
-  public update(detail: VotingCardResultDetail, value: string | number): void {
-    detail.countOfReceivedVotingCards = +value;
+  public update(detail: VotingCardResultDetail, value?: number): void {
+    detail.countOfReceivedVotingCards = value;
     this.updateTotals();
   }
 

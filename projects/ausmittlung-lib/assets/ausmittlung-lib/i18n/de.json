@@ -59,11 +59,12 @@
       "MAP_WRITE_INS": "Write-Ins zuordnen…",
       "VOTING_CARDS": {
         "TITLE": "Stimmrechtsausweise",
-        "1_VALID": "Urne",
+        "1": "Urne",
+        "2": "brieflich",
         "2_VALID": "brieflich gültig",
         "2_INVALID": "brieflich ungültig",
-        "3_VALID": "E-Voting",
-        "4_VALID": "vorzeitig",
+        "3": "E-Voting",
+        "4": "vorzeitig",
         "TOTAL_VALID": "Total gültige",
         "TOTAL": "Total"
       },
@@ -90,7 +91,8 @@
         "UPDATE_REMARK": "Die folgenden Anpassungen an den Kontaktdaten sind nur temporär für den aktuellen Urnengang gültig. Die permanenten Kontaktdaten können innerhalb der VOTING Basis-Services angepasst werden."
       },
       "STATE_ACTION": {
-        "ALL_TO_AUDIT_TENTATIVELY": "Alle auf vorläufig geprüft"
+        "ALL_TO_AUDIT_TENTATIVELY": "Alle auf vorläufig geprüft",
+        "RESET_RESULTS": "Status zurücksetzen und Teilergebnisse löschen"
       }
     }
   },
@@ -442,6 +444,7 @@
     "INDIVIDUAL": "Vereinzelte",
     "EMPTY_VOTES": "Leere Zeilen",
     "INVALID_VOTES": "Ungültige Stimmen",
+    "INVALID_BALLOT": "Ungültiger Wahlzettel",
     "BALLOT_DETAIL": {
       "SHORTCUT": {
         "ADD_CANDIDATE": {

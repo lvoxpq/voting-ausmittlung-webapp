@@ -46,19 +46,21 @@
       ></bc-number>
       <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.individualVoteCount"></bc-number>
 
-      <span translate class="candidate-candidacy">MAJORITY_ELECTION.EMPTY_VOTES</span>
-      <span><!-- party --></span>
-      <bc-number
-        [disabled]="readonly"
-        [value]="result.conventionalSubTotal.emptyVoteCount"
-        [min]="0"
-        [error]="
+      <ng-container *ngIf="showEmptyVotes">
+        <span translate class="candidate-candidacy">MAJORITY_ELECTION.EMPTY_VOTES</span>
+        <span><!-- party --></span>
+        <bc-number
+          [disabled]="readonly"
+          [value]="result.conventionalSubTotal.emptyVoteCount"
+          [min]="0"
+          [error]="
           result.conventionalSubTotal.emptyVoteCount !== undefined && result.conventionalSubTotal.emptyVoteCount < 0
         "
-        (valueChange)="setConventionalEmptyVoteCount($event); contentChanged.emit()"
-      ></bc-number>
-      <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.eVotingSubTotal.emptyVoteCount"></bc-number>
-      <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.emptyVoteCount"></bc-number>
+          (valueChange)="setConventionalEmptyVoteCount($event); contentChanged.emit()"
+        ></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.eVotingSubTotal.emptyVoteCount"></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.emptyVoteCount"></bc-number>
+      </ng-container>
 
       <ng-container *ngIf="showInvalidVotes">
         <span translate class="candidate-candidacy">MAJORITY_ELECTION.INVALID_VOTES</span>

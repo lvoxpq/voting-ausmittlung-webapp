@@ -13,12 +13,21 @@
   <vo-ausm-info-panel-entry label="APP.STATE">
     <div class="state-container">
       <vo-ausm-result-state-box [state]="resultList.state"></vo-ausm-result-state-box>
-      <vo-lib-inline-spinner *ngIf="showStateActions" [loading]="isActionExecuting" position="right">
+      <vo-lib-inline-spinner [loading]="isActionExecuting" position="right">
         <bc-button
-          [class.disabled]="!canSetAllToAuditedTentatively || isActionExecuting"
+          *ngIf="showSetAllAuditedTentatively"
+          [disabled]="!canSetAllToAuditedTentatively || isActionExecuting"
           variant="tertiary"
           [label]="'CONTEST.DETAIL.STATE_ACTION.ALL_TO_AUDIT_TENTATIVELY' | translate"
-          (buttonClick)="executeStateUpdate(countingCircleResultStates.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY)">
+          (buttonClick)="setAllResponsibleAuditedTentatively()">
+        </bc-button>
+
+        <bc-button
+          *ngIf="showResetResultsInTestingPhase && !resultList.contest.testingPhaseEnded"
+          [disabled]="!canResetResultsInTestingPhase || isActionExecuting"
+          [label]="'CONTEST.DETAIL.STATE_ACTION.RESET_RESULTS' | translate"
+          variant="tertiary"
+          (buttonClick)="resetResults()">
         </bc-button>
       </vo-lib-inline-spinner>
     </div>

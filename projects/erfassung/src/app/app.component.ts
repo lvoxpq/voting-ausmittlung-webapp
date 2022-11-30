@@ -4,6 +4,7 @@
  */
 
 import { AuthenticationService, AuthorizationService, SnackbarComponent } from '@abraxas/base-components';
+import { OAuthService } from 'angular-oauth2-oidc';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -31,6 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     themeService: ThemeService,
     private readonly translations: TranslateService,
+    private readonly oauthService: OAuthService,
     private readonly auth: AuthenticationService,
     private readonly authorization: AuthorizationService,
     private readonly router: Router,
@@ -38,7 +40,10 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly languageService: LanguageService,
     private readonly locationStrategy: LocationStrategy,
   ) {
-    const snackbarSubscription = snackbarService.message$.subscribe(m => {
+    // enable automatic silent refresh
+    this.oauthService.setupAutomaticSilentRefresh();
+
+    const snackbarSubscription = this.snackbarService.message$.subscribe(m => {
       if (!this.snackbarComponent) {
         return;
       }

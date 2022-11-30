@@ -278,12 +278,18 @@ export class MajorityElectionWriteInMappingComponent implements OnChanges {
       const candidates = [
         ...candidatesResp,
         this.createFakeCandidate(individualCandidateId, individualCandidateNr, 'MAJORITY_ELECTION.INDIVIDUAL'),
-        this.createFakeCandidate(emptyCandidateId, emptyCandidateNr, 'MAJORITY_ELECTION.EMPTY_VOTES'),
       ];
 
-      if (this.invalidVotes) {
-        // add before other fake candidates
-        candidates.splice(-2, 0, this.createFakeCandidate(invalidCandidateId, invalidCandidateNr, 'MAJORITY_ELECTION.INVALID_VOTES'));
+      // In elections with a single mandate, add an invalid ballot fake candidate, since empty votes and invalid votes are not possible.
+      if (this.election.numberOfMandates === 1) {
+        candidates.splice(-1, 0, this.createFakeCandidate(invalidCandidateId, invalidCandidateNr, 'MAJORITY_ELECTION.INVALID_BALLOT'));
+      } else {
+        candidates.push(this.createFakeCandidate(emptyCandidateId, emptyCandidateNr, 'MAJORITY_ELECTION.EMPTY_VOTES'));
+
+        if (this.invalidVotes) {
+          // add before other fake candidates
+          candidates.splice(-2, 0, this.createFakeCandidate(invalidCandidateId, invalidCandidateNr, 'MAJORITY_ELECTION.INVALID_VOTES'));
+        }
       }
 
       this.candidatesWithMappings = candidates.map(candidate => ({
