@@ -25,14 +25,14 @@
           (back)="saveAndBack()"
           (deleteBallot)="deleteBallotAndNavigate()"
           (ballotNumberChange)="navigateToBallot($event)">
-          <bc-icon *ngIf="!header.readonly" class="clickable-icon"icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
+          <bc-icon *ngIf="!header.readonly" class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
         </vo-ausm-ballot-header>
         <vo-ausm-majority-election-ballot-contents
           (contentChanged)="contentChanged()"
           [ballot]="ballot"
           [loadingBallot]="loadingBallot"
           [disabled]="actionExecuting"
-          [showInvalidVotes]="politicalBusinessResult.election.invalidVotes"
+          [showInvalidVotes]="politicalBusinessResult.election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes"
           [automaticEmptyVoteCounting]="politicalBusinessResult.entryParams.automaticEmptyVoteCounting"
           [readonly]="!bundleInProcessOrCorrection
             || (isErfassungUser | async) !== true

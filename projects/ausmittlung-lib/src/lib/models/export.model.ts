@@ -6,11 +6,13 @@
 import {
   ExportFileFormat,
   ResultExportConfiguration as ResultExportConfigurationProto,
+  PoliticalBusinessExportMetadata as PoliticalBusinessExportMetadataProto,
   ResultExportTemplate as ResultExportTemplateProto,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/export_pb';
 import { DomainOfInfluenceType } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/domain_of_influence_pb';
 
 export type ResultExportTemplate = ResultExportTemplateProto.AsObject;
+export type PoliticalBusinessExportMetadata = PoliticalBusinessExportMetadataProto.AsObject;
 export { ExportFileFormat };
 
 export type GenerateResultExportsRequest = {
@@ -34,6 +36,10 @@ export type ResultExportTemplateRequest = {
   politicalBusinessUnionId?: string;
 };
 
-export type ResultExportConfiguration = Omit<ResultExportConfigurationProto.AsObject, 'intervalMinutes'> & {
+export type ResultExportConfiguration = Omit<
+  ResultExportConfigurationProto.AsObject,
+  'intervalMinutes' | 'politicalBusinessMetadataMap'
+> & {
   intervalMinutes?: number;
+  politicalBusinessMetadata: Map<string, PoliticalBusinessExportMetadata>;
 };

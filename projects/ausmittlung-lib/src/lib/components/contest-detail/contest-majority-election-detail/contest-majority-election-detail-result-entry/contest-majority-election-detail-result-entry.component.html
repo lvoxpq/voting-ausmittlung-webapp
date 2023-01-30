@@ -25,7 +25,7 @@
     <vo-lib-inline-spinner [loading]="isUpdatingResultEntry">
       <bc-button variant="primary"
                  [label]="'MAJORITY_ELECTION.RESULT_ENTRY.SELECT' | translate"
-                 [disabled]="isUpdatingResultEntry || (resultEntry === resultEntries.MAJORITY_ELECTION_RESULT_ENTRY_DETAILED && (resultEntryParams.ballotBundleSize <= 0 || resultEntryParams.ballotBundleSampleSize < 0 || resultEntryParams.ballotBundleSampleSize > resultEntryParams.ballotBundleSize))"
+                 [disabled]="isUpdatingResultEntry || (resultEntry === resultEntries.MAJORITY_ELECTION_RESULT_ENTRY_DETAILED && (resultEntryParams.ballotBundleSize <= 0 || resultEntryParams.ballotBundleSampleSize <= 0 || resultEntryParams.ballotBundleSampleSize > resultEntryParams.ballotBundleSize))"
                  (buttonClick)="save()">
       </bc-button>
     </vo-lib-inline-spinner>

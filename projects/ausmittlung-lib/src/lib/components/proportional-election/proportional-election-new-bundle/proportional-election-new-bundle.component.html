@@ -51,7 +51,6 @@
       <tr bc-header-row *bcHeaderRowDef="columns"></tr>
       <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"></tr>
     </bc-advanced-table>
-    <bc-table-paginator [pageSize]="10" [showFirstLastButtons]="true" [tooltips]="false"></bc-table-paginator>
 
     <div class="align-right">
       <bc-button [class.disabled]="saving || enableBundleNumber && (!bundleNumber || duplicatedBundleNumber)"

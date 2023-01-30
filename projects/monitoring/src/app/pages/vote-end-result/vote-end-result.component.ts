@@ -79,10 +79,6 @@ export class VoteEndResultComponent implements OnDestroy {
     this.endResult.finalized = finalize;
   }
 
-  public export(): void {
-    alert('not yet implemented');
-  }
-
   private async loadData(voteId: string): Promise<void> {
     this.loading = true;
     try {

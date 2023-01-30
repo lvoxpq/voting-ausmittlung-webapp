@@ -11,7 +11,7 @@
                                                   class="primary-result-input"
                                                   [countOfAccountedBallots]="resultDetail.countOfVoters.conventionalAccountedBallots"
                                                   [readonly]="readonly"
-                                                  [showInvalidVotes]="election.invalidVotes && election.numberOfMandates !== 1"
+                                                  [showInvalidVotes]="election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes && election.numberOfMandates !== 1"
                                                   [showEmptyVotes]="election.numberOfMandates !== 1"
                                                   (contentChanged)="candidateResultChange.emit()"></vo-ausm-contest-majority-election-result-input>
 </div>
@@ -21,7 +21,7 @@
     *ngFor="let result of resultDetail.secondaryMajorityElectionResults"
     class="secondary-result-input"
     [showElectionHeader]="true"
-    [showInvalidVotes]="election.invalidVotes && election.numberOfMandates !== 1"
+    [showInvalidVotes]="election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes && election.numberOfMandates !== 1"
     [showEmptyVotes]="election.numberOfMandates !== 1"
     [eVoting]="eVoting"
     [result]="result"

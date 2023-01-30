@@ -1,7 +1,7 @@
 <bc-number
   class="numeric"
   [label]="'ELECTION.RESULT_ENTRY.BALLOT_BUNDLE_SIZE' | translate"
-  [min]="1"
+  [min]="0"
   [error]="resultEntryParams.ballotBundleSize < 1"
   [required]="true"
   [allowUndefined]="false"
@@ -16,7 +16,7 @@
   [required]="true"
   [allowUndefined]="false"
   [error]="
-    resultEntryParams.ballotBundleSampleSize < 0 ||
+    resultEntryParams.ballotBundleSampleSize < 1 ||
     resultEntryParams.ballotBundleSampleSize > resultEntryParams.ballotBundleSize
   "
   [value]="resultEntryParams.ballotBundleSampleSize"

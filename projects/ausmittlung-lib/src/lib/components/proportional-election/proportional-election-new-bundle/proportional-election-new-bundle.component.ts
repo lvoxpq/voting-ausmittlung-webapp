@@ -3,23 +3,23 @@
  * For license information see LICENSE file
  */
 
-import { AdvancedTablePaginatorComponent, NumberComponent } from '@abraxas/base-components';
+import { NumberComponent } from '@abraxas/base-components';
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
-import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
+import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { ProportionalElectionList } from '../../../models';
 import { ProportionalElectionResultBundleService } from '../../../services/proportional-election-result-bundle.service';
 import { ProportionalElectionService } from '../../../services/proportional-election.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'vo-ausm-proportional-election-new-bundle',
   templateUrl: './proportional-election-new-bundle.component.html',
   styleUrls: ['./proportional-election-new-bundle.component.scss'],
 })
-export class ProportionalElectionNewBundleComponent implements OnInit, AfterViewInit {
+export class ProportionalElectionNewBundleComponent implements OnInit {
   public readonly columns = ['select', 'orderNumber', 'shortDescription', 'description'];
   public readonly dataSource = new MatTableDataSource<ProportionalElectionList>();
   public readonly selection = new SelectionModel<ProportionalElectionList>(false, []);
@@ -43,9 +43,6 @@ export class ProportionalElectionNewBundleComponent implements OnInit, AfterView
 
   @ViewChild('listNumberFormfield')
   private listNumberFormfield?: NumberComponent;
-
-  @ViewChild(AdvancedTablePaginatorComponent)
-  public paginator!: AdvancedTablePaginatorComponent;
 
   constructor(
     private readonly dialogRef: MatDialogRef<ProportionalElectionNewBundleComponentData>,
@@ -72,10 +69,6 @@ export class ProportionalElectionNewBundleComponent implements OnInit, AfterView
       this.cd.detectChanges();
       this.setInitialFocus();
     }
-  }
-
-  public ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
   }
 
   public toggleRow(row: ProportionalElectionList, value: boolean): void {

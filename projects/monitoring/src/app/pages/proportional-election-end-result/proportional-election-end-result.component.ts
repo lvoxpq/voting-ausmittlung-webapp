@@ -3,7 +3,6 @@
  * For license information see LICENSE file
  */
 
-import { ProportionalElectionCandidateEndResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/proportional_election_end_result_pb';
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -12,11 +11,13 @@ import {
   dataSourceToPropertyPrefix,
   groupBySingle,
   ProportionalElectionCandidateEndResult,
+  ProportionalElectionCandidateEndResultState,
   ProportionalElectionEndResult,
   ProportionalElectionEndResultLotDecision,
   ProportionalElectionListEndResult,
   ProportionalElectionResultService,
   SecondFactorTransactionService,
+  sum,
   SwissAbroadVotingRight,
   VotingDataSource,
 } from 'ausmittlung-lib';
@@ -26,6 +27,11 @@ import {
   ProportionalElectionLotDecisionDialogData,
   ProportionalElectionLotDecisionDialogResult,
 } from '../../components/proportional-election-lot-decision-dialog/proportional-election-lot-decision-dialog.component';
+import {
+  ProportionalElectionManualEndResultDialogComponent,
+  ProportionalElectionManualEndResultDialogData,
+  ProportionalElectionManualEndResultDialogResult,
+} from '../../components/proportional-election-manual-end-result-dialog/proportional-election-manual-end-result-dialog.component';
 
 @Component({
   selector: 'app-proportional-election-end-result',
@@ -61,10 +67,6 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
 
   public async ngOnDestroy(): Promise<void> {
     this.routeSubscription.unsubscribe();
-  }
-
-  public export(): void {
-    alert('not yet implemented');
   }
 
   public setDataPrefix(dataSource: VotingDataSource): void {
@@ -108,9 +110,11 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
           });
       } else {
         await this.resultService.revertEndResultFinalization(this.endResult.election.id);
+        this.endResult.finalized = false;
       }
     } finally {
       this.finalizing = false;
+      this.refreshTableColumns();
     }
 
     this.toast.success(this.i18n.instant('APP.SAVED'));
@@ -141,6 +145,31 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
     this.updateEndResultByLotDecisions(result?.lotDecisionsByListId);
   }
 
+  public async openEnterManualEndResult(): Promise<void> {
+    if (!this.endResult || this.endResult.listEndResults.length === 0) {
+      return;
+    }
+
+    const data: ProportionalElectionManualEndResultDialogData = {
+      lists: this.endResult.listEndResults,
+    };
+
+    const result = await this.dialogService.openForResult<
+      ProportionalElectionManualEndResultDialogComponent,
+      ProportionalElectionManualEndResultDialogResult
+    >(ProportionalElectionManualEndResultDialogComponent, data);
+
+    if (result?.hasChanges) {
+      this.endResult.finalized = false;
+    }
+
+    for (const listEndResult of this.endResult.listEndResults) {
+      listEndResult.numberOfMandates = listEndResult.candidateEndResults.filter(
+        x => x.state === ProportionalElectionCandidateEndResultState.PROPORTIONAL_ELECTION_CANDIDATE_END_RESULT_STATE_ELECTED,
+      ).length;
+    }
+  }
+
   public selectListEndResult(listEndResult: ProportionalElectionListEndResult): void {
     this.selectedListEndResult = listEndResult;
     this.candidateEndResults = this.selectedListEndResult.candidateEndResults;
@@ -159,6 +188,15 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
 
     if (this.hasOpenRequiredLotDecisions && this.endResult.allCountingCirclesDone && !this.endResult.contest.locked) {
       await this.openUpdateLotDecisions();
+    }
+
+    if (!this.endResult.manualEndResultRequired) {
+      return;
+    }
+
+    const sumListNumberOfMandates = sum(this.endResult.listEndResults, x => x.numberOfMandates);
+    if (sumListNumberOfMandates !== this.endResult.election.numberOfMandates) {
+      await this.openEnterManualEndResult();
     }
   }
 
@@ -205,19 +243,25 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
   }
 
   private refreshTableColumns(): void {
-    this.listColumns = ['orderNumber', 'description', 'listVotesCount', 'blankRowsCount', 'totalVoteCount'];
-    if (this.endResult?.allCountingCirclesDone) {
-      this.listColumns.push('nrOfMandates');
+    this.listColumns = ['orderNumber', 'description'];
+    if (this.endResult?.finalized) {
+      this.listColumns.push('listVotesCount', 'blankRowsCount', 'totalVoteCount');
+      if (this.endResult?.allCountingCirclesDone) {
+        this.listColumns.push('nrOfMandates');
+      }
     }
     this.listColumns.push('listUnion', 'subListUnion');
 
-    this.candidateColumns = ['number', 'lastName', 'firstName', 'voteCount'];
-    if (this.endResult?.allCountingCirclesDone) {
-      this.candidateColumns.push('rank');
-    }
-    this.candidateColumns.push('state');
-    if (this.endResult?.allCountingCirclesDone && this.hasLotDecisions && !this.hasOpenRequiredLotDecisions) {
-      this.candidateColumns.push('lotDecision');
+    this.candidateColumns = ['number', 'lastName', 'firstName'];
+    if (this.endResult?.finalized) {
+      this.candidateColumns.push('voteCount');
+      if (this.endResult?.finalized && this.endResult?.allCountingCirclesDone) {
+        this.candidateColumns.push('rank');
+      }
+      this.candidateColumns.push('state');
+      if (this.endResult?.allCountingCirclesDone && this.hasLotDecisions && !this.hasOpenRequiredLotDecisions) {
+        this.candidateColumns.push('lotDecision');
+      }
     }
   }
 }

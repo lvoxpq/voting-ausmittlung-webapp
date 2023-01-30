@@ -69,11 +69,15 @@ export abstract class ElectionBallotComponent<
     }
 
     if (this.isBallotUnchanged()) {
-      await this.dialog.alert(
+      const saveUnchangedBallot = await this.dialog.confirm(
         this.i18n.instant('ELECTION.BALLOT_DETAIL.UNCHANGED_BALLOT.TITLE'),
         this.i18n.instant('ELECTION.BALLOT_DETAIL.UNCHANGED_BALLOT.MSG'),
+        this.i18n.instant('COMMON.SAVE'),
       );
-      return false;
+
+      if (!saveUnchangedBallot) {
+        return false;
+      }
     }
 
     return true;

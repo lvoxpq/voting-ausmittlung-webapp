@@ -1,0 +1,25 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+::ng-deep .mat-stepper-horizontal .mat-step-header {
+  .mat-step-icon .mat-icon {
+    color: $color-white;
+  }
+
+  .mat-horizontal-content-container {
+    padding: 0;
+  }
+}
+
+.candidate-results {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 0.5rem 0.8rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 60rem;
+  align-items: center;
+
+  .candidate-name {
+    grid-column: 3/5;
+  }
+}

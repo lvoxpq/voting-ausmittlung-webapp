@@ -34,6 +34,15 @@
     <th bc-header-cell *bcHeaderCellDef>{{ 'POLITICAL_BUSINESS.TYPE.TITLE' | translate }}</th>
     <td bc-cell *bcCellDef="let element">{{ 'POLITICAL_BUSINESS.TYPE.' + element.businessType | translate }}</td>
   </ng-container>
+  <ng-container bcColumnDef="token">
+    <th bc-header-cell *bcHeaderCellDef>{{ 'EXPORT_COCKPIT.POLITICAL_BUSINESS_METADATA.TOKEN' | translate }}</th>
+    <td bc-cell *bcCellDef="let element">
+      <bc-text
+        [value]="getToken(element.id)"
+        (valueChange)="setToken(element.id, $event)"
+      ></bc-text>
+    </td>
+  </ng-container>
 
   <tr bc-header-row *bcHeaderRowDef="columns"></tr>
   <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"></tr>

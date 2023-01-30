@@ -4,7 +4,7 @@
  */
 
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, HostListener, Inject, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostListener, Inject, QueryList, ViewChildren } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProportionalElectionCandidate } from '../../../models';
 import { ProportionalElectionBallotCandidatesChooseEntryComponent } from './proportional-election-ballot-candidates-choose-entry/proportional-election-ballot-candidates-choose-entry.component';
@@ -30,6 +30,7 @@ export class ProportionalElectionBallotCandidatesChooseDialogComponent implement
   constructor(
     private readonly dialogRef: MatDialogRef<ProportionalElectionCandidate[]>,
     @Inject(MAT_DIALOG_DATA) dialogData: ProportionalElectionCandidate[],
+    private readonly cd: ChangeDetectorRef,
   ) {
     this.allCandidates = dialogData.map(c => ({
       ...c,
@@ -65,6 +66,8 @@ export class ProportionalElectionBallotCandidatesChooseDialogComponent implement
     const upperQuery = query.toUpperCase();
     this.candidates = this.allCandidates.filter(c => c.queryable.includes(upperQuery));
     if (this.candidates.length > 0) {
+      // detect changes to make sure that the filtered components are visible
+      this.cd.detectChanges();
       this.keyManager?.setFirstItemActive();
     }
   }

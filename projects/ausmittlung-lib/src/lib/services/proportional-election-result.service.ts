@@ -13,6 +13,8 @@ import {
   DefineProportionalElectionResultEntryParamsRequest,
   DefineProportionalElectionResultEntryRequest,
   EnterProportionalElectionCountOfVotersRequest,
+  EnterProportionalElectionManualCandidateEndResultRequest,
+  EnterProportionalElectionManualListEndResultRequest,
   EnterProportionalElectionUnmodifiedListResultRequest,
   EnterProportionalElectionUnmodifiedListResultsRequest,
   FinalizeProportionalElectionEndResultRequest,
@@ -54,6 +56,7 @@ import {
   ProportionalElectionListEndResultAvailableLotDecisionsProto,
   ProportionalElectionListEndResultProto,
   ProportionalElectionListResult,
+  ProportionalElectionManualCandidateEndResult,
   ProportionalElectionResult,
   ProportionalElectionResultEntryParams,
   ProportionalElectionResultProto,
@@ -315,6 +318,13 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     );
   }
 
+  public enterManualListEndResult(listId: string, candidateEndResults: ProportionalElectionManualCandidateEndResult[]): Promise<void> {
+    const req = new EnterProportionalElectionManualListEndResultRequest();
+    req.setProportionalElectionListId(listId);
+    req.setCandidateEndResultsList(candidateEndResults.map(x => this.mapToEnterManualCandidateEndResultRequest(x)));
+    return this.requestEmptyResp(c => c.enterManualListEndResult, req);
+  }
+
   private mapToUnmodifiedListResults(proto: ProportionalElectionUnmodifiedListResultsProto): ProportionalElectionUnmodifiedListResults {
     return {
       electionResult: ProportionalElectionResultService.mapToProportionalElectionResult(proto.getElectionResult()!),
@@ -343,6 +353,7 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
       countOfVoters: data.getCountOfVoters()!.toObject(),
       listEndResults: this.mapToListEndResults(data.getListEndResultsList()),
       finalized: data.getFinalized(),
+      manualEndResultRequired: data.getManualEndResultRequired(),
     };
   }
 
@@ -412,6 +423,15 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     const req = new EnterProportionalElectionCountOfVotersRequest();
     req.setElectionResultId(electionResultId);
     req.setCountOfVoters(this.mapToCountOfVotersProto(countOfVoters));
+    return req;
+  }
+
+  private mapToEnterManualCandidateEndResultRequest(
+    data: ProportionalElectionManualCandidateEndResult,
+  ): EnterProportionalElectionManualCandidateEndResultRequest {
+    const req = new EnterProportionalElectionManualCandidateEndResultRequest();
+    req.setCandidateId(data.candidate.id);
+    req.setState(data.state);
     return req;
   }
 }

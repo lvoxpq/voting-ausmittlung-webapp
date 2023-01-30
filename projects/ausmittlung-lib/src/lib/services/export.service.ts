@@ -13,12 +13,14 @@ import {
   GetPoliticalBusinessUnionResultExportTemplatesRequest,
   ListResultExportConfigurationsRequest,
   TriggerResultExportRequest,
+  UpdatePoliticalBusinessExportMetadataRequest,
   UpdateResultExportConfigurationRequest,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/export_requests_pb';
 import { GrpcBackendService, GrpcEnvironment, GrpcService } from '@abraxas/voting-lib';
 import { Inject, Injectable } from '@angular/core';
 import { Int32Value } from 'google-protobuf/google/protobuf/wrappers_pb';
 import {
+  PoliticalBusinessExportMetadata,
   PoliticalBusinessType,
   PoliticalBusinessUnion,
   PoliticalBusinessUnionType,
@@ -119,6 +121,7 @@ export class ExportService extends GrpcService<ExportServicePromiseClient> {
         r.toObject().configurationsList.map(x => ({
           ...x,
           intervalMinutes: x.intervalMinutes?.value,
+          politicalBusinessMetadata: this.mapToMetadataMap(x.politicalBusinessMetadataMap),
         })),
     );
   }
@@ -128,6 +131,12 @@ export class ExportService extends GrpcService<ExportServicePromiseClient> {
     req.setContestId(config.contestId);
     req.setExportConfigurationId(config.exportConfigurationId);
     req.setPoliticalBusinessIdsList(config.politicalBusinessIdsList);
+
+    const reqMetadataMap = req.getPoliticalBusinessMetadataMap();
+    for (const metadataEntry of config.politicalBusinessMetadata) {
+      reqMetadataMap.set(metadataEntry[0], this.mapToUpdateMetadataRequest(metadataEntry[1]));
+    }
+
     if (config.intervalMinutes !== undefined) {
       const intervalMinutes = new Int32Value();
       intervalMinutes.setValue(config.intervalMinutes);
@@ -141,11 +150,33 @@ export class ExportService extends GrpcService<ExportServicePromiseClient> {
     contestId: string,
     exportConfigurationId: string,
     politicalBusinessIds: string[],
+    politicalBusinessMetadata: Map<string, PoliticalBusinessExportMetadata>,
   ): Promise<void> {
     const req = new TriggerResultExportRequest();
     req.setContestId(contestId);
     req.setExportConfigurationId(exportConfigurationId);
     req.setPoliticalBusinessIdsList(politicalBusinessIds);
+
+    const reqMetadataMap = req.getPoliticalBusinessMetadataMap();
+    for (const metadataEntry of politicalBusinessMetadata) {
+      reqMetadataMap.set(metadataEntry[0], this.mapToUpdateMetadataRequest(metadataEntry[1]));
+    }
+
     return this.requestEmptyResp(x => x.triggerResultExport, req);
+  }
+
+  private mapToMetadataMap(metadata: [string, PoliticalBusinessExportMetadata][]): Map<string, PoliticalBusinessExportMetadata> {
+    const map = new Map<string, PoliticalBusinessExportMetadata>();
+    for (const entry of metadata) {
+      map.set(entry[0], entry[1]);
+    }
+
+    return map;
+  }
+
+  private mapToUpdateMetadataRequest(metadata: PoliticalBusinessExportMetadata): UpdatePoliticalBusinessExportMetadataRequest {
+    const req = new UpdatePoliticalBusinessExportMetadataRequest();
+    req.setToken(metadata.token);
+    return req;
   }
 }

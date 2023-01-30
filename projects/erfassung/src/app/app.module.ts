@@ -12,6 +12,7 @@ import {
   BreadcrumbItemModule,
   BreadcrumbsModule,
   ButtonModule,
+  FORMFIELD_DEFAULT_OPTIONS,
   RoleModule,
   SnackbarModule,
   SpinnerModule,
@@ -100,6 +101,10 @@ registerLocaleData(localeDeCh);
       provide: HTTP_INTERCEPTORS,
       multi: true,
       useClass: HttpLanguageInterceptor,
+    },
+    {
+      provide: FORMFIELD_DEFAULT_OPTIONS,
+      useValue: { optionalText: 'optional' },
     },
   ],
   bootstrap: [AppComponent],

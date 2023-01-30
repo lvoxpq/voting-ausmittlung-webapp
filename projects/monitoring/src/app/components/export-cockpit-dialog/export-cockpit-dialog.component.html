@@ -11,9 +11,11 @@
                  [clearable]="false"
                  (valueChange)="setSelectedConfig($event)"></bc-dropdown>
     <ng-container *ngIf="selectedConfig; else noData">
-      <app-political-business-selection-table [politicalBusinesses]="dialogData.politicalBusinesses"
-                                              [(selectedPoliticalBusinessIds)]="selectedConfig.politicalBusinessIdsList"
-                                              (selectedPoliticalBusinessIdsChange)="hasEdits = true"></app-political-business-selection-table>
+      <app-export-cockpit-political-businesses [politicalBusinesses]="dialogData.politicalBusinesses"
+                                               [exportConfig]="selectedConfig"
+                                               (exportConfigChange)="hasEdits = true"
+                                               (isValidChange)="isValid = $event">
+      </app-export-cockpit-political-businesses>
       <bc-radio-button-group
         class="mt-2"
         [items]="[
@@ -43,7 +45,7 @@
   <div footer>
     <vo-lib-button-bar (save)="save()"
                        [saving]="saving"
-                       [canSave]="!triggeringExport && hasEdits"
+                       [canSave]="!triggeringExport && hasEdits && isValid"
                        [sticky]="false"
                        [cancelLabel]="'APP.CLOSE' | translate"
                        (cancel)="close()"></vo-lib-button-bar>

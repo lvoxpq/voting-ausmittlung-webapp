@@ -61,14 +61,6 @@ export class ContestVoteDetailComponent extends AbstractContestPoliticalBusiness
     return !isEqual(this.resultDetail, this.lastSavedVoteResult);
   }
 
-  public get hasVoteResults(): boolean {
-    return (
-      this.resultDetail?.results.some(r =>
-        r.questionResults.some(qr => qr.totalCountOfAnswer1 > 0 || qr.totalCountOfAnswer2 > 0 || qr.totalCountOfAnswerUnspecified > 0),
-      ) ?? false
-    );
-  }
-
   public async validateAndSave(): Promise<void> {
     if (!this.resultDetail) {
       return;

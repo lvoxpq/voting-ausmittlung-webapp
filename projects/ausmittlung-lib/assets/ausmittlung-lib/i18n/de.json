@@ -346,8 +346,8 @@
         "MSG": "Anz. leere Zeilen ungültig. Wahlzettel kann nicht gespeichert werden."
       },
       "UNCHANGED_BALLOT": {
-        "TITLE": "Wahlzettel unverändert",
-        "MSG": "Ein unveränderter Wahlzettel kann nicht gespeichert werden."
+        "TITLE": "Unveränderten Wahlzettel speichern?",
+        "MSG": "Der aktuelle Wahlzettel ist unverändert. Sind Sie sicher, dass Sie diesen speichern wollen?"
       },
       "NO_BALLOTS": "Kein Wahlzettel vorhanden",
       "EDIT_CANDIDATE_HINT": "Nr eingeben",
@@ -532,6 +532,10 @@
           "COMBINATION": "Ctrl + Alt + G"
         }
       }
+    },
+    "END_RESULTS": {
+      "FINALIZED": "Sitzverteilung auslösen / Schlussergebnis",
+      "NOT_FINALIZED": "In Erfassung"
     }
   },
   "BALLOT_COUNT": {

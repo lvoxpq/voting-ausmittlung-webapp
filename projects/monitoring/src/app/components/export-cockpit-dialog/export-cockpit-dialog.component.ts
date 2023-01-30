@@ -21,9 +21,9 @@ export class ExportCockpitDialogComponent implements OnInit {
   public triggerModeAuto: boolean = false;
   public configs: ResultExportConfiguration[] = [];
   public selectedConfig?: ResultExportConfiguration;
-  public selectedConfigOriginal?: ResultExportConfiguration;
 
   public hasEdits: boolean = false;
+  public isValid: boolean = false;
 
   constructor(
     private readonly dialogRef: MatDialogRef<ExportCockpitDialogData>,
@@ -56,6 +56,7 @@ export class ExportCockpitDialogComponent implements OnInit {
         this.dialogData.contestId,
         this.selectedConfig.exportConfigurationId,
         this.selectedConfig.politicalBusinessIdsList,
+        this.selectedConfig.politicalBusinessMetadata,
       );
       this.toast.success(this.i18n.instant('EXPORT_COCKPIT.TRIGGERED'));
     } finally {

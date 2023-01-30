@@ -1,4 +1,4 @@
-# ✨ Changelog (`v1.35.1`)
+# ✨ Changelog (`v1.40.0`)
 
 All notable changes to this project will be documented in this file.
 
@@ -8,11 +8,120 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version Info
 
 ```text
-This version -------- v1.35.1
-Previous version ---- v1.33.1
+This version -------- v1.40.0
+Previous version ---- v1.35.1
 Initial version ----- v1.25.0
-Total commits ------- 11
+Total commits ------- 19
 ```
+
+## [v1.40.0] - 2023-01-20
+
+### 🔄 Changed
+
+- change app title depending on theme
+- cache last used theme
+
+## [v1.39.1] - 2023-01-19
+
+### 🔄 Changed
+
+- remove proportional election candidate at last found position
+
+## [v1.39.0] - 2023-01-18
+
+### 🔄 Changed
+
+- manual proportional election end result
+
+## [v1.38.1] - 2023-01-17
+
+### 🔄 Changed
+
+- improve ballot content view
+
+## [v1.38.0] - 2023-01-06
+
+### 🔄 Changed
+
+- allow unchanged ballots
+
+## [v1.37.4] - 2023-01-06
+
+### 🔄 Changed
+
+- correctly display tie break answer buttons
+
+## [v1.37.3] - 2023-01-05
+
+### ❌ Removed
+
+- remove export button from end result page
+
+## [v1.37.2] - 2023-01-04
+
+### ❌ Removed
+
+- remove internal description, invalid votes and individual empty ballots allowed from elections
+
+## [v1.37.1] - 2022-12-23
+
+### 🔄 Changed
+
+- fix(VOTING-2418): hide proportional election end result columns and protocolls before finalized
+
+## [v1.37.0] - 2022-12-23
+
+### 🆕 Added
+
+- Added export configuration political business metadata, needed for Seantis
+
+## [v1.36.4] - 2022-12-19
+
+### 🔄 Changed
+
+- fix selection of adding proportional election candidate
+
+## [v1.36.3] - 2022-12-19
+
+### ❌ Removed
+
+- remove proportional election list paginator for a new bundle
+
+## [v1.36.2] - 2022-12-19
+
+### 🔄 Changed
+
+- add optional text for formfield default options
+
+## [v1.36.1] - 2022-12-13
+
+### 🔄 Changed
+
+- changed path to logo for whitelabeling
+
+## [v1.36.0] - 2022-12-12
+
+### 🆕 Added
+
+- add white labeling logo for customers
+
+## [v1.35.4] - 2022-12-02
+
+### 🔄 Changed
+
+- smaller voting cards number fields
+
+## [v1.35.3] - 2022-11-30
+
+### 🔄 Changed
+
+- allow zero accounted ballots for political businesses
+
+## [v1.35.2] - 2022-11-30
+
+### 🔄 Changed
+
+- ballot bundle sample size must be greater than zero
 
 ## [v1.35.1] - 2022-11-16
 
@@ -151,7 +260,6 @@ Total commits ------- 11
 ### 🔄 Changed
 
 - base components update
-- configure preview/public github urls and gpg key id for commit signing
 
 ## [v1.29.0] - 2022-07-15
 
@@ -210,6 +318,27 @@ Total commits ------- 11
 
 - Proportional Election unmodified lists save button title adjusted
 - Proportional Election unmodified lists save button navigates back after save succeeded.
+
+### 🔄 Changed
+
+- improve vote ballot ux behavior
+- fixed submit bundle popup cancel for elections
+
+### 🔄 Changed
+
+- improve proportional create bundle behavior
+
+### 🆕 Added
+
+- add shortcut dialog for bundle overview
+
+### 🔄 Changed
+
+- Vote percent indicator for majority elections should show correct value if no accounted ballots are entered yet (by using the sum of the candidate votes instead).
+
+### 🔄 Changed
+
+- Adjusted page title of the vote review bundle page
 
 ## [v1.25.6] - 2022-06-01
 

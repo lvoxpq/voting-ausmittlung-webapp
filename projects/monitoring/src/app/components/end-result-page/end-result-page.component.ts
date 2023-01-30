@@ -25,7 +25,4 @@ export class EndResultPageComponent {
 
   @Input()
   public domainOfInfluenceType?: DomainOfInfluenceType;
-
-  @Output()
-  public export: EventEmitter<void> = new EventEmitter<void>();
 }

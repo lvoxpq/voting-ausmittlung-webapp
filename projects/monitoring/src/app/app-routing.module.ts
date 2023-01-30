@@ -12,13 +12,13 @@ import { MonitoringContestOverviewComponent } from './pages/monitoring-contest-o
 import { MonitoringOverviewComponent } from './pages/monitoring-overview/monitoring-overview.component';
 import { ProportionalElectionEndResultComponent } from './pages/proportional-election-end-result/proportional-election-end-result.component';
 import { VoteEndResultComponent } from './pages/vote-end-result/vote-end-result.component';
-import { AuthThemeGuard } from '@abraxas/voting-lib';
+import { AuthThemeGuard, ThemeService } from '@abraxas/voting-lib';
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'default',
+    redirectTo: ThemeService.NoTheme,
   },
   {
     path: ':theme',

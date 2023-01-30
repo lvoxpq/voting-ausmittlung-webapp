@@ -5,7 +5,7 @@
   [max]="100"
   [required]="true"
   [allowUndefined]="false"
-  [error]="resultEntryParams.ballotBundleSampleSizePercent < 0 || resultEntryParams.ballotBundleSampleSizePercent > 100"
+  [error]="resultEntryParams.ballotBundleSampleSizePercent <= 0 || resultEntryParams.ballotBundleSampleSizePercent > 100"
   [value]="resultEntryParams.ballotBundleSampleSizePercent"
   (valueChange)="resultEntryParams.ballotBundleSampleSizePercent = +$event">
 </bc-number>

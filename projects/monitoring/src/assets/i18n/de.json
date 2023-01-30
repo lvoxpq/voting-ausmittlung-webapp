@@ -1,6 +1,9 @@
 {
   "APP": {
-    "TITLE": "VOTING Ausmittlung Monitoring",
+    "TITLE": {
+      "default": "VOTING Ausmittlung Monitoring",
+      "sg": "Ergebnisermittlung Monitoring"
+    },
     "CONFIRM": "Bestätigen"
   },
   "MONITORING_COCKPIT": {
@@ -29,7 +32,10 @@
     "TRIGGERED": "Manuelle Übermittlung gestartet…",
     "TRIGGER_MODE_MANUAL": "Manuell",
     "TRIGGER_MODE_AUTO": "Automatisch",
-    "INTERVAL": "Export-Intervall (in Minuten)"
+    "INTERVAL": "Export-Intervall (in Minuten)",
+    "POLITICAL_BUSINESS_METADATA": {
+      "TOKEN": "Token"
+    }
   },
   "END_RESULT": {
     "OVERVIEW": "Ergebnisübersicht",
@@ -135,6 +141,9 @@
       "TITLE": "Schlussergebnis setzen?",
       "MESSAGE": "Mit der Bestätigung wird der Ausmittlungsstand in den Exports als Schlussergebnis ausgewiesen."
     }
+  },
+  "PROPORTIONAL_ELECTION_END_RESULT": {
+    "ENTER_MANUAL_RESULTS": "Ergebnisse manuell eintragen"
   },
   "ERROR_MESSAGES": {
     "CountingCircleResultInInvalidStateForEVotingImportException": "eVoting Resultate können nur importiert werden, wenn noch kein Resultat geprüft wurde.",

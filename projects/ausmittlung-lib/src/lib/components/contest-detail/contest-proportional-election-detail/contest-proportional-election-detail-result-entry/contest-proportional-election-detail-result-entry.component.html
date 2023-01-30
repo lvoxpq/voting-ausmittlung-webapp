@@ -19,7 +19,7 @@
     <vo-lib-inline-spinner [loading]="isUpdatingResultEntryParams">
       <bc-button variant="primary"
                  [label]="'PROPORTIONAL_ELECTION.RESULT_ENTRY.SELECT' | translate"
-                 [disabled]="isUpdatingResultEntryParams || resultEntryParams.ballotBundleSize <= 0 || resultEntryParams.ballotBundleSampleSize < 0 || resultEntryParams.ballotBundleSampleSize > resultEntryParams.ballotBundleSize"
+                 [disabled]="isUpdatingResultEntryParams || resultEntryParams.ballotBundleSize <= 0 || resultEntryParams.ballotBundleSampleSize <= 0 || resultEntryParams.ballotBundleSampleSize > resultEntryParams.ballotBundleSize"
                  (buttonClick)="save()">
       </bc-button>
     </vo-lib-inline-spinner>

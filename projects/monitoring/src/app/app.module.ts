@@ -14,6 +14,7 @@ import {
   ButtonModule,
   CheckboxModule,
   DropdownModule,
+  FORMFIELD_DEFAULT_OPTIONS,
   FormfieldModule,
   IconModule,
   LabelModule,
@@ -69,7 +70,6 @@ import { MonitoringCockpitGridFooterButtonsComponent } from './components/monito
 import { MonitoringCockpitGridFooterComponent } from './components/monitoring-cockpit-grid-footer/monitoring-cockpit-grid-footer.component';
 import { MonitoringCockpitGridComponent } from './components/monitoring-cockpit-grid/monitoring-cockpit-grid.component';
 import { PoliticalBusinessResultExportDialogComponent } from './components/political-business-result-export-dialog/political-business-result-export-dialog.component';
-import { PoliticalBusinessSelectionTableComponent } from './components/political-business-selection-table/political-business-selection-table.component';
 import { ProportionalElectionLotDecisionDialogComponent } from './components/proportional-election-lot-decision-dialog/proportional-election-lot-decision-dialog.component';
 import { ResultImportDialogComponent } from './components/result-import-dialog/result-import-dialog.component';
 import { ResultImportListDialogComponent } from './components/result-import-list-dialog/result-import-list-dialog.component';
@@ -82,6 +82,8 @@ import { VoteEndResultComponent } from './pages/vote-end-result/vote-end-result.
 import { BreadcrumbsService } from './services/breadcrumbs.service';
 import { RoleService } from './services/role.service';
 import { WebpackTranslateLoader } from './services/webpack-translate-loader';
+import { ExportCockpitPoliticalBusinessesComponent } from './components/export-cockpit-political-businesses/export-cockpit-political-businesses.component';
+import { ProportionalElectionManualEndResultDialogComponent } from './components/proportional-election-manual-end-result-dialog/proportional-election-manual-end-result-dialog.component';
 
 registerLocaleData(localeDeCh);
 
@@ -108,13 +110,14 @@ registerLocaleData(localeDeCh);
     MajorityElectionLotDecisionListComponent,
     ProportionalElectionEndResultComponent,
     ProportionalElectionLotDecisionDialogComponent,
+    ProportionalElectionManualEndResultDialogComponent,
     MonitoringCockpitGridFooterButtonsComponent,
     EndResultTypeSelectorComponent,
     ImportFileSelectComponent,
     ResultImportDialogComponent,
     ResultImportListDialogComponent,
     ExportCockpitDialogComponent,
-    PoliticalBusinessSelectionTableComponent,
+    ExportCockpitPoliticalBusinessesComponent,
   ],
   imports: [
     BrowserModule,
@@ -186,6 +189,10 @@ registerLocaleData(localeDeCh);
       provide: HTTP_INTERCEPTORS,
       multi: true,
       useClass: HttpLanguageInterceptor,
+    },
+    {
+      provide: FORMFIELD_DEFAULT_OPTIONS,
+      useValue: { optionalText: 'optional' },
     },
   ],
   bootstrap: [AppComponent],

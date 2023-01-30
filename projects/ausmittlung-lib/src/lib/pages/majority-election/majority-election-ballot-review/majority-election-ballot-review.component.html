@@ -22,7 +22,7 @@
       <ng-container *ngIf="!loadingBallot && !!ballot; else spinner">
         <vo-ausm-majority-election-ballot-contents class="mb-3"
                                                    [ballot]="ballot"
-                                                   [showInvalidVotes]="electionResult.election.invalidVotes"
+                                                   [showInvalidVotes]="electionResult.election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes"
                                                    [loadingBallot]="loadingBallot"
                                                    [readonly]="!correctionOngoing"
                                                    [disabled]="actionExecuting">

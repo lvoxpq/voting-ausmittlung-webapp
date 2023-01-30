@@ -63,7 +63,7 @@ export class ProportionalElectionBallotContentComponent {
       return;
     }
 
-    this.ballotUiService.removeCandidateAtFirstFoundPosition(candidate, this.ballotUiData);
+    this.ballotUiService.removeCandidateAtLastFoundPosition(candidate, this.ballotUiData);
     this.contentChanged.emit();
   }
 

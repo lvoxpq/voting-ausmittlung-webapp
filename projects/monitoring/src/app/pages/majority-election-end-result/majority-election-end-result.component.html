@@ -2,8 +2,7 @@
                      [contest]="endResult?.contest"
                      [domainOfInfluenceDetails]="endResult?.domainOfInfluenceDetails"
                      [domainOfInfluenceType]="endResult?.election?.domainOfInfluence?.type"
-                     [swissAbroadHaveVotingRights]="endResult?.election.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE"
-                     (export)="export()">
+                     [swissAbroadHaveVotingRights]="endResult?.election.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE">
   <ng-container *ngIf="endResult">
     <vo-ausm-info-panel>
       <vo-ausm-info-panel-entry label="END_RESULT.POLITICAL_BUSINESS">

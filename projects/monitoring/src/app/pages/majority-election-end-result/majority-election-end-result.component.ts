@@ -52,10 +52,6 @@ export class MajorityElectionEndResultComponent implements OnDestroy {
     this.routeSubscription.unsubscribe();
   }
 
-  public export(): void {
-    alert('not yet implemented');
-  }
-
   public async setFinalized(finalize: boolean): Promise<void> {
     if (!this.endResult || finalize === this.endResult.finalized) {
       return;

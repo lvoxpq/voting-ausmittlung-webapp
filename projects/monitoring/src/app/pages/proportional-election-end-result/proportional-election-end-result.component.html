@@ -2,8 +2,7 @@
                      [contest]="endResult?.contest"
                      [domainOfInfluenceDetails]="endResult?.domainOfInfluenceDetails"
                      [domainOfInfluenceType]="endResult?.election?.domainOfInfluence?.type"
-                     [swissAbroadHaveVotingRights]="endResult?.election.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE"
-                     (export)="export()">
+                     [swissAbroadHaveVotingRights]="endResult?.election.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE">
   <ng-container *ngIf="endResult">
     <vo-ausm-info-panel>
       <vo-ausm-info-panel-entry label="END_RESULT.POLITICAL_BUSINESS">
@@ -41,11 +40,18 @@
                            position="right">
       <app-end-result-type-selector [finalized]="endResult.finalized"
                                     (finalizedChange)="setFinalized($event)"
-                                    [disabled]="hasOpenRequiredLotDecisions || !endResult.allCountingCirclesDone || endResult.contest.locked || finalizing"></app-end-result-type-selector>
+                                    [disabled]="hasOpenRequiredLotDecisions || !endResult.allCountingCirclesDone || endResult.contest.locked || finalizing"
+                                    finalizedLabel="PROPORTIONAL_ELECTION.END_RESULTS.FINALIZED"
+                                    notFinalizedLabel="PROPORTIONAL_ELECTION.END_RESULTS.NOT_FINALIZED"></app-end-result-type-selector>
     </vo-lib-inline-spinner>
     <bc-button *ngIf="hasLotDecisions && endResult.allCountingCirclesDone && !endResult.contest.locked"
                [label]="'END_RESULT.ELECTION.LOT_DECISION.OPEN' | translate"
                (buttonClick)="openUpdateLotDecisions()">
+    </bc-button>
+
+    <bc-button *ngIf="endResult.manualEndResultRequired && !endResult.contest.locked"
+               [label]="'PROPORTIONAL_ELECTION_END_RESULT.ENTER_MANUAL_RESULTS' | translate"
+               (buttonClick)="openEnterManualEndResult()">
     </bc-button>
   </div>
 

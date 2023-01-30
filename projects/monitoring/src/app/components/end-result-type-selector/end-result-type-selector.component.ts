@@ -4,7 +4,7 @@
  */
 
 import { RadioButton } from '@abraxas/base-components';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -12,34 +12,42 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './end-result-type-selector.component.html',
   styleUrls: ['./end-result-type-selector.component.scss'],
 })
-export class EndResultTypeSelectorComponent {
+export class EndResultTypeSelectorComponent implements OnInit {
   @Input()
   public finalized: boolean = false;
+
+  @Input()
+  public finalizedLabel: string = 'END_RESULTS.FINALIZED';
+
+  @Input()
+  public notFinalizedLabel: string = 'END_RESULTS.NOT_FINALIZED';
+
+  @Input()
+  public disabled: boolean = true;
 
   @Output()
   public finalizedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  public readonly items: RadioButton[];
+  public items: RadioButton[] = [];
 
-  constructor(private readonly i18n: TranslateService) {
+  constructor(private readonly i18n: TranslateService) {}
+
+  public ngOnInit(): void {
     this.items = [
       {
         value: false,
         disabled: true,
-        displayText: this.i18n.instant('END_RESULTS.NOT_FINALIZED'),
+        displayText: this.i18n.instant(this.notFinalizedLabel),
       },
       {
         value: true,
         disabled: true,
-        displayText: this.i18n.instant('END_RESULTS.FINALIZED'),
+        displayText: this.i18n.instant(this.finalizedLabel),
       },
     ];
-  }
 
-  @Input()
-  public set disabled(d: boolean) {
     for (const item of this.items) {
-      item.disabled = d;
+      item.disabled = this.disabled;
     }
   }
 

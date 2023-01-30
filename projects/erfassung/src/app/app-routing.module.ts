@@ -8,13 +8,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { majorityElectionResultRoute, proportionalElectionResultRoute, voteResultRoute } from 'ausmittlung-lib';
 import { ErfassungContestDetailComponent } from './pages/erfassung-contest-detail/erfassung-contest-detail.component';
 import { ErfassungContestOverviewComponent } from './pages/erfassung-contest-overview/erfassung-contest-overview.component';
-import { AuthThemeGuard } from '@abraxas/voting-lib';
+import { AuthThemeGuard, ThemeService } from '@abraxas/voting-lib';
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'default',
+    redirectTo: ThemeService.NoTheme,
   },
   {
     path: ':theme',

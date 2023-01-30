@@ -1,6 +1,9 @@
 {
   "APP": {
-    "TITLE": "VOTING Ausmittlung Erfassung"
+    "TITLE": {
+      "default": "VOTING Ausmittlung Erfassung",
+      "sg": "Ergebnisermittlung"
+    }
   },
   "CONTEST": {
     "POLITICAL_BUSINESSES": "Geschäfte zur Erfassung",

@@ -5,7 +5,7 @@
   @extend .p-3;
 
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 15rem));
+  grid-template-columns: repeat(3, minmax(0, 16rem));
   grid-gap: 1rem;
   border-left: 2px solid transparent;
 }
@@ -15,7 +15,8 @@
 }
 
 .tie-break-answers {
-  grid-template-columns: repeat(3, minmax(0, 15rem));
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 16rem));
   grid-auto-flow: column;
 }
 
