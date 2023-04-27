@@ -64,6 +64,7 @@
       <div>
         <bc-button *ngIf="position.isSlotAvailable && !readonly"
                    variant="tertiary"
+                   [tabIndex]="-1"
                    [label]="'ELECTION.BALLOT_DETAIL.ADD_CANDIDATE' | translate"
                    (buttonClick)="addNewCandidate(position)"></bc-button>
       </div>

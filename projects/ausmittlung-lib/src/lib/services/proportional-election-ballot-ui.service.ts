@@ -21,7 +21,7 @@ export class ProportionalElectionBallotUiService {
       listPositions: [],
       addableCandidatesByNumber: {},
       removableCandidatesByNumber: {},
-      removableCandidatesFromListByNumber: {},
+      removableCandidatesInRangeByNumber: {},
       emptyVoteCountValid: true,
       automaticEmptyVoteCounting: true,
       userEnteredEmptyVoteCount: 0,
@@ -76,7 +76,7 @@ export class ProportionalElectionBallotUiService {
       emptyVoteCountValid: true,
       userEnteredEmptyVoteCount: emptyVoteCount,
       removableCandidatesByNumber: {},
-      removableCandidatesFromListByNumber: {},
+      removableCandidatesInRangeByNumber: {},
       addableCandidatesByNumber: {},
       listNumber,
     };
@@ -121,7 +121,7 @@ export class ProportionalElectionBallotUiService {
     }
 
     uiData.removableCandidatesByNumber = {};
-    uiData.removableCandidatesFromListByNumber = {};
+    uiData.removableCandidatesInRangeByNumber = {};
     uiData.emptyVoteCount = uiData.numberOfMandates;
     this.updateEmptyVoteCountComputed(uiData);
   }
@@ -131,6 +131,7 @@ export class ProportionalElectionBallotUiService {
     uiData: ProportionalElectionBallotUiData,
   ): void {
     const listCandidatePosition = uiData.listPositions
+      .filter(x => !x.isSlotAvailable)
       .slice()
       .reverse()
       .find(x => x.listCandidate?.id === candidate.id || x.replacementCandidate?.id === candidate.id);
@@ -178,7 +179,7 @@ export class ProportionalElectionBallotUiService {
     }
 
     for (let i = start; i <= end; i++) {
-      const candidate = uiData.removableCandidatesFromListByNumber[i];
+      const candidate = uiData.removableCandidatesInRangeByNumber[i];
       if (!candidate) {
         continue;
       }
@@ -319,7 +320,7 @@ export class ProportionalElectionBallotUiService {
   private updateEditableCandidates(uiData: ProportionalElectionBallotUiData, electionCandidates: ProportionalElectionCandidate[]): void {
     const allCandidates = this.getAllCandidates(uiData);
     uiData.removableCandidatesByNumber = {};
-    uiData.removableCandidatesFromListByNumber = {};
+    uiData.removableCandidatesInRangeByNumber = {};
     for (const removableCandidate of allCandidates.filter(x => !x.removedFromList)) {
       this.setCandidateRemovable(uiData, removableCandidate, true);
     }
@@ -359,7 +360,7 @@ export class ProportionalElectionBallotUiService {
       if (sameList) {
         uiData.removableCandidatesByNumber[candidate.number] = candidate;
         if (!isNaN(number)) {
-          uiData.removableCandidatesFromListByNumber[number] = candidate;
+          uiData.removableCandidatesInRangeByNumber[number] = candidate;
         }
       }
 
@@ -370,7 +371,7 @@ export class ProportionalElectionBallotUiService {
     if (sameList) {
       delete uiData.removableCandidatesByNumber[candidate.number];
       if (!isNaN(number)) {
-        delete uiData.removableCandidatesFromListByNumber[number];
+        delete uiData.removableCandidatesInRangeByNumber[number];
       }
     }
   }
@@ -390,7 +391,7 @@ export interface ProportionalElectionBallotUiData {
 
   // candidates which can be removed from the ballot
   // indexed by the candidates number converted to a number
-  removableCandidatesFromListByNumber: Record<number, ProportionalElectionBallotCandidate>;
+  removableCandidatesInRangeByNumber: Record<number, ProportionalElectionBallotCandidate>;
 
   automaticEmptyVoteCounting: boolean;
   emptyVoteCountValid: boolean;

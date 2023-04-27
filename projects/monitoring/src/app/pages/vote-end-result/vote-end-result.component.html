@@ -1,6 +1,7 @@
 <app-end-result-page [loading]="loading"
                      [contest]="endResult?.contest"
-                     [domainOfInfluenceDetails]="endResult?.domainOfInfluenceDetails"
+                     [countOfVotersInformation]="endResult?.countOfVotersInformation"
+                     [votingCards]="endResult?.votingCards"
                      [domainOfInfluenceType]="endResult?.vote?.domainOfInfluence?.type"
                      [swissAbroadHaveVotingRights]="endResult?.vote.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE">
   <ng-container *ngIf="endResult">
@@ -9,7 +10,7 @@
         {{endResult.vote.title}}
       </vo-ausm-info-panel-entry>
       <vo-ausm-info-panel-entry label="END_RESULT.COUNT_OF_VOTERS">
-        {{endResult.domainOfInfluenceDetails?.countOfVotersInformation.totalCountOfVoters | number}}
+        {{endResult.countOfVotersInformation.totalCountOfVoters | number}}
       </vo-ausm-info-panel-entry>
       <vo-ausm-info-panel-entry label="END_RESULT.COUNTING_DONE">
         {{'END_RESULT.COUNTING_DONE_OF' | translate: endResult}}

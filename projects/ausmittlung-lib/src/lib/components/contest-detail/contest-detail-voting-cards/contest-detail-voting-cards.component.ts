@@ -3,54 +3,88 @@
  * For license information see LICENSE file
  */
 
-import { Component, Input, OnChanges } from '@angular/core';
-import {
-  AggregatedContestCountingCircleDetails,
-  ContestCountingCircleDetails,
-  DomainOfInfluenceType,
-  VotingCardChannel,
-  VotingCardResultDetail,
-} from '../../../models';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DomainOfInfluenceType, VotingCardChannel, VotingCardResultDetail } from '../../../models';
 import { groupBy } from '../../../services/utils/array.utils';
 
 @Component({
   selector: 'vo-ausm-contest-detail-voting-cards',
   templateUrl: './contest-detail-voting-cards.component.html',
 })
-export class ContestDetailVotingCardsComponent implements OnChanges {
+export class ContestDetailVotingCardsComponent implements OnInit {
   public votingCardsByDoiType: { [key in keyof typeof DomainOfInfluenceType]?: VotingCardResultDetail[] } = {};
+
+  private _domainOfInfluenceTypes?: DomainOfInfluenceType[];
+  private _enabledVotingCardChannels: VotingCardChannel[] = [];
+  private _votingCards?: VotingCardResultDetail[];
+  private initialized: boolean = false;
 
   @Input()
   public readonly: boolean = true;
 
-  @Input()
-  public domainOfInfluenceTypes: DomainOfInfluenceType[] = [];
+  @Output()
+  public votingCardsChange: EventEmitter<VotingCardResultDetail[]> = new EventEmitter<VotingCardResultDetail[]>();
 
   @Input()
-  public enabledVotingCardChannels: VotingCardChannel[] = [];
+  public set domainOfInfluenceTypes(v: DomainOfInfluenceType[]) {
+    if (v === this._domainOfInfluenceTypes) {
+      return;
+    }
+
+    this._domainOfInfluenceTypes = v;
+    this.updateVotingCards();
+  }
+
+  public get domainOfInfluenceTypes(): DomainOfInfluenceType[] {
+    return this._domainOfInfluenceTypes ?? [];
+  }
 
   @Input()
-  public details!: ContestCountingCircleDetails | AggregatedContestCountingCircleDetails;
+  public set enabledVotingCardChannels(v: VotingCardChannel[]) {
+    if (v === this._enabledVotingCardChannels) {
+      return;
+    }
 
-  public ngOnChanges(): void {
+    this._enabledVotingCardChannels = v;
+    this.updateVotingCards();
+  }
+
+  @Input()
+  public set votingCards(v: VotingCardResultDetail[]) {
+    if (v === this._votingCards) {
+      return;
+    }
+
+    this._votingCards = v;
+    this.updateVotingCards();
+  }
+
+  public ngOnInit(): void {
+    this.initialized = true;
+    this.updateVotingCards();
+  }
+
+  public updateVotingCards(): void {
+    if (!this.initialized || !this._votingCards || !this._domainOfInfluenceTypes) return;
+
     const vcByDoiType = groupBy(
-      this.details.votingCards,
+      this._votingCards,
       x => x.domainOfInfluenceType,
       x => x,
     );
 
     const allVotingCards: VotingCardResultDetail[] = [];
     this.votingCardsByDoiType = {};
-    for (const doiType of this.domainOfInfluenceTypes) {
+    for (const doiType of this._domainOfInfluenceTypes) {
       const byChannel = groupBy(
         vcByDoiType[doiType] ?? [],
         x => x.channel,
         x => x,
       );
       const vcDetails =
-        this.enabledVotingCardChannels.length === 0
-          ? this.details.votingCards.filter(x => !!x.countOfReceivedVotingCards && x.countOfReceivedVotingCards > 0)
-          : this.enabledVotingCardChannels.map(c => ({
+        this._enabledVotingCardChannels.length === 0
+          ? this._votingCards
+          : this._enabledVotingCardChannels.map(c => ({
               countOfReceivedVotingCards: byChannel[c.votingChannel]?.find(x => x.valid === c.valid)?.countOfReceivedVotingCards,
               domainOfInfluenceType: doiType,
               valid: c.valid,
@@ -60,6 +94,9 @@ export class ContestDetailVotingCardsComponent implements OnChanges {
       this.votingCardsByDoiType[doiType] = vcDetails;
     }
 
-    this.details.votingCards = allVotingCards;
+    if (!this.readonly) {
+      this._votingCards = allVotingCards;
+      this.votingCardsChange.emit(allVotingCards);
+    }
   }
 }

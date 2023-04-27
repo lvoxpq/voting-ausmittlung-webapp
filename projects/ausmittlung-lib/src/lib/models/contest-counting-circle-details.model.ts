@@ -3,14 +3,11 @@
  * For license information see LICENSE file
  */
 
-import {
-  AggregatedContestCountingCircleDetails as AggregatedContestCountingCircleDetailsProto,
-  ContestCountingCircleDetails as ContestCountingCircleDetailsProto,
-} from '@abraxas/voting-ausmittlung-service-proto/grpc/models/contest_counting_circle_details_pb';
+import { ContestCountingCircleDetails as ContestCountingCircleDetailsProto } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/contest_counting_circle_details_pb';
 import { CountOfVotersInformation } from './count-of-voters.model';
 import { VotingCardResultDetail } from './voting-cards.model';
 
-export { ContestCountingCircleDetailsProto, AggregatedContestCountingCircleDetailsProto };
+export { ContestCountingCircleDetailsProto };
 
 export interface ContestCountingCircleDetails {
   contestId: string;
@@ -18,9 +15,4 @@ export interface ContestCountingCircleDetails {
   countOfVotersInformation: CountOfVotersInformation;
   votingCards: VotingCardResultDetail[];
   eVoting: boolean;
-}
-
-export interface AggregatedContestCountingCircleDetails {
-  countOfVotersInformation: CountOfVotersInformation;
-  votingCards: VotingCardResultDetail[];
 }

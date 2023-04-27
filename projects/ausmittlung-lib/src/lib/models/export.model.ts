@@ -7,17 +7,44 @@ import {
   ExportFileFormat,
   ResultExportConfiguration as ResultExportConfigurationProto,
   PoliticalBusinessExportMetadata as PoliticalBusinessExportMetadataProto,
-  ResultExportTemplate as ResultExportTemplateProto,
+  DataExportTemplate as DataExportTemplateProto,
+  ProtocolExport as ProtocolExportProto,
+  ProtocolExportState as ProtocolExportStateProto,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/export_pb';
-import { DomainOfInfluenceType } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/domain_of_influence_pb';
+import { Contest } from './contest.model';
+import { CountingCircle } from './counting-circle.model';
 
-export type ResultExportTemplate = ResultExportTemplateProto.AsObject;
+export interface ProtocolExport extends Omit<ProtocolExportProto.AsObject, 'started'> {
+  started: Date;
+}
+export type ResultExportTemplate = DataExportTemplateProto.AsObject | ProtocolExportProto.AsObject;
 export type PoliticalBusinessExportMetadata = PoliticalBusinessExportMetadataProto.AsObject;
 export { ExportFileFormat };
 
+export type ResultExportTemplateContainer = {
+  contest: Contest;
+  countingCircle?: CountingCircle;
+  templates: ResultExportTemplate[];
+};
+
 export type GenerateResultExportsRequest = {
   contestId: string;
-  resultExportRequests: ResultExportTemplateRequest[];
+  countingCircleId: string | undefined;
+  exportTemplateIds: string[];
+};
+
+export type FetchProtocolExportsRequest = {
+  contestId: string;
+  countingCircleId: string | undefined;
+  protocolExportIds: string[];
+};
+
+export type ProtocolExportStateChange = {
+  exportTemplateId: string;
+  protocolExportId: string;
+  newState: ProtocolExportStateProto;
+  fileName: string;
+  started: Date;
 };
 
 export type GenerateResultBundleReviewExportRequest = {
@@ -26,14 +53,6 @@ export type GenerateResultBundleReviewExportRequest = {
   countingCircleId: string;
   politicalBusinessResultBundleId: string;
   politicalBusinessId: string;
-};
-
-export type ResultExportTemplateRequest = {
-  key: string;
-  politicalBusinessIds: string[];
-  countingCircleId: string;
-  domainOfInfluenceType?: DomainOfInfluenceType;
-  politicalBusinessUnionId?: string;
 };
 
 export type ResultExportConfiguration = Omit<

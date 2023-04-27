@@ -45,7 +45,7 @@
     },
     "DETAIL": {
       "CONTESTS_TITLE": "Übersicht Urnengänge",
-      "EXPORT": "Exportieren…",
+      "EXPORT": "Exportieren",
       "DATE_TITLE": "Urnengang vom {{date}}",
       "COUNT_OF_VOTERS": "Stimmberechtigte",
       "MEN": "Männer",
@@ -594,21 +594,28 @@
     "SECONDARY_ELECTION_SINGLE": "Nebenwahl"
   },
   "EXPORTS": {
+    "BREADCRUMB_TITLE": "Exports",
     "TITLE": "Exportieren",
-    "SELECTED": "Ausgewählte Exports",
-    "SAVE": "Auswahl exportieren",
-    "TABS": {
-      "SINGLE_POLITICAL_BUSINESS": "Nach Geschäft",
-      "MULTIPLE_POLITICAL_BUSINESS": "Mehrere Geschäfte",
-      "CONTEST": "Urnengang",
-      "SINGLE_POLITICAL_BUSINESS_UNION": "Nach Geschäftsverbindung"
-    },
-    "POLITICAL_BUSINESS": "Geschäft",
     "DESCRIPTION": "Bezeichnung",
-    "POLITICAL_BUSINESS_TYPE": "Geschäftstyp",
-    "FORMAT": "Format",
-    "EXPORT": "Export",
-    "EXPORTS": "Exports"
+    "POLITICAL_BUSINESS": "Geschäft",
+    "STATE": "Status",
+    "DATA_DATE": "Datenstand",
+    "FILE_NAME": "Dateiname",
+    "DOWNLOAD": "Download",
+    "RETRY": "Wiederholen",
+    "EXPORT_ACTION": "Exportieren",
+    "EXPORT_SELECTED_ACTION": "Alle markierten exportieren",
+    "NO_TEMPLATES": "Keine Exports verfügbar",
+    "TABS": {
+      "PROTOCOLS": "Protokolle",
+      "DATA_FILES": "Datenexports"
+    },
+    "STATES": {
+      "0": "-",
+      "1": "wird generiert",
+      "2": "abgeschlossen",
+      "3": "fehlgeschlagen"
+    }
   },
   "DOMAIN_OF_INFLUENCE": {
     "TYPE": "Ebene {{type}}",

@@ -24,6 +24,19 @@
         <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.STARTED' | translate }}</th>
         <td bc-cell *bcCellDef="let element">{{ element.started | date: 'dd.MM.yyyy - HH:mm' }}</td>
       </ng-container>
+      <ng-container bcColumnDef="ignoredCountingCircles">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.IGNORED_COUNTING_CIRCLES' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">
+          <ul class="ignored-counting-circle-list">
+            <li *ngFor="let ignoredCountingCircle of element.ignoredCountingCirclesList">
+              <span class="mr-2">{{ ignoredCountingCircle.countingCircleId }}</span>
+              <span *ngIf="ignoredCountingCircle.countingCircleDescription" class="mr-2">{{ ignoredCountingCircle.countingCircleDescription }}</span>
+              <span *ngIf="ignoredCountingCircle.isTestCountingCircle">{{ 'RESULT_IMPORT.IGNORED_COUNTING_CIRCLE.TEST_COUNTING_CIRCLE' | translate }}</span>
+              <span class="non-test-counting-circle" *ngIf="!ignoredCountingCircle.isTestCountingCircle">{{ 'RESULT_IMPORT.IGNORED_COUNTING_CIRCLE.NON_TEST_COUNTING_CIRCLE' | translate }}</span>
+            </li>
+          </ul>
+        </td>
+      </ng-container>
 
       <tr bc-header-row *bcHeaderRowDef="columns"></tr>
       <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"></tr>

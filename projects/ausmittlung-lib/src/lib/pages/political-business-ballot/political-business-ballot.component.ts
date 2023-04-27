@@ -214,6 +214,7 @@ export abstract class PoliticalBusinessBallotComponent<
     }
 
     this.toast.success(this.i18n.instant('APP.SAVED'));
+    this.hasChanges = false;
     return true;
   }
 

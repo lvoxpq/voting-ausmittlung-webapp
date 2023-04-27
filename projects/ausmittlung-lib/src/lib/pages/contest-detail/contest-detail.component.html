@@ -21,7 +21,7 @@
         [label]="'CONTEST.DETAIL.MAP_WRITE_INS' | translate"
         (buttonClick)="mapWriteIns()">
       </bc-button>
-      <bc-button variant="tertiary" (buttonClick)="export()" [label]="'CONTEST.DETAIL.EXPORT' | translate"></bc-button>
+      <bc-button *ngIf="showExport" variant="tertiary" (buttonClick)="export()" [label]="'CONTEST.DETAIL.EXPORT' | translate"></bc-button>
     </div>
   </vo-lib-page-header>
 

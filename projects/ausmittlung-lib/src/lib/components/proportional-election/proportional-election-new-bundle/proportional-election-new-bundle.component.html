@@ -7,10 +7,9 @@
                  class="my-2 field-number"
                  [required]="true"
                  [allowUndefined]="false"
-                 [min]="1"
                  [label]="'POLITICAL_BUSINESS.BUNDLE_NUMBER' | translate"
                  [value]="bundleNumber"
-                 [error]="duplicatedBundleNumber"
+                 [error]="duplicatedBundleNumber || !bundleNumber"
                  [hint]="duplicatedBundleNumber ? ('POLITICAL_BUSINESS.DUPLICATED_BUNDLE_NUMBER' | translate) : ''"
                  (valueChange)="updateBundleNumber(+$event)"></bc-number>
 

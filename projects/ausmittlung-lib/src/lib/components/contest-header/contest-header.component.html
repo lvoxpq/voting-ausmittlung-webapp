@@ -1,21 +1,23 @@
 <div class="container" *ngIf="!!contest">
   {{'CONTEST.DETAIL.DATE_TITLE' | translate:{date: (contest.date | date: 'longDate') || ''} }}
-  <bc-status-label *ngIf="color"
-                   [backgroundColor]="color">
-    <ng-container [ngSwitch]="contest.state">
-      <span *ngSwitchCase="states.CONTEST_STATE_TESTING_PHASE">
-        {{('CONTEST.END_OF_TESTING_PHASE') | translate}} {{contest.endOfTestingPhase | date: 'short'}}
-      </span>
-      <ng-container *ngSwitchCase="states.CONTEST_STATE_PAST_LOCKED">
-        <span>{{'CONTEST.PAST_LOCKED' | translate}} </span>
-        <bc-button *ngIf="isErfassungElectionAdmin || isMonitoringElectionAdmin"
-                   variant="tertiary"
-                   [label]="'CONTEST.PAST_UNLOCK.OPEN' | translate"
-                   (buttonClick)="openPastUnlockDialog()"></bc-button>
-      </ng-container>
-      <span *ngSwitchCase="states.CONTEST_STATE_PAST_UNLOCKED">
-        {{'CONTEST.PAST_UNLOCKED' | translate}}
-      </span>
+  <ng-container [ngSwitch]="contest.state">
+    <bc-status-label *ngSwitchCase="states.CONTEST_STATE_TESTING_PHASE"
+                     foregroundColor="dark"
+                     backgroundColor="#ffa000"
+                     [label]="('CONTEST.END_OF_TESTING_PHASE' | translate) + ' ' + (contest.endOfTestingPhase | date: 'short')">
+    </bc-status-label>
+    <ng-container *ngSwitchCase="states.CONTEST_STATE_PAST_LOCKED">
+      <bc-status-label foregroundColor="light"
+                       backgroundColor="#c60000"
+                       [label]="'CONTEST.PAST_LOCKED' | translate"></bc-status-label>
+      <bc-button *ngIf="isErfassungElectionAdmin || isMonitoringElectionAdmin"
+                 variant="tertiary"
+                 [label]="'CONTEST.PAST_UNLOCK.OPEN' | translate"
+                 (buttonClick)="openPastUnlockDialog()"></bc-button>
     </ng-container>
-  </bc-status-label>
+    <bc-status-label *ngSwitchCase="states.CONTEST_STATE_PAST_UNLOCKED"
+                     foregroundColor="light"
+                     backgroundColor="#1c9048"
+                     [label]="'CONTEST.PAST_UNLOCKED' | translate"></bc-status-label>
+  </ng-container>
 </div>

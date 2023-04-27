@@ -423,11 +423,9 @@ export class VoteResultService extends PoliticalBusinessResultBaseService<
     return {
       contest: ContestService.mapToContest(data.getContest()!),
       vote: VoteResultService.mapToVote(data.getVote()!),
-      domainOfInfluenceDetails: ContestCountingCircleDetailsService.mapToAggregatedContestCountingCircleDetails(
-        data.getDomainOfInfluenceDetails(),
-      ),
+      countOfVotersInformation: ContestCountingCircleDetailsService.mapToCountOfVotersInformation(data.getCountOfVotersInformation()!),
+      votingCards: data.getVotingCardsList().map(v => ContestCountingCircleDetailsService.mapToVotingCard(v)),
       ballotEndResults: this.mapToBallotEndResults(data.getBallotEndResultsList()),
-      totalCountOfVoters: data.getTotalCountOfVoters(),
       countOfDoneCountingCircles: data.getCountOfDoneCountingCircles(),
       totalCountOfCountingCircles: data.getTotalCountOfCountingCircles(),
       allCountingCirclesDone: data.getAllCountingCirclesDone(),

@@ -4,7 +4,7 @@
  */
 
 import { DialogService } from '@abraxas/voting-lib';
-import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Contest, ContestState } from '../../models';
 import { RoleService } from '../../services/role.service';
@@ -18,9 +18,7 @@ import {
   templateUrl: './contest-header.component.html',
   styleUrls: ['./contest-header.component.scss'],
 })
-export class ContestHeaderComponent implements OnDestroy, OnChanges {
-  public color?: string;
-  public foregroundColor: 'dark' | 'light' = 'dark';
+export class ContestHeaderComponent implements OnDestroy {
   public isErfassungElectionAdmin: boolean = false;
   public isMonitoringElectionAdmin: boolean = false;
 
@@ -53,45 +51,8 @@ export class ContestHeaderComponent implements OnDestroy, OnChanges {
     this.dialog.open(ContestPastUnlockDialogComponent, dialogData);
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.contest === undefined) {
-      return;
-    }
-
-    const previousContestValue: Contest = changes.contest.previousValue;
-    if (previousContestValue === this.contest) {
-      return;
-    }
-
-    this.updateColor();
-  }
-
   public ngOnDestroy(): void {
     this.isErfassungElectionAdminSubscription?.unsubscribe();
     this.isMonitoringElectionAdminSubscription?.unsubscribe();
-  }
-
-  private updateColor(): void {
-    if (!this.contest) {
-      this.color = undefined;
-      return;
-    }
-
-    switch (this.contest.state) {
-      case ContestState.CONTEST_STATE_TESTING_PHASE:
-        this.color = '#ffa000'; // warning
-        this.foregroundColor = 'dark';
-        break;
-      case ContestState.CONTEST_STATE_PAST_LOCKED:
-        this.color = '#c60000'; // error
-        this.foregroundColor = 'light';
-        break;
-      case ContestState.CONTEST_STATE_PAST_UNLOCKED:
-        this.color = '#1c9048'; // success
-        this.foregroundColor = 'light';
-        break;
-      default:
-        this.color = undefined;
-    }
   }
 }

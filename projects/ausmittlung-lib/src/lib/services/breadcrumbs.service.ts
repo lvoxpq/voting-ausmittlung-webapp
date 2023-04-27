@@ -4,7 +4,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { ProportionalElectionResult } from '../models';
+import { Contest, CountingCircle, ProportionalElectionResult } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +26,10 @@ export class BreadcrumbsService {
         name: 'PROPORTIONAL_ELECTION.RESULTS',
       },
     ];
+  }
+
+  public forExports(countingCircle?: CountingCircle): BreadcrumbItem[] {
+    return [{ name: 'CONTEST.DETAIL.TITLE', link: ['..'] }, { name: 'EXPORTS.BREADCRUMB_TITLE' }];
   }
 }
 

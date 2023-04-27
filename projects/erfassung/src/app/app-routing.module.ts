@@ -5,7 +5,7 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { majorityElectionResultRoute, proportionalElectionResultRoute, voteResultRoute } from 'ausmittlung-lib';
+import { majorityElectionResultRoute, proportionalElectionResultRoute, ResultExportComponent, voteResultRoute } from 'ausmittlung-lib';
 import { ErfassungContestDetailComponent } from './pages/erfassung-contest-detail/erfassung-contest-detail.component';
 import { ErfassungContestOverviewComponent } from './pages/erfassung-contest-overview/erfassung-contest-overview.component';
 import { AuthThemeGuard, ThemeService } from '@abraxas/voting-lib';
@@ -36,6 +36,10 @@ const routes: Routes = [
           {
             path: ':contestId/:countingCircleId',
             component: ErfassungContestDetailComponent,
+          },
+          {
+            path: ':contestId/:countingCircleId/exports',
+            component: ResultExportComponent,
           },
         ],
       },

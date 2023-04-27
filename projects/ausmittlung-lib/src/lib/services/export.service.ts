@@ -5,30 +5,34 @@
 
 import { ExportServicePromiseClient } from '@abraxas/voting-ausmittlung-service-proto/grpc/export_service_grpc_web_pb';
 import {
-  GetContestExportTemplatesRequest,
-  GetCountingCircleResultExportTemplatesRequest,
-  GetMultiplePoliticalBusinessesCountingCircleResultExportTemplatesRequest,
-  GetMultiplePoliticalBusinessesResultExportTemplatesRequest,
-  GetPoliticalBusinessResultExportTemplatesRequest,
-  GetPoliticalBusinessUnionResultExportTemplatesRequest,
+  ListDataExportTemplatesRequest,
+  ListProtocolExportsRequest,
   ListResultExportConfigurationsRequest,
+  StartProtocolExportsRequest,
   TriggerResultExportRequest,
   UpdatePoliticalBusinessExportMetadataRequest,
   UpdateResultExportConfigurationRequest,
+  GetProtocolExportStateChangesRequest,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/export_requests_pb';
-import { GrpcBackendService, GrpcEnvironment, GrpcService } from '@abraxas/voting-lib';
+import { GrpcBackendService, GrpcEnvironment, GrpcService, retryForeverWithBackoff } from '@abraxas/voting-lib';
 import { Inject, Injectable } from '@angular/core';
 import { Int32Value } from 'google-protobuf/google/protobuf/wrappers_pb';
 import {
   PoliticalBusinessExportMetadata,
-  PoliticalBusinessType,
-  PoliticalBusinessUnion,
-  PoliticalBusinessUnionType,
+  ProtocolExportStateChange,
   ResultExportConfiguration,
   ResultExportTemplate,
-  SimplePoliticalBusiness,
+  ResultExportTemplateContainer,
 } from '../models';
 import { GRPC_ENV_INJECTION_TOKEN } from './tokens';
+import {
+  DataExportTemplates,
+  ProtocolExport,
+  ProtocolExports,
+  ProtocolExportStateChange as ProtocolExportStateChangeProto,
+} from '@abraxas/voting-ausmittlung-service-proto/grpc/models/export_pb';
+import { ContestService } from './contest.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -38,77 +42,62 @@ export class ExportService extends GrpcService<ExportServicePromiseClient> {
     super(ExportServicePromiseClient, env, grpcBackend);
   }
 
-  public getCountingCircleResultExportTemplates(ccId: string, politicalBusiness: SimplePoliticalBusiness): Promise<ResultExportTemplate[]> {
-    const req = new GetCountingCircleResultExportTemplatesRequest();
-    req.setCountingCircleId(ccId);
-    req.setPoliticalBusinessId(politicalBusiness.id);
-    req.setPoliticalBusinessType(politicalBusiness.businessType);
-    return this.request(
-      c => c.getCountingCircleResultExportTemplates,
-      req,
-      r => r.toObject().templatesList,
-    );
-  }
-
-  public getPoliticalBusinessResultExportTemplates(pb: SimplePoliticalBusiness): Promise<ResultExportTemplate[]> {
-    const req = new GetPoliticalBusinessResultExportTemplatesRequest();
-    req.setPoliticalBusinessId(pb.id);
-    req.setPoliticalBusinessType(pb.businessType);
-    return this.request(
-      c => c.getPoliticalBusinessResultExportTemplates,
-      req,
-      r => r.toObject().templatesList,
-    );
-  }
-
-  public getPoliticalBusinessUnionResultExportTemplates(pbu: PoliticalBusinessUnion): Promise<ResultExportTemplate[]> {
-    const pbType =
-      pbu.type === PoliticalBusinessUnionType.POLITICAL_BUSINESS_UNION_TYPE_PROPORTIONAL_ELECTION
-        ? PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_PROPORTIONAL_ELECTION
-        : PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_MAJORITY_ELECTION;
-
-    const req = new GetPoliticalBusinessUnionResultExportTemplatesRequest();
-    req.setPoliticalBusinessUnionId(pbu.id);
-    req.setPoliticalBusinessType(pbType);
-    return this.request(
-      c => c.getPoliticalBusinessUnionResultExportTemplates,
-      req,
-      r => r.toObject().templatesList,
-    );
-  }
-
-  public getMultiplePoliticalBusinessesResultExportTemplates(contestId: string): Promise<ResultExportTemplate[]> {
-    const req = new GetMultiplePoliticalBusinessesResultExportTemplatesRequest();
+  public listDataExportTemplates(contestId: string, countingCircleId: string | undefined): Promise<ResultExportTemplateContainer> {
+    const req = new ListDataExportTemplatesRequest();
     req.setContestId(contestId);
+
+    if (countingCircleId !== undefined) {
+      req.setCountingCircleId(countingCircleId);
+    }
+
     return this.request(
-      c => c.getMultiplePoliticalBusinessesResultExportTemplates,
+      c => c.listDataExportTemplates,
       req,
-      r => r.toObject().templatesList,
+      r => this.mapDataExportsToResultExportTemplatesContainer(r),
     );
   }
 
-  public getMultiplePoliticalBusinessesCountingCircleResultExportTemplates(
-    contestId: string,
-    countingCircleId: string,
-  ): Promise<ResultExportTemplate[]> {
-    const req = new GetMultiplePoliticalBusinessesCountingCircleResultExportTemplatesRequest();
+  public listProtocolExports(contestId: string, countingCircleId: string | undefined): Promise<ResultExportTemplateContainer> {
+    const req = new ListProtocolExportsRequest();
     req.setContestId(contestId);
-    req.setCountingCircleId(countingCircleId);
+
+    if (countingCircleId !== undefined) {
+      req.setCountingCircleId(countingCircleId);
+    }
+
     return this.request(
-      c => c.getMultiplePoliticalBusinessesCountingCircleResultExportTemplates,
+      c => c.listProtocolExports,
       req,
-      r => r.toObject().templatesList,
+      r => this.mapProtocolExportsToResultExportTemplatesContainer(r),
     );
   }
 
-  public getContestExportTemplates(contestId: string): Promise<ResultExportTemplate[]> {
-    const req = new GetContestExportTemplatesRequest();
+  public startProtocolExports(contestId: string, countingCircleId: string | undefined, exports: ResultExportTemplate[]): Promise<void> {
+    const req = new StartProtocolExportsRequest();
     req.setContestId(contestId);
-    return this.request(
-      c => c.getContestExportTemplates,
+
+    if (countingCircleId !== undefined) {
+      req.setCountingCircleId(countingCircleId);
+    }
+
+    req.setExportTemplateIdsList(exports.map(e => e.exportTemplateId));
+
+    return this.requestEmptyResp(c => c.startProtocolExports, req);
+  }
+
+  public getProtocolExportStateChanges(contestId: string, countingCircleId: string | undefined): Observable<ProtocolExportStateChange> {
+    const req = new GetProtocolExportStateChangesRequest();
+    req.setContestId(contestId);
+
+    if (countingCircleId !== undefined) {
+      req.setCountingCircleId(countingCircleId);
+    }
+
+    return this.requestServerStream(
+      c => c.getProtocolExportStateChanges,
       req,
-      r => r.toObject().templatesList,
-    );
+      r => this.mapToProtocolExportStateChange(r),
+    ).pipe(retryForeverWithBackoff());
   }
 
   public listResultExportConfigurations(contestId: string): Promise<ResultExportConfiguration[]> {
@@ -178,5 +167,35 @@ export class ExportService extends GrpcService<ExportServicePromiseClient> {
     const req = new UpdatePoliticalBusinessExportMetadataRequest();
     req.setToken(metadata.token);
     return req;
+  }
+
+  private mapDataExportsToResultExportTemplatesContainer(r: DataExportTemplates): ResultExportTemplateContainer {
+    const obj = r.toObject();
+    return {
+      templates: obj.templatesList,
+      contest: ContestService.mapToContest(r.getContest()!),
+      countingCircle: obj.countingCircle,
+    };
+  }
+
+  private mapProtocolExportsToResultExportTemplatesContainer(exports: ProtocolExports): ResultExportTemplateContainer {
+    return {
+      templates: exports.getProtocolExportsList().map(x => ({
+        ...x.toObject(),
+        started: x.getStarted()?.toDate(),
+      })),
+      contest: ContestService.mapToContest(exports.getContest()!),
+      countingCircle: exports.getCountingCircle()?.toObject(),
+    };
+  }
+
+  private mapToProtocolExportStateChange(stateChange: ProtocolExportStateChangeProto): ProtocolExportStateChange {
+    return {
+      exportTemplateId: stateChange.getExportTemplateId(),
+      protocolExportId: stateChange.getProtocolExportId(),
+      newState: stateChange.getNewState(),
+      fileName: stateChange.getFileName(),
+      started: stateChange.getStarted()?.toDate()!,
+    };
   }
 }

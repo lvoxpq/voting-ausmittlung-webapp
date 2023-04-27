@@ -104,7 +104,8 @@ export class ProportionalElectionNewBundleComponent implements OnInit {
   }
 
   public updateBundleNumber(newNumber: number | string): void {
-    if (!newNumber) {
+    if (!newNumber || newNumber < 0) {
+      delete this.bundleNumber;
       return;
     }
 

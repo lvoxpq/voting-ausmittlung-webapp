@@ -5,7 +5,7 @@
 
 import { DialogService } from '@abraxas/voting-lib';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ResultOverview, ResultService } from 'ausmittlung-lib';
 import { Subscription } from 'rxjs';
 import {
@@ -13,10 +13,6 @@ import {
   ExportCockpitDialogData,
 } from '../../components/export-cockpit-dialog/export-cockpit-dialog.component';
 import { MonitoringCockpitGridComponent } from '../../components/monitoring-cockpit-grid/monitoring-cockpit-grid.component';
-import {
-  PoliticalBusinessResultExportDialogComponent,
-  PoliticalBusinessResultExportDialogData,
-} from '../../components/political-business-result-export-dialog/political-business-result-export-dialog.component';
 import {
   ResultImportListDialogComponent,
   ResultImportListDialogData,
@@ -38,6 +34,7 @@ export class MonitoringOverviewComponent implements OnDestroy {
   private readonly routeSubscription: Subscription;
 
   constructor(
+    private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly resultService: ResultService,
     private readonly dialogService: DialogService,
@@ -81,17 +78,12 @@ export class MonitoringOverviewComponent implements OnDestroy {
     this.dialogService.open(ExportCockpitDialogComponent, data);
   }
 
-  public export(): void {
+  public async export(): Promise<void> {
     if (!this.resultOverview) {
       return;
     }
 
-    const data: PoliticalBusinessResultExportDialogData = {
-      contestId: this.resultOverview.contest.id,
-      politicalBusinesses: this.resultOverview.politicalBusinesses,
-    };
-
-    this.dialogService.open(PoliticalBusinessResultExportDialogComponent, data);
+    await this.router.navigate(['exports'], { relativeTo: this.route });
   }
 
   private async loadData(contestId: string): Promise<void> {

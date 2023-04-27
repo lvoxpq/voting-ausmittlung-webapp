@@ -2,10 +2,10 @@
   <vo-ausm-contest-detail-count-of-voters [readonly]="readonly"
                                           [eVoting]="resultListValue.details.eVoting"
                                           [swissAbroadHaveVotingRightsOnAnyBusiness]="resultListValue.swissAbroadHaveVotingRightsOnAnyBusiness"
-                                          [details]="resultListValue.details"></vo-ausm-contest-detail-count-of-voters>
+                                          [countOfVoters]="resultListValue.details.countOfVotersInformation"></vo-ausm-contest-detail-count-of-voters>
 
   <vo-ausm-contest-detail-voting-cards [readonly]="readonly"
-                                       [details]="resultListValue.details"
+                                       [(votingCards)]="resultListValue.details.votingCards"
                                        [enabledVotingCardChannels]="resultListValue.enabledVotingCardChannels"
                                        [domainOfInfluenceTypes]="domainOfInfluenceTypes"></vo-ausm-contest-detail-voting-cards>
 

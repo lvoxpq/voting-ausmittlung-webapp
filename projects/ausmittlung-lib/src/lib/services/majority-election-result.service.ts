@@ -386,10 +386,8 @@ export class MajorityElectionResultService extends PoliticalBusinessResultBaseSe
     return {
       contest: ContestService.mapToContest(data.getContest()!),
       election: MajorityElectionService.mapToElection(data.getMajorityElection()!),
-      domainOfInfluenceDetails: ContestCountingCircleDetailsService.mapToAggregatedContestCountingCircleDetails(
-        data.getDomainOfInfluenceDetails(),
-      ),
-      totalCountOfVoters: data.getTotalCountOfVoters(),
+      countOfVotersInformation: ContestCountingCircleDetailsService.mapToCountOfVotersInformation(data.getCountOfVotersInformation()!),
+      votingCards: data.getVotingCardsList().map(v => ContestCountingCircleDetailsService.mapToVotingCard(v)),
       countOfDoneCountingCircles: data.getCountOfDoneCountingCircles(),
       totalCountOfCountingCircles: data.getTotalCountOfCountingCircles(),
       allCountingCirclesDone: data.getAllCountingCirclesDone(),

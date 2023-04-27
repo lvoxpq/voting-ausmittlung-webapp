@@ -13,6 +13,7 @@ import {
   FormfieldModule,
   IconModule,
   LabelModule,
+  LoadingBarModule,
   NumberModule,
   RadioButtonModule,
   SpinnerModule,
@@ -72,7 +73,6 @@ import { ContestVoteDetailComponent } from './components/contest-detail/contest-
 import { ContestHeaderComponent } from './components/contest-header/contest-header.component';
 import { ContestListComponent } from './components/contest-list/contest-list.component';
 import { ContestPastUnlockDialogComponent } from './components/contest-past-unlock-dialog/contest-past-unlock-dialog.component';
-import { CountingCircleResultExportDialogComponent } from './components/counting-circle-result-export-dialog/counting-circle-result-export-dialog.component';
 import { ElectionBallotReviewButtonBarComponent } from './components/election-ballot-review-button-bar/election-ballot-review-button-bar.component';
 import { ElectionBundleStateChipComponent } from './components/election-bundle-state-chip/election-bundle-state-chip.component';
 import { ElectionInfoComponent } from './components/election-info/election-info.component';
@@ -98,7 +98,6 @@ import { ProportionalElectionBallotContentComponent } from './components/proport
 import { ProportionalElectionBundleTableComponent } from './components/proportional-election/proportional-election-bundle-table/proportional-election-bundle-table.component';
 import { ProportionalElectionInfoComponent } from './components/proportional-election/proportional-election-info/proportional-election-info.component';
 import { ProportionalElectionNewBundleComponent } from './components/proportional-election/proportional-election-new-bundle/proportional-election-new-bundle.component';
-import { ResultExportDialogComponent } from './components/result-export-dialog/result-export-dialog.component';
 import { ResultStateBoxComponent } from './components/result-state-box/result-state-box.component';
 import { SelectCountingCircleDialogComponent } from './components/select-counting-circle-dialog/select-counting-circle-dialog.component';
 import { SecondFactorTransactionDialogComponent } from './components/transaction-request-dialog/second-factor-transaction-dialog.component';
@@ -130,6 +129,7 @@ import { VoteBundleOverviewComponent } from './pages/vote/vote-bundle-overview/v
 import { TranslateVoteQuestionPipe } from './pipes/translate-vote-question.pipe';
 import { VOTING_BASIS_WEBAPP_URL } from './tokens';
 import { AdmonitionComponent } from './components/admonition/admonition.component';
+import { ResultExportComponent } from './pages/result-export/result-export.component';
 
 @NgModule({
   declarations: [
@@ -193,8 +193,6 @@ import { AdmonitionComponent } from './components/admonition/admonition.componen
     ContestHeaderComponent,
     CommentsDialogComponent,
     ProportionalElectionResultsComponent,
-    ResultExportDialogComponent,
-    CountingCircleResultExportDialogComponent,
     ContestMajorityElectionDetailHeaderComponent,
     ContestProportionalElectionDetailHeaderComponent,
     BreadcrumbsComponent,
@@ -230,6 +228,7 @@ import { AdmonitionComponent } from './components/admonition/admonition.componen
     SecondFactorTransactionDialogComponent,
     ShortcutDialogComponent,
     AdmonitionComponent,
+    ResultExportComponent,
   ],
   imports: [
     CommonModule,
@@ -258,6 +257,7 @@ import { AdmonitionComponent } from './components/admonition/admonition.componen
     StatusLabelModule,
     TabsModule,
     TableModule,
+    LoadingBarModule,
   ],
   exports: [
     ContestDetailComponent,
@@ -271,7 +271,6 @@ import { AdmonitionComponent } from './components/admonition/admonition.componen
     MajorityElectionBallotReviewComponent,
     MajorityElectionBundleOverviewComponent,
     ContestHeaderComponent,
-    ResultExportDialogComponent,
     ContestDetailCountOfVotersComponent,
     ContestDetailVotingCardsComponent,
     InfoPanelComponent,

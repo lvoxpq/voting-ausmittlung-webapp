@@ -13,8 +13,6 @@ import { UpdateVotingCardResultDetailRequest } from '@abraxas/voting-ausmittlung
 import { GrpcBackendService, GrpcEnvironment, GrpcService } from '@abraxas/voting-lib';
 import { Inject, Injectable } from '@angular/core';
 import {
-  AggregatedContestCountingCircleDetails,
-  AggregatedContestCountingCircleDetailsProto,
   ContestCountingCircleDetails,
   CountOfVotersInformation,
   CountOfVotersInformationProto,
@@ -38,19 +36,6 @@ export class ContestCountingCircleDetailsService extends GrpcService<ContestCoun
     private readonly validationMapping: ValidationMappingService,
   ) {
     super(ContestCountingCircleDetailsServicePromiseClient, env, grpcBackend);
-  }
-
-  public static mapToAggregatedContestCountingCircleDetails(
-    data?: AggregatedContestCountingCircleDetailsProto,
-  ): AggregatedContestCountingCircleDetails | undefined {
-    if (!data) {
-      return undefined;
-    }
-
-    return {
-      countOfVotersInformation: ContestCountingCircleDetailsService.mapToCountOfVotersInformation(data.getCountOfVotersInformation()!),
-      votingCards: data.getVotingCardsList().map(v => ContestCountingCircleDetailsService.mapToVotingCard(v)),
-    };
   }
 
   public static mapToCountOfVotersInformation(data: CountOfVotersInformationProto): CountOfVotersInformation {

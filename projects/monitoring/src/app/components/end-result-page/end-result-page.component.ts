@@ -3,8 +3,8 @@
  * For license information see LICENSE file
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AggregatedContestCountingCircleDetails, Contest, DomainOfInfluenceType } from 'ausmittlung-lib';
+import { Component, Input } from '@angular/core';
+import { VotingCardResultDetail, CountOfVotersInformation, Contest, DomainOfInfluenceType } from 'ausmittlung-lib';
 
 @Component({
   selector: 'app-end-result-page',
@@ -21,7 +21,10 @@ export class EndResultPageComponent {
   public swissAbroadHaveVotingRights: boolean = false;
 
   @Input()
-  public domainOfInfluenceDetails?: AggregatedContestCountingCircleDetails;
+  public countOfVotersInformation?: CountOfVotersInformation;
+
+  @Input()
+  public votingCards?: VotingCardResultDetail;
 
   @Input()
   public domainOfInfluenceType?: DomainOfInfluenceType;

@@ -6,10 +6,11 @@
 import { FileDownloadService } from '@abraxas/voting-lib';
 import { Inject, Injectable } from '@angular/core';
 import {
+  FetchProtocolExportsRequest,
   GenerateResultBundleReviewExportRequest,
   GenerateResultExportsRequest,
+  ProtocolExport,
   ResultExportTemplate,
-  ResultExportTemplateRequest,
 } from '../models';
 import { REST_API_URL_INJECTION_TOKEN } from './tokens';
 
@@ -23,12 +24,30 @@ export class ResultExportService {
     this.apiUrl = `${restApiUrl}/result_export`;
   }
 
-  public async downloadExports(resultExportTemplates: ResultExportTemplate[], contestId: string): Promise<void> {
+  public async downloadExports(
+    resultExportTemplates: ResultExportTemplate[],
+    contestId: string,
+    countingCircleId: string | undefined,
+  ): Promise<void> {
     const req: GenerateResultExportsRequest = {
       contestId,
-      resultExportRequests: this.mapToResultExportRequests(resultExportTemplates),
+      countingCircleId,
+      exportTemplateIds: resultExportTemplates.map(e => e.exportTemplateId),
     };
     return await this.fileDownloadService.postDownloadFile(this.apiUrl, req);
+  }
+
+  public async downloadProtocolExports(
+    resultExportTemplates: ProtocolExport[],
+    contestId: string,
+    countingCircleId: string | undefined,
+  ): Promise<void> {
+    const req: FetchProtocolExportsRequest = {
+      contestId,
+      countingCircleId,
+      protocolExportIds: resultExportTemplates.map(t => t.protocolExportId),
+    };
+    return await this.fileDownloadService.postDownloadFile(`${this.apiUrl}/protocol_exports`, req);
   }
 
   public async downloadResultBundleReviewExport(
@@ -47,19 +66,5 @@ export class ResultExportService {
     };
     const url = `${this.apiUrl}/bundle_review`;
     return this.fileDownloadService.postDownloadFile(url, req);
-  }
-
-  private mapToResultExportRequests(data: ResultExportTemplate[]): ResultExportTemplateRequest[] {
-    return data.map(x => this.mapToResultExportRequest(x));
-  }
-
-  private mapToResultExportRequest(data: ResultExportTemplate): ResultExportTemplateRequest {
-    return {
-      key: data.key,
-      countingCircleId: data.countingCircleId,
-      politicalBusinessIds: data.politicalBusinessIdsList,
-      domainOfInfluenceType: data.domainOfInfluenceType,
-      politicalBusinessUnionId: data.politicalBusinessUnionId,
-    };
   }
 }

@@ -1,4 +1,14 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
 div[header] {
   display: flex;
   justify-content: space-between;
+}
+
+.ignored-counting-circle-list {
+  padding-left: 1rem;
+
+  .non-test-counting-circle {
+    color: $color-error;
+  }
 }

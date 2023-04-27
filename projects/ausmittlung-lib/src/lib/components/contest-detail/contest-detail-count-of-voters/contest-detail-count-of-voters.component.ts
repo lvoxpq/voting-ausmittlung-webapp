@@ -6,8 +6,8 @@
 import { NumberComponent } from '@abraxas/base-components';
 import { Component, Input, ViewChild } from '@angular/core';
 import {
-  AggregatedContestCountingCircleDetails,
   ContestCountingCircleDetails,
+  CountOfVotersInformation,
   CountOfVotersInformationSubTotal,
   SexType,
   VoterType,
@@ -35,7 +35,7 @@ export class ContestDetailCountOfVotersComponent {
   @Input()
   public eVoting: boolean = false;
 
-  public detailsValue!: ContestCountingCircleDetails | AggregatedContestCountingCircleDetails;
+  public countOfVotersInformation!: CountOfVotersInformation;
 
   @ViewChild('maleFormfield')
   private maleFormfieldComponent!: NumberComponent;
@@ -44,11 +44,11 @@ export class ContestDetailCountOfVotersComponent {
   private swissAbroadVotersInformation: Record<number, CountOfVotersInformationSubTotal> = {};
 
   @Input()
-  public set details(v: ContestCountingCircleDetails | AggregatedContestCountingCircleDetails) {
-    this.detailsValue = v;
+  public set countOfVoters(v: CountOfVotersInformation) {
+    this.countOfVotersInformation = v;
 
-    const swissInfos = v.countOfVotersInformation.subTotalInfoList.filter(x => x.voterType === VoterType.VOTER_TYPE_SWISS);
-    const swissAbroadInfos = v.countOfVotersInformation.subTotalInfoList.filter(x => x.voterType === VoterType.VOTER_TYPE_SWISS_ABROAD);
+    const swissInfos = v.subTotalInfoList.filter(x => x.voterType === VoterType.VOTER_TYPE_SWISS);
+    const swissAbroadInfos = v.subTotalInfoList.filter(x => x.voterType === VoterType.VOTER_TYPE_SWISS_ABROAD);
     this.swissVotersInformation = groupBySingle(
       swissInfos,
       x => x.sex as number,
@@ -69,20 +69,20 @@ export class ContestDetailCountOfVotersComponent {
       return result;
     }
 
-    // don't set the numberic value => textfield should be empty as long as no input is provided
+    // don't set the numeric value => textfield should be empty as long as no input is provided
     result = records[sex] = {
       sex,
       voterType,
     } as CountOfVotersInformationSubTotal;
 
-    this.detailsValue.countOfVotersInformation.subTotalInfoList.push(result);
+    this.countOfVotersInformation.subTotalInfoList.push(result);
     return result;
   }
 
   public updateTotal(): void {
     this.totalSwiss = sum(Object.values(this.swissVotersInformation), x => x.countOfVoters);
     this.totalSwissAbroad = sum(Object.values(this.swissAbroadVotersInformation), x => x.countOfVoters);
-    this.detailsValue.countOfVotersInformation.totalCountOfVoters = this.totalSwiss + this.totalSwissAbroad;
+    this.countOfVotersInformation.totalCountOfVoters = this.totalSwiss + this.totalSwissAbroad;
   }
 
   public setFocus(): void {

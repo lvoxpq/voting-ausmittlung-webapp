@@ -343,10 +343,8 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     return {
       contest: ContestService.mapToContest(data.getContest()!),
       election: ProportionalElectionService.mapToElection(data.getProportionalElection()!),
-      domainOfInfluenceDetails: ContestCountingCircleDetailsService.mapToAggregatedContestCountingCircleDetails(
-        data.getDomainOfInfluenceDetails(),
-      ),
-      totalCountOfVoters: data.getTotalCountOfVoters(),
+      countOfVotersInformation: ContestCountingCircleDetailsService.mapToCountOfVotersInformation(data.getCountOfVotersInformation()!),
+      votingCards: data.getVotingCardsList().map(v => ContestCountingCircleDetailsService.mapToVotingCard(v)),
       countOfDoneCountingCircles: data.getCountOfDoneCountingCircles(),
       totalCountOfCountingCircles: data.getTotalCountOfCountingCircles(),
       allCountingCirclesDone: data.getAllCountingCirclesDone(),

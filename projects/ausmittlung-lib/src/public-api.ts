@@ -34,10 +34,10 @@ export * from './lib/pages/majority-election/majority-election-ballot-groups/maj
 export * from './lib/pages/majority-election/majority-election-ballot/majority-election-ballot.component';
 export * from './lib/pages/majority-election/majority-election-ballot-review/majority-election-ballot-review.component';
 export * from './lib/pages/majority-election/majority-election-bundle-overview/majority-election-bundle-overview.component';
+export * from './lib/pages/result-export/result-export.component';
 
 // components
 export * from './lib/components/select-counting-circle-dialog/select-counting-circle-dialog.component';
-export * from './lib/components/result-export-dialog/result-export-dialog.component';
 export * from './lib/components/breadcrumbs/breadcrumbs.component';
 export * from './lib/components/contest-header/contest-header.component';
 export * from './lib/components/contest-detail/contest-detail-count-of-voters/contest-detail-count-of-voters.component';

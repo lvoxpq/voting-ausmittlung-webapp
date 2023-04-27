@@ -6,14 +6,10 @@
 import { AuthorizationService, Tenant } from '@abraxas/base-components';
 import { DialogService } from '@abraxas/voting-lib';
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ContestDetailSidebarComponent } from '../../components/contest-detail/contest-detail-sidebar/contest-detail-sidebar.component';
 import { ContestPoliticalBusinessDetailComponent } from '../../components/contest-detail/contest-political-business-detail/contest-political-business-detail.component';
-import {
-  CountingCircleResultExportDialogComponent,
-  CountingCircleResultExportDialogData,
-} from '../../components/counting-circle-result-export-dialog/counting-circle-result-export-dialog.component';
 import {
   MajorityElectionWriteInMappingDialogComponent,
   ResultImportWriteInMappingDialogData,
@@ -44,6 +40,9 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
   @Input()
   public showResetResultsInTestingPhase: boolean = false;
 
+  @Input()
+  public showExport: boolean = true;
+
   public sidebarReadonly: boolean = true;
 
   public tenant?: Tenant;
@@ -71,6 +70,7 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     roleService: RoleService,
     breadcrumbsService: BreadcrumbsService,
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly resultService: ResultService,
     private readonly auth: AuthorizationService,
     private readonly cd: ChangeDetectorRef,
@@ -117,18 +117,12 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public export(): void {
+  public async export(): Promise<void> {
     if (!this.resultList) {
       return;
     }
 
-    const data: CountingCircleResultExportDialogData = {
-      countingCircleResults: this.resultList.results,
-      contestId: this.resultList.contest.id,
-      countingCircleId: this.resultList.countingCircle.id,
-    };
-
-    this.dialogService.open(CountingCircleResultExportDialogComponent, data);
+    await this.router.navigate(['exports'], { relativeTo: this.route });
   }
 
   public ngAfterViewInit(): void {

@@ -5,7 +5,7 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { majorityElectionResultRoute, proportionalElectionResultRoute, voteResultRoute } from 'ausmittlung-lib';
+import { ResultExportComponent, majorityElectionResultRoute, proportionalElectionResultRoute, voteResultRoute } from 'ausmittlung-lib';
 import { MajorityElectionEndResultComponent } from './pages/majority-election-end-result/majority-election-end-result.component';
 import { MonitoringContestDetailComponent } from './pages/monitoring-contest-detail/monitoring-contest-detail.component';
 import { MonitoringContestOverviewComponent } from './pages/monitoring-contest-overview/monitoring-contest-overview.component';
@@ -43,8 +43,16 @@ const routes: Routes = [
             component: MonitoringOverviewComponent,
           },
           {
+            path: ':contestId/exports',
+            component: ResultExportComponent,
+          },
+          {
             path: ':contestId/:countingCircleId',
             component: MonitoringContestDetailComponent,
+          },
+          {
+            path: ':contestId/:countingCircleId/exports',
+            component: ResultExportComponent,
           },
         ],
       },

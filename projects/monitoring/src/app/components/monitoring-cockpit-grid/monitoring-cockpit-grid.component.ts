@@ -97,6 +97,11 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
     }
 
     this.updateFilters();
+
+    if (this.countNotCorrected === 0) {
+      this.onlyCorrectedFilterSelected(true);
+    }
+
     this.startChangesListener();
   }
 

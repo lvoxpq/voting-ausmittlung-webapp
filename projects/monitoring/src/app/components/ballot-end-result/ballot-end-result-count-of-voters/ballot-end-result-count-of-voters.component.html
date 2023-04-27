@@ -14,17 +14,17 @@
 
     <span translate>BALLOT_COUNT.BLANK</span>
     <span>{{ countOfVoters.conventionalBlankBallots | number }}</span>
-    <span></span>
-    <span>{{ countOfVoters.conventionalBlankBallots | number }}</span>
+    <span>{{ countOfVoters.eVotingBlankBallots | number }}</span>
+    <span>{{ countOfVoters.totalBlankBallots | number }}</span>
 
     <span translate>BALLOT_COUNT.INVALID</span>
     <span>{{ countOfVoters.conventionalInvalidBallots | number }}</span>
-    <span></span>
-    <span>{{ countOfVoters.conventionalInvalidBallots | number }}</span>
+    <span>{{ countOfVoters.eVotingInvalidBallots | number }}</span>
+    <span>{{ countOfVoters.totalInvalidBallots | number }}</span>
 
     <span translate>BALLOT_COUNT.VALID</span>
     <span>{{ countOfVoters.conventionalAccountedBallots | number }}</span>
-    <span>{{ countOfVoters.eVotingReceivedBallots | number }}</span>
+    <span>{{ countOfVoters.eVotingAccountedBallots | number }}</span>
     <span>{{ countOfVoters.totalAccountedBallots | number }}</span>
 
     <span translate>VOTE.VOTER_PARTICIPATION</span>
@@ -38,10 +38,10 @@
     <span>{{ countOfVoters.totalReceivedBallots | number }}</span>
 
     <span translate>BALLOT_COUNT.BLANK</span>
-    <span>{{ countOfVoters.conventionalBlankBallots | number }}</span>
+    <span>{{ countOfVoters.totalBlankBallots | number }}</span>
 
     <span translate>BALLOT_COUNT.INVALID</span>
-    <span>{{ countOfVoters.conventionalInvalidBallots | number }}</span>
+    <span>{{ countOfVoters.totalInvalidBallots | number }}</span>
 
     <span translate>BALLOT_COUNT.VALID</span>
     <span>{{ countOfVoters.totalAccountedBallots | number }}</span>

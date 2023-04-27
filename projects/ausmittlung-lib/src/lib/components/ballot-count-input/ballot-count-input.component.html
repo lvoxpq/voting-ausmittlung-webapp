@@ -39,16 +39,12 @@
   <ng-container *ngIf="eVoting">
     <bc-label class="col-1" [label]="'VOTING_DATA_SOURCE.E_VOTING' | translate"></bc-label>
     <bc-number [disabled]="true" [tabIndex]="-1" [value]="countOfVoters.eVotingReceivedBallots"></bc-number>
-    <bc-number class="col-4" [disabled]="true" [tabIndex]="-1" [(value)]="countOfVoters.eVotingInvalidBallots"></bc-number>
-    <bc-number
-      class="col-5"
-      [disabled]="true"
-      [tabIndex]="-1"
-      [value]="countOfVoters.eVotingAccountedBallots"
-    ></bc-number>
+    <bc-number [disabled]="true" [tabIndex]="-1" [(value)]="countOfVoters.eVotingBlankBallots"></bc-number>
+    <bc-number [disabled]="true" [tabIndex]="-1" [(value)]="countOfVoters.eVotingInvalidBallots"></bc-number>
+    <bc-number [disabled]="true" [tabIndex]="-1" [value]="countOfVoters.eVotingAccountedBallots"></bc-number>
     <bc-label class="col-1" [label]="'VOTING_DATA_SOURCE.TOTAL' | translate"></bc-label>
     <bc-number [disabled]="true" [tabIndex]="-1" [value]="countOfVoters.totalReceivedBallots"></bc-number>
-    <bc-number [disabled]="true" [tabIndex]="-1" [(value)]="countOfVoters.conventionalBlankBallots"></bc-number>
+    <bc-number [disabled]="true" [tabIndex]="-1" [(value)]="countOfVoters.totalBlankBallots"></bc-number>
     <bc-number [disabled]="true" [tabIndex]="-1" [(value)]="countOfVoters.totalInvalidBallots"></bc-number>
     <bc-number [disabled]="true" [tabIndex]="-1" [value]="countOfVoters.totalAccountedBallots"></bc-number>
   </ng-container>

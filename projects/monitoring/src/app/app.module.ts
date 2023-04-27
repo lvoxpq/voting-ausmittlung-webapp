@@ -69,7 +69,6 @@ import { MonitoringCockpitGridEntryComponent } from './components/monitoring-coc
 import { MonitoringCockpitGridFooterButtonsComponent } from './components/monitoring-cockpit-grid-footer/monitoring-cockpit-grid-footer-buttons/monitoring-cockpit-grid-footer-buttons.component';
 import { MonitoringCockpitGridFooterComponent } from './components/monitoring-cockpit-grid-footer/monitoring-cockpit-grid-footer.component';
 import { MonitoringCockpitGridComponent } from './components/monitoring-cockpit-grid/monitoring-cockpit-grid.component';
-import { PoliticalBusinessResultExportDialogComponent } from './components/political-business-result-export-dialog/political-business-result-export-dialog.component';
 import { ProportionalElectionLotDecisionDialogComponent } from './components/proportional-election-lot-decision-dialog/proportional-election-lot-decision-dialog.component';
 import { ResultImportDialogComponent } from './components/result-import-dialog/result-import-dialog.component';
 import { ResultImportListDialogComponent } from './components/result-import-list-dialog/result-import-list-dialog.component';
@@ -96,7 +95,6 @@ registerLocaleData(localeDeCh);
     MonitoringContestOverviewComponent,
     MonitoringOverviewComponent,
     MonitoringCockpitGridFooterComponent,
-    PoliticalBusinessResultExportDialogComponent,
     EndResultPageComponent,
     VoteEndResultComponent,
     BallotEndResultComponent,
