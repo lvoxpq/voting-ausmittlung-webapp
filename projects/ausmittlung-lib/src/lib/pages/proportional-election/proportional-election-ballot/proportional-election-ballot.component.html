@@ -80,8 +80,8 @@
         [actionExecuting]="actionExecuting"
         [readonly]="(isErfassungUser | async) !== true || !bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
         [canSubmitBundle]="bundle.countOfBallots > 0"
-        [canCreateBallot]="bundle.countOfBallots < politicalBusinessResult.entryParams.ballotBundleSize"
-        (createBallot)="createBallot()"
+        [nextBallotEnabled]="!ballot || ballot.number < politicalBusinessResult.entryParams.ballotBundleSize"
+        (nextBallot)="nextBallot()"
         (back)="saveAndBack()"
         (submitBundle)="submitBundleAndNavigate()"></vo-ausm-political-business-ballot-button-bar>
     </ng-container>

@@ -84,6 +84,15 @@ export abstract class PoliticalBusinessBallotComponent<
     }
   }
 
+  public async nextBallot(): Promise<void> {
+    if (!this.ballot || this.ballot.isNew || this.ballot.number === this.currentMaxBallotNumber) {
+      await this.createBallot();
+      return;
+    }
+
+    await this.navigateToBallot(this.ballot.number + 1);
+  }
+
   public async saveAndBack(): Promise<void> {
     this.actionExecuting = true;
     try {
@@ -96,7 +105,7 @@ export abstract class PoliticalBusinessBallotComponent<
     }
   }
 
-  public async createBallot(): Promise<void> {
+  protected async createBallot(): Promise<void> {
     if (!this.bundle || !this.politicalBusinessResult) {
       return;
     }

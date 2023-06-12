@@ -4,8 +4,13 @@
  */
 
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MajorityElection, MajorityElectionResult } from '../../../../models';
+import { MajorityElection, MajorityElectionResult, MajorityElectionWriteInMapping } from '../../../../models';
 import { BallotCountInputComponent } from '../../../ballot-count-input/ballot-count-input.component';
+import {
+  MajorityElectionWriteInMappingDialogComponent,
+  ResultImportWriteInMappingDialogData,
+} from '../../../majority-election-write-in-mappings/majority-election-write-in-mapping-dialog/majority-election-write-in-mapping-dialog.component';
+import { DialogService } from '@abraxas/voting-lib';
 
 @Component({
   selector: 'vo-ausm-contest-majority-election-detail-final-results',
@@ -34,7 +39,26 @@ export class ContestMajorityElectionDetailFinalResultsComponent {
   @ViewChild(BallotCountInputComponent)
   private ballotCountInputComponent!: BallotCountInputComponent;
 
+  public mappedWriteIns?: MajorityElectionWriteInMapping[];
+
+  constructor(private readonly dialogService: DialogService) {}
+
   public setFocus(): void {
     this.ballotCountInputComponent.setFocus();
+  }
+
+  public async openWriteIns(electionId: string): Promise<void> {
+    if (!this.resultDetail || !this.resultDetail.election.contest) {
+      return;
+    }
+
+    const data: ResultImportWriteInMappingDialogData = {
+      contestId: this.resultDetail.election.contest.id,
+      countingCircleId: this.resultDetail.countingCircle.id,
+      electionId: electionId,
+    };
+
+    const result = await this.dialogService.openForResult(MajorityElectionWriteInMappingDialogComponent, data);
+    this.mappedWriteIns = result?.mappings;
   }
 }

@@ -4,6 +4,8 @@
  */
 
 import { Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } from '@angular/core';
+import { EchType, ImportFile } from '../import-file.model';
+import { EnumItemDescription, EnumUtil } from '@abraxas/voting-lib';
 
 @Component({
   selector: 'app-import-file-select',
@@ -11,15 +13,20 @@ import { Component, ElementRef, EventEmitter, HostListener, Output, ViewChild } 
   styleUrls: ['./import-file-select.component.scss'],
 })
 export class ImportFileSelectComponent {
-  public selectedFile?: File;
+  public readonly echTypes: EnumItemDescription<EchType>[];
+  public selectedFiles: ImportFile[] = [];
+  public selectedEchType: EchType = EchType.Ech0222;
   public draggingFiles: boolean = false;
-  public loading: boolean = false;
 
   @Output()
-  public fileChange: EventEmitter<File | undefined> = new EventEmitter<File | undefined>();
+  public filesChange: EventEmitter<ImportFile[]> = new EventEmitter<ImportFile[]>();
 
   @ViewChild('fileInput')
   private fileInput!: ElementRef;
+
+  constructor(readonly enumUtil: EnumUtil) {
+    this.echTypes = enumUtil.getArrayWithDescriptions<EchType>(EchType, 'RESULT_IMPORT.E_CH_TYPES.');
+  }
 
   @HostListener('window:drop', ['$event'])
   public async onDrop(e: any): Promise<void> {
@@ -55,8 +62,19 @@ export class ImportFileSelectComponent {
     this.fileInput.nativeElement.value = null;
   }
 
-  public selectFile(file?: File): void {
-    this.selectedFile = file;
-    this.fileChange.emit(file);
+  public removeFile(importFile: ImportFile): void {
+    const index = this.selectedFiles.indexOf(importFile);
+    if (index < 0) {
+      return;
+    }
+
+    this.selectedFiles.splice(index, 1);
+    this.selectedFiles = [...this.selectedFiles];
+    this.filesChange.emit(this.selectedFiles);
+  }
+
+  public selectFile(file: File): void {
+    this.selectedFiles = [...this.selectedFiles, { file, echType: this.selectedEchType }];
+    this.filesChange.emit(this.selectedFiles);
   }
 }

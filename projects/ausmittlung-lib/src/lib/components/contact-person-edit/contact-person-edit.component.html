@@ -1,11 +1,13 @@
 <div class="full-width form-field">
   <bc-text
     [label]="'CONTEST.DETAIL.CONTACT_DATA.FAMILY_NAME' | translate"
+    [required]="true"
     [(value)]="contactPerson.familyName"
   ></bc-text>
   <bc-text
     class="ml-2"
     [label]="'CONTEST.DETAIL.CONTACT_DATA.FIRST_NAME' | translate"
+    [required]="true"
     [(value)]="contactPerson.firstName"
   ></bc-text>
 </div>
@@ -16,6 +18,7 @@
 ></bc-text>
 <bc-text
   [label]="'CONTEST.DETAIL.CONTACT_DATA.MOBILE_PHONE' | translate"
+  [required]="true"
   [(value)]="contactPerson.mobilePhone"
 ></bc-text>
 <bc-text [label]="'CONTEST.DETAIL.CONTACT_DATA.EMAIL' | translate" [(value)]="contactPerson.email" type="email"></bc-text>

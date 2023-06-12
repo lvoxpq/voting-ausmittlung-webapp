@@ -1,9 +1,9 @@
 <div>
   <bc-button *ngIf="!readonly"
              class="mr-3"
-             [disabled]="disabled || actionExecuting || !canCreateBallot"
-             (buttonClick)="createBallot.emit()"
-             [label]="labelCreate | translate"
+             [disabled]="disabled || actionExecuting || !nextBallotEnabled"
+             (buttonClick)="nextBallot.emit()"
+             [label]="labelNext | translate"
              variant="primary"></bc-button>
   <vo-lib-inline-spinner *ngIf="!readonly"
                          class="ml-3"

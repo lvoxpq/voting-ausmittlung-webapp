@@ -9,6 +9,7 @@ import {
   ListResultImportsRequest,
   MapMajorityElectionWriteInRequest,
   MapMajorityElectionWriteInsRequest,
+  ResetMajorityElectionWriteInMappingsRequest,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/result_import_requests_pb';
 import { ResultImportServicePromiseClient } from '@abraxas/voting-ausmittlung-service-proto/grpc/result_import_service_grpc_web_pb';
 import { GrpcBackendService, GrpcEnvironment, GrpcService } from '@abraxas/voting-lib';
@@ -42,9 +43,10 @@ export class ResultImportService extends GrpcService<ResultImportServicePromiseC
     this.apiUrl = `${restApiUrl ?? 'http://localhost:5100/api'}/result_import/`;
   }
 
-  public async import(contestId: string, file: File): Promise<void> {
+  public async import(contestId: string, eCH0222File: File, eCH0110File: File): Promise<void> {
     const data = new FormData();
-    data.append('file', file, file.name);
+    data.append('ech0222File', eCH0222File, eCH0222File.name);
+    data.append('ech0110File', eCH0110File, eCH0110File.name);
     await firstValueFrom(this.http.post(`${this.apiUrl}${contestId}`, data));
   }
 
@@ -84,11 +86,7 @@ export class ResultImportService extends GrpcService<ResultImportServicePromiseC
       mappings.map(m => {
         const protoMapping = new MapMajorityElectionWriteInRequest();
         protoMapping.setWriteInId(m.id);
-        protoMapping.setTarget(
-          m.target === MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_UNSPECIFIED
-            ? MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_INDIVIDUAL
-            : m.target,
-        );
+        protoMapping.setTarget(m.target);
 
         if (m.target === MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_CANDIDATE) {
           protoMapping.setCandidateId(m.candidateId);
@@ -117,6 +115,20 @@ export class ResultImportService extends GrpcService<ResultImportServicePromiseC
       importId: resp.getImportId(),
       writeInGroups: resp.getElectionWriteInMappingsList().map(x => this.mapMajorityElectionWriteIn(x)),
     };
+  }
+
+  public async resetMajorityElectionWriteIns(
+    electionId: string,
+    countingCircleId: string,
+    contestId: string,
+    pbType: PoliticalBusinessType,
+  ): Promise<void> {
+    const req = new ResetMajorityElectionWriteInMappingsRequest();
+    req.setCountingCircleId(countingCircleId);
+    req.setContestId(contestId);
+    req.setElectionId(electionId);
+    req.setPoliticalBusinessType(pbType);
+    await this.requestEmptyResp(c => c.resetMajorityElectionWriteIns, req);
   }
 
   private mapMajorityElectionWriteIn(proto: MajorityElectionWriteInMappingsProto): MajorityElectionWriteInMappings {

@@ -9,18 +9,6 @@
     </div>
     <vo-ausm-contest-header center [contest]="resultList?.contest"></vo-ausm-contest-header>
     <div right *ngIf="!!resultList">
-      <bc-button
-        *ngIf="!contentReadonly
-          && resultList.currentTenantIsResponsible
-          && !resultList.contest.locked
-          && resultList.contest.eVotingResultsImported
-          && resultList.hasUnmappedEVotingWriteIns
-          && isErfassungElectionAdmin"
-        class="mx-2"
-        variant="tertiary"
-        [label]="'CONTEST.DETAIL.MAP_WRITE_INS' | translate"
-        (buttonClick)="mapWriteIns()">
-      </bc-button>
       <bc-button *ngIf="showExport" variant="tertiary" (buttonClick)="export()" [label]="'CONTEST.DETAIL.EXPORT' | translate"></bc-button>
     </div>
   </vo-lib-page-header>

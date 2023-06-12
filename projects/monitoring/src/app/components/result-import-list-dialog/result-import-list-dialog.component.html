@@ -14,7 +14,7 @@
       </ng-container>
       <ng-container bcColumnDef="importType">
         <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.E_CH_STANDARD' | translate }}</th>
-        <td bc-cell *bcCellDef="let element">{{ element.deleted ? '' : ('RESULT_IMPORT.ECH_0222' | translate) }}</td>
+        <td bc-cell *bcCellDef="let element">{{ element.deleted ? '' : ('RESULT_IMPORT.E_CH_TYPES.eCH-0222' | translate) }}</td>
       </ng-container>
       <ng-container bcColumnDef="startedBy">
         <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.STARTED_BY' | translate }}</th>
@@ -23,6 +23,16 @@
       <ng-container bcColumnDef="started">
         <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.STARTED' | translate }}</th>
         <td bc-cell *bcCellDef="let element">{{ element.started | date: 'dd.MM.yyyy - HH:mm' }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="importedCountingCircles">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.IMPORTED_COUNTING_CIRCLES' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">
+          <ul class="imported-counting-circle-list">
+            <li *ngFor="let importedCountingCircle of element.importedCountingCirclesList">
+              <span>{{ importedCountingCircle.name }}</span>
+            </li>
+          </ul>
+        </td>
       </ng-container>
       <ng-container bcColumnDef="ignoredCountingCircles">
         <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.IGNORED_COUNTING_CIRCLES' | translate }}</th>

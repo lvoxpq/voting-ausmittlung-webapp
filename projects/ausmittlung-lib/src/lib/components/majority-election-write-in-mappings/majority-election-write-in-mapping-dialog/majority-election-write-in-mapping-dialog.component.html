@@ -1,5 +1,5 @@
 <vo-lib-dialog>
-  <h3 header translate>RESULT_IMPORT.WRITE_INS.TITLE</h3>
+  <h3 *ngIf="!loading" header>{{ (!!electionId && electionHasWriteIns ? 'RESULT_IMPORT.WRITE_INS.TITLE_WITH_ELECTION' : 'RESULT_IMPORT.WRITE_INS.TITLE') | translate:{ electionDescription: selectedElection?.shortDescription } }}</h3>
 
   <div content>
     <bc-spinner *ngIf="loading; else content"></bc-spinner>
@@ -19,13 +19,16 @@
       </mat-horizontal-stepper>
 
       <vo-ausm-majority-election-write-in-mapping
+        *ngIf="elections.length > 0; else noData"
         [canShowNextElection]="elections.length > 1 && selectedElectionIndex < elections.length - 1"
+        [canShowResetMappings]="electionHasWriteIns && !!electionId"
         [readOnly]="saving"
         [election]="selectedElection"
         [invalidVotes]="hasInvalidVotes"
         [writeInMappings]="mappings"
         (writeInMappingsChange)="setMappings($event)"
-        (showNextElection)="selectedElectionChange(selectedElectionIndex + 1)"></vo-ausm-majority-election-write-in-mapping>
+        (showNextElection)="selectedElectionChange(selectedElectionIndex + 1)"
+        (resetMappings)="resetWriteIns()"></vo-ausm-majority-election-write-in-mapping>
     </ng-template>
   </div>
 
@@ -33,6 +36,11 @@
     <vo-lib-button-bar [saveLabel]="(selectedElectionIndex === elections.length - 1 ? 'RESULT_IMPORT.WRITE_INS.COMPLETE' : 'RESULT_IMPORT.WRITE_INS.NEXT_ELECTION') | translate"
                        (save)="selectedElectionChange(selectedElectionIndex + 1)"
                        [saving]="saving"
+                       [canSave]="electionHasWriteIns && !hasUnmappedWriteIns()"
                        (cancel)="close()"></vo-lib-button-bar>
   </div>
 </vo-lib-dialog>
+
+<ng-template #noData>
+  <p class="no-data" translate>RESULT_IMPORT.WRITE_INS.NO_DATA</p>
+</ng-template>

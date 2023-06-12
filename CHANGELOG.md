@@ -1,4 +1,4 @@
-# ✨ Changelog (`v1.45.0`)
+# ✨ Changelog (`v1.50.0`)
 
 All notable changes to this project will be documented in this file.
 
@@ -8,11 +8,84 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version Info
 
 ```text
-This version -------- v1.45.0
-Previous version ---- v1.40.0
+This version -------- v1.50.0
+Previous version ---- 
 Initial version ----- v1.25.0
-Total commits ------- 18
+Total commits ------- 13
 ```
+
+## [v1.50.0] - 2023-05-31
+
+### 🔄 Changed
+
+- add latest execution timestamp to export cockpit
+
+## [v1.49.4] - 2023-05-31
+
+### 🔄 Changed
+
+- show validation message when majority election has no candidates
+
+## [v1.49.3] - 2023-05-30
+
+### 🔄 Changed
+
+- do not automatically map unmapped write-ins to individual candidate
+
+## [v1.49.2] - 2023-05-26
+
+### 🔄 Changed
+
+- Make certain contact person fields required
+
+## [v1.49.1] - 2023-05-26
+
+### 🔄 Changed
+
+- Change export data date label
+
+## [v1.49.0] - 2023-05-25
+
+### 🔄 Changed
+
+- change new ballot button to next ballot button
+
+## [v1.48.1] - 2023-05-17
+
+### ❌ Removed
+
+- remove wrong proportional election can submit checks
+
+## [v1.48.0] - 2023-05-16
+
+### 🆕 Added
+
+- reset write ins for majority election
+
+## [v1.47.1] - 2023-05-11
+
+### 🔄 Changed
+
+- show correct voting cards on end result page
+
+## [v1.47.0] - 2023-05-08
+
+### 🔄 Changed
+
+- show imported counting circles
+
+## [v1.46.1] - 2023-05-02
+
+### 🔄 Changed
+
+- update cd-templates to resolve blocking deploy-trigger
+
+## [v1.46.0] - 2023-05-01
+
+### 🔄 Changed
+
+- always show e-voting ballot count, even if write-ins are not yet mapped
+- automatically count e-voting voting cards
 
 ## [v1.45.0] - 2023-03-31
 
@@ -219,67 +292,41 @@ Total commits ------- 18
 
 - ballot bundle sample size must be greater than zero
 
-## [v1.35.1] - 2022-11-16
-
-### 🔄 Changed
-
-- fix mail voting channel label
-
-## [v1.35.0] - 2022-11-16
-
 ### 🔒 Security
 
 - configure client refresh token flow (rfc-6749)
-
-## [v1.34.4] - 2022-11-03
 
 ### 🆕 Added
 
 - add eVoting write in mapping to invalid ballot
 
-## [v1.34.3] - 2022-10-31
-
 ### 🆕 Added
 
 - add result state change listener for erfassung
-
-## [v1.34.2] - 2022-10-31
 
 ### 🔄 Changed
 
 - update can set state on result after on init
 
-## [v1.34.1] - 2022-10-28
-
 ### 🔄 Changed
 
 - set all results to audited tentatively depending responsible tenant
-
-## [v1.34.0] - 2022-10-27
 
 ### 🆕 Added
 
 - Reset counting circle results in testing phase
 
-## [v1.33.4] - 2022-10-14
-
 ### 🔄 Changed
 
 - Fixed majority election lot decision typo
-
-## [v1.33.3] - 2022-10-13
 
 ### 🔄 Changed
 
 - no empty vote count and no invalid vote count for single mandate
 
-## [v1.33.2] - 2022-10-04
-
 ### 🔄 Changed
 
 - Updated voting-library to fix layouting issues
-
-## [v1.33.1] - 2022-09-28
 
 ### 🆕 Added
 
@@ -397,6 +444,72 @@ Total commits ------- 18
 ### 🔄 Changed
 
 - Adjusted page title of the vote review bundle page
+
+## [v1.35.1] - 2022-11-16
+
+### 🔄 Changed
+
+- fix mail voting channel label
+
+## [v1.35.0] - 2022-11-16
+
+### 🔒 Security
+
+- configure client refresh token flow (rfc-6749)
+
+## [v1.34.4] - 2022-11-03
+
+### 🆕 Added
+
+- add eVoting write in mapping to invalid ballot
+
+## [v1.34.3] - 2022-10-31
+
+### 🆕 Added
+
+- add result state change listener for erfassung
+
+## [v1.34.2] - 2022-10-31
+
+### 🔄 Changed
+
+- update can set state on result after on init
+
+## [v1.34.1] - 2022-10-28
+
+### 🔄 Changed
+
+- set all results to audited tentatively depending responsible tenant
+
+## [v1.34.0] - 2022-10-27
+
+### 🆕 Added
+
+- Reset counting circle results in testing phase
+
+## [v1.33.4] - 2022-10-14
+
+### 🔄 Changed
+
+- Fixed majority election lot decision typo
+
+## [v1.33.3] - 2022-10-13
+
+### 🔄 Changed
+
+- no empty vote count and no invalid vote count for single mandate
+
+## [v1.33.2] - 2022-10-04
+
+### 🔄 Changed
+
+- Updated voting-library to fix layouting issues
+
+## [v1.33.1] - 2022-09-28
+
+### 🔄 Changed
+
+- correct button placement in case of more than 3 possible tie break answers
 
 ## [v1.33.0] - 2022-09-28
 

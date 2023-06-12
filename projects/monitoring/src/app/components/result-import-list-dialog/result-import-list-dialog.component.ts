@@ -18,7 +18,7 @@ export type ResultImportListDialogResult = 'imported' | 'deleted' | undefined;
   styleUrls: ['./result-import-list-dialog.component.scss'],
 })
 export class ResultImportListDialogComponent implements OnInit {
-  public readonly columns = ['fileName', 'importType', 'startedBy', 'started', 'ignoredCountingCircles'];
+  public readonly columns = ['fileName', 'importType', 'startedBy', 'started', 'importedCountingCircles', 'ignoredCountingCircles'];
   public loading: boolean = true;
   public resultImports: ResultImport[] = [];
   public contestEVotingResultsImported: boolean = false;

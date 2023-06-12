@@ -103,6 +103,7 @@ export class ContestDetailSidebarComponent {
     const dialogResult = await this.dialogService.openForResult<ContactPersonEditDialogComponent, ContactPersonEditDialogResult>(
       ContactPersonEditDialogComponent,
       dialogData,
+      { disableClose: !showCancel },
     );
 
     if (dialogResult) {

@@ -76,14 +76,15 @@ export class ContestDetailVotingCardsComponent implements OnInit {
     const allVotingCards: VotingCardResultDetail[] = [];
     this.votingCardsByDoiType = {};
     for (const doiType of this._domainOfInfluenceTypes) {
+      const votingCardsForDoiType = vcByDoiType[doiType] ?? [];
       const byChannel = groupBy(
-        vcByDoiType[doiType] ?? [],
+        votingCardsForDoiType,
         x => x.channel,
         x => x,
       );
       const vcDetails =
         this._enabledVotingCardChannels.length === 0
-          ? this._votingCards
+          ? votingCardsForDoiType
           : this._enabledVotingCardChannels.map(c => ({
               countOfReceivedVotingCards: byChannel[c.votingChannel]?.find(x => x.valid === c.valid)?.countOfReceivedVotingCards,
               domainOfInfluenceType: doiType,

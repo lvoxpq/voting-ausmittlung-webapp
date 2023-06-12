@@ -50,7 +50,7 @@
                                                       [isActionExecuting]="isActionExecuting"
                                                       [state]="result.state"
                                                       [canValidateAndSave]="!contentReadonly && hasEdits && countOfVotersValid"
-                                                      [canSubmit]="!contentReadonly && !hasEdits && resultDetail.countOfVoters.totalReceivedBallots > 0 && resultDetail.totalCountOfLists <= resultDetail.countOfVoters.totalAccountedBallots">
+                                                      [canSubmit]="!contentReadonly && !hasEdits">
     </vo-ausm-contest-political-business-detail-footer>
   </ng-template>
 </ng-container>

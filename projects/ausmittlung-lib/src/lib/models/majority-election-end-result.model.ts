@@ -15,7 +15,7 @@ import {
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/majority_election_end_result_pb';
 import { PoliticalBusinessCountOfVoters } from './count-of-voters.model';
 import { ElectionEndResultAvailableLotDecision } from './election-lot-decision.model';
-import { MajorityElectionResultSubTotal } from './majority-election-result.model';
+import { MajorityElectionResultSubTotal, MajorityElectionResultTotal } from './majority-election-result.model';
 import { MajorityElection, MajorityElectionCandidate, SecondaryMajorityElection } from './majority-election.model';
 import { PoliticalBusinessEndResult } from './political-business-end-result.model';
 
@@ -31,7 +31,7 @@ export {
 
 export { MajorityElectionCandidateEndResultStateProto as MajorityElectionCandidateEndResultState };
 
-export interface MajorityElectionEndResult extends PoliticalBusinessEndResult, MajorityElectionResultSubTotal {
+export interface MajorityElectionEndResult extends PoliticalBusinessEndResult, MajorityElectionResultTotal {
   election: MajorityElection;
   countOfVoters: PoliticalBusinessCountOfVoters;
   candidateEndResults: MajorityElectionCandidateEndResult[];
@@ -40,7 +40,7 @@ export interface MajorityElectionEndResult extends PoliticalBusinessEndResult, M
   conventionalSubTotal: MajorityElectionResultSubTotal;
 }
 
-export interface SecondaryMajorityElectionEndResult extends MajorityElectionResultSubTotal {
+export interface SecondaryMajorityElectionEndResult extends MajorityElectionResultTotal {
   election: SecondaryMajorityElection;
   candidateEndResults: MajorityElectionCandidateEndResult[];
   eVotingSubTotal: MajorityElectionResultSubTotal;

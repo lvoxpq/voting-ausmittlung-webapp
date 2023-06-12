@@ -53,7 +53,7 @@ export {
 export { MajorityElectionResultEntryProto as MajorityElectionResultEntry };
 export type MajorityElectionResultEntryParams = MajorityElectionResultEntryParamsProto.AsObject;
 
-export interface MajorityElectionResult extends CountingCircleResult, MajorityElectionResultSubTotal {
+export interface MajorityElectionResult extends CountingCircleResult, MajorityElectionResultTotal {
   election: MajorityElection;
   entry: MajorityElectionResultEntryProto;
   entryParams?: MajorityElectionResultEntryParams;
@@ -71,15 +71,25 @@ export interface MajorityElectionResult extends CountingCircleResult, MajorityEl
 
 export type MajorityElectionResultSubTotal = MajorityElectionResultSubTotalProto.AsObject;
 
+export interface MajorityElectionResultTotal {
+  individualVoteCount: number;
+  emptyVoteCount: number;
+  invalidVoteCount: number;
+  totalCandidateVoteCountExclIndividual: number;
+  totalCandidateVoteCountInclIndividual: number;
+}
+
 export interface MajorityElectionResultNullableSubTotal {
   individualVoteCount?: number;
-  emptyVoteCount?: number;
+  emptyVoteCountInclWriteIns?: number;
+  emptyVoteCountExclWriteIns?: number;
+  emptyVoteCountWriteIns?: number;
   invalidVoteCount?: number;
   totalCandidateVoteCountExclIndividual: number;
   totalCandidateVoteCountInclIndividual: number;
 }
 
-export interface SecondaryMajorityElectionResult extends MajorityElectionResultSubTotal {
+export interface SecondaryMajorityElectionResult extends MajorityElectionResultTotal {
   election: SecondaryMajorityElection;
   candidateResults: MajorityElectionCandidateResult[];
   conventionalSubTotal: MajorityElectionResultNullableSubTotal;
@@ -89,7 +99,9 @@ export interface SecondaryMajorityElectionResult extends MajorityElectionResultS
 export interface MajorityElectionCandidateResult {
   candidate: MajorityElectionCandidate;
   voteCount: number;
-  eVotingVoteCount: number;
+  eVotingExclWriteInsVoteCount: number;
+  eVotingWriteInsVoteCount: number;
+  eVotingInclWriteInsVoteCount: number;
   conventionalVoteCount?: number;
 }
 
@@ -133,11 +145,13 @@ export function resetMajorityConventionalResults(result: MajorityElectionResult)
     result.entry === MajorityElectionResultEntryProto.MAJORITY_ELECTION_RESULT_ENTRY_DETAILED ? 0 : undefined;
 
   result.conventionalSubTotal.individualVoteCount = conventionalDefaultValue;
-  result.conventionalSubTotal.emptyVoteCount = conventionalDefaultValue;
+  result.conventionalSubTotal.emptyVoteCountInclWriteIns = conventionalDefaultValue;
+  result.conventionalSubTotal.emptyVoteCountExclWriteIns = conventionalDefaultValue;
+  result.conventionalSubTotal.emptyVoteCountWriteIns = conventionalDefaultValue;
   result.conventionalSubTotal.invalidVoteCount = conventionalDefaultValue;
 
   result.individualVoteCount = result.eVotingSubTotal.individualVoteCount;
-  result.emptyVoteCount = result.eVotingSubTotal.emptyVoteCount;
+  result.emptyVoteCount = result.eVotingSubTotal.emptyVoteCountInclWriteIns;
   result.invalidVoteCount = result.eVotingSubTotal.invalidVoteCount;
 
   result.conventionalCountOfDetailedEnteredBallots = 0;
@@ -146,21 +160,23 @@ export function resetMajorityConventionalResults(result: MajorityElectionResult)
 
   for (const candidateResult of result.candidateResults) {
     candidateResult.conventionalVoteCount = conventionalDefaultValue;
-    candidateResult.voteCount = candidateResult.eVotingVoteCount;
+    candidateResult.voteCount = candidateResult.eVotingInclWriteInsVoteCount;
   }
 
   for (const secondaryResult of result.secondaryMajorityElectionResults) {
     secondaryResult.conventionalSubTotal.individualVoteCount = conventionalDefaultValue;
-    secondaryResult.conventionalSubTotal.emptyVoteCount = conventionalDefaultValue;
+    secondaryResult.conventionalSubTotal.emptyVoteCountInclWriteIns = conventionalDefaultValue;
+    secondaryResult.conventionalSubTotal.emptyVoteCountExclWriteIns = conventionalDefaultValue;
+    secondaryResult.conventionalSubTotal.emptyVoteCountWriteIns = conventionalDefaultValue;
     secondaryResult.conventionalSubTotal.invalidVoteCount = conventionalDefaultValue;
 
     secondaryResult.individualVoteCount = secondaryResult.eVotingSubTotal.individualVoteCount;
-    secondaryResult.emptyVoteCount = secondaryResult.eVotingSubTotal.emptyVoteCount;
+    secondaryResult.emptyVoteCount = secondaryResult.eVotingSubTotal.emptyVoteCountInclWriteIns;
     secondaryResult.invalidVoteCount = secondaryResult.eVotingSubTotal.invalidVoteCount;
 
     for (const candidateResult of secondaryResult.candidateResults) {
       candidateResult.conventionalVoteCount = conventionalDefaultValue;
-      candidateResult.voteCount = candidateResult.eVotingVoteCount;
+      candidateResult.voteCount = candidateResult.eVotingInclWriteInsVoteCount;
     }
   }
 }

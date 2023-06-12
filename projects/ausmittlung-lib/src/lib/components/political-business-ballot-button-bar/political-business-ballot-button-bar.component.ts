@@ -24,10 +24,10 @@ export class PoliticalBusinessBallotButtonBarComponent {
   public canSubmitBundle: boolean = false;
 
   @Input()
-  public canCreateBallot: boolean = false;
+  public nextBallotEnabled: boolean = false;
 
   @Input()
-  public labelCreate: string = 'ELECTION.BALLOT_DETAIL.NEW';
+  public labelNext: string = 'ELECTION.BALLOT_DETAIL.NEW';
 
   @Output()
   public back: EventEmitter<void> = new EventEmitter<void>();
@@ -36,16 +36,16 @@ export class PoliticalBusinessBallotButtonBarComponent {
   public submitBundle: EventEmitter<void> = new EventEmitter<void>();
 
   @Output()
-  public createBallot: EventEmitter<void> = new EventEmitter<void>();
+  public nextBallot: EventEmitter<void> = new EventEmitter<void>();
 
   @HostListener('document:keydown.control.alt.d', ['$event'])
   public emitCreateBallot(event: KeyboardEvent): void {
-    if (this.disabled || this.actionExecuting || !this.canCreateBallot) {
+    if (this.disabled || this.actionExecuting || !this.nextBallotEnabled) {
       return;
     }
 
     event.preventDefault();
-    this.createBallot.emit();
+    this.nextBallot.emit();
   }
 
   @HostListener('document:keydown.control.alt.w', ['$event'])

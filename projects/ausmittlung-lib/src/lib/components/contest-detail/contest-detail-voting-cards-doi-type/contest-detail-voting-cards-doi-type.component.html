@@ -5,7 +5,7 @@
        [voAusmBindCssVarValue]="votingCardDetailsValue.length % 2 === 0 && !hasInvalidVotingCardChannel ? 3 : 2">
     <ng-container *ngFor="let votingCardDetail of votingCardDetailsValue; let i = index">
       <bc-number
-        [disabled]="readonly"
+        [disabled]="readonly || votingCardDetail.channel === votingChannels.VOTING_CHANNEL_E_VOTING"
         [required]="true"
         [min]="0"
         [value]="votingCardDetail.countOfReceivedVotingCards"

@@ -153,9 +153,13 @@
     "LIST_TITLE": "Importierte Ergebnisse",
     "TITLE": "Ergebnisse importieren",
     "IMPORT": "Ergebnisse importieren",
+    "EXPLANATION": "Sowohl die eCH-0222- als auch die eCH-0110-Datei müssen ausgewählt und miteinander hochgeladen werden.",
     "SELECT_FILE": "Datei auswählen",
     "E_CH_STANDARD": "eCH-Datenstandard",
-    "ECH_0222": "eCH-0222 - Schnittstelle Rohdaten Wahlen und Abstimmungen",
+    "E_CH_TYPES": {
+      "eCH-0222": "eCH-0222 - Schnittstelle Rohdaten Wahlen und Abstimmungen",
+      "eCH-0110": "eCH-0110 - Benötigt für die Anzahl Stimmrechtsausweise"
+    },
     "DRAG_FILE": "Datei hierher ziehen",
     "OR": "oder…",
     "CHOOSE_FILE": "Datei zum Hochladen auswählen",
@@ -164,6 +168,7 @@
     "IMPORT_DONE": "Import wird verarbeitet…",
     "STARTED_BY": "Importiert durch",
     "STARTED": "Datum/Uhrzeit",
+    "IMPORTED_COUNTING_CIRCLES": "Importierte Auszählungskreise",
     "IGNORED_COUNTING_CIRCLES": "Ignorierte Auszählungskreise",
     "IGNORED_COUNTING_CIRCLE": {
       "TEST_COUNTING_CIRCLE": "(Testurne)",

@@ -3,8 +3,14 @@
  * For license information see LICENSE file
  */
 
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MajorityElectionCandidateResult, MajorityElectionResult, SecondaryMajorityElectionResult } from '../../../../models';
+import { Component, ElementRef, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import {
+  MajorityElectionCandidateResult,
+  MajorityElectionResult,
+  MajorityElectionWriteInMapping,
+  SecondaryMajorityElectionResult,
+} from '../../../../models';
+import { adjustWriteIns, resetWriteIns } from '../../../../services/utils/write-ins-mapping.utils';
 
 @Component({
   selector: 'vo-ausm-contest-majority-election-result-input',
@@ -32,6 +38,19 @@ export class ContestMajorityElectionResultInputComponent {
   @Input()
   public readonly: boolean = true;
 
+  @Input()
+  public set mappedWriteIns(mappings: MajorityElectionWriteInMapping[] | undefined) {
+    if (!mappings) {
+      return;
+    }
+
+    resetWriteIns(this.result);
+    adjustWriteIns(this.result, mappings);
+  }
+
+  @Input()
+  public buttonsTemplate?: TemplateRef<HTMLElement>;
+
   @Output()
   public contentChanged: EventEmitter<void> = new EventEmitter<void>();
 
@@ -47,8 +66,8 @@ export class ContestMajorityElectionResultInputComponent {
   }
 
   public setConventionalEmptyVoteCount(v?: number): void {
-    this.result.conventionalSubTotal.emptyVoteCount = v;
-    this.result.emptyVoteCount = (v ?? 0) + this.result.eVotingSubTotal.emptyVoteCount;
+    this.result.conventionalSubTotal.emptyVoteCountExclWriteIns = v;
+    this.result.emptyVoteCount = (v ?? 0) + this.result.eVotingSubTotal.emptyVoteCountInclWriteIns;
   }
 
   public setConventionalInvalidVoteCount(v?: number): void {
@@ -63,6 +82,6 @@ export class ContestMajorityElectionResultInputComponent {
 
   public setConventionalVoteCount(candidate: MajorityElectionCandidateResult, v?: number): void {
     candidate.conventionalVoteCount = v;
-    candidate.voteCount = (v ?? 0) + candidate.eVotingVoteCount;
+    candidate.voteCount = (v ?? 0) + candidate.eVotingInclWriteInsVoteCount;
   }
 }

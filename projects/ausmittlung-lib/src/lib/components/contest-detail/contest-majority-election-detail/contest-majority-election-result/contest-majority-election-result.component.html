@@ -5,6 +5,8 @@
   <div class="p-3">
     <h4 translate class="mb-0">APP.RESULT</h4>
 
+    <ng-container [ngTemplateOutlet]="buttonsTemplate" [ngTemplateOutletContext]="{electionId:result.election.id}"></ng-container>
+
     <div class="candidate-results" #candidateResultsContainer>
       <bc-label [label]="'CANDIDATE.NR' | translate"></bc-label>
       <bc-label [label]="'CANDIDATE.CANDIDACY' | translate"></bc-label>
@@ -17,8 +19,8 @@
         <span>{{candidate.candidate.politicalLastName}} {{candidate.candidate.politicalFirstName}}</span>
         <span>{{candidate.candidate.party}}</span>
         <span *ngIf="eVotingValue" class="candidate-vote-count">{{candidate.conventionalVoteCount | number}}</span>
-        <span *ngIf="eVotingValue" class="candidate-vote-count">{{candidate.eVotingVoteCount | number}}</span>
-        <span class="candidate-vote-count">{{candidate.voteCount | number}}</span>
+        <span *ngIf="eVotingValue" class="candidate-vote-count">{{(candidate.eVotingExclWriteInsVoteCount + candidate.eVotingWriteInsVoteCount) | number}}</span>
+        <span class="candidate-vote-count">{{((candidate.conventionalVoteCount ?? 0) + candidate.eVotingExclWriteInsVoteCount + candidate.eVotingWriteInsVoteCount) | number}}</span>
         <ng-container *ngTemplateOutlet="votePercentIndicator; context: {$implicit: candidate.voteCount}"></ng-container>
       </ng-container>
 

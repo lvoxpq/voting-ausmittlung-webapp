@@ -14,7 +14,7 @@
     <vo-ausm-contest-majority-election-detail-detailed *ngIf="resultDetail.entry === entryVariants.MAJORITY_ELECTION_RESULT_ENTRY_DETAILED || resultReadonly; else finalResultsContent"
                                                        [resultDetail]="resultDetail"
                                                        [readonly]="resultReadonly"
-                                                       [eVoting]="eVoting && !resultDetail.hasUnmappedWriteIns"
+                                                       [eVoting]="eVoting"
                                                        [showDetailsLink]="resultDetail.entry === entryVariants.MAJORITY_ELECTION_RESULT_ENTRY_DETAILED"
                                                        (countOfVotersChange)="hasEdits = true; updateCountOfVotersValid()"
                                                        [isErfassungElectionAdmin]="isErfassungElectionAdmin"
@@ -23,7 +23,7 @@
 
     <ng-template #finalResultsContent>
       <vo-ausm-contest-majority-election-detail-final-results [readonly]="resultReadonly || !isErfassungElectionAdmin"
-                                                              [eVoting]="eVoting && !resultDetail.hasUnmappedWriteIns"
+                                                              [eVoting]="eVoting"
                                                               [election]="resultDetail.election"
                                                               (countOfVotersChange)="hasEdits = true; updateCountOfVotersValid()"
                                                               (candidateResultChange)="hasEdits = true; updateCandidateResultsValid()"

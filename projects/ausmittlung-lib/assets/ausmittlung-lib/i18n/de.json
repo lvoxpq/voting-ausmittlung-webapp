@@ -56,7 +56,6 @@
       "SWISS_ABROAD": "Auslandschweizer",
       "E_VOTING_ACTIVE": "E-Voting aktiviert",
       "COUNTING_CIRCLE_DETAILS_SAVED": "Stimmberechtigte und Stimmrechtsausweise erfolgreich gespeichert.",
-      "MAP_WRITE_INS": "Write-Ins zuordnen…",
       "VOTING_CARDS": {
         "TITLE": "Stimmrechtsausweise",
         "1": "Urne",
@@ -246,7 +245,7 @@
     "BALLOT_DETAIL": {
       "TITLE": "Stimmzettel erfassen",
       "DELETE": "Stimmzettel löschen",
-      "NEW": "+ Nächsten Stimmzettel erfassen",
+      "NEW": "Nächster Stimmzettel",
       "CONFIRM_DELETE": "Sind Sie sicher, dass der Stimmzettel gelöscht werden soll?",
       "BALLOT_NR": "Stimmzettel-Nr.",
       "NO_BALLOTS": "Kein Stimmzettel vorhanden",
@@ -337,7 +336,7 @@
     "BALLOT_DETAIL": {
       "TITLE": "Wahlzettel erfassen",
       "DELETE": "Wahlzettel löschen",
-      "NEW": "+ Nächsten Wahlzettel erfassen",
+      "NEW": "Nächster Wahlzettel",
       "SUBMIT_BUNDLE": "Bund abschliessen",
       "BALLOT_NR": "Wahlzettel-Nr.",
       "EMPTY": "Leere Zeilen",
@@ -413,6 +412,7 @@
     "TITLE": "Majorzwahl",
     "BY_BALLOT_GROUPS": "Nach Wahlzettelgruppen erfassen",
     "BY_BUNDLE": "Einzelne Wahlzettel erfassen und Bundkontrolle",
+    "MAP_WRITE_INS": "E-Voting Write-Ins zuweisen",
     "RESULT_ENTRY": {
       "SELECT": "Erfassungsvariante festlegen",
       "NOT_SELECTED": "Die Erfassungsvariante sind nicht eingestellt. Bitte kontaktieren Sie den zuständigen Auszählungsverantwortlichen.",
@@ -599,7 +599,7 @@
     "DESCRIPTION": "Bezeichnung",
     "POLITICAL_BUSINESS": "Geschäft",
     "STATE": "Status",
-    "DATA_DATE": "Datenstand",
+    "DATA_DATE": "Zeitpunkt Generierung",
     "FILE_NAME": "Dateiname",
     "DOWNLOAD": "Download",
     "RETRY": "Wiederholen",
@@ -790,6 +790,10 @@
           "INVALID": "Stimmen-Total für Stichfrage 3 (Frage 2 / Frage 3) entspricht nicht der Anzahl gültige Stimmzettel."
         }
       },
+      "26": {
+        "VALID": "Es sind Kandidierende erfasst",
+        "INVALID": "Es wurden keine Kandidierende erfasst, nur Vereinzelte. Bitte fügen Sie in VOTING Basis mindestens einen Kandidierenden hinzu."
+      },
       "27": {
         "VALID": "Die Kandidierenden-Stimmen sind vollständig erfasst.",
         "INVALID": "Die Kandidierenden-Stimmen sind noch nicht vollständig erfasst."
@@ -883,16 +887,19 @@
   "RESULT_IMPORT": {
     "WRITE_INS": {
       "TITLE": "Write-Ins zuordnen",
+      "TITLE_WITH_ELECTION": "Write-Ins zuordnen - {{electionDescription}}",
       "TITLE_MISSING_MAPPINGS": "Write-Ins (vorgruppiert)",
       "TITLE_CANDIDATES": "Kandidierende",
       "NO_MORE_DATA": "Keine weiteren Write-Ins vorhanden",
+      "NO_DATA": "Keine Write-Ins vorhanden",
       "NEXT_ELECTION": "Nächste Wahl",
       "COUNT_OF_WRITE_INS": "Anz. Write-Ins",
       "ADDED_TO_CANDIDATE": "Write-Ins zu Kandidat/in {{number}} {{politicalFirstName}} {{politicalLastName}} hinzugefügt.",
       "NO_CANDIDATE_SELECTED": "Keine Write-Ins ausgewählt…",
       "COULD_NOT_FIND_CANDIDATE": "Kein/e Kandidat/in mit der Nummer {{number}} gefunden…",
       "ASSIGN_SHORTCUT": "CTRL+Zahl um Write-In zuzuordnen",
-      "COMPLETE": "Abschliessen"
+      "COMPLETE": "Abschliessen",
+      "RESET": "Write-Ins zurücksetzen"
     }
   },
   "SECOND_FACTOR_TRANSACTION": {

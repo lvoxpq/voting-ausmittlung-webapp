@@ -33,6 +33,13 @@
     </ng-template>
   </div>
   <div class="p-2 candidates">
+    <div class="buttons">
+      <bc-button *ngIf="canShowResetMappings"
+                 [disabled]="readOnly"
+                 (buttonClick)="resetAllMappings()"
+                 [label]="'RESULT_IMPORT.WRITE_INS.RESET' | translate"
+                 variant="secondary"></bc-button>
+    </div>
     <h3 translate>RESULT_IMPORT.WRITE_INS.TITLE_CANDIDATES</h3>
     <div class="candidates-content">
       <table aria-label="candidates">
@@ -76,8 +83,7 @@
             <td>
               <div class="chip p-1 pl-2 m-1" *ngFor="let mapping of candidateMapping.writeInMappings">
                 {{mapping.writeInCandidateName}} ({{mapping.voteCount | number}})
-                <bc-icon icon="x"
-                         size="1.5rem"
+                <bc-icon *ngIf="!readOnly" icon="cancel" class="ml-1 clickable"
                          (click)="removeMapping(mapping, candidateMapping); $event.preventDefault(); $event.stopPropagation()"></bc-icon>
               </div>
             </td>

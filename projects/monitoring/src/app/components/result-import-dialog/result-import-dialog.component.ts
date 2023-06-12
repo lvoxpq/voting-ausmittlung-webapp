@@ -5,9 +5,10 @@
 
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ResultImportService } from 'ausmittlung-lib';
+import { EchType, ImportFile } from './import-file.model';
 
 @Component({
   selector: 'app-result-import-dialog',
@@ -15,7 +16,8 @@ import { ResultImportService } from 'ausmittlung-lib';
 })
 export class ResultImportDialogComponent {
   public importing: boolean = false;
-  public file?: File;
+  public files: ImportFile[] = [];
+  public filesValid: boolean = false;
 
   private readonly contestId: string;
 
@@ -30,18 +32,26 @@ export class ResultImportDialogComponent {
     this.contestId = dialogData.contestId;
   }
 
+  public filesChanged(files: ImportFile[]): void {
+    this.files = files;
+    this.filesValid =
+      files.length === 2 && files.some(f => f.echType === EchType.Ech0222) && files.some(f => f.echType === EchType.Ech0110);
+  }
+
   public close(): void {
     this.dialogRef.close();
   }
 
   public async import(): Promise<void> {
-    if (!this.file) {
+    if (!this.filesValid) {
       return;
     }
 
     try {
       this.importing = true;
-      await this.resultImportService.import(this.contestId, this.file);
+      const eCH0222File = this.files.find(f => f.echType === EchType.Ech0222)!;
+      const eCH0110File = this.files.find(f => f.echType === EchType.Ech0110)!;
+      await this.resultImportService.import(this.contestId, eCH0222File.file, eCH0110File.file);
       this.toast.success(this.i18n.instant('RESULT_IMPORT.IMPORT_DONE'));
       this.dialogRef.close(true);
     } finally {

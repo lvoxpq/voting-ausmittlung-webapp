@@ -61,7 +61,7 @@ import { QuestionPopularMajorityAlgorithmEndResultComponent } from './components
 import { EndResultPageComponent } from './components/end-result-page/end-result-page.component';
 import { EndResultTypeSelectorComponent } from './components/end-result-type-selector/end-result-type-selector.component';
 import { ExportCockpitDialogComponent } from './components/export-cockpit-dialog/export-cockpit-dialog.component';
-import { ImportFileSelectComponent } from './components/import-file-select/import-file-select.component';
+import { ImportFileSelectComponent } from './components/result-import-dialog/import-file-select/import-file-select.component';
 import { MajorityElectionEndResultCandidatesListComponent } from './components/majority-election-end-result-candidates-list/majority-election-end-result-candidates-list.component';
 import { MajorityElectionLotDecisionDialogComponent } from './components/majority-election-lot-decision-dialog/majority-election-lot-decision-dialog.component';
 import { MajorityElectionLotDecisionListComponent } from './components/majority-election-lot-decision-dialog/majority-election-lot-decision-list/majority-election-lot-decision-list.component';

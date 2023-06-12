@@ -5,6 +5,7 @@
     [election]="result.election"
   ></vo-ausm-majority-election-secondary-info>
   <div class="p-3">
+    <ng-container [ngTemplateOutlet]="buttonsTemplate" [ngTemplateOutletContext]="{electionId:result.election.id}"></ng-container>
     <div class="candidate-results" #candidateResultsContainer [class.large-ml]="showElectionHeader">
       <bc-label [label]="'CANDIDATE.NR' | translate"></bc-label>
       <bc-label [label]="'CANDIDATE.CANDIDACY' | translate"></bc-label>
@@ -23,8 +24,8 @@
           [error]="candidate.conventionalVoteCount < 0"
           (valueChange)="setConventionalVoteCount(candidate, $event); contentChanged.emit()"
         ></bc-number>
-        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="candidate.eVotingVoteCount"></bc-number>
-        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="candidate.voteCount"></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="candidate.eVotingExclWriteInsVoteCount + candidate.eVotingWriteInsVoteCount"></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="(candidate.conventionalVoteCount ?? 0) + candidate.eVotingExclWriteInsVoteCount + candidate.eVotingWriteInsVoteCount"></bc-number>
       </ng-container>
 
       <span translate class="candidate-candidacy">MAJORITY_ELECTION.INDIVIDUAL</span>
@@ -51,15 +52,15 @@
         <span><!-- party --></span>
         <bc-number
           [disabled]="readonly"
-          [value]="result.conventionalSubTotal.emptyVoteCount"
+          [value]="result.conventionalSubTotal.emptyVoteCountExclWriteIns"
           [min]="0"
           [error]="
-          result.conventionalSubTotal.emptyVoteCount !== undefined && result.conventionalSubTotal.emptyVoteCount < 0
+          result.conventionalSubTotal.emptyVoteCountExclWriteIns !== undefined && result.conventionalSubTotal.emptyVoteCountExclWriteIns < 0
         "
           (valueChange)="setConventionalEmptyVoteCount($event); contentChanged.emit()"
         ></bc-number>
-        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.eVotingSubTotal.emptyVoteCount"></bc-number>
-        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.emptyVoteCount"></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="result.eVotingSubTotal.emptyVoteCountWriteIns + result.eVotingSubTotal.emptyVoteCountExclWriteIns"></bc-number>
+        <bc-number *ngIf="eVotingValue" [disabled]="true" [value]="(result.conventionalSubTotal.emptyVoteCountExclWriteIns ?? 0) + result.eVotingSubTotal.emptyVoteCountWriteIns + result.eVotingSubTotal.emptyVoteCountExclWriteIns"></bc-number>
       </ng-container>
 
       <ng-container *ngIf="showInvalidVotes">

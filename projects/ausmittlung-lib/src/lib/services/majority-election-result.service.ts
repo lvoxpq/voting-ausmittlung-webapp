@@ -135,7 +135,9 @@ export class MajorityElectionResultService extends PoliticalBusinessResultBaseSe
     const protoObj = data.toObject();
     return {
       ...protoObj,
-      emptyVoteCount: protoObj.emptyVoteCount?.value,
+      emptyVoteCountInclWriteIns: protoObj.emptyVoteCountInclWriteIns?.value,
+      emptyVoteCountExclWriteIns: protoObj.emptyVoteCountExclWriteIns?.value,
+      emptyVoteCountWriteIns: protoObj.emptyVoteCountWriteIns?.value,
       invalidVoteCount: protoObj.invalidVoteCount?.value,
       individualVoteCount: protoObj.individualVoteCount?.value,
     };
@@ -488,13 +490,13 @@ export class MajorityElectionResultService extends PoliticalBusinessResultBaseSe
     req.setCountOfVoters(this.mapToCountOfVotersProto(result.countOfVoters));
     req.setCandidateResultsList(result.candidateResults.map(x => this.mapToCandidateResultProto(x)));
     req.setIndividualVoteCount(createInt32Value(result.conventionalSubTotal.individualVoteCount));
-    req.setEmptyVoteCount(createInt32Value(result.conventionalSubTotal.emptyVoteCount));
+    req.setEmptyVoteCount(createInt32Value(result.conventionalSubTotal.emptyVoteCountExclWriteIns));
     req.setInvalidVoteCount(createInt32Value(result.conventionalSubTotal.invalidVoteCount));
     req.setSecondaryElectionCandidateResultsList(
       result.secondaryMajorityElectionResults.map(x => {
         const candidateReq = new EnterSecondaryMajorityElectionCandidateResultsRequest();
         candidateReq.setIndividualVoteCount(createInt32Value(x.conventionalSubTotal.individualVoteCount));
-        candidateReq.setEmptyVoteCount(createInt32Value(x.conventionalSubTotal.emptyVoteCount));
+        candidateReq.setEmptyVoteCount(createInt32Value(x.conventionalSubTotal.emptyVoteCountExclWriteIns));
         candidateReq.setInvalidVoteCount(createInt32Value(x.conventionalSubTotal.invalidVoteCount));
         candidateReq.setSecondaryMajorityElectionId(x.election.id);
         candidateReq.setCandidateResultsList(x.candidateResults.map(y => this.mapToCandidateResultProto(y)));

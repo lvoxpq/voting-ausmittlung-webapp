@@ -72,9 +72,9 @@
       [actionExecuting]="actionExecuting"
       [readonly]="(isErfassungUser | async) !== true || !bundleInProcessOrCorrection || politicalBusinessResult.vote.contest!.locked"
       [canSubmitBundle]="bundle.countOfBallots > 0"
-      [canCreateBallot]="true"
-      [labelCreate]="'VOTE.BALLOT_DETAIL.NEW'"
-      (createBallot)="createBallot()"
+      [nextBallotEnabled]="true"
+      [labelNext]="'VOTE.BALLOT_DETAIL.NEW'"
+      (nextBallot)="nextBallot()"
       (back)="saveAndBack()"
       (submitBundle)="submitBundleAndNavigate()"></vo-ausm-political-business-ballot-button-bar>
   </ng-container>

@@ -23,8 +23,8 @@
     <vo-lib-button-bar footer
                        [hasCancelButton]="showCancel"
                        [saving]="saving"
-                       [canSave]="!!countingCircle.contactPersonDuringEvent?.phone
-                        && (countingCircle.contactPersonSameDuringEventAsAfter || !!countingCircle.contactPersonAfterEvent?.phone)"
+                       [canSave]="!!countingCircle.contactPersonDuringEvent?.phone && !!countingCircle.contactPersonDuringEvent?.mobilePhone
+                        && (countingCircle.contactPersonSameDuringEventAsAfter || (!!countingCircle.contactPersonAfterEvent?.phone && !!countingCircle.contactPersonAfterEvent?.mobilePhone))"
                        (save)="save()"
                        (cancel)="cancel()"></vo-lib-button-bar>
   </div>

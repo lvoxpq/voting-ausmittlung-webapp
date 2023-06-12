@@ -77,11 +77,17 @@ export class MajorityElectionWriteInMappingComponent implements OnChanges {
   @Input()
   public canShowNextElection: boolean = false;
 
+  @Input()
+  public canShowResetMappings: boolean = false;
+
   @Output()
   public writeInMappingsChange: EventEmitter<MajorityElectionWriteInMapping[]> = new EventEmitter<MajorityElectionWriteInMapping[]>();
 
   @Output()
   public showNextElection: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  public resetMappings: EventEmitter<void> = new EventEmitter<void>();
 
   private writeInMappingsById: Record<string, MajorityElectionWriteInMapping> = {};
   private candidatesByNumber: Record<string, CandidateWithMappings> = {};
@@ -220,6 +226,16 @@ export class MajorityElectionWriteInMappingComponent implements OnChanges {
     this.availableWriteInMappings = [writeIn, ...this.availableWriteInMappings];
     this.writeInMappingsChange.emit(this.writeInMappings);
     this.selectFirstAvailableWriteInMapping();
+  }
+
+  public resetAllMappings(): void {
+    for (const candidateMapping of this.candidatesWithMappings) {
+      for (const mapping of candidateMapping.writeInMappings) {
+        this.removeMapping(mapping, candidateMapping);
+      }
+    }
+
+    this.resetMappings.emit();
   }
 
   private updateAvailableWriteInMappings(): void {
