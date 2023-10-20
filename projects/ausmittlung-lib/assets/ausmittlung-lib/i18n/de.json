@@ -23,7 +23,8 @@
     "RESULT": "Ergebnis",
     "CLOSE": "Schliessen",
     "CONTINUE": "Weiter",
-    "SHORTCUT_TITLE": "Tastenkombinationen"
+    "SHORTCUT_TITLE": "Tastenkombinationen",
+    "CONFIRM": "Bestätigen"
   },
   "CONTEST": {
     "TITLE": "Urnengänge",
@@ -90,8 +91,10 @@
         "UPDATE_REMARK": "Die folgenden Anpassungen an den Kontaktdaten sind nur temporär für den aktuellen Urnengang gültig. Die permanenten Kontaktdaten können innerhalb der VOTING Basis-Services angepasst werden."
       },
       "STATE_ACTION": {
+        "LABEL": "Status aller Geschäfte ändern...",
         "ALL_TO_AUDIT_TENTATIVELY": "Alle auf vorläufig geprüft",
-        "RESET_RESULTS": "Status zurücksetzen und Teilergebnisse löschen"
+        "RESET_RESULTS": "Status zurücksetzen und Teilergebnisse löschen",
+        "SUBMIT_RESULTS": "Erfassung prüfen und beenden"
       }
     }
   },
@@ -100,7 +103,7 @@
     "RESULTS_ENTRY": {
       "EDIT": "(anpassen…)",
       "QUESTION": "Bitte wählen Sie die Methode aus, wie die Ergebnisse erfasst werden sollen",
-      "SELECT": "Variante festlegen",
+      "SELECT": "Erfassungsparameter bestätigen",
       "NOT_SELECTED": "Die Erfassungsweise ist nicht eingestellt. Bitte kontaktieren Sie den zuständigen Wahlverantwortlichen.",
       "SELECTED": "Erfassungsvariante: {{name}}",
       "CONFIRM_CHANGE": "Sind Sie sicher, dass Sie die Erfassungsweise umstellen möchten?",
@@ -161,7 +164,6 @@
           "2": "Physisch"
         }
       },
-      "SELECT": "Erfassungsvariante festlegen",
       "COUNTING_CIRCLE": "Auszählungskreis"
     },
     "BALLOT_CARD": "Stimmzettel",
@@ -318,6 +320,7 @@
     "BALLOT_CARD": "Wahlzettel",
     "BUNDLE_OVERVIEW": "Bundeübersicht und einzelne Wahlzettel erfassen",
     "NEW_BUNDLE": "+ Neuen Bund erfassen",
+    "CONFIRM_BUNDLE_CREATION": "Bund {{number}}, bitte auf internen physischen Unterlagen erfassen (bspw. Bundblatt / Stapeldeckblatt / Wahlzettelcouvert)",
     "BUNDLE_SIZE": "Bund-Grösse",
     "BUNDLE_CREATED_BY": "Erstellt von",
     "BUNDLE_REVIEWED_BY": "Kontrolliert von",
@@ -414,8 +417,7 @@
     "BY_BUNDLE": "Einzelne Wahlzettel erfassen und Bundkontrolle",
     "MAP_WRITE_INS": "E-Voting Write-Ins zuweisen",
     "RESULT_ENTRY": {
-      "SELECT": "Erfassungsvariante festlegen",
-      "NOT_SELECTED": "Die Erfassungsvariante sind nicht eingestellt. Bitte kontaktieren Sie den zuständigen Auszählungsverantwortlichen.",
+      "NOT_SELECTED": "Die Erfassungsvariante sind nicht eingestellt. Bitte kontaktieren Sie die zuständige auszählungsverantwortliche Person.",
       "EDIT": "Erfassungsvariante anpassen…",
       "LONG": {
         "1": "Endresultate (Das Total der Kandidierenden-Stimmen wird direkt von den Wahlverantwortlichen erfasst)",
@@ -456,8 +458,7 @@
   },
   "PROPORTIONAL_ELECTION": {
     "RESULT_ENTRY": {
-      "SELECT": "Erfassungsparameter festlegen",
-      "NOT_SELECTED": "Die Erfassungsparameter sind nicht eingestellt. Bitte kontaktieren Sie den zuständigen Auszählungsverantwortlichen.",
+      "NOT_SELECTED": "Die Erfassungsparameter sind nicht eingestellt. Bitte kontaktieren Sie die zuständige auszählungsverantwortliche Person.",
       "CONFIRM_CHANGE": "Sind Sie sicher, dass Sie die Erfassungsparameter umstellen möchten?",
       "EDIT": "Erfassungsparameter anpassen…",
       "REVIEW_PROCEDURE": {
@@ -531,6 +532,10 @@
           "TEXT": "Kandidat/in entfernen von",
           "COMBINATION": "Ctrl + Alt + G"
         }
+      },
+      "INVALID_EMPTY_BALLOT_WITHOUT_PARTY": {
+        "TITLE": "Wahlzettel leer",
+        "MSG": "Wahlzettel ohne Parteibezeichnung muss mindestens ein/e Kandidat/in beinhalten."
       }
     },
     "END_RESULTS": {
@@ -900,6 +905,12 @@
       "ASSIGN_SHORTCUT": "CTRL+Zahl um Write-In zuzuordnen",
       "COMPLETE": "Abschliessen",
       "RESET": "Write-Ins zurücksetzen"
+    },
+    "IMPORTED": {
+      "TITLE": "E-Voting Import",
+      "TEXT_WITH_WRITE_INS": "Die E-Voting Ergebnisse wurden importiert. Möchten Sie die Zuweisung der Write-Ins jetzt vornehmen?",
+      "TEXT_WITHOUT_WRITE_INS": "Die E-Voting Ergebnisse wurden importiert. Sie können die Ergebniserfassung jetzt abschliessen.",
+      "ACTION_WRITE_INS": "Write-Ins zuweisen"
     }
   },
   "SECOND_FACTOR_TRANSACTION": {

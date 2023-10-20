@@ -8,7 +8,7 @@
                               labelPosition="bottom"
                               [linear]="false"
                               [selectedIndex]="selectedElectionIndex"
-                              (selectionChange)="$event.previouslySelectedStep.interacted = false; selectedElectionChange($event.selectedIndex)">
+                              (selectionChange)="$event.previouslySelectedStep.interacted = false;">
         <ng-template matStepperIcon="number"></ng-template>
         <ng-template matStepperIcon="edit"></ng-template>
         <mat-step *ngFor="let election of elections; let i = index"

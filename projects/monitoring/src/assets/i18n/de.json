@@ -3,8 +3,7 @@
     "TITLE": {
       "default": "VOTING Ausmittlung Monitoring",
       "sg": "Ergebnisermittlung Monitoring"
-    },
-    "CONFIRM": "Bestätigen"
+    }
   },
   "MONITORING_COCKPIT": {
     "TITLE": "Monitoring Cockpit",
@@ -33,6 +32,7 @@
     "TRIGGER_MODE_MANUAL": "Manuell",
     "TRIGGER_MODE_AUTO": "Automatisch",
     "INTERVAL": "Export-Intervall (in Minuten)",
+    "LATEST_EXECUTION": "Letzter Export:",
     "POLITICAL_BUSINESS_METADATA": {
       "TOKEN": "Token"
     }

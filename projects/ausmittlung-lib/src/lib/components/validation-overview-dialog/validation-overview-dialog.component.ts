@@ -5,21 +5,21 @@
 
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ValidationOverview } from '../../models';
+import { ValidationSummary } from '../../models';
 
 @Component({
   selector: 'vo-ausm-validation-overview-dialog',
   templateUrl: './validation-overview-dialog.component.html',
 })
 export class ValidationOverviewDialogComponent {
-  public readonly validationOverview: ValidationOverview;
+  public readonly validationSummaries: ValidationSummary[];
   public readonly saveLabel: string;
   public readonly header: string;
   public readonly canEmitSave: boolean;
   public readonly validationResultsLabel?: string;
 
   constructor(private readonly dialogRef: MatDialogRef<boolean>, @Inject(MAT_DIALOG_DATA) dialogData: ValidationOverviewDialogData) {
-    this.validationOverview = dialogData.validationOverview;
+    this.validationSummaries = dialogData.validationSummaries;
     this.saveLabel = dialogData.saveLabel;
     this.header = dialogData.header;
     this.canEmitSave = dialogData.canEmitSave;
@@ -40,7 +40,7 @@ export class ValidationOverviewDialogComponent {
 }
 
 export interface ValidationOverviewDialogData {
-  validationOverview: ValidationOverview;
+  validationSummaries: ValidationSummary[];
   canEmitSave: boolean;
   saveLabel: string;
   header: string;

@@ -13,7 +13,7 @@
         <h4 *ngIf="!bundle.list" translate>ELECTION.BALLOT_DETAIL.WITHOUT_LIST</h4>
         <vo-ausm-ballot-header
           #header
-          [canNavigate]="emptyVoteCountValid"
+          [canNavigate]="emptyVoteCountValid && ballotUiData.candidateCountValid"
           [ballotNumber]="ballot?.number"
           [minBallotNumber]="minBallotNumber"
           [maxBallotNumber]="currentMaxBallotNumber"
@@ -23,34 +23,35 @@
             || !bundleInProcessOrCorrection
             || politicalBusinessResult.election.contest!.locked"
           [canDeleteBallot]="!!ballot && ballot.number === currentMaxBallotNumber"
-          (back)="saveAndBack()"
           (deleteBallot)="deleteBallotAndNavigate()"
           (ballotNumberChange)="navigateToBallot($event)">
-          <bc-button
-            *ngIf="!loadingBallot
-              && !!ballot
-              && bundleInProcessOrCorrection
-              && (isErfassungUser | async) === true
-              && !politicalBusinessResult.election.contest!.locked"
-            class="mx-2 mb-2"
-            variant="tertiary"
-            [label]="'ELECTION.BALLOT_DETAIL.REMOVE_ALL_CANDIDATES' | translate"
-            [class.disabled]="actionExecuting"
-            (buttonClick)="removeAllCandidates()">
-          </bc-button>
-          <bc-button
-            *ngIf="!loadingBallot
-              && !!ballot
-              && bundleInProcessOrCorrection
-              && (isErfassungUser | async) === true
-              && !politicalBusinessResult.election.contest!.locked"
-            class="mx-2 mb-2"
-            variant="tertiary"
-            [class.disabled]="actionExecuting || !hasChanges"
-            [label]="'ELECTION.BALLOT_DETAIL.RESET' | translate"
-            (buttonClick)="resetBallot()">
-          </bc-button>
-          <bc-icon *ngIf="!header.readonly" class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
+          <ng-container center>
+            <bc-button
+              *ngIf="!loadingBallot
+                && !!ballot
+                && bundleInProcessOrCorrection
+                && (isErfassungUser | async) === true
+                && !politicalBusinessResult.election.contest!.locked"
+              class="mx-2 mb-2"
+              variant="tertiary"
+              [label]="'ELECTION.BALLOT_DETAIL.REMOVE_ALL_CANDIDATES' | translate"
+              [disabled]="actionExecuting"
+              (buttonClick)="removeAllCandidates()">
+            </bc-button>
+            <bc-button
+              *ngIf="!loadingBallot
+                && !!ballot
+                && bundleInProcessOrCorrection
+                && (isErfassungUser | async) === true
+                && !politicalBusinessResult.election.contest!.locked"
+              class="mx-2 mb-2"
+              variant="tertiary"
+              [disabled]="actionExecuting || !hasChanges"
+              [label]="'ELECTION.BALLOT_DETAIL.RESET' | translate"
+              (buttonClick)="resetBallot()">
+            </bc-button>
+          </ng-container>
+          <bc-icon right *ngIf="!header.readonly" class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
         </vo-ausm-ballot-header>
         <ng-container *ngIf="!loadingBallot && !!ballot; else noBallot">
           <vo-ausm-proportional-election-ballot-content
@@ -80,7 +81,7 @@
         [actionExecuting]="actionExecuting"
         [readonly]="(isErfassungUser | async) !== true || !bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
         [canSubmitBundle]="bundle.countOfBallots > 0"
-        [nextBallotEnabled]="!ballot || ballot.number < politicalBusinessResult.entryParams.ballotBundleSize"
+        [nextBallotEnabled]="!ballot || ballot.number % politicalBusinessResult.entryParams.ballotBundleSize !== 0"
         (nextBallot)="nextBallot()"
         (back)="saveAndBack()"
         (submitBundle)="submitBundleAndNavigate()"></vo-ausm-political-business-ballot-button-bar>

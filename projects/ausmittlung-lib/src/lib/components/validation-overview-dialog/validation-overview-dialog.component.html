@@ -6,16 +6,8 @@
       <p *ngIf="!!validationResultsLabel" class="mb-2">
         {{ validationResultsLabel | translate }}
       </p>
-      <vo-ausm-validation-result *ngFor="let result of validationOverview.requiredValidationResults" [result]="result">
-      </vo-ausm-validation-result>
 
-      <ng-container *ngIf="validationOverview.optionalValidationResults.length > 0">
-        <p class="mt-3 mb-2" translate>VALIDATION.PLAUSIBILISATION.HEADER</p>
-        <vo-ausm-validation-result
-          *ngFor="let result of validationOverview.optionalValidationResults"
-          [result]="result">
-        </vo-ausm-validation-result>
-      </ng-container>
+      <vo-ausm-validation-summary *ngFor="let summary of validationSummaries" [summary]="summary"></vo-ausm-validation-summary>
     </div>
   </div>
 

@@ -18,9 +18,9 @@
           {{ballotGroup.ballotGroup.shortDescription}}
         </span>
         <bc-number [disabled]="(isErfassungElectionAdmin | async) !== true || resultReadOnly"
-                   [value]="ballotGroup.voteCount"
+                   [ngModel]="ballotGroup.voteCount"
                    [allowUndefined]="false"
-                   (valueChange)="ballotGroup.voteCount = +$event; updateTotalAndSetChanges()"
+                   (ngModelChange)="ballotGroup.voteCount = +$event; updateTotalAndSetChanges()"
                    [min]="0"
                    [error]="ballotGroup.voteCount < 0"
                    (focusin)="page.sidebarOpen = true; focusedBallotGroup = ballotGroup"></bc-number>

@@ -8,7 +8,10 @@ import {
   MajorityElectionWriteInMapping as MajorityElectionWriteInMappingProto,
   MajorityElectionWriteInMappings as MajorityElectionWriteInMappingsProto,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/majority_election_write_in_pb';
-import { ResultImport as ResultImportProto } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/results_pb';
+import {
+  ResultImport as ResultImportProto,
+  ResultImportChange as ResultImportChangeProto,
+} from '@abraxas/voting-ausmittlung-service-proto/grpc/models/results_pb';
 import { MajorityElectionWriteInMappingTarget } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/majority_election_write_in_pb';
 import { SimplePoliticalBusiness } from './political-business.model';
 
@@ -21,6 +24,7 @@ export {
   MajorityElectionContestWriteInMappingsProto,
   MajorityElectionWriteInMappingsProto,
   MajorityElectionWriteInMappingProto,
+  ResultImportChangeProto,
 };
 
 export interface MajorityElectionWriteInMappings {

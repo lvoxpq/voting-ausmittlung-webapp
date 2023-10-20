@@ -11,7 +11,7 @@ import {
   ContestCountingCircleDetails,
   ProportionalElectionResult,
   updateCountOfVotersCalculatedFields,
-  ValidationOverview,
+  ValidationSummary,
 } from '../../../models';
 import { PoliticalBusinessResultService } from '../../../services/political-business-result.service';
 import { ProportionalElectionResultService } from '../../../services/proportional-election-result.service';
@@ -133,7 +133,7 @@ export class ContestProportionalElectionDetailComponent extends AbstractContestP
     this.ballotCountInputComponent?.setFocus();
   }
 
-  protected async loadValidationOverviewData(): Promise<ValidationOverview> {
+  protected async loadValidationSummary(): Promise<ValidationSummary> {
     return this.resultService.validateEnterCountOfVoters(this.resultDetail!.id, this.resultDetail!.countOfVoters);
   }
 }

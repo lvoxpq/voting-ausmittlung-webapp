@@ -130,6 +130,8 @@ import { TranslateVoteQuestionPipe } from './pipes/translate-vote-question.pipe'
 import { VOTING_BASIS_WEBAPP_URL } from './tokens';
 import { AdmonitionComponent } from './components/admonition/admonition.component';
 import { ResultExportComponent } from './pages/result-export/result-export.component';
+import { ValidationSummaryComponent } from './components/validation-summary/validation-summary.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -217,6 +219,7 @@ import { ResultExportComponent } from './pages/result-export/result-export.compo
     VotingDataSourceTabsComponent,
     ValidationOverviewDialogComponent,
     ValidationResultComponent,
+    ValidationSummaryComponent,
     BallotHeaderComponent,
     ProportionalElectionBallotCandidateRemoveRangeComponent,
     MajorityElectionWriteInMappingComponent,
@@ -258,6 +261,7 @@ import { ResultExportComponent } from './pages/result-export/result-export.compo
     TabsModule,
     TableModule,
     LoadingBarModule,
+    MatMenuModule,
   ],
   exports: [
     ContestDetailComponent,
@@ -280,6 +284,8 @@ import { ResultExportComponent } from './pages/result-export/result-export.compo
     VoteBundleOverviewComponent,
     VotingDataSourceTabsComponent,
     TranslateVoteQuestionPipe,
+    ResultStateBoxComponent,
+    ValidationOverviewDialogComponent,
   ],
 })
 export class AusmittlungLibModule {

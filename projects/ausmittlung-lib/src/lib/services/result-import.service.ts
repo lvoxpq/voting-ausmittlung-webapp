@@ -6,13 +6,14 @@
 import {
   DeleteResultImportDataRequest,
   GetMajorityElectionWriteInMappingsRequest,
+  GetResultImportChangesRequest,
   ListResultImportsRequest,
   MapMajorityElectionWriteInRequest,
   MapMajorityElectionWriteInsRequest,
   ResetMajorityElectionWriteInMappingsRequest,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/result_import_requests_pb';
 import { ResultImportServicePromiseClient } from '@abraxas/voting-ausmittlung-service-proto/grpc/result_import_service_grpc_web_pb';
-import { GrpcBackendService, GrpcEnvironment, GrpcService } from '@abraxas/voting-lib';
+import { GrpcBackendService, GrpcEnvironment, GrpcService, retryForeverWithBackoff } from '@abraxas/voting-lib';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import {
@@ -21,11 +22,12 @@ import {
   MajorityElectionWriteInMappings,
   PoliticalBusinessType,
   ResultImport,
+  ResultImportChangeProto,
 } from '../models';
 import { MajorityElectionWriteInMappingsProto, MajorityElectionWriteInMappingTarget } from '../models/result-import.model';
 import { PoliticalBusinessService } from './political-business.service';
 import { GRPC_ENV_INJECTION_TOKEN, REST_API_URL_INJECTION_TOKEN } from './tokens';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -129,6 +131,17 @@ export class ResultImportService extends GrpcService<ResultImportServicePromiseC
     req.setElectionId(electionId);
     req.setPoliticalBusinessType(pbType);
     await this.requestEmptyResp(c => c.resetMajorityElectionWriteIns, req);
+  }
+
+  public getImportChanges(contestId: string, countingCircleId: string): Observable<ResultImportChangeProto.AsObject> {
+    const req = new GetResultImportChangesRequest();
+    req.setContestId(contestId);
+    req.setCountingCircleId(countingCircleId);
+    return this.requestServerStream(
+      c => c.getImportChanges,
+      req,
+      r => r.toObject(),
+    ).pipe(retryForeverWithBackoff());
   }
 
   private mapMajorityElectionWriteIn(proto: MajorityElectionWriteInMappingsProto): MajorityElectionWriteInMappings {

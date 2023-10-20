@@ -18,7 +18,7 @@ import {
   CountOfVotersInformationProto,
   CountOfVotersInformationSubTotal,
   CountOfVotersInformationSubTotalProto,
-  ValidationOverview,
+  ValidationSummary,
   VotingCardResultDetail,
   VotingCardResultDetailProto,
 } from '../models';
@@ -66,13 +66,13 @@ export class ContestCountingCircleDetailsService extends GrpcService<ContestCoun
     return this.requestEmptyResp(c => c.updateDetails, req);
   }
 
-  public validateUpdateDetails(details: ContestCountingCircleDetails): Promise<ValidationOverview> {
+  public validateUpdateDetails(details: ContestCountingCircleDetails): Promise<ValidationSummary> {
     const req = new ValidateUpdateContestCountingCircleDetailsRequest();
     req.setRequest(this.mapToRequest(details));
     return this.request(
       c => c.validateUpdateDetails,
       req,
-      r => this.validationMapping.mapToValidationOverview(r),
+      r => this.validationMapping.mapToValidationSummary(r),
     );
   }
 

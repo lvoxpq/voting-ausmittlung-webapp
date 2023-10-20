@@ -82,8 +82,12 @@ export class ProportionalElectionBallotCandidateModifyComponent {
     this.addCandidateValue = '';
   }
 
-  public setFocus(): void {
-    this.removeCandidateInput.setFocus();
+  public setFocus(focusAddCandidate: boolean): void {
+    if (focusAddCandidate) {
+      this.addCandidateInput.setFocus();
+    } else {
+      this.removeCandidateInput.setFocus();
+    }
   }
 
   private removeDots(str: string): string {

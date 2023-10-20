@@ -24,17 +24,22 @@
         [value]="triggerModeAuto"
         (valueChange)="setTriggerMode($event)"></bc-radio-button-group>
       <bc-number *ngIf="triggerModeAuto"
-                 class="mb-2"
                  [label]="'EXPORT_COCKPIT.INTERVAL' | translate"
                  [required]="true"
                  [min]="0"
                  [(ngModel)]="selectedConfig.intervalMinutes"
                  (ngModelChange)="hasEdits = true"></bc-number>
-      <div class="trigger">
-        <bc-button (buttonClick)="saveAndTriggerManualExport()"
-                   [disabled]="saving || triggeringExport"
-                   [label]="'EXPORT_COCKPIT.TRIGGER_MANUAL' | translate"></bc-button>
-        <bc-spinner *ngIf="triggeringExport" class="ml-1"></bc-spinner>
+      <div class="trigger-container mt-2">
+        <div class="trigger">
+          <bc-button (buttonClick)="saveAndTriggerManualExport()"
+                     [disabled]="saving || triggeringExport"
+                     [label]="'EXPORT_COCKPIT.TRIGGER_MANUAL' | translate"></bc-button>
+          <bc-spinner *ngIf="triggeringExport" class="ml-1"></bc-spinner>
+        </div>
+        <div class="latest-execution" *ngIf="selectedConfig.latestExecution" >
+          <span translate>EXPORT_COCKPIT.LATEST_EXECUTION</span>
+          <span>{{ selectedConfig.latestExecution | date: 'short' }}</span>
+        </div>
       </div>
     </ng-container>
     <ng-template #noData>

@@ -12,7 +12,6 @@
                  [error]="duplicatedBundleNumber || !bundleNumber"
                  [hint]="duplicatedBundleNumber ? ('POLITICAL_BUSINESS.DUPLICATED_BUNDLE_NUMBER' | translate) : ''"
                  (valueChange)="updateBundleNumber(+$event)"></bc-number>
-
       <bc-text #listNumberFormfield
                     class="m-2 field-number"
                  [required]="true"
@@ -20,6 +19,12 @@
                     [(value)]="listNumber"
                     (keydown.enter)="selectList(true)"
                     (keydown.tab)="selectList(false); footer.setSaveFocus(); $event.preventDefault()"></bc-text>
+      <div class="spacer"></div>
+      <bc-button [disabled]="saving || enableBundleNumber && (!bundleNumber || duplicatedBundleNumber)"
+                 class="align-bottom"
+                 variant="tertiary"
+                 [label]="'PROPORTIONAL_ELECTION.BALLOT_WITHOUT_LIST' | translate"
+                 (buttonClick)="createBundle()"></bc-button>
     </div>
 
     <bc-advanced-table [dataSource]="dataSource">
@@ -50,13 +55,6 @@
       <tr bc-header-row *bcHeaderRowDef="columns"></tr>
       <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"></tr>
     </bc-advanced-table>
-
-    <div class="align-right">
-      <bc-button [class.disabled]="saving || enableBundleNumber && (!bundleNumber || duplicatedBundleNumber)"
-                 variant="tertiary"
-                 [label]="'PROPORTIONAL_ELECTION.BALLOT_WITHOUT_LIST' | translate"
-                 (buttonClick)="createBundle()"></bc-button>
-    </div>
   </div>
   <vo-lib-button-bar
     footer

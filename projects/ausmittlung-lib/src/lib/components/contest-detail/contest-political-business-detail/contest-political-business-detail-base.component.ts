@@ -4,9 +4,9 @@
  */
 
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
-import { ChangeDetectorRef, Input, OnDestroy, OnInit, Directive } from '@angular/core';
+import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import {
   ContestCountingCircleDetails,
@@ -16,7 +16,7 @@ import {
   ResultListResult,
   StateChange,
   SwissAbroadVotingRight,
-  ValidationOverview,
+  ValidationSummary,
   VoterType,
 } from '../../../models';
 import { PoliticalBusinessResultBaseService } from '../../../services/political-business-result-base.service';
@@ -37,6 +37,8 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
   TService extends PoliticalBusinessResultBaseService<T, any, any>,
 > implements OnInit, OnDestroy
 {
+  private static readonly emptySecondFactorId: string = '';
+
   @Input()
   public countingCircleId!: string;
 
@@ -161,19 +163,19 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     }
   }
 
-  protected abstract loadValidationOverviewData(): Promise<ValidationOverview>;
+  protected abstract loadValidationSummary(): Promise<ValidationSummary>;
 
   protected async confirmValidationOverviewDialog(isFinishingOperation: boolean): Promise<boolean> {
-    const validationOverview = await this.loadValidationOverviewData();
+    const validationSummary = await this.loadValidationSummary();
 
     const data: ValidationOverviewDialogData = {
-      validationOverview,
-      canEmitSave: !(isFinishingOperation && !validationOverview.isValid),
+      validationSummaries: [validationSummary],
+      canEmitSave: !(isFinishingOperation && !validationSummary.isValid),
       header: `VALIDATION.COUNTING_CIRCLE_RESULT.HEADER.${isFinishingOperation ? 'FINISHING_OPERATION' : 'SAVE_OPERATION'}.${
-        validationOverview.isValid ? 'VALID' : 'INVALID'
+        validationSummary.isValid ? 'VALID' : 'INVALID'
       }`,
-      saveLabel: isFinishingOperation && !validationOverview.isValid ? 'APP.CONTINUE' : 'COMMON.SAVE',
-      validationResultsLabel: validationOverview.isValid ? undefined : 'VALIDATION.COUNTING_CIRCLE_RESULT.DESCRIPTION.INVALID',
+      saveLabel: isFinishingOperation && !validationSummary.isValid ? 'APP.CONTINUE' : 'COMMON.SAVE',
+      validationResultsLabel: validationSummary.isValid ? undefined : 'VALIDATION.COUNTING_CIRCLE_RESULT.DESCRIPTION.INVALID',
     };
 
     const result = await this.dialog.openForResult<ValidationOverviewDialogComponent, ValidationOverviewDialogResult>(
@@ -193,11 +195,17 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
         }
 
         const secondFactorTransaction = await this.resultService.prepareSubmissionFinished(id);
+        if (!secondFactorTransaction.getId() || !secondFactorTransaction.getCode()) {
+          await firstValueFrom(
+            this.resultService.submissionFinished(id, AbstractContestPoliticalBusinessDetailComponent.emptySecondFactorId),
+          );
+          break;
+        }
+
         await this.secondFactorTransactionService.showDialogAndExecuteVerifyAction(
           () => this.resultService.submissionFinished(id, secondFactorTransaction.getId()),
           secondFactorTransaction.getCode(),
         );
-
         break;
       }
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION: {
@@ -206,6 +214,13 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
       }
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE: {
         const secondFactorTransaction = await this.resultService.prepareCorrectionFinished(id);
+        if (!secondFactorTransaction.getId() || !secondFactorTransaction.getCode()) {
+          await firstValueFrom(
+            this.resultService.correctionFinished(id, comment, AbstractContestPoliticalBusinessDetailComponent.emptySecondFactorId),
+          );
+          break;
+        }
+
         await this.secondFactorTransactionService.showDialogAndExecuteVerifyAction(
           () => this.resultService.correctionFinished(id, comment, secondFactorTransaction.getId()),
           secondFactorTransaction.getCode(),

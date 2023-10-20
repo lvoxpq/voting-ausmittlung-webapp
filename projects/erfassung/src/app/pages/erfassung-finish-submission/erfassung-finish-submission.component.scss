@@ -1,0 +1,8 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.ready-for-correction-result {
+  @extend .mb-1;
+
+  color: $color-grey-3;
+}

@@ -4,11 +4,14 @@
  */
 
 import {
+  CountingCircleResultsPrepareSubmissionFinishedRequest,
+  CountingCircleResultsSubmissionFinishedRequest,
   GetResultCommentsRequest,
   GetResultListRequest,
   GetResultOverviewRequest,
   GetResultStateChangesRequest,
   ResetCountingCircleResultsRequest,
+  ValidateCountingCircleResultsRequest,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/result_requests_pb';
 import { ResultServiceClient, ResultServicePromiseClient } from '@abraxas/voting-ausmittlung-service-proto/grpc/result_service_grpc_web_pb';
 import { GrpcBackendService, GrpcEnvironment, GrpcStreamingService, retryForeverWithBackoff } from '@abraxas/voting-lib';
@@ -29,17 +32,24 @@ import {
   ResultOverviewCountingCircleResultsProto,
   ResultOverviewProto,
   ResultStateChangeProto,
+  ValidationSummaries,
 } from '../models';
 import { ContestCountingCircleDetailsService } from './contest-counting-circle-details.service';
 import { ContestService } from './contest.service';
 import { PoliticalBusinessService } from './political-business.service';
 import { GRPC_ENV_INJECTION_TOKEN } from './tokens';
+import { ValidationMappingService } from './validation-mapping.service';
+import { SecondFactorTransaction } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/second_factor_transaction_pb';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ResultService extends GrpcStreamingService<ResultServicePromiseClient, ResultServiceClient> {
-  constructor(grpcBackend: GrpcBackendService, @Inject(GRPC_ENV_INJECTION_TOKEN) env: GrpcEnvironment) {
+  constructor(
+    grpcBackend: GrpcBackendService,
+    @Inject(GRPC_ENV_INJECTION_TOKEN) env: GrpcEnvironment,
+    private readonly validationMapping: ValidationMappingService,
+  ) {
     super(ResultServicePromiseClient, ResultServiceClient, env, grpcBackend);
   }
 
@@ -89,6 +99,44 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
     req.setContestId(contestId);
     req.setCountingCircleId(countingCircleId);
     return this.requestEmptyResp(c => c.resetCountingCircleResults, req);
+  }
+
+  public validateCountingCircleResults(contestId: string, countingCircleId: string, resultIds: string[]): Promise<ValidationSummaries> {
+    const req = new ValidateCountingCircleResultsRequest();
+    req.setContestId(contestId);
+    req.setCountingCircleId(countingCircleId);
+    req.setCountingCircleResultIdsList(resultIds);
+    return this.request(
+      c => c.validateCountingCircleResults,
+      req,
+      r => this.validationMapping.mapToValidationSummaries(r),
+    );
+  }
+
+  public prepareSubmissionFinished(contestId: string, countingCircleId: string, resultIds: string[]): Promise<SecondFactorTransaction> {
+    const req = new CountingCircleResultsPrepareSubmissionFinishedRequest();
+    req.setContestId(contestId);
+    req.setCountingCircleId(countingCircleId);
+    req.setCountingCircleResultIdsList(resultIds);
+    return this.request(
+      c => c.prepareSubmissionFinished,
+      req,
+      r => r,
+    );
+  }
+
+  public submissionFinished(
+    contestId: string,
+    countingCircleId: string,
+    resultIds: string[],
+    secondFactorTransactionId: string,
+  ): Observable<void> {
+    const req = new CountingCircleResultsSubmissionFinishedRequest();
+    req.setContestId(contestId);
+    req.setCountingCircleId(countingCircleId);
+    req.setCountingCircleResultIdsList(resultIds);
+    req.setSecondFactorTransactionId(secondFactorTransactionId);
+    return this.requestClientStreamEmptyResp(c => c.submissionFinished, req);
   }
 
   private mapToResultList(data: ResultListProto): ResultList {

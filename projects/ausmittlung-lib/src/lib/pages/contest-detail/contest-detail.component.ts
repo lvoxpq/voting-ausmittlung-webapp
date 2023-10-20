@@ -21,6 +21,7 @@ import { PoliticalBusinessResultService } from '../../services/political-busines
 import { ResultService } from '../../services/result.service';
 import { RoleService } from '../../services/role.service';
 import { groupBySingle } from '../../services/utils/array.utils';
+import { ResultImportService } from '../../services/result-import.service';
 
 @Component({
   selector: 'vo-ausm-contest-detail',
@@ -59,6 +60,7 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
   private readonly routeQueryParamsSubscription: Subscription;
   private politicalBusinessesDetailsChangeSubscription?: Subscription;
   private stateChangesSubscription?: Subscription;
+  private importChangesSubscription?: Subscription;
 
   @ViewChild(ContestDetailSidebarComponent)
   private contestDetailSidebarComponent?: ContestDetailSidebarComponent;
@@ -72,6 +74,7 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly resultService: ResultService,
+    private readonly resultImportService: ResultImportService,
     private readonly auth: AuthorizationService,
     private readonly cd: ChangeDetectorRef,
     private readonly dialogService: DialogService,
@@ -125,6 +128,14 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     await this.router.navigate(['exports'], { relativeTo: this.route });
   }
 
+  public async finishSubmission(): Promise<void> {
+    if (!this.resultList) {
+      return;
+    }
+
+    await this.router.navigate(['finish-submission'], { relativeTo: this.route });
+  }
+
   public ngAfterViewInit(): void {
     this.politicalBusinessesDetails?.notifyOnChanges();
     this.politicalBusinessesDetailsChangeSubscription = this.politicalBusinessesDetails?.changes.subscribe(() =>
@@ -138,6 +149,7 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     this.politicalBusinessesDetailsChangeSubscription?.unsubscribe();
     this.isErfassungElectionAdminSubscription?.unsubscribe();
     this.stateChangesSubscription?.unsubscribe();
+    this.importChangesSubscription?.unsubscribe();
   }
 
   public updateCountOfVoters(newData: ContestCountingCircleDetails): void {
@@ -237,5 +249,39 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     this.stateChangesSubscription = this.resultService
       .getStateChanges(this.resultList.contest.id)
       .subscribe(({ id, newState }) => this.stateUpdated(id, newState));
+
+    if (this.isErfassungElectionAdmin) {
+      this.importChangesSubscription?.unsubscribe();
+      this.importChangesSubscription = this.resultImportService
+        .getImportChanges(this.resultList.contest.id, this.resultList.countingCircle.id)
+        .subscribe(({ hasWriteIns }) => this.importUpdated(hasWriteIns));
+    }
+  }
+
+  private async importUpdated(hasWriteIns: boolean): Promise<void> {
+    if (!this.resultList) {
+      return;
+    }
+
+    const title = 'RESULT_IMPORT.IMPORTED.TITLE';
+    if (!hasWriteIns) {
+      await this.dialogService.alert(title, 'RESULT_IMPORT.IMPORTED.TEXT_WITHOUT_WRITE_INS', 'APP.CONFIRM');
+      return;
+    }
+
+    const confirmed = await this.dialogService.confirm(
+      title,
+      'RESULT_IMPORT.IMPORTED.TEXT_WITH_WRITE_INS',
+      'RESULT_IMPORT.IMPORTED.ACTION_WRITE_INS',
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    // update result list after import with new values and write ins
+    this.resultList = await this.resultService.getList(this.resultList.contest.id, this.resultList.countingCircle.id);
+
+    await this.mapWriteIns();
   }
 }

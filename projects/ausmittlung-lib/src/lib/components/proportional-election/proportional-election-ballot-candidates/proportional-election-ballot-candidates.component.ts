@@ -3,7 +3,7 @@
  * For license information see LICENSE file
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, QueryList, ViewChildren } from '@angular/core';
 import { ProportionalElectionBallotCandidate, ProportionalElectionOrBallotCandidate } from '../../../models';
 import { ProportionalElectionBallotListPosition } from '../../../services/proportional-election-ballot-ui.service';
 
@@ -38,6 +38,9 @@ export class ProportionalElectionBallotCandidatesComponent {
 
   @Output()
   public removeCandidate: EventEmitter<RemoveCandidatePositionEvent> = new EventEmitter<RemoveCandidatePositionEvent>();
+
+  @ViewChildren('positionElement', { read: ElementRef })
+  public positionElements!: QueryList<ElementRef>;
 
   public addNewCandidate(position: ProportionalElectionBallotListPosition): void {
     if (!position.isSlotAvailable) {

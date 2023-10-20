@@ -17,11 +17,13 @@ import { Injectable } from '@angular/core';
 import { Timestamp } from 'google-protobuf/google/protobuf/timestamp_pb';
 import {
   DomainOfInfluenceType,
-  ValidationOverview,
-  ValidationOverviewProto,
+  ValidationSummary,
+  ValidationSummaryProto,
   ValidationResult,
   ValidationResultProto,
   VotingChannel,
+  ValidationSummariesProto,
+  ValidationSummaries,
 } from '../models';
 
 @Injectable({
@@ -37,12 +39,20 @@ export class ValidationMappingService {
     this.votingChannels = this.enumUtil.getArrayWithDescriptions<VotingChannel>(VotingChannel, 'VOTING_CHANNELS.');
   }
 
-  public mapToValidationOverview(v: ValidationOverviewProto): ValidationOverview {
+  public mapToValidationSummaries(v: ValidationSummariesProto): ValidationSummaries {
+    return {
+      summaries: v.getSummariesList().map(x => this.mapToValidationSummary(x)),
+      isValid: v.getIsValid(),
+    };
+  }
+
+  public mapToValidationSummary(v: ValidationSummaryProto): ValidationSummary {
     const validationResults = v.getValidationResultsList().map(x => this.mapToValidationResult(x));
     return {
       requiredValidationResults: validationResults.filter(x => !x.isOptional),
       optionalValidationResults: validationResults.filter(x => x.isOptional),
       isValid: v.getIsValid(),
+      title: v.getTitle(),
     };
   }
 

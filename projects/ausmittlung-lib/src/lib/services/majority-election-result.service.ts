@@ -53,7 +53,7 @@ import {
   MajorityElectionResultProto,
   mapToNullableCountOfVoters,
   PoliticalBusinessNullableCountOfVoters,
-  ValidationOverview,
+  ValidationSummary,
 } from '../models';
 import {
   MajorityElectionCandidateEndResult,
@@ -339,23 +339,23 @@ export class MajorityElectionResultService extends PoliticalBusinessResultBaseSe
   public validateEnterCountOfVoters(
     electionResultId: string,
     countOfVoters: PoliticalBusinessNullableCountOfVoters,
-  ): Promise<ValidationOverview> {
+  ): Promise<ValidationSummary> {
     const req = new ValidateEnterMajorityElectionCountOfVotersRequest();
     req.setRequest(this.mapToEnterCountOfVotersRequest(electionResultId, countOfVoters));
     return this.request(
       c => c.validateEnterCountOfVoters,
       req,
-      r => this.validationMapping.mapToValidationOverview(r),
+      r => this.validationMapping.mapToValidationSummary(r),
     );
   }
 
-  public validateEnterCandidateResults(result: MajorityElectionResult): Promise<ValidationOverview> {
+  public validateEnterCandidateResults(result: MajorityElectionResult): Promise<ValidationSummary> {
     const req = new ValidateEnterMajorityElectionCandidateResultsRequest();
     req.setRequest(this.mapToEnterCandidateResultsRequest(result));
     return this.request(
       c => c.validateEnterCandidateResults,
       req,
-      r => this.validationMapping.mapToValidationOverview(r),
+      r => this.validationMapping.mapToValidationSummary(r),
     );
   }
 

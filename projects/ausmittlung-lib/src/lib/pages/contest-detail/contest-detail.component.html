@@ -15,10 +15,12 @@
 
   <div *ngIf="resultList">
     <vo-ausm-contest-info
+      [contentReadonly]="contentReadonly"
       [resultList]="resultList"
       [isResponsibleErfassungElectionAdmin]="resultList?.currentTenantIsResponsible && isErfassungElectionAdmin"
       [showResetResultsInTestingPhase]="showResetResultsInTestingPhase"
-      [showSetAllAuditedTentatively]="showSetAllAuditedTentatively">
+      [showSetAllAuditedTentatively]="showSetAllAuditedTentatively"
+      (finishSubmission)="finishSubmission()">
     </vo-ausm-contest-info>
 
     <div class="political-business-list">

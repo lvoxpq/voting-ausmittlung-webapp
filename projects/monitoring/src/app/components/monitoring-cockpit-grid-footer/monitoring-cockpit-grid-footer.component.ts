@@ -65,7 +65,7 @@ export class MonitoringCockpitGridFooterComponent {
 
     const resultsToUpdate = this.filteredCountingCircleResults
       .map(ccResult => ccResult.resultsByPoliticalBusinessId[politicalBusiness.id])
-      .filter(result => result.state !== newState);
+      .filter(result => !!result && result.state !== newState);
 
     if (resultsToUpdate.length === 0) {
       this.loading = false;

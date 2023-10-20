@@ -71,13 +71,15 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
   }
 
   @HostListener('document:keydown.control.alt.t', ['$event'])
-  public resetBallot(event?: KeyboardEvent): void {
+  public async resetBallot(event?: KeyboardEvent): Promise<void> {
     if (!this.ballot) {
       return;
     }
 
     event?.preventDefault();
-    this.ballot = this.ballotUiService.newBallot(this.ballot.number, this.listCandidates);
+    this.ballot = this.ballot.isNew
+      ? this.ballotUiService.newBallot(this.ballot.number, this.listCandidates)
+      : await this.resultBundleService.getBallot(this.bundle!.id, this.ballot.number);
     this.ballotUiData = this.ballotUiService.buildUiData(
       this.electionCandidates,
       this.politicalBusinessResult!.entryParams.automaticEmptyVoteCounting,
@@ -85,6 +87,11 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
       this.ballot,
     );
     this.contentChanged();
+
+    if (this.ballot!.isNew) {
+      return;
+    }
+
     this.hasChanges = false;
   }
 
@@ -93,6 +100,7 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
     event?.preventDefault();
     this.ballotUiService.removeAllCandidates(this.ballotUiData);
     this.contentChanged();
+    this.setFocus();
   }
 
   public contentChanged(): void {
@@ -220,8 +228,29 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
     this.proportionalElectionBallotContentComponent?.setFocus();
   }
 
+  protected async validateBallot(): Promise<boolean> {
+    if (!(await this.validateBallotWithoutPartyTooHaveOneCandidate())) {
+      return false;
+    }
+
+    return super.validateBallot();
+  }
+
   private async loadCandidates(electionId: string, listId: string | undefined): Promise<void> {
     this.electionCandidates = await this.electionService.listCandidates(electionId);
     this.listCandidates = !listId ? [] : this.electionCandidates.filter(x => x.listId === listId);
+  }
+
+  private async validateBallotWithoutPartyTooHaveOneCandidate(): Promise<boolean> {
+    if (!this.ballot || this.ballotUiData.candidateCountValid) {
+      return true;
+    }
+
+    await this.dialog.alert(
+      this.i18n.instant('PROPORTIONAL_ELECTION.BALLOT_DETAIL.INVALID_EMPTY_BALLOT_WITHOUT_PARTY.TITLE'),
+      this.i18n.instant('PROPORTIONAL_ELECTION.BALLOT_DETAIL.INVALID_EMPTY_BALLOT_WITHOUT_PARTY.MSG'),
+    );
+
+    return false;
   }
 }

@@ -64,7 +64,7 @@ import {
   ProportionalElectionUnmodifiedListResultProto,
   ProportionalElectionUnmodifiedListResults,
   ProportionalElectionUnmodifiedListResultsProto,
-  ValidationOverview,
+  ValidationSummary,
 } from '../models';
 import { ContestCountingCircleDetailsService } from './contest-counting-circle-details.service';
 import { ContestService } from './contest.service';
@@ -308,13 +308,13 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
   public validateEnterCountOfVoters(
     electionResultId: string,
     countOfVoters: PoliticalBusinessNullableCountOfVoters,
-  ): Promise<ValidationOverview> {
+  ): Promise<ValidationSummary> {
     const req = new ValidateEnterProportionalElectionCountOfVotersRequest();
     req.setRequest(this.mapToEnterCountOfVotersRequest(electionResultId, countOfVoters));
     return this.request(
       c => c.validateEnterCountOfVoters,
       req,
-      r => this.validationMapping.mapToValidationOverview(r),
+      r => this.validationMapping.mapToValidationSummary(r),
     );
   }
 

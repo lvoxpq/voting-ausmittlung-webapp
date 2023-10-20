@@ -49,9 +49,6 @@ export class BallotHeaderComponent {
   public ballotNumberChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Output()
-  public back: EventEmitter<void> = new EventEmitter<void>();
-
-  @Output()
   public deleteBallot: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private readonly dialog: DialogService) {}

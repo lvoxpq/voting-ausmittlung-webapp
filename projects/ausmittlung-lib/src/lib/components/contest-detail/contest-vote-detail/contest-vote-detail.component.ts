@@ -14,7 +14,7 @@ import {
   StateChange,
   TieBreakQuestionResult,
   updateCountOfVotersCalculatedFields,
-  ValidationOverview,
+  ValidationSummary,
   VoteResult,
   VoteResultEntry,
 } from '../../../models';
@@ -130,7 +130,7 @@ export class ContestVoteDetailComponent extends AbstractContestPoliticalBusiness
     this.contestVoteDetailDetailedComponent?.setFocus();
   }
 
-  protected async loadValidationOverviewData(): Promise<ValidationOverview> {
+  protected async loadValidationSummary(): Promise<ValidationSummary> {
     if (this.resultDetail!.entry === VoteResultEntry.VOTE_RESULT_ENTRY_FINAL_RESULTS) {
       if (this.resultDetail!.state === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION) {
         return await this.resultService.validateEnterCorrectionResults(this.resultDetail!);

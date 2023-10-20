@@ -1,0 +1,18 @@
+{
+  "projects/ausmittlung-lib/**/*.ts": [
+    "prettier --write",
+    "ng-lint-staged lint:ng --project ausmittlung-lib --fix --"
+  ],
+  "projects/monitoring/**/*.ts": [
+    "prettier --write",
+    "ng-lint-staged lint:ng --project monitoring --fix --"
+  ],
+  "projects/erfassung/**/*.ts": [
+    "prettier --write",
+    "ng-lint-staged lint:ng --project erfassung --fix --"
+  ],
+  "**/*.scss": [
+    "prettier --write",
+    "stylelint"
+  ]
+}

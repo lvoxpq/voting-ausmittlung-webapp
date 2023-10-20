@@ -46,6 +46,8 @@ export * from './lib/components/info-panel/info-panel.component';
 export * from './lib/components/info-panel/info-panel-entry/info-panel-entry.component';
 export * from './lib/components/vote-results-graph/vote-results-graph.component';
 export * from './lib/components/voting-data-source-tabs/voting-data-source-tabs.component';
+export * from './lib/components/validation-overview-dialog/validation-overview-dialog.component';
+export * from './lib/components/result-state-box/result-state-box.component';
 
 // pipes
 export * from './lib/pipes/translate-vote-question.pipe';

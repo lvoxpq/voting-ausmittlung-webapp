@@ -120,13 +120,13 @@ export class ContestDetailSidebarComponent {
       return false;
     }
 
-    const validationOverview = await this.contestCountingCircleDetailsService.validateUpdateDetails(this.resultListValue.details);
+    const validationSummary = await this.contestCountingCircleDetailsService.validateUpdateDetails(this.resultListValue.details);
 
     const data: ValidationOverviewDialogData = {
-      validationOverview,
-      canEmitSave: validationOverview.isValid,
-      header: `VALIDATION.CONTEST_COUNTING_CIRCLE_DETAILS.HEADER.${validationOverview.isValid ? 'VALID' : 'INVALID'}`,
-      saveLabel: !validationOverview.isValid ? 'APP.CONTINUE' : 'COMMON.SAVE',
+      validationSummaries: [validationSummary],
+      canEmitSave: validationSummary.isValid,
+      header: `VALIDATION.CONTEST_COUNTING_CIRCLE_DETAILS.HEADER.${validationSummary.isValid ? 'VALID' : 'INVALID'}`,
+      saveLabel: !validationSummary.isValid ? 'APP.CONTINUE' : 'COMMON.SAVE',
     };
 
     const result = await this.dialogService.openForResult<ValidationOverviewDialogComponent, ValidationOverviewDialogResult>(

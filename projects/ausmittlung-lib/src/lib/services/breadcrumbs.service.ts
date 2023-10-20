@@ -28,8 +28,12 @@ export class BreadcrumbsService {
     ];
   }
 
-  public forExports(countingCircle?: CountingCircle): BreadcrumbItem[] {
+  public forExports(): BreadcrumbItem[] {
     return [{ name: 'CONTEST.DETAIL.TITLE', link: ['..'] }, { name: 'EXPORTS.BREADCRUMB_TITLE' }];
+  }
+
+  public forFinishSubmission(): BreadcrumbItem[] {
+    return [{ name: 'CONTEST.DETAIL.TITLE', link: ['..'] }, { name: 'SUBMISSION_DONE.BREADCRUMB_TITLE' }];
   }
 }
 

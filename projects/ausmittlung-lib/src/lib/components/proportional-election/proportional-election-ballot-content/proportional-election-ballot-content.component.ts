@@ -16,6 +16,7 @@ import { ProportionalElectionBallotCandidatesChooseDialogComponent } from '../pr
 import {
   AddCandidatePositionEvent,
   CandidatePositionEvent,
+  ProportionalElectionBallotCandidatesComponent,
 } from '../proportional-election-ballot-candidates/proportional-election-ballot-candidates.component';
 
 @Component({
@@ -51,6 +52,9 @@ export class ProportionalElectionBallotContentComponent {
   @ViewChild(ProportionalElectionBallotCandidateModifyComponent)
   private proportionalElectionBallotCandidateModifyComponent?: ProportionalElectionBallotCandidateModifyComponent;
 
+  @ViewChild(ProportionalElectionBallotCandidatesComponent)
+  private proportionalElectionBallotCandidatesComponent?: ProportionalElectionBallotCandidatesComponent;
+
   constructor(private readonly ballotUiService: ProportionalElectionBallotUiService, private readonly dialogService: DialogService) {}
 
   public async removeCandidateAtPosition({ position, listCandidate }: CandidatePositionEvent): Promise<void> {
@@ -63,7 +67,8 @@ export class ProportionalElectionBallotContentComponent {
       return;
     }
 
-    this.ballotUiService.removeCandidateAtLastFoundPosition(candidate, this.ballotUiData);
+    const position = this.ballotUiService.removeCandidateAtLastFoundPosition(candidate, this.ballotUiData);
+    this.scrollToPosition(position);
     this.contentChanged.emit();
   }
 
@@ -77,6 +82,7 @@ export class ProportionalElectionBallotContentComponent {
       candidate = await this.dialogService.openForResult(
         ProportionalElectionBallotCandidatesChooseDialogComponent,
         Object.values(this.ballotUiData.addableCandidatesByNumber),
+        { autoFocus: false },
       );
 
       if (!candidate) {
@@ -94,12 +100,17 @@ export class ProportionalElectionBallotContentComponent {
       return;
     }
 
-    this.ballotUiService.addCandidateAtFirstAvailablePosition(candidate, this.ballotUiData);
+    const position = this.ballotUiService.addCandidateAtFirstAvailablePosition(candidate, this.ballotUiData);
+    this.scrollToPosition(position);
     this.contentChanged.emit();
   }
 
   public updateEmptyVotes(emptyVoteCount: number): void {
-    if (emptyVoteCount < 0 || emptyVoteCount > this.ballotUiData.numberOfMandates) {
+    if (
+      emptyVoteCount < 0 ||
+      emptyVoteCount > this.ballotUiData.numberOfMandates ||
+      emptyVoteCount === this.ballotUiData.userEnteredEmptyVoteCount
+    ) {
       return;
     }
 
@@ -108,6 +119,11 @@ export class ProportionalElectionBallotContentComponent {
   }
 
   public setFocus(): void {
-    this.proportionalElectionBallotCandidateModifyComponent?.setFocus();
+    this.proportionalElectionBallotCandidateModifyComponent?.setFocus(this.ballotUiData.listPositions.every(p => p.isSlotAvailable));
+  }
+
+  private scrollToPosition(position: number): void {
+    const elementRef = this.proportionalElectionBallotCandidatesComponent?.positionElements.get(position - 1);
+    elementRef?.nativeElement.scrollIntoView({ block: 'nearest' });
   }
 }

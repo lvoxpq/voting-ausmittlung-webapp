@@ -107,10 +107,11 @@ export class ExportService extends GrpcService<ExportServicePromiseClient> {
       c => c.listResultExportConfigurations,
       req,
       r =>
-        r.toObject().configurationsList.map(x => ({
-          ...x,
-          intervalMinutes: x.intervalMinutes?.value,
-          politicalBusinessMetadata: this.mapToMetadataMap(x.politicalBusinessMetadataMap),
+        r.getConfigurationsList().map(x => ({
+          ...x.toObject(),
+          intervalMinutes: x.getIntervalMinutes()?.getValue(),
+          politicalBusinessMetadata: this.mapToMetadataMap(x.toObject().politicalBusinessMetadataMap),
+          latestExecution: x.getLatestExecution()?.toDate(),
         })),
     );
   }

@@ -57,8 +57,9 @@ export type GenerateResultBundleReviewExportRequest = {
 
 export type ResultExportConfiguration = Omit<
   ResultExportConfigurationProto.AsObject,
-  'intervalMinutes' | 'politicalBusinessMetadataMap'
+  'intervalMinutes' | 'politicalBusinessMetadataMap' | 'latestExecution'
 > & {
   intervalMinutes?: number;
   politicalBusinessMetadata: Map<string, PoliticalBusinessExportMetadata>;
+  latestExecution?: Date;
 };

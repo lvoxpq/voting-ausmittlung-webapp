@@ -5,7 +5,7 @@
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
 import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { ProportionalElectionUnmodifiedListResults } from '../../../models';
 import { ProportionalElectionResultService } from '../../../services/proportional-election-result.service';
 import { RoleService } from '../../../services/role.service';
 import { sum } from '../../../services/utils/array.utils';
+import { NumberComponent } from '@abraxas/base-components';
 
 @Component({
   selector: 'vo-ausm-proportional-election-unmodified-lists',
@@ -20,6 +21,9 @@ import { sum } from '../../../services/utils/array.utils';
   styleUrls: ['./proportional-election-unmodified-lists.component.scss'],
 })
 export class ProportionalElectionUnmodifiedListsComponent implements OnDestroy {
+  @ViewChildren(NumberComponent)
+  public listResultComponents?: QueryList<NumberComponent>;
+
   public result?: ProportionalElectionUnmodifiedListResults;
   public total: number = 0;
   public loading: boolean = true;
@@ -99,6 +103,9 @@ export class ProportionalElectionUnmodifiedListsComponent implements OnDestroy {
       this.hasChanges = false;
     } finally {
       this.loading = false;
+
+      // setTimeout is needed to make sure all components are visible
+      setTimeout(() => this.listResultComponents?.first.setFocus());
     }
   }
 

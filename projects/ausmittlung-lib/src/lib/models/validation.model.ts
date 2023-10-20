@@ -4,12 +4,18 @@
  */
 
 import {
-  ValidationOverview as ValidationOverviewProto,
+  ValidationSummary as ValidationSummaryProto,
+  ValidationSummaries as ValidationSummariesProto,
   ValidationResult as ValidationResultProto,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/validation_pb';
 import { Validation } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/validation_pb';
 
-export { Validation, ValidationOverviewProto, ValidationResultProto };
+export { Validation, ValidationSummaryProto, ValidationResultProto, ValidationSummariesProto };
+
+export interface ValidationSummaries {
+  summaries: ValidationSummary[];
+  isValid: boolean;
+}
 
 export interface ValidationResult {
   validation: Validation;
@@ -20,7 +26,8 @@ export interface ValidationResult {
   translationListItemsCount?: number;
 }
 
-export interface ValidationOverview {
+export interface ValidationSummary {
+  title: string;
   requiredValidationResults: ValidationResult[];
   optionalValidationResults: ValidationResult[];
   isValid: boolean;

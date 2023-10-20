@@ -112,7 +112,7 @@ export class ContestMajorityElectionDetailResultEntryComponent implements OnInit
       this.resultEntry === this.originalResultEntry &&
       isEqual(this.resultEntryParams, this.originalResultEntryParams)
     ) {
-      this.resultEntryChange.emit(this.resultEntry);
+      this.done.emit();
       return;
     }
 

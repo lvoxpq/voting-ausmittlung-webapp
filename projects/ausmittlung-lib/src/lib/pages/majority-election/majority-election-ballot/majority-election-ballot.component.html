@@ -22,10 +22,9 @@
             || !bundleInProcessOrCorrection
             || politicalBusinessResult.election.contest!.locked"
           [canDeleteBallot]="!!ballot && ballot.number === currentMaxBallotNumber"
-          (back)="saveAndBack()"
           (deleteBallot)="deleteBallotAndNavigate()"
           (ballotNumberChange)="navigateToBallot($event)">
-          <bc-icon *ngIf="!header.readonly" class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
+          <bc-icon right *ngIf="!header.readonly" class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
         </vo-ausm-ballot-header>
         <vo-ausm-majority-election-ballot-contents
           (contentChanged)="contentChanged()"
@@ -52,7 +51,7 @@
         [actionExecuting]="actionExecuting"
         [readonly]="(isErfassungUser | async) !== true || !bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
         [canSubmitBundle]="bundle.countOfBallots > 0"
-        [nextBallotEnabled]="!ballot || ballot.number < politicalBusinessResult.entryParams.ballotBundleSize"
+        [nextBallotEnabled]="!ballot || ballot.number % politicalBusinessResult.entryParams.ballotBundleSize !== 0"
         (nextBallot)="nextBallot()"
         (back)="saveAndBack()"
         (submitBundle)="submitBundleAndNavigate()"></vo-ausm-political-business-ballot-button-bar>

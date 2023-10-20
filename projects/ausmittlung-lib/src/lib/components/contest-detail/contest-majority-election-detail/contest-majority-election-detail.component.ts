@@ -12,7 +12,7 @@ import {
   MajorityElectionResultEntry,
   resetMajorityConventionalResults,
   updateCountOfVotersCalculatedFields,
-  ValidationOverview,
+  ValidationSummary,
 } from '../../../models';
 import { MajorityElectionResultService } from '../../../services/majority-election-result.service';
 import { PoliticalBusinessResultService } from '../../../services/political-business-result.service';
@@ -126,7 +126,7 @@ export class ContestMajorityElectionDetailComponent extends AbstractContestPolit
     this.contestMajorityElectionDetailFinalResultsComponent?.setFocus();
   }
 
-  protected async loadValidationOverviewData(): Promise<ValidationOverview> {
+  protected async loadValidationSummary(): Promise<ValidationSummary> {
     return this.resultDetail!.entry === MajorityElectionResultEntry.MAJORITY_ELECTION_RESULT_ENTRY_FINAL_RESULTS
       ? await this.resultService.validateEnterCandidateResults(this.resultDetail!)
       : await this.resultService.validateEnterCountOfVoters(this.resultDetail!.id, this.resultDetail!.countOfVoters);

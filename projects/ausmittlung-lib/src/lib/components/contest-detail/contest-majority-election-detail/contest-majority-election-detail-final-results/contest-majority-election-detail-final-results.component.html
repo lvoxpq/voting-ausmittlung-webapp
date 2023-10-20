@@ -15,7 +15,6 @@
                                                     [eVoting]="eVoting"
                                                     [mappedWriteIns]="mappedWriteIns"
                                                     class="primary-result-input"
-                                                    [countOfAccountedBallots]="resultDetail.countOfVoters.conventionalAccountedBallots"
                                                     [readonly]="readonly"
                                                     [showInvalidVotes]="election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes && election.numberOfMandates !== 1"
                                                     [showEmptyVotes]="election.numberOfMandates !== 1"
@@ -33,7 +32,6 @@
     [eVoting]="eVoting"
     [mappedWriteIns]="mappedWriteIns"
     [result]="result"
-    [countOfAccountedBallots]="resultDetail.countOfVoters.conventionalAccountedBallots"
     [readonly]="readonly"
     [buttonsTemplate]="buttonsTemplate"
     (contentChanged)="candidateResultChange.emit()"></vo-ausm-contest-majority-election-result-input>

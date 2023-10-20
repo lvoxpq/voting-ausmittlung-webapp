@@ -27,6 +27,7 @@ export class ProportionalElectionBallotUiService {
       userEnteredEmptyVoteCount: 0,
       emptyVoteCount: 0,
       numberOfMandates: 0,
+      candidateCountValid: true,
     };
   }
 
@@ -79,6 +80,7 @@ export class ProportionalElectionBallotUiService {
       removableCandidatesInRangeByNumber: {},
       addableCandidatesByNumber: {},
       listNumber,
+      candidateCountValid: !!listNumber || ballot.candidates.length > 0,
     };
     this.updateAllCandidateAccumulated(ballot.candidates);
     this.updateEditableCandidates(result, electionCandidates);
@@ -129,7 +131,7 @@ export class ProportionalElectionBallotUiService {
   public removeCandidateAtLastFoundPosition(
     candidate: ProportionalElectionBallotCandidate,
     uiData: ProportionalElectionBallotUiData,
-  ): void {
+  ): number {
     const listCandidatePosition = uiData.listPositions
       .filter(x => !x.isSlotAvailable)
       .slice()
@@ -140,6 +142,7 @@ export class ProportionalElectionBallotUiService {
     }
 
     this.removeCandidateAtPosition(listCandidatePosition, !listCandidatePosition.replacementCandidate, uiData);
+    return listCandidatePosition.position;
   }
 
   public removeCandidateAtPosition(
@@ -166,6 +169,7 @@ export class ProportionalElectionBallotUiService {
 
     position.isSlotAvailable = true;
     this.updateEmptyVoteCount(uiData, 1);
+    this.updateValidCandidateCount(uiData);
     this.updateCandidateAccumulated(candidate, uiData);
     this.updateEditableCandidatesForRemovedCandidate(candidate, uiData);
   }
@@ -190,13 +194,14 @@ export class ProportionalElectionBallotUiService {
   public addCandidateAtFirstAvailablePosition(
     candidate: ProportionalElectionBallotCandidate,
     uiData: ProportionalElectionBallotUiData,
-  ): void {
+  ): number {
     const position = uiData.listPositions.find(p => p.isSlotAvailable);
     if (!position) {
       throw new Error('find available candidate position not found');
     }
 
     this.addCandidateAtPosition(candidate, position, false, uiData);
+    return position.position;
   }
 
   public addCandidateAtPosition(
@@ -223,6 +228,7 @@ export class ProportionalElectionBallotUiService {
 
     position.isSlotAvailable = false;
     this.updateEmptyVoteCount(uiData, -1);
+    this.updateValidCandidateCount(uiData);
     this.updateCandidateAccumulated(ballotCandidate, uiData);
     this.updateEditableCandidatesForAddedCandidate(ballotCandidate, uiData);
   }
@@ -301,6 +307,18 @@ export class ProportionalElectionBallotUiService {
     } else {
       uiData.emptyVoteCountValid = uiData.userEnteredEmptyVoteCount === uiData.emptyVoteCount;
     }
+  }
+
+  private updateValidCandidateCount(uiData: ProportionalElectionBallotUiData): void {
+    if (uiData.listNumber) {
+      uiData.candidateCountValid = true;
+      return;
+    }
+
+    // ballots without a party need at least one candidate
+    uiData.candidateCountValid = uiData.listPositions.some(
+      x => (!!x.listCandidate && !x.listCandidate.removedFromList) || !!x.replacementCandidate,
+    );
   }
 
   private updateEditableCandidatesForRemovedCandidate(
@@ -399,6 +417,7 @@ export interface ProportionalElectionBallotUiData {
   emptyVoteCount: number;
   numberOfMandates: number;
   listNumber?: string;
+  candidateCountValid: boolean;
 }
 
 export interface ProportionalElectionBallotListPosition {

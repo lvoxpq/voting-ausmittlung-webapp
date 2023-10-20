@@ -6,7 +6,7 @@
   <bc-label class="title replacement-candidate-row" [label]="'ELECTION.BALLOT_DETAIL.CANDIDATE_ON_BALLOT' | translate"></bc-label>
   <ng-container *ngFor="let position of positions">
     <ng-container *ngIf="position.listCandidate; else emptyRowSlot">
-      <bc-checkbox class="m-0 candidate-toggle"
+      <bc-checkbox class="m-0 candidate-toggle" #positionElement
                    [tabIndex]="-1"
                    [class.clickable]="!readonly && (!position.listCandidate.removedFromList || !position.listCandidate.accumulated)"
                    [checked]="!position.listCandidate.removedFromList"

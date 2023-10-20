@@ -8,3 +8,7 @@
 mat-horizontal-stepper {
   margin-bottom: -2rem; // compensate for unused content space
 }
+
+::ng-deep .mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}

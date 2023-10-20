@@ -14,6 +14,7 @@
                  [clearable]="true"
                  (valueChange)="countingCircleFilterSelected($event)"
                  [disabled]="plausibiliseLoading"
+                 [typeaheadDebounceInterval]="250"
                  displayExpr="name"></bc-dropdown>
   </div>
   <ng-container *ngIf="filteredPoliticalBusinesses.length > 0; else noData">

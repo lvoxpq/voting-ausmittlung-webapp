@@ -82,7 +82,7 @@ export class ContestProportionalElectionDetailResultEntryComponent implements On
 
   public async save(): Promise<void> {
     if (!this.isInitialSetup && isEqual(this.resultEntryParams, this.originalResultEntryParams)) {
-      this.resultEntryParamsChange.emit(this.resultEntryParams);
+      this.done.emit();
       return;
     }
 

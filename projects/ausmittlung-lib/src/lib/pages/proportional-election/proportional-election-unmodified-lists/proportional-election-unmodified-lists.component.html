@@ -14,9 +14,9 @@
         <span>{{listResult.list.shortDescription}}</span>
         <span>{{listResult.list.description}}</span>
         <bc-number [disabled]="(isErfassungElectionAdmin | async) !== true || resultReadOnly"
-                   [value]="listResult.conventionalVoteCount"
+                   [ngModel]="listResult.conventionalVoteCount"
                    [allowUndefined]="false"
-                   (valueChange)="listResult.conventionalVoteCount = +$event; updateTotalAndSetChanges()"
+                   (ngModelChange)="listResult.conventionalVoteCount = +$event; updateTotalAndSetChanges()"
                    [min]="0"></bc-number>
       </ng-container>
 

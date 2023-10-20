@@ -180,6 +180,6 @@ export class ResultExportComponent implements OnInit, OnDestroy {
   }
 
   private updateBreadcrumbs(): void {
-    this.breadcrumbs = this.breadcrumbsService.forExports(this.countingCircle);
+    this.breadcrumbs = this.breadcrumbsService.forExports();
   }
 }

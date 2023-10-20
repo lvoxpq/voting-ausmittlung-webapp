@@ -1,4 +1,4 @@
-# ✨ Changelog (`v1.50.0`)
+# ✨ Changelog (`v1.53.17`)
 
 All notable changes to this project will be documented in this file.
 
@@ -8,11 +8,157 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version Info
 
 ```text
-This version -------- v1.50.0
-Previous version ---- 
+This version -------- v1.53.17
+Previous version ---- v1.49.4
 Initial version ----- v1.25.0
-Total commits ------- 13
+Total commits ------- 25
 ```
+
+## [v1.53.17] - 2023-10-20
+
+### 🔄 Changed
+
+- Show total blank ballots on end results
+
+## [v1.53.16] - 2023-10-18
+
+### 🔄 Changed
+
+- reset ballot should undo changes
+
+## [v1.53.15] - 2023-10-11
+
+### 🆕 Added
+
+- pop up for bundle creation
+
+## [v1.53.14] - 2023-10-10
+
+### 🔄 Changed
+
+- next ballot enabled for continuous ballot numbers
+
+## [v1.53.13] - 2023-10-10
+
+### 🔄 Changed
+
+- information text for missing entryvariations or entryparameters
+
+## [v1.53.12] - 2023-10-05
+
+### 🔄 Changed
+
+- ballots without a party need at least one candidate
+
+## [v1.53.11] - 2023-09-04
+
+### 🔄 Changed
+
+- enable automatic exports during testing phase
+
+## [v1.53.10] - 2023-08-10
+
+### 🔄 Changed
+
+- update empty vote count only if it really changed
+
+## [v1.53.9] - 2023-08-09
+
+### 🔄 Changed
+
+- consolidate buttons for multiple political business status changes
+
+## [v1.53.8] - 2023-07-28
+
+### 🔄 Changed
+
+- improved save behavior of result entry
+
+## [v1.53.7] - 2023-07-28
+
+### 🔄 Changed
+
+- change initial focus for candidate choose dialog
+
+## [v1.53.6] - 2023-07-28
+
+### 🔄 Changed
+
+- set focus on page load for list results and ballot groups
+
+## [v1.53.5] - 2023-07-28
+
+### 🆕 Added
+
+- added typeahead debounce for counting circle filter
+
+## [v1.53.4] - 2023-07-28
+
+### 🔄 Changed
+
+- rename detail result entry labels
+
+## [v1.53.3] - 2023-07-28
+
+### 🔄 Changed
+
+- ballot without list button placement
+
+## [v1.53.2] - 2023-07-27
+
+### 🔄 Changed
+
+- navigate back from bundle
+
+## [v1.53.1] - 2023-07-26
+
+### 🔄 Changed
+
+- disable automatic export during testing phase
+
+## [v1.53.0] - 2023-07-12
+
+### ❌ Removed
+
+- remove second factor transaction for owned political businesses
+
+## [v1.52.1] - 2023-07-06
+
+### 🔄 Changed
+
+- proportional election ballot candidate position scrolls into view if not visible
+
+## [v1.52.0] - 2023-06-28
+
+### 🆕 Added
+
+- add import change listener
+
+## [v1.51.2] - 2023-06-26
+
+### 🔄 Changed
+
+- update all states exclude missing political businesses
+
+## [v1.51.1] - 2023-06-26
+
+### 🔄 Changed
+
+- change button disable and error class to property and color
+
+## [v1.51.0] - 2023-06-20
+
+### 🆕 Added
+
+- Multiple counting circle results submission finished
+
+## [v1.50.1] - 2023-06-19
+
+### 🔄 Changed
+
+- Button arrangement in ballot edit header
+- Focus add candidate if no candidate can be removed on proportional election ballots
+- Focus add candidate when removing all candidates on proportional election ballots
 
 ## [v1.50.0] - 2023-05-31
 
@@ -151,142 +297,51 @@ Total commits ------- 13
 
 ### 🔄 Changed
 
-- contest state chip
-
-## [v1.41.2] - 2023-02-16
-
-### 🔄 Changed
-
 - dialog width in the bundle number dialog
-
-## [v1.41.1] - 2023-02-13
-
-### 🔄 Changed
-
-- ballot button bar sticky
-
-## [v1.41.0] - 2023-01-31
 
 ### 🔄 Changed
 
 - New export page instead of dialog
 
-## [v1.40.2] - 2023-01-30
-
-### 🔄 Changed
-
-- proportional election candidates tab index changed
-
-## [v1.40.1] - 2023-01-30
-
-### 🔄 Changed
-
-- remove candidates in range
-
-## [v1.40.0] - 2023-01-20
-
-### 🔄 Changed
-
-- change app title depending on theme
-- cache last used theme
-
-## [v1.39.1] - 2023-01-19
-
-### 🔄 Changed
-
-- remove proportional election candidate at last found position
-
-## [v1.39.0] - 2023-01-18
-
-### 🔄 Changed
-
-- manual proportional election end result
-
-## [v1.38.1] - 2023-01-17
-
-### 🔄 Changed
-
-- improve ballot content view
-
-## [v1.38.0] - 2023-01-06
-
-### 🔄 Changed
-
-- allow unchanged ballots
-
-## [v1.37.4] - 2023-01-06
-
-### 🔄 Changed
-
-- correctly display tie break answer buttons
-
-## [v1.37.3] - 2023-01-05
-
 ### ❌ Removed
 
 - remove export button from end result page
-
-## [v1.37.2] - 2023-01-04
 
 ### ❌ Removed
 
 - remove internal description, invalid votes and individual empty ballots allowed from elections
 
-## [v1.37.1] - 2022-12-23
-
 ### 🔄 Changed
 
 - fix(VOTING-2418): hide proportional election end result columns and protocolls before finalized
-
-## [v1.37.0] - 2022-12-23
 
 ### 🆕 Added
 
 - Added export configuration political business metadata, needed for Seantis
 
-## [v1.36.4] - 2022-12-19
-
 ### 🔄 Changed
 
 - fix selection of adding proportional election candidate
-
-## [v1.36.3] - 2022-12-19
 
 ### ❌ Removed
 
 - remove proportional election list paginator for a new bundle
 
-## [v1.36.2] - 2022-12-19
-
 ### 🔄 Changed
 
 - add optional text for formfield default options
-
-## [v1.36.1] - 2022-12-13
 
 ### 🔄 Changed
 
 - changed path to logo for whitelabeling
 
-## [v1.36.0] - 2022-12-12
-
 ### 🆕 Added
 
 - add white labeling logo for customers
 
-## [v1.35.4] - 2022-12-02
-
-### 🔄 Changed
-
-- smaller voting cards number fields
-
-## [v1.35.3] - 2022-11-30
-
 ### 🔄 Changed
 
 - allow zero accounted ballots for political businesses
-
-## [v1.35.2] - 2022-11-30
 
 ### 🔄 Changed
 
@@ -444,6 +499,145 @@ Total commits ------- 13
 ### 🔄 Changed
 
 - Adjusted page title of the vote review bundle page
+
+## [v1.41.2] - 2023-02-16
+
+### 🔄 Changed
+
+- dialog width in the bundle number dialog
+
+## [v1.41.1] - 2023-02-13
+
+### 🔄 Changed
+
+- ballot button bar sticky
+
+## [v1.41.0] - 2023-01-31
+
+### 🔄 Changed
+
+- New export page instead of dialog
+
+## [v1.40.2] - 2023-01-30
+
+### 🔄 Changed
+
+- proportional election candidates tab index changed
+
+## [v1.40.1] - 2023-01-30
+
+### 🔄 Changed
+
+- remove candidates in range
+
+## [v1.40.0] - 2023-01-20
+
+### 🔄 Changed
+
+- change app title depending on theme
+- cache last used theme
+
+## [v1.39.1] - 2023-01-19
+
+### 🔄 Changed
+
+- remove proportional election candidate at last found position
+
+## [v1.39.0] - 2023-01-18
+
+### 🔄 Changed
+
+- manual proportional election end result
+
+## [v1.38.1] - 2023-01-17
+
+### 🔄 Changed
+
+- improve ballot content view
+
+## [v1.38.0] - 2023-01-06
+
+### 🔄 Changed
+
+- allow unchanged ballots
+
+## [v1.37.4] - 2023-01-06
+
+### 🔄 Changed
+
+- correctly display tie break answer buttons
+
+## [v1.37.3] - 2023-01-05
+
+### ❌ Removed
+
+- remove export button from end result page
+
+## [v1.37.2] - 2023-01-04
+
+### ❌ Removed
+
+- remove internal description, invalid votes and individual empty ballots allowed from elections
+
+## [v1.37.1] - 2022-12-23
+
+### 🔄 Changed
+
+- fix(VOTING-2418): hide proportional election end result columns and protocolls before finalized
+
+## [v1.37.0] - 2022-12-23
+
+### 🆕 Added
+
+- Added export configuration political business metadata, needed for Seantis
+
+## [v1.36.4] - 2022-12-19
+
+### 🔄 Changed
+
+- fix selection of adding proportional election candidate
+
+## [v1.36.3] - 2022-12-19
+
+### ❌ Removed
+
+- remove proportional election list paginator for a new bundle
+
+## [v1.36.2] - 2022-12-19
+
+### 🔄 Changed
+
+- add optional text for formfield default options
+
+## [v1.36.1] - 2022-12-13
+
+### 🔄 Changed
+
+- changed path to logo for whitelabeling
+
+## [v1.36.0] - 2022-12-12
+
+### 🆕 Added
+
+- add white labeling logo for customers
+
+## [v1.35.4] - 2022-12-02
+
+### 🔄 Changed
+
+- smaller voting cards number fields
+
+## [v1.35.3] - 2022-11-30
+
+### 🔄 Changed
+
+- allow zero accounted ballots for political businesses
+
+## [v1.35.2] - 2022-11-30
+
+### 🔄 Changed
+
+- ballot bundle sample size must be greater than zero
 
 ## [v1.35.1] - 2022-11-16
 

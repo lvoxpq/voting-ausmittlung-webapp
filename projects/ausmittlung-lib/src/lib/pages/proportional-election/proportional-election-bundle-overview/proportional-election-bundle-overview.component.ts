@@ -59,6 +59,7 @@ export class ProportionalElectionBundleOverviewComponent extends PoliticalBusine
       data,
     );
     if (result) {
+      await this.dialog.alert('APP.CONFIRM', this.i18n.instant('ELECTION.CONFIRM_BUNDLE_CREATION', { number: result.bundleNumber }));
       await this.router.navigate([result.bundleId, ProportionalElectionBallotComponent.newId], {
         relativeTo: this.route,
         queryParams: {

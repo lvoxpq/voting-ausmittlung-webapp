@@ -1,0 +1,72 @@
+<vo-lib-page [contentLoading]="false"
+             header="SUBMISSION_DONE.TITLE">
+  <vo-lib-page-header header>
+    <vo-ausm-breadcrumbs left [items]="breadcrumbs"></vo-ausm-breadcrumbs>
+    <vo-ausm-contest-header center [contest]="contest"></vo-ausm-contest-header>
+    <div right>
+      <bc-button variant="tertiary"
+                 [disabled]="selectedResults.selected.length === 0 || loadingResults || finishingResultSubmissions"
+                 [label]="'SUBMISSION_DONE.FINISH_SUBMISSION_SELECTED_ACTION' | translate"
+                 (buttonClick)="finishSubmissionSelected()"></bc-button>
+    </div>
+  </vo-lib-page-header>
+
+  <bc-spinner *ngIf="loadingResults; else contentTable"
+              size="large"></bc-spinner>
+
+  <ng-template #contentTable>
+    <bc-advanced-table *ngIf="resultsDataSource.data.length > 0; else noData" [dataSource]="resultsDataSource">
+      <ng-container bcColumnDef="select">
+        <th bc-header-cell *bcHeaderCellDef>
+          <bc-checkbox
+            class="ml-2 mb-0"
+            (checkedChange)="selectAllResults($event)"
+            [checked]="selectedResults.hasValue() && allResultsSelected"
+            [indeterminate]="selectedResults.hasValue() && !allResultsSelected"
+            [disabled]="finishingResultSubmissions"
+          >
+          </bc-checkbox>
+        </th>
+        <td bc-cell *bcCellDef="let element">
+          <bc-checkbox
+            class="ml-2"
+            (checkedChange)="toggleResult(element, $event)"
+            [checked]="selectedResults.isSelected(element)"
+            [disabled]="element.state !== countingCircleResultStates.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING || finishingResultSubmissions"
+          >
+          </bc-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container bcColumnDef="politicalBusinessTitle">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'SUBMISSION_DONE.POLITICAL_BUSINESS' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ element.politicalBusiness.title }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="domainOfInfluenceType">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'SUBMISSION_DONE.DOMAIN_OF_INFLUENCE_TYPE' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ 'DOMAIN_OF_INFLUENCE_TYPES.' + element.politicalBusiness.domainOfInfluence.type | translate }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="politicalBusinessType">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'SUBMISSION_DONE.POLITICAL_BUSINESS_TYPE' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">{{ 'POLITICAL_BUSINESS.TYPE.' + element.politicalBusiness.businessType | translate }}</td>
+      </ng-container>
+      <ng-container bcColumnDef="countingCircleResultState">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'SUBMISSION_DONE.COUNTING_CIRCLE_RESULT_STATE' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">
+          <vo-ausm-result-state-box [state]="element.state"></vo-ausm-result-state-box>
+        </td>
+      </ng-container>
+
+      <tr bc-header-row *bcHeaderRowDef="columns"></tr>
+      <tr bc-advanced-table-row *bcRowDef="let row; columns: columns" [selectable]="true"></tr>
+    </bc-advanced-table>
+
+    <div *ngIf="readyForCorrectionResults.length > 0" class="mt-3">
+      <p class="ready-for-correction-result" *ngFor="let readyForCorrectionResult of readyForCorrectionResults">{{ 'SUBMISSION_DONE.READY_FOR_CORRECTION_RESULT' | translate : { title : readyForCorrectionResult.politicalBusiness.title } }}</p>
+    </div>
+  </ng-template>
+
+  <ng-template #noData>
+    <span class="no-data">{{'SUBMISSION_DONE.NO_RESULTS' | translate}}</span>
+  </ng-template>
+</vo-lib-page>

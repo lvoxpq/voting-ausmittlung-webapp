@@ -24,6 +24,7 @@
         (ballotNumberChange)="navigateToBallot($event)"
         (deleteBallot)="deleteBallotAndNavigate()">
         <div
+          center
           *ngIf="!loadingBallot
             && !!ballot
             && bundleInProcessOrCorrection
@@ -31,23 +32,23 @@
             && !politicalBusinessResult.vote.contest!.locked"
           class="mb-2">
           <bc-button class="mx-2"
-                     [class.disabled]="actionExecuting"
+                     [disabled]="actionExecuting"
                      variant="tertiary"
                      [label]="'VOTE.BALLOT_DETAIL.SET_ANSWER.YES' | translate"
                      (buttonClick)="setAnswerYes()"></bc-button>
           <bc-button class="mx-2"
-                     [class.disabled]="actionExecuting"
+                     [disabled]="actionExecuting"
                      variant="tertiary"
                      [label]="'VOTE.BALLOT_DETAIL.SET_ANSWER.NO' | translate"
                      (buttonClick)="setAnswerNo()"></bc-button>
           <bc-button *ngIf="!!ballotResult && ballotResult.ballot.ballotType === BallotType.BALLOT_TYPE_VARIANTS_BALLOT"
                      class="mx-2"
                      variant="tertiary"
-                     [class.disabled]="actionExecuting"
+                     [disabled]="actionExecuting"
                      [label]="'VOTE.BALLOT_DETAIL.SET_ANSWER.UNSPECIFIED' | translate"
                      (buttonClick)="setAnswerUnspecified()"></bc-button>
         </div>
-        <bc-icon *ngIf="!header.readonly" class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
+        <bc-icon right *ngIf="!header.readonly" class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
       </vo-ausm-ballot-header>
       <ng-container *ngIf="!loadingBallot && !!ballot; else noBallot">
         <vo-ausm-vote-ballot-content

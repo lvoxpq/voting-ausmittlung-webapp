@@ -6,7 +6,7 @@
 import { AuthorizationService, Tenant } from '@abraxas/base-components';
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
 import { PoliticalBusinessType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/political_business_pb';
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ContestCountingCircleDetails, ResultList, ResultListResult, VotingChannel } from '../../../models';
 import { MajorityElectionResultService } from '../../../services/majority-election-result.service';
@@ -23,6 +23,9 @@ import { VoteResultService } from '../../../services/vote-result.service';
 })
 export class ContestInfoComponent implements OnDestroy, OnChanges, OnInit {
   @Input()
+  public contentReadonly: boolean = false;
+
+  @Input()
   public resultList!: ResultList;
 
   @Input()
@@ -33,6 +36,9 @@ export class ContestInfoComponent implements OnDestroy, OnChanges, OnInit {
 
   @Input()
   public isResponsibleErfassungElectionAdmin: boolean = false;
+
+  @Output()
+  public finishSubmission: EventEmitter<void> = new EventEmitter<void>();
 
   public isActionExecuting: boolean = false;
   public canSetAllToAuditedTentatively: boolean = false;

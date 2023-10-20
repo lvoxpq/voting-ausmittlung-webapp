@@ -5,6 +5,8 @@
   grid-gap: 0.4rem 0.8rem;
   grid-template-columns: repeat(3, auto) minmax(6.5rem, auto) repeat(3, auto) minmax(6.5rem, auto);
   align-items: center;
+  overflow-y: auto;
+  max-height: 31rem;
 
   .title {
     align-self: start;

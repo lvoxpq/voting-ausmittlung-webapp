@@ -14,21 +14,37 @@
     <div class="state-container">
       <vo-ausm-result-state-box [state]="resultList.state"></vo-ausm-result-state-box>
       <vo-lib-inline-spinner [loading]="isActionExecuting" position="right">
+        <!-- only show this button when at least one menu item is shown (via ngIf) -->
         <bc-button
-          *ngIf="showSetAllAuditedTentatively"
-          [disabled]="!canSetAllToAuditedTentatively || isActionExecuting"
+          *ngIf="showSetAllAuditedTentatively
+            || (showResetResultsInTestingPhase && !resultList.contest.testingPhaseEnded)
+            || (!contentReadonly && !resultList?.contest.locked && isResponsibleErfassungElectionAdmin)"
           variant="tertiary"
-          [label]="'CONTEST.DETAIL.STATE_ACTION.ALL_TO_AUDIT_TENTATIVELY' | translate"
-          (buttonClick)="setAllResponsibleAuditedTentatively()">
+          [label]="'CONTEST.DETAIL.STATE_ACTION.LABEL' | translate"
+          [matMenuTriggerFor]="menu">
         </bc-button>
-
-        <bc-button
-          *ngIf="showResetResultsInTestingPhase && !resultList.contest.testingPhaseEnded"
-          [disabled]="!canResetResultsInTestingPhase || isActionExecuting"
-          [label]="'CONTEST.DETAIL.STATE_ACTION.RESET_RESULTS' | translate"
-          variant="tertiary"
-          (buttonClick)="resetResults()">
-        </bc-button>
+        <mat-menu #menu class="no-max-width">
+          <button
+            mat-menu-item
+            *ngIf="showSetAllAuditedTentatively"
+            [disabled]="!canSetAllToAuditedTentatively || isActionExecuting"
+            (click)="setAllResponsibleAuditedTentatively()">
+            {{ 'CONTEST.DETAIL.STATE_ACTION.ALL_TO_AUDIT_TENTATIVELY' | translate }}
+          </button>
+          <button
+            mat-menu-item
+            *ngIf="showResetResultsInTestingPhase && !resultList.contest.testingPhaseEnded"
+            [disabled]="!canResetResultsInTestingPhase || isActionExecuting"
+            (click)="resetResults()">
+            {{ 'CONTEST.DETAIL.STATE_ACTION.RESET_RESULTS' | translate }}
+          </button>
+          <button
+            mat-menu-item
+            *ngIf="!contentReadonly && !resultList?.contest.locked && isResponsibleErfassungElectionAdmin"
+            (click)="finishSubmission.emit()">
+            {{ 'CONTEST.DETAIL.STATE_ACTION.SUBMIT_RESULTS' | translate }}
+          </button>
+        </mat-menu>
       </vo-lib-inline-spinner>
     </div>
   </vo-ausm-info-panel-entry>

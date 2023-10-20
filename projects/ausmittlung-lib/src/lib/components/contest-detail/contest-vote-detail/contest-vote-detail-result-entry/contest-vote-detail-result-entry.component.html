@@ -12,11 +12,11 @@
     <bc-button class="mr-2"
                *ngIf="!isInitialSetup"
                [disabled]="isUpdatingResultEntry"
-               [label]="'COMMON.CANCEL' | translate"
+               [label]="'APP.BACK' | translate"
                (buttonClick)="cancel(true)"></bc-button>
     <vo-lib-inline-spinner [loading]="isUpdatingResultEntry">
       <bc-button variant="primary"
-                 [label]="'VOTE.RESULT_ENTRY.SELECT' | translate"
+                 [label]="'POLITICAL_BUSINESS.RESULTS_ENTRY.SELECT' | translate"
                  [disabled]="isUpdatingResultEntry || (resultEntry === resultEntries.VOTE_RESULT_ENTRY_DETAILED && (resultEntryParams.ballotBundleSampleSizePercent <= 0 || resultEntryParams.ballotBundleSampleSizePercent > 100))"
                  (buttonClick)="save()">
       </bc-button>

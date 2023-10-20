@@ -12,10 +12,12 @@ import {
   BreadcrumbItemModule,
   BreadcrumbsModule,
   ButtonModule,
+  CheckboxModule,
   FORMFIELD_DEFAULT_OPTIONS,
   RoleModule,
   SnackbarModule,
   SpinnerModule,
+  TableModule,
   TenantModule,
   UserModule,
 } from '@abraxas/base-components';
@@ -43,11 +45,12 @@ import { ErfassungContestDetailComponent } from './pages/erfassung-contest-detai
 import { ErfassungContestOverviewComponent } from './pages/erfassung-contest-overview/erfassung-contest-overview.component';
 import { RoleService } from './services/role.service';
 import { WebpackTranslateLoader } from './services/webpack-translate-loader';
+import { ErfassungFinishSubmissionComponent } from './pages/erfassung-finish-submission/erfassung-finish-submission.component';
 
 registerLocaleData(localeDeCh);
 
 @NgModule({
-  declarations: [AppComponent, ErfassungContestOverviewComponent, ErfassungContestDetailComponent],
+  declarations: [AppComponent, ErfassungContestOverviewComponent, ErfassungContestDetailComponent, ErfassungFinishSubmissionComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -73,6 +76,8 @@ registerLocaleData(localeDeCh);
     AppLayoutModule,
     AppHeaderBarModule,
     ButtonModule,
+    TableModule,
+    CheckboxModule,
   ],
   providers: [
     ...getCommonProviders(),

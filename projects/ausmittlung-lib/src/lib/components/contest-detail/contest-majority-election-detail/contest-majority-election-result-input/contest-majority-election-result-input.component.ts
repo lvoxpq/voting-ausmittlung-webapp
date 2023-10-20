@@ -27,9 +27,6 @@ export class ContestMajorityElectionResultInputComponent {
   public result!: MajorityElectionResult | SecondaryMajorityElectionResult;
 
   @Input()
-  public countOfAccountedBallots!: number;
-
-  @Input()
   public showInvalidVotes: boolean = false;
 
   @Input()

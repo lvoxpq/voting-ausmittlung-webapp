@@ -5,7 +5,7 @@
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
 import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { MajorityElectionBallotGroupResult, MajorityElectionBallotGroupResults }
 import { MajorityElectionResultService } from '../../../services/majority-election-result.service';
 import { RoleService } from '../../../services/role.service';
 import { sum } from '../../../services/utils/array.utils';
+import { NumberComponent } from '@abraxas/base-components';
 
 @Component({
   selector: 'vo-ausm-majority-election-ballot-groups',
@@ -20,6 +21,9 @@ import { sum } from '../../../services/utils/array.utils';
   styleUrls: ['./majority-election-ballot-groups.component.scss'],
 })
 export class MajorityElectionBallotGroupsComponent implements OnDestroy {
+  @ViewChildren(NumberComponent)
+  public ballotGroupComponents?: QueryList<NumberComponent>;
+
   public result?: MajorityElectionBallotGroupResults;
   public focusedBallotGroup?: MajorityElectionBallotGroupResult;
   public total: number = 0;
@@ -100,6 +104,9 @@ export class MajorityElectionBallotGroupsComponent implements OnDestroy {
       this.hasChanges = false;
     } finally {
       this.loading = false;
+
+      // setTimeout is needed to make sure all components are visible
+      setTimeout(() => this.ballotGroupComponents?.first.setFocus());
     }
   }
 

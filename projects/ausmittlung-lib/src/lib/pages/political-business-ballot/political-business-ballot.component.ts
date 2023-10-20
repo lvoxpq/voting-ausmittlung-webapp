@@ -94,6 +94,10 @@ export abstract class PoliticalBusinessBallotComponent<
   }
 
   public async saveAndBack(): Promise<void> {
+    if (!this.bundleInProcessOrCorrection) {
+      return await this.navigateBack();
+    }
+
     this.actionExecuting = true;
     try {
       if (!(await this.saveBallot())) {

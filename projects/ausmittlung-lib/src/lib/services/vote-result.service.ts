@@ -61,7 +61,7 @@ import {
   TieBreakQuestionResultNullableSubTotalProto,
   TieBreakQuestionResultProto,
   TieBreakQuestionResultSubTotalProto,
-  ValidationOverview,
+  ValidationSummary,
   Vote,
   VoteEndResult,
   VoteEndResultProto,
@@ -352,33 +352,33 @@ export class VoteResultService extends PoliticalBusinessResultBaseService<
     );
   }
 
-  public validateEnterCountOfVoters(voteResult: VoteResult): Promise<ValidationOverview> {
+  public validateEnterCountOfVoters(voteResult: VoteResult): Promise<ValidationSummary> {
     const req = new ValidateEnterVoteResultCountOfVotersRequest();
     req.setRequest(this.mapToEnterCountOfVotersRequest(voteResult));
     return this.request(
       c => c.validateEnterCountOfVoters,
       req,
-      r => this.validationMapping.mapToValidationOverview(r),
+      r => this.validationMapping.mapToValidationSummary(r),
     );
   }
 
-  public validateEnterResults(result: VoteResult): Promise<ValidationOverview> {
+  public validateEnterResults(result: VoteResult): Promise<ValidationSummary> {
     const req = new ValidateEnterVoteResultsRequest();
     req.setRequest(this.mapToEnterResultsRequest(result));
     return this.request(
       c => c.validateEnterResults,
       req,
-      r => this.validationMapping.mapToValidationOverview(r),
+      r => this.validationMapping.mapToValidationSummary(r),
     );
   }
 
-  public validateEnterCorrectionResults(result: VoteResult): Promise<ValidationOverview> {
+  public validateEnterCorrectionResults(result: VoteResult): Promise<ValidationSummary> {
     const req = new ValidateEnterVoteResultCorrectionRequest();
     req.setRequest(this.mapToEnterCorrectionResultsRequest(result));
     return this.request(
       c => c.validateEnterCorrectionResults,
       req,
-      r => this.validationMapping.mapToValidationOverview(r),
+      r => this.validationMapping.mapToValidationSummary(r),
     );
   }
 
