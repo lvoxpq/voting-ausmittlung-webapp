@@ -609,7 +609,19 @@
     "DOWNLOAD": "Download",
     "RETRY": "Wiederholen",
     "EXPORT_ACTION": "Exportieren",
-    "EXPORT_SELECTED_ACTION": "Alle markierten exportieren",
+    "GENERATE": "Generieren",
+    "GENERATE_SELECTED_ACTION": "Markierte generieren",
+    "EXPORT_SELECTED_ACTION": "Markierte exportieren",
+    "CONFIRM_GENERATE_AGAIN": {
+      "TITLE": "Erneut generieren",
+      "MESSAGE": {
+        "1": "Das Protokoll ist aktuell in Generierung. Bei erneuter Auslösung wird der laufende Auftrag abgebrochen und die Generierung startet neu.",
+        "2": "Das Protokoll wurde am {{started}} Uhr bereits generiert. Soll der Auftrag erneut ausgelöst werden?",
+        "MULTIPLE": "Es wurden bereits generierte Protokolle markiert. Diese werden erneut generiert."
+      },
+      "CONFIRM": "Erneut generieren"
+    },
+    "NOT_YET_GENERATED": "Es wurden noch nicht alle markierten Protokolle generiert. Diese sind im Export nicht enthalten.",
     "NO_TEMPLATES": "Keine Exports verfügbar",
     "TABS": {
       "PROTOCOLS": "Protokolle",

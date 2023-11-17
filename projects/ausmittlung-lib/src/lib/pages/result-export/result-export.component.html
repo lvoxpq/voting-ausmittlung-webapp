@@ -4,6 +4,11 @@
     <vo-ausm-breadcrumbs left [items]="breadcrumbs"></vo-ausm-breadcrumbs>
     <vo-ausm-contest-header center [contest]="contest"></vo-ausm-contest-header>
     <div right>
+      <bc-button *ngIf="selectedTab === tabs.PROTOCOLS"
+                 variant="tertiary"
+                 [disabled]="selectedTemplates.selected.length === 0 || loadingTemplates"
+                 [label]="'EXPORTS.GENERATE_SELECTED_ACTION' | translate"
+                 (buttonClick)="generateSelected()"></bc-button>
       <bc-button variant="tertiary"
                  [disabled]="selectedTemplates.selected.length === 0 || loadingTemplates"
                  [label]="'EXPORTS.EXPORT_SELECTED_ACTION' | translate"
@@ -56,12 +61,16 @@
         <th bc-header-cell *bcHeaderCellDef>{{ 'EXPORTS.POLITICAL_BUSINESS' | translate }}</th>
         <td bc-cell *bcCellDef="let element">{{ element.entityDescription }}</td>
       </ng-container>
-      <ng-container bcColumnDef="export-button">
+      <ng-container bcColumnDef="export">
         <th bc-header-cell *bcHeaderCellDef>{{ 'EXPORTS.EXPORT_ACTION' | translate }}</th>
         <td bc-cell *bcCellDef="let element">
-          <bc-button variant="tertiary"
-                     [label]="'EXPORTS.' + (!element.state || element.state === protocolExportStates.PROTOCOL_EXPORT_STATE_UNSPECIFIED ? 'EXPORT_ACTION' : 'RETRY') | translate"
-                     (buttonClick)="export([element])"></bc-button>
+          <bc-button variant="tertiary" [label]="'EXPORTS.EXPORT_ACTION' | translate" (buttonClick)="downloadDataExports([element])"></bc-button>
+        </td>
+      </ng-container>
+      <ng-container bcColumnDef="generate">
+        <th bc-header-cell *bcHeaderCellDef>{{ 'EXPORTS.GENERATE' | translate }}</th>
+        <td bc-cell *bcCellDef="let element">
+          <bc-button variant="tertiary" [label]="'EXPORTS.GENERATE' | translate" (buttonClick)="generateProtocolExports([element])"></bc-button>
         </td>
       </ng-container>
       <ng-container bcColumnDef="state">

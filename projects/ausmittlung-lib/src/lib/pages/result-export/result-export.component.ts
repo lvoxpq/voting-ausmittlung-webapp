@@ -8,6 +8,9 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ResultExportService } from '../../services/result-export.service';
 import { BreadcrumbItem, BreadcrumbsService } from '../../services/breadcrumbs.service';
 import { ProtocolExportState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/export_pb';
+import { DialogService } from '@abraxas/voting-lib';
+import { TranslateService } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
 
 enum Tabs {
   PROTOCOLS,
@@ -20,10 +23,12 @@ enum Tabs {
   styleUrls: ['./result-export.component.scss'],
 })
 export class ResultExportComponent implements OnInit, OnDestroy {
-  public readonly defaultColumns = ['select', 'description', 'political-business', 'export-button'];
-  public readonly protocolExportColumns = [...this.defaultColumns, 'state', 'data-date', 'file-name', 'download-button'];
+  private readonly defaultColumns = ['select', 'description', 'political-business'];
+  private readonly dataExportColumns = [...this.defaultColumns, 'export'];
+  private readonly protocolExportColumns = [...this.defaultColumns, 'generate', 'state', 'data-date', 'file-name', 'download-button'];
 
   public readonly protocolExportStates: typeof ProtocolExportState = ProtocolExportState;
+  public readonly tabs: typeof Tabs = Tabs;
 
   public columns: string[] = this.protocolExportColumns;
 
@@ -50,6 +55,9 @@ export class ResultExportComponent implements OnInit, OnDestroy {
     private readonly resultExportService: ResultExportService,
     private readonly route: ActivatedRoute,
     private readonly breadcrumbsService: BreadcrumbsService,
+    private readonly dialog: DialogService,
+    private readonly i18n: TranslateService,
+    private readonly datePipe: DatePipe,
   ) {}
 
   public async ngOnInit(): Promise<void> {
@@ -68,7 +76,7 @@ export class ResultExportComponent implements OnInit, OnDestroy {
   public async changeTab(tab: Tabs): Promise<void> {
     this.selectedTab = tab;
 
-    this.columns = tab === Tabs.PROTOCOLS ? this.protocolExportColumns : this.defaultColumns;
+    this.columns = tab === Tabs.PROTOCOLS ? this.protocolExportColumns : this.dataExportColumns;
 
     await this.loadData();
   }
@@ -96,36 +104,78 @@ export class ResultExportComponent implements OnInit, OnDestroy {
     this.updateAllTemplatesSelected();
   }
 
+  public async generateSelected(): Promise<void> {
+    if (await this.generateProtocolExports(this.selectedTemplates.selected)) {
+      this.selectedTemplates.clear();
+    }
+  }
+
   public async exportSelected(): Promise<void> {
-    await this.export(this.selectedTemplates.selected);
+    if (this.selectedTab === Tabs.DATA_FILES) {
+      await this.downloadDataExports(this.selectedTemplates.selected);
+    } else {
+      await this.downloadProtocolExports(this.selectedTemplates.selected as ProtocolExport[]);
+    }
+
     this.selectedTemplates.clear();
   }
 
-  public async export(templates: ResultExportTemplate[]): Promise<void> {
+  public async downloadDataExports(templates: ResultExportTemplate[]): Promise<void> {
     this.generatingExports = true;
     try {
-      if (this.selectedTab === Tabs.PROTOCOLS) {
-        await this.exportService.startProtocolExports(this.contestId, this.countingCircleId, templates);
-        for (let template of templates) {
-          const protocolExport = template as ProtocolExport;
-          protocolExport.started = new Date();
-          protocolExport.state = ProtocolExportState.PROTOCOL_EXPORT_STATE_GENERATING;
-        }
-      } else {
-        await this.resultExportService.downloadExports(templates, this.contestId, this.countingCircleId);
-      }
+      await this.resultExportService.downloadExports(templates, this.contestId, this.countingCircleId);
     } finally {
       this.generatingExports = false;
     }
   }
 
-  public async downloadProtocolExports(protocolExports: ProtocolExport[]): Promise<void> {
+  public async generateProtocolExports(templates: ResultExportTemplate[]): Promise<boolean> {
+    if (!(await this.confirmGenerationIfNeeded(templates as ProtocolExport[]))) {
+      return false;
+    }
+
     this.generatingExports = true;
     try {
-      await this.resultExportService.downloadProtocolExports(protocolExports, this.contestId, this.countingCircleId);
+      await this.exportService.startProtocolExports(this.contestId, this.countingCircleId, templates);
     } finally {
       this.generatingExports = false;
     }
+
+    return true;
+  }
+
+  public async downloadProtocolExports(protocolExports: ProtocolExport[]): Promise<void> {
+    const generatedExports = protocolExports.filter(p => p.state === ProtocolExportState.PROTOCOL_EXPORT_STATE_COMPLETED);
+    if (generatedExports.length !== protocolExports.length) {
+      await this.dialog.alert('', 'EXPORTS.NOT_YET_GENERATED');
+    }
+
+    this.generatingExports = true;
+    try {
+      await this.resultExportService.downloadProtocolExports(generatedExports, this.contestId, this.countingCircleId);
+    } finally {
+      this.generatingExports = false;
+    }
+  }
+
+  private async confirmGenerationIfNeeded(protocolExports: ProtocolExport[]): Promise<boolean> {
+    if (
+      protocolExports.every(
+        p =>
+          p.state !== ProtocolExportState.PROTOCOL_EXPORT_STATE_GENERATING &&
+          p.state !== ProtocolExportState.PROTOCOL_EXPORT_STATE_COMPLETED,
+      )
+    ) {
+      return true;
+    }
+
+    const i18nPrefix = 'EXPORTS.CONFIRM_GENERATE_AGAIN';
+    let message = i18nPrefix + '.MESSAGE.MULTIPLE';
+    if (protocolExports.length === 1) {
+      const started = this.datePipe.transform(protocolExports[0].started, 'dd.MM.yyyy, HH:mm')!;
+      message = this.i18n.instant(`${i18nPrefix}.MESSAGE.${protocolExports[0].state}`, { started });
+    }
+    return await this.dialog.confirm(`${i18nPrefix}.TITLE`, message, `${i18nPrefix}.CONFIRM`);
   }
 
   private async loadData(): Promise<void> {
@@ -133,7 +183,7 @@ export class ResultExportComponent implements OnInit, OnDestroy {
 
     try {
       this.selectedTemplates.clear();
-      this.updateAllTemplatesSelected();
+      this.allTemplatesSelected = false;
 
       const data =
         this.selectedTab === Tabs.PROTOCOLS

@@ -91,12 +91,36 @@ export class MajorityElectionBallotContentComponent implements OnChanges {
   }
 
   public updateManualEmptyVoteCount(emptyVoteCount: number): void {
+    if (this.ballot.emptyVoteCount === emptyVoteCount) {
+      return;
+    }
+
     this.ballot.emptyVoteCount = emptyVoteCount;
     this.contentChanged.emit();
   }
 
   public setFocus(): void {
     this.toggleCandidateInput.setFocus();
+  }
+
+  public setInvalidVoteCount(count: number): void {
+    if (this.ballot.invalidVoteCount === count) {
+      return;
+    }
+
+    this.ballot.invalidVoteCount = count;
+    this.updateEmptyVoteCount();
+    this.contentChanged.emit();
+  }
+
+  public setIndividualVoteCount(count: number): void {
+    if (this.ballot.individualVoteCount === count) {
+      return;
+    }
+
+    this.ballot.individualVoteCount = count;
+    this.updateEmptyVoteCount();
+    this.contentChanged.emit();
   }
 
   private setEmptyVoteCountIfAuto(): void {

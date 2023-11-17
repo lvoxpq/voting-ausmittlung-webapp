@@ -1,4 +1,4 @@
-# ✨ Changelog (`v1.53.17`)
+# ✨ Changelog (`v1.54.2`)
 
 All notable changes to this project will be documented in this file.
 
@@ -8,11 +8,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version Info
 
 ```text
-This version -------- v1.53.17
-Previous version ---- v1.49.4
+This version -------- v1.54.2
+Previous version ---- v1.53.17
 Initial version ----- v1.25.0
-Total commits ------- 25
+Total commits ------- 9
 ```
+
+## [v1.54.2] - 2023-11-16
+
+### :arrows_counterclockwise: Changed
+
+- do not manually mark protocol exports as generating
+
+## [v1.54.1] - 2023-11-15
+
+### :arrows_counterclockwise: Changed
+
+- correctly select all templates after data has been loaded
+
+## [v1.54.0] - 2023-11-15
+
+### :arrows_counterclockwise: Changed
+
+- reworked export selected protocols feature
+
+## [v1.53.23] - 2023-11-09
+
+### :new: Added
+
+- add environment indicator badge in header
+
+## [v1.53.22] - 2023-10-25
+
+### 🔄 Changed
+
+- improve UX for re-generating single protocol exports
+
+## [v1.53.21] - 2023-10-24
+
+### :arrows_counterclockwise: Changed
+
+- setup automatic refresh to only listen for the access_token lifetime since the IdP only responds with the access_token
+
+## [v1.53.20] - 2023-10-23
+
+This reverts commit 60ee4e312750c5b9d82b3ab87107bccc48cb7971.
+
+## [v1.53.19] - 2023-10-23
+
+### 🔄 Changed
+
+- detect changes in majority election ballots correctly
+
+## [v1.53.18] - 2023-10-22
+
+### 🔄 Changed
+
+- disable retry button for 10 mins after the start of a protocol export
 
 ## [v1.53.17] - 2023-10-20
 
@@ -251,49 +303,13 @@ Total commits ------- 25
 
 - select the only corrected tab in the monitoring cockpit grid, when all counting circles are corrected
 
-## [v1.44.0] - 2023-03-01
-
-### 🔄 Changed
-
-- protocol export state changes
-
-## [v1.43.0] - 2023-03-01
-
-### 🔄 Changed
-
-- display ignored counting circles of result imports
-
-## [v1.42.2] - 2023-03-01
-
 ### 🔄 Changed
 
 - add all voting cards for end result page
 
-## [v1.42.1] - 2023-02-28
-
-### 🔄 Changed
-
-- bundle number input error message
-
-## [v1.42.0] - 2023-02-24
-
-### 🔄 Changed
-
-- async PDF protocol generation process
-
-## [v1.41.5] - 2023-02-22
-
 ### 🔄 Changed
 
 - hide export button for monitoring contest detail component
-
-## [v1.41.4] - 2023-02-21
-
-### 🔄 Changed
-
-- bundle number input error message
-
-## [v1.41.3] - 2023-02-16
 
 ### 🔄 Changed
 
@@ -499,6 +515,54 @@ Total commits ------- 25
 ### 🔄 Changed
 
 - Adjusted page title of the vote review bundle page
+
+## [v1.44.0] - 2023-03-01
+
+### 🔄 Changed
+
+- protocol export state changes
+
+## [v1.43.0] - 2023-03-01
+
+### 🔄 Changed
+
+- display ignored counting circles of result imports
+
+## [v1.42.2] - 2023-03-01
+
+### 🔄 Changed
+
+- add all voting cards for end result page
+
+## [v1.42.1] - 2023-02-28
+
+### 🔄 Changed
+
+- bundle number input error message
+
+## [v1.42.0] - 2023-02-24
+
+### 🔄 Changed
+
+- async PDF protocol generation process
+
+## [v1.41.5] - 2023-02-22
+
+### 🔄 Changed
+
+- hide export button for monitoring contest detail component
+
+## [v1.41.4] - 2023-02-21
+
+### 🔄 Changed
+
+- bundle number input error message
+
+## [v1.41.3] - 2023-02-16
+
+### 🔄 Changed
+
+- contest state chip
 
 ## [v1.41.2] - 2023-02-16
 

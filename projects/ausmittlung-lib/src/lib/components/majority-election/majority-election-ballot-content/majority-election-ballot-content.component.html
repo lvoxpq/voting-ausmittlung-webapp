@@ -31,7 +31,7 @@
       [disabled]="disabled || readonly"
       [error]="ballot.invalidVoteCount < 0 || ballot.invalidVoteCount > ballot.election.numberOfMandates"
       [value]="ballot.invalidVoteCount"
-      (valueChange)="ballot.invalidVoteCount = +$event; updateEmptyVoteCount(); contentChanged.emit()"
+      (valueChange)="setInvalidVoteCount(+$event)"
     ></bc-number>
     <bc-number
       [label]="'MAJORITY_ELECTION.INDIVIDUAL' | translate"
@@ -42,7 +42,7 @@
       [disabled]="disabled || readonly"
       [error]="ballot.individualVoteCount < 0 || ballot.individualVoteCount > ballot.election.numberOfMandates"
       [value]="ballot.individualVoteCount"
-      (valueChange)="ballot.individualVoteCount = +$event; updateEmptyVoteCount(); contentChanged.emit()"
+      (valueChange)="setIndividualVoteCount(+$event)"
       (keydown.enter)="emptyVoteFormfield.readonly ? contentCompleted.emit($event) : undefined"
     ></bc-number>
     <bc-number

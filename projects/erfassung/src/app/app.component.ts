@@ -45,7 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly title: Title,
   ) {
     // enable automatic silent refresh
-    this.oauthService.setupAutomaticSilentRefresh();
+    this.oauthService.setupAutomaticSilentRefresh({}, 'access_token');
 
     const snackbarSubscription = this.snackbarService.message$.subscribe(m => {
       if (!this.snackbarComponent) {
