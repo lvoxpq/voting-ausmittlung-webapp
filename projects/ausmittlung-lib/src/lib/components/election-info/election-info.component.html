@@ -3,7 +3,7 @@
     {{'ELECTION.NR_OF_MANDATES' | translate:electionResult.election}}
   </vo-ausm-info-panel-entry>
   <vo-ausm-info-panel-entry label="APP.STATE">
-    <vo-ausm-result-state-box [state]="electionResult.state"></vo-ausm-result-state-box>
+    <vo-ausm-result-state-box [state]="electionResult.state" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-result-state-box>
   </vo-ausm-info-panel-entry>
   <vo-ausm-info-panel-entry label="ELECTION.RESULT_ENTRY.COUNTING_CIRCLE">
     {{electionResult.countingCircle.name}}

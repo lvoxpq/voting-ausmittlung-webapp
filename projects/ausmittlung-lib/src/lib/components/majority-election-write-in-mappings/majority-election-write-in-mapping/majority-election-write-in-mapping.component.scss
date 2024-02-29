@@ -55,6 +55,10 @@
       border-collapse: collapse;
       width: 100%;
 
+      .last-name-column {
+        max-width: 7rem;
+      }
+
       th {
         text-align: left;
         color: $color-black;

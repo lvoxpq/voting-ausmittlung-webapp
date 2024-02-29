@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, Inject } from '@angular/core';
@@ -9,6 +10,7 @@ import { cloneDeep } from 'lodash';
 import { CountingCircle, ResultList } from '../../../../models';
 import { ContestCountingCircleContactPersonService } from '../../../../services/contest-counting-circle-contact-person.service';
 
+// TODO: can be removed if new UI is standard
 @Component({
   selector: 'vo-ausm-contact-person-edit-dialog',
   templateUrl: './contact-person-edit-dialog.component.html',

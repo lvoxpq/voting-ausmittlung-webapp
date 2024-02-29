@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
@@ -16,7 +17,7 @@ import {
 } from '../../../models';
 import { MajorityElectionResultService } from '../../../services/majority-election-result.service';
 import { PoliticalBusinessResultService } from '../../../services/political-business-result.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { SecondFactorTransactionService } from '../../../services/second-factor-transaction.service';
 import { AbstractContestPoliticalBusinessDetailComponent } from '../contest-political-business-detail/contest-political-business-detail-base.component';
 import { ContestPoliticalBusinessDetailComponent } from '../contest-political-business-detail/contest-political-business-detail.component';
@@ -51,14 +52,24 @@ export class ContestMajorityElectionDetailComponent extends AbstractContestPolit
     parent: ContestPoliticalBusinessDetailComponent,
     i18n: TranslateService,
     toast: SnackbarService,
-    roleService: RoleService,
+    permissionService: PermissionService,
     resultService: MajorityElectionResultService,
     dialog: DialogService,
     secondFactorTransactionService: SecondFactorTransactionService,
     politicalBusinessResultService: PoliticalBusinessResultService,
     cd: ChangeDetectorRef,
   ) {
-    super(i18n, toast, resultService, dialog, secondFactorTransactionService, politicalBusinessResultService, cd, roleService, parent);
+    super(
+      i18n,
+      toast,
+      resultService,
+      dialog,
+      secondFactorTransactionService,
+      politicalBusinessResultService,
+      cd,
+      permissionService,
+      parent,
+    );
   }
 
   public updateCandidateResultsValid(): void {
@@ -75,18 +86,13 @@ export class ContestMajorityElectionDetailComponent extends AbstractContestPolit
     this.countOfVotersValid = !!this.resultDetail && this.areCountOfVotersValid(this.resultDetail.countOfVoters);
   }
 
-  public async validateAndSave(): Promise<void> {
+  public async save(): Promise<void> {
     if (!this.resultDetail) {
       return;
     }
 
     try {
       this.isActionExecuting = true;
-
-      const validationConfirm = await this.confirmValidationOverviewDialog(false);
-      if (!validationConfirm) {
-        return;
-      }
 
       if (this.resultDetail.entry === MajorityElectionResultEntry.MAJORITY_ELECTION_RESULT_ENTRY_FINAL_RESULTS) {
         await this.resultService.enterCandidateResults(this.resultDetail);
@@ -95,6 +101,21 @@ export class ContestMajorityElectionDetailComponent extends AbstractContestPolit
       }
       this.toast.success(this.i18n.instant('APP.SAVED'));
       this.hasEdits = false;
+    } finally {
+      this.isActionExecuting = false;
+    }
+  }
+
+  public async validateAndSave(): Promise<void> {
+    try {
+      this.isActionExecuting = true;
+
+      const validationConfirm = await this.confirmValidationOverviewDialog(false);
+      if (!validationConfirm) {
+        return;
+      }
+
+      await this.save();
     } finally {
       this.isActionExecuting = false;
     }

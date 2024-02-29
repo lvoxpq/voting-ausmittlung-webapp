@@ -1,3 +1,9 @@
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
+ */
+
 import { contestMock } from '../../http-mocks/contest.service.mock';
 import { AppPage } from '../../page-models/app';
 import { user } from '../../roles/roles';

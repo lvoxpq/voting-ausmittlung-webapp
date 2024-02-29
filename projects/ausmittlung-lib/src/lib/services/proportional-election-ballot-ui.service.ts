@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Injectable } from '@angular/core';
@@ -28,6 +29,7 @@ export class ProportionalElectionBallotUiService {
       emptyVoteCount: 0,
       numberOfMandates: 0,
       candidateCountValid: true,
+      candidateCheckDigit: false,
     };
   }
 
@@ -35,6 +37,7 @@ export class ProportionalElectionBallotUiService {
     electionCandidates: ProportionalElectionCandidate[],
     automaticEmptyVoteCounting: boolean,
     numberOfMandates: number,
+    candidateCheckDigit: boolean,
     ballot?: ProportionalElectionResultBallot,
   ): ProportionalElectionBallotUiData {
     if (!ballot) {
@@ -81,6 +84,7 @@ export class ProportionalElectionBallotUiService {
       addableCandidatesByNumber: {},
       listNumber,
       candidateCountValid: !!listNumber || ballot.candidates.length > 0,
+      candidateCheckDigit,
     };
     this.updateAllCandidateAccumulated(ballot.candidates);
     this.updateEditableCandidates(result, electionCandidates);
@@ -358,10 +362,11 @@ export class ProportionalElectionBallotUiService {
   }
 
   private setCandidateAddable(uiData: ProportionalElectionBallotUiData, candidate: ProportionalElectionCandidate, addable: boolean): void {
+    const number = candidate.listNumber + candidate.number + (uiData.candidateCheckDigit ? candidate.checkDigit : '');
     if (addable) {
-      uiData.addableCandidatesByNumber[candidate.listNumber + candidate.number] = candidate;
+      uiData.addableCandidatesByNumber[number] = candidate;
     } else {
-      delete uiData.addableCandidatesByNumber[candidate.listNumber + candidate.number];
+      delete uiData.addableCandidatesByNumber[number];
     }
   }
 
@@ -371,25 +376,25 @@ export class ProportionalElectionBallotUiService {
     removable: boolean,
   ): void {
     const sameList = uiData.listNumber === candidate.listNumber;
-    const number = +candidate.number;
+    const candidateNumberWithCheckDigit = candidate.number + (uiData.candidateCheckDigit ? candidate.checkDigit : '');
     if (removable) {
-      uiData.removableCandidatesByNumber[candidate.listNumber + candidate.number] = candidate;
+      uiData.removableCandidatesByNumber[candidate.listNumber + candidateNumberWithCheckDigit] = candidate;
 
       if (sameList) {
-        uiData.removableCandidatesByNumber[candidate.number] = candidate;
-        if (!isNaN(number)) {
-          uiData.removableCandidatesInRangeByNumber[number] = candidate;
+        uiData.removableCandidatesByNumber[candidateNumberWithCheckDigit] = candidate;
+        if (!isNaN(+candidateNumberWithCheckDigit)) {
+          uiData.removableCandidatesInRangeByNumber[+candidateNumberWithCheckDigit] = candidate;
         }
       }
 
       return;
     }
 
-    delete uiData.removableCandidatesByNumber[candidate.listNumber + candidate.number];
+    delete uiData.removableCandidatesByNumber[candidate.listNumber + candidateNumberWithCheckDigit];
     if (sameList) {
-      delete uiData.removableCandidatesByNumber[candidate.number];
-      if (!isNaN(number)) {
-        delete uiData.removableCandidatesInRangeByNumber[number];
+      delete uiData.removableCandidatesByNumber[candidateNumberWithCheckDigit];
+      if (!isNaN(+candidateNumberWithCheckDigit)) {
+        delete uiData.removableCandidatesInRangeByNumber[+candidateNumberWithCheckDigit];
       }
     }
   }
@@ -418,6 +423,7 @@ export interface ProportionalElectionBallotUiData {
   numberOfMandates: number;
   listNumber?: string;
   candidateCountValid: boolean;
+  candidateCheckDigit: boolean;
 }
 
 export interface ProportionalElectionBallotListPosition {

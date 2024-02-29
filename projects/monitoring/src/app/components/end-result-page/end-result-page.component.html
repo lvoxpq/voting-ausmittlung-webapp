@@ -1,7 +1,7 @@
 <vo-lib-page [contentLoading]="loading"
-             [enableSidebar]="true"
+             [enableSidebar]="!newZhFeaturesEnabled"
              [sidebarTemplate]="sidebar"
-             [sidebarOpen]="true"
+             [sidebarOpen]="!newZhFeaturesEnabled"
              header="END_RESULT.OVERVIEW">
 
   <vo-lib-page-header header>
@@ -17,6 +17,21 @@
     <vo-ausm-contest-header center [contest]="contest"></vo-ausm-contest-header>
   </vo-lib-page-header>
 
+  <ng-container *ngIf="newZhFeaturesEnabled && countOfVotersInformation && votingCards && contest">
+    <h2 class="mt-3" translate>CONTEST.DETAIL.COUNT_OF_VOTERS_AND_VOTING_CARDS</h2>
+    <div class="mb-3">
+      <vo-ausm-contest-detail-info [eVoting]="contest.eVoting"
+                                   [swissAbroadHaveVotingRightsOnAnyBusiness]="swissAbroadHaveVotingRights"
+                                   [countOfVoters]="countOfVotersInformation"
+                                   [votingCards]="votingCards"
+                                   [domainOfInfluenceTypes]="[domainOfInfluenceType]"
+                                   [readonly]="true"
+                                   [canton]="canton">
+      </vo-ausm-contest-detail-info>
+    </div>
+  </ng-container>
+
+
   <ng-content></ng-content>
 
   <ng-template #sidebar>
@@ -30,7 +45,8 @@
         <vo-ausm-contest-detail-voting-cards *ngIf="domainOfInfluenceType !== undefined"
                                              [readonly]="true"
                                              [domainOfInfluenceTypes]="[domainOfInfluenceType]"
-                                             [votingCards]="votingCards"></vo-ausm-contest-detail-voting-cards>
+                                             [votingCards]="votingCards"
+                                             [canton]="canton"></vo-ausm-contest-detail-voting-cards>
       </ng-container>
     </ng-container>
 

@@ -1,11 +1,12 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   ContestCountingCircleDetails,
@@ -15,21 +16,23 @@ import {
 } from '../../../models';
 import { PoliticalBusinessResultService } from '../../../services/political-business-result.service';
 import { ProportionalElectionResultService } from '../../../services/proportional-election-result.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { SecondFactorTransactionService } from '../../../services/second-factor-transaction.service';
 import { BallotCountInputComponent } from '../../ballot-count-input/ballot-count-input.component';
 import { AbstractContestPoliticalBusinessDetailComponent } from '../contest-political-business-detail/contest-political-business-detail-base.component';
 import { ContestPoliticalBusinessDetailComponent } from '../contest-political-business-detail/contest-political-business-detail.component';
+import { Permissions } from '../../../models/permissions.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'vo-ausm-contest-proportional-election-detail',
   templateUrl: './contest-proportional-election-detail.component.html',
   styleUrls: ['./contest-proportional-election-detail.component.scss'],
 })
-export class ContestProportionalElectionDetailComponent extends AbstractContestPoliticalBusinessDetailComponent<
-  ProportionalElectionResult,
-  ProportionalElectionResultService
-> {
+export class ContestProportionalElectionDetailComponent
+  extends AbstractContestPoliticalBusinessDetailComponent<ProportionalElectionResult, ProportionalElectionResultService>
+  implements OnInit, OnDestroy
+{
   // set has edits to true by default
   // since for proportional elections save and validate needs to be clicked before submit should be available
   // and validations should be ran in the frontend before submitting
@@ -37,23 +40,42 @@ export class ContestProportionalElectionDetailComponent extends AbstractContestP
 
   public countOfVotersValid: boolean = true;
 
+  public canReadListResults: boolean = false;
+
   @ViewChild(BallotCountInputComponent)
   private ballotCountInputComponent?: BallotCountInputComponent;
+
+  public newZhFeaturesEnabled: boolean = false;
+
+  private readonly routeSubscription: Subscription;
 
   constructor(
     parent: ContestPoliticalBusinessDetailComponent,
     i18n: TranslateService,
     toast: SnackbarService,
-    roleService: RoleService,
+    roleService: PermissionService,
     resultService: ProportionalElectionResultService,
     dialog: DialogService,
     secondFactorTransactionService: SecondFactorTransactionService,
     politicalBusinessResultService: PoliticalBusinessResultService,
     cd: ChangeDetectorRef,
+    route: ActivatedRoute,
     private readonly router: Router,
     private readonly themeService: ThemeService,
   ) {
     super(i18n, toast, resultService, dialog, secondFactorTransactionService, politicalBusinessResultService, cd, roleService, parent);
+    this.routeSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
+  }
+
+  public override async ngOnInit(): Promise<void> {
+    await super.ngOnInit();
+    this.canReadListResults = await this.permissionService.hasPermission(Permissions.ProportionalElectionListResult.Read);
+  }
+
+  public ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
   }
 
   public resetResults(): void {
@@ -81,18 +103,13 @@ export class ContestProportionalElectionDetailComponent extends AbstractContestP
     this.countOfVotersValid = !!this.resultDetail && this.areCountOfVotersValid(this.resultDetail.countOfVoters);
   }
 
-  public async validateAndSave(): Promise<void> {
+  public async save(): Promise<void> {
     if (!this.resultDetail) {
       return;
     }
 
     try {
       this.isActionExecuting = true;
-
-      const validationConfirm = await this.confirmValidationOverviewDialog(false);
-      if (!validationConfirm) {
-        return;
-      }
 
       await this.resultService.enterCountOfVoters(this.resultDetail.id, this.resultDetail.countOfVoters);
       this.toast.success(this.i18n.instant('APP.SAVED'));
@@ -102,8 +119,23 @@ export class ContestProportionalElectionDetailComponent extends AbstractContestP
     }
   }
 
+  public async validateAndSave(): Promise<void> {
+    try {
+      this.isActionExecuting = true;
+
+      const validationConfirm = await this.confirmValidationOverviewDialog(false);
+      if (!validationConfirm) {
+        return;
+      }
+
+      await this.save();
+    } finally {
+      this.isActionExecuting = false;
+    }
+  }
+
   public async openUnmodifiedLists(): Promise<void> {
-    if (!this.resultDetail || (!this.isErfassungElectionAdmin && !this.isMonitoringElectionAdmin)) {
+    if (!this.resultDetail || !this.canReadListResults) {
       return;
     }
 

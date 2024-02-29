@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import {
@@ -21,6 +22,7 @@ import {
   Comment,
   CommentProto,
   ContestCountingCircleDetails,
+  CountingMachine,
   ResultList,
   ResultListProto,
   ResultListResult,
@@ -84,14 +86,14 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
     );
   }
 
-  public getStateChanges(contestId: string): Observable<ResultStateChangeProto.AsObject> {
+  public getStateChanges(contestId: string, onRetry: () => {}): Observable<ResultStateChangeProto.AsObject> {
     const req = new GetResultStateChangesRequest();
     req.setContestId(contestId);
     return this.requestServerStream(
       c => c.getStateChanges,
       req,
       r => r.toObject(),
-    ).pipe(retryForeverWithBackoff());
+    ).pipe(retryForeverWithBackoff(onRetry));
   }
 
   public resetCountingCircleResults(contestId: string, countingCircleId: string): Promise<void> {
@@ -149,6 +151,7 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
       results,
       currentTenantIsResponsible: data.getCurrentTenantIsResponsible(),
       enabledVotingCardChannels: data.getEnabledVotingCardChannelsList().map(x => x.toObject()),
+      electorateSummary: data.getElectorateSummary()!.toObject(),
     };
   }
 
@@ -197,6 +200,7 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
         countingCircleId: resultList.getCountingCircle()!.getId(),
         contestId: resultList.getContest()!.getId(),
         eVoting: false,
+        countingMachine: CountingMachine.COUNTING_MACHINE_UNSPECIFIED,
       };
     }
 

@@ -1,10 +1,35 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+// TODO: can be removed if new UI is standard
 .container {
   margin: 0.2rem 0;
   text-align: center;
 }
 
-bc-chip {
-  padding: 0.2rem 0;
-  display: inline-block;
+.info-text {
   font-size: 1rem;
+  color: $color-grey-1;
+  display: block;
+}
+
+.info-container {
+  display: grid;
+  grid-template-columns: fit-content(44rem) auto 1fr 1fr;
+  column-gap: 3rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+}
+
+.col-span-2 {
+  grid-column: span 2 / span 2;
+}
+
+.col-span-3 {
+  grid-column: span 3 / span 3;
+}
+
+.col-span-4 {
+  grid-column: span 4 / span 4;
 }

@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { MajorityElectionReviewProcedure } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/majority_election_pb';
@@ -16,7 +17,7 @@ import {
 import { MajorityElectionResultBundles, PoliticalBusinessResultBundle } from '../../../models';
 import { MajorityElectionResultBundleService } from '../../../services/majority-election-result-bundle.service';
 import { ResultExportService } from '../../../services/result-export.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { PoliticalBusinessBundleOverviewComponent } from '../../political-business-bundle-overview/political-business-bundle-overview.component';
 import { MajorityElectionBallotComponent } from '../majority-election-ballot/majority-election-ballot.component';
 
@@ -31,7 +32,7 @@ export class MajorityElectionBundleOverviewComponent extends PoliticalBusinessBu
 
   constructor(
     private readonly resultBundleService: MajorityElectionResultBundleService,
-    roleService: RoleService,
+    permissionService: PermissionService,
     i18n: TranslateService,
     toast: SnackbarService,
     dialog: DialogService,
@@ -40,7 +41,7 @@ export class MajorityElectionBundleOverviewComponent extends PoliticalBusinessBu
     themeService: ThemeService,
     resultExportService: ResultExportService,
   ) {
-    super(roleService, i18n, toast, dialog, route, router, themeService, resultExportService);
+    super(permissionService, i18n, toast, dialog, route, router, themeService, resultExportService);
   }
 
   @HostListener('document:keydown.control.alt.q')
@@ -119,8 +120,8 @@ export class MajorityElectionBundleOverviewComponent extends PoliticalBusinessBu
     return this.resultBundleService.getBundles(resultId);
   }
 
-  protected startChangesListener(resultId: string): Observable<PoliticalBusinessResultBundle> {
-    return this.resultBundleService.getBundleChanges(resultId);
+  protected startChangesListener(resultId: string, onRetry: () => {}): Observable<PoliticalBusinessResultBundle> {
+    return this.resultBundleService.getBundleChanges(resultId, onRetry);
   }
 
   private async exportBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {

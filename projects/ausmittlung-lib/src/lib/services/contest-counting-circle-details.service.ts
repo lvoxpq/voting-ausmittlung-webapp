@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { ContestCountingCircleDetailsServicePromiseClient } from '@abraxas/voting-ausmittlung-service-proto/grpc/contest_counting_circle_details_service_grpc_web_pb';
@@ -80,6 +81,7 @@ export class ContestCountingCircleDetailsService extends GrpcService<ContestCoun
     const request = new UpdateContestCountingCircleDetailsRequest();
     request.setContestId(details.contestId);
     request.setCountingCircleId(details.countingCircleId);
+    request.setCountingMachine(details.countingMachine);
 
     for (const vcDetail of details.votingCards) {
       const vcDetailReq = new UpdateVotingCardResultDetailRequest();

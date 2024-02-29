@@ -5,7 +5,7 @@
                                                                [(resultEntryParams)]="resultDetail.entryParams"
                                                                (done)="selectResultEntry = false; setFocus()"
                                                                (resetResults)="resetResults()"
-                                                               [readonly]="contestLocked || contentReadonly || !isErfassungElectionAdmin">
+                                                               [readonly]="contestLocked || contentReadonly || !canEnterResults">
     </vo-ausm-contest-proportional-election-detail-result-entry>
   </div>
 
@@ -13,43 +13,74 @@
     <div class="content">
       <vo-ausm-ballot-count-input header="ELECTION.BALLOT_CARD"
                                   [eVoting]="eVoting"
-                                  [readonly]="resultReadonly || !isErfassungElectionAdmin"
+                                  [readonly]="resultReadonly || !canEnterResults"
                                   [totalCountOfVoters]="resultDetail.totalCountOfVoters"
                                   [participationLabel]="'ELECTION.VOTER_PARTICIPATION'"
                                   [countOfVoters]="resultDetail.countOfVoters"
                                   (countOfVotersChange)="hasEdits = true; updateCountOfVotersValid()"></vo-ausm-ballot-count-input>
 
-      <div class="detail">
-        <div class="detail-icon-link"
-             [class.disabled]="!isErfassungElectionAdmin && !isMonitoringElectionAdmin"
-             (click)="openUnmodifiedLists()">
-          <span translate>PROPORTIONAL_ELECTION.UNMODIFIED_LISTS</span>
-          <span class="number pr-2">{{!resultDetail?.conventionalSubTotal.totalCountOfUnmodifiedLists ? '-' : resultDetail?.conventionalSubTotal.totalCountOfUnmodifiedLists | number }}</span>
-          <bc-icon icon="arrow-right"></bc-icon>
-        </div>
-        <div class="detail-icon-link" (click)="openModifiedLists()">
-          <span translate>PROPORTIONAL_ELECTION.MODIFIED_LISTS</span>
-          <span class="number pr-2">{{!resultDetail?.conventionalSubTotal.totalCountOfBallots ? '-' : resultDetail?.conventionalSubTotal.totalCountOfBallots | number}}</span>
-          <bc-icon icon="arrow-right"></bc-icon>
-        </div>
+      <div [class.detail]="!newZhFeaturesEnabled">
+        <ng-container *ngIf="newZhFeaturesEnabled; else oldUi">
+          <h4 translate>POLITICAL_BUSINESS.SUBMISSION</h4>
+          <vo-ausm-contest-detail-submission-tile
+            [title]="'PROPORTIONAL_ELECTION.UNMODIFIED_LISTS' | translate"
+            [text]="(!resultDetail?.conventionalSubTotal.totalCountOfUnmodifiedLists ? 'PROPORTIONAL_ELECTION.NO_UNMODIFIED_LISTS' : 'PROPORTIONAL_ELECTION.UNMODIFIED_LISTS_COUNT') | translate: { count: resultDetail?.conventionalSubTotal.totalCountOfUnmodifiedLists }"
+            [disabled]="!canReadListResults"
+            (buttonClick)="openUnmodifiedLists()">
+          </vo-ausm-contest-detail-submission-tile>
+          <vo-ausm-contest-detail-submission-tile
+            [title]="'PROPORTIONAL_ELECTION.MODIFIED_LISTS' | translate"
+            [text]="(!resultDetail?.conventionalSubTotal.totalCountOfBallots ? 'ELECTION.NO_BUNDLES' : 'ELECTION.BALLOT_COUNT') | translate: { count: resultDetail?.conventionalSubTotal.totalCountOfBallots }"
+            (buttonClick)="openModifiedLists()">
+          </vo-ausm-contest-detail-submission-tile>
+        </ng-container>
+        <ng-template #oldUi>
+          <div class="detail-icon-link"
+               [class.disabled]="!canReadListResults"
+               (click)="openUnmodifiedLists()">
+            <span translate>PROPORTIONAL_ELECTION.UNMODIFIED_LISTS</span>
+            <span class="number pr-2">{{!resultDetail?.conventionalSubTotal.totalCountOfUnmodifiedLists ? '-' : resultDetail?.conventionalSubTotal.totalCountOfUnmodifiedLists | number }}</span>
+            <bc-icon icon="arrow-right"></bc-icon>
+          </div>
+          <div class="detail-icon-link" (click)="openModifiedLists()">
+            <span translate>PROPORTIONAL_ELECTION.MODIFIED_LISTS</span>
+            <span class="number pr-2">{{!resultDetail?.conventionalSubTotal.totalCountOfBallots ? '-' : resultDetail?.conventionalSubTotal.totalCountOfBallots | number}}</span>
+            <bc-icon icon="arrow-right"></bc-icon>
+          </div>
+        </ng-template>
+      </div>
+      <div *ngIf="canReadListResults && newZhFeaturesEnabled">
+        <h4 translate>POLITICAL_BUSINESS.RESULT</h4>
+        <vo-ausm-contest-detail-submission-tile
+          [title]="'PROPORTIONAL_ELECTION.SHOW_RESULTS' | translate"
+          [buttonText]="'APP.OPEN'"
+          (buttonClick)="navigateToResults()">
+        </vo-ausm-contest-detail-submission-tile>
       </div>
     </div>
 
-    <bc-button *ngIf="isErfassungElectionAdmin || isMonitoringElectionAdmin"
+    <bc-button *ngIf="canReadListResults && !newZhFeaturesEnabled"
+               class="mb-3"
                (buttonClick)="navigateToResults()"
                [label]="'PROPORTIONAL_ELECTION.SHOW_RESULTS' | translate">
     </bc-button>
 
-    <vo-ausm-contest-political-business-detail-footer *ngIf="!contestLocked && (!contentReadonly || isResponsibleMonitorAuthority)"
+    <vo-ausm-contest-political-business-detail-footer *ngIf="!contestLocked
+                                                        && (!contentReadonly || isResponsibleMonitorAuthority)
+                                                        && (canAudit || (canFinishSubmission && (result.state === states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING || result.state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION)))"
                                                       editEntryText="PROPORTIONAL_ELECTION.RESULT_ENTRY.EDIT"
                                                       entryDescription=""
                                                       (selectResultEntry)="selectResultEntry = true"
                                                       (validateAndSave)="validateAndSave()"
+                                                      (validate)="validateAndSave()"
+                                                      (save)="save()"
                                                       (stateUpdate)="stateUpdate($event)"
                                                       [isResponsibleMonitorAuthority]="isResponsibleMonitorAuthority"
                                                       [isActionExecuting]="isActionExecuting"
                                                       [state]="result.state"
                                                       [canValidateAndSave]="!contentReadonly && hasEdits && countOfVotersValid"
+                                                      [canValidate]="!contentReadonly && countOfVotersValid"
+                                                      [canSave]="!contentReadonly && countOfVotersValid"
                                                       [canSubmit]="!contentReadonly && !hasEdits">
     </vo-ausm-contest-political-business-detail-footer>
   </ng-template>

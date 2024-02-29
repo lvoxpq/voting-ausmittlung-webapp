@@ -1,11 +1,12 @@
 <vo-lib-page [contentLoading]="loading"
              header="ELECTION.REVIEW_BALLOT_DETAIL.TITLE">
   <div *ngIf="electionResult && electionResult.entryParams && bundle" class="content">
-    <vo-ausm-majority-election-info [electionResult]="electionResult"></vo-ausm-majority-election-info>
+    <vo-ausm-majority-election-info [electionResult]="electionResult" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-majority-election-info>
 
     <div>
       <vo-ausm-majority-election-bundle-table [bundleSize]="electionResult.entryParams.ballotBundleSize"
-                                              [bundles]="[bundle]"></vo-ausm-majority-election-bundle-table>
+                                              [bundles]="[bundle]"
+                                              [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-majority-election-bundle-table>
     </div>
 
     <div class="content-box">
@@ -25,21 +26,22 @@
                                                    [showInvalidVotes]="electionResult.election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes"
                                                    [loadingBallot]="loadingBallot"
                                                    [readonly]="!correctionOngoing"
-                                                   [disabled]="actionExecuting">
+                                                   [disabled]="actionExecuting"
+                                                   [candidateCheckDigit]="electionResult.entryParams.candidateCheckDigit">
         </vo-ausm-majority-election-ballot-contents>
       </ng-container>
     </div>
   </div>
 
   <ng-container page-footer>
-    <vo-ausm-election-ballot-review-button-bar class="content-box"
+    <vo-ausm-result-ballot-review-button-bar class="content-box"
                                                *ngIf="electionResult && bundle"
                                                (back)="back()"
                                                (rejectBundleReview)="rejectBundleReview()"
                                                (succeedBundleReview)="succeedBundleReview()"
                                                [actionExecuting]="actionExecuting"
                                                [disabled]="loadingBallot || !ballot"
-                                               [canSucceed]="canSucceed"></vo-ausm-election-ballot-review-button-bar>
+                                               [canSucceed]="canSucceed"></vo-ausm-result-ballot-review-button-bar>
   </ng-container>
 </vo-lib-page>
 

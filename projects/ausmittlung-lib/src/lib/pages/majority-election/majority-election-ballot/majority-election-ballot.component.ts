@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { BallotBundleState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/ballot_bundle_pb';
@@ -21,7 +22,7 @@ import {
 import { MajorityElectionResultBundleService } from '../../../services/majority-election-result-bundle.service';
 import { MajorityElectionResultService } from '../../../services/majority-election-result.service';
 import { MajorityElectionService } from '../../../services/majority-election.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { UserService } from '../../../services/user.service';
 import { ElectionBallotComponent } from '../../election-ballot/election-ballot.component';
 
@@ -54,12 +55,12 @@ export class MajorityElectionBallotComponent extends ElectionBallotComponent<
     toast: SnackbarService,
     i18n: TranslateService,
     userService: UserService,
-    roleService: RoleService,
+    permissionService: PermissionService,
     private readonly resultBundleService: MajorityElectionResultBundleService,
     private readonly resultService: MajorityElectionResultService,
     private readonly electionService: MajorityElectionService,
   ) {
-    super(userService, route, dialog, i18n, router, toast, roleService);
+    super(userService, route, dialog, i18n, router, toast, permissionService);
   }
 
   public get ballotBundleSize(): number | undefined {

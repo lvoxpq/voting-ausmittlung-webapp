@@ -1,10 +1,11 @@
 @use '@abraxas/voting-lib/style/spacing' as *;
+@use '@abraxas/voting-lib/style/color' as *;
 
 .footer {
-  display: flex;
-  align-items: flex-end;
+  @extend .pt-2, .pl-4;
 
-  @extend .mt-2;
+  display: flex;
+  align-items: center;
 
   > :first-child {
     flex-grow: 1;
@@ -13,4 +14,8 @@
   .buttons :not(:first-child) {
     @extend .ml-2;
   }
+}
+
+.footer.border {
+  border-top: 1px solid $color-grey-6;
 }

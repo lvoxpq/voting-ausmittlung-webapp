@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import {
@@ -63,14 +64,14 @@ export class VoteResultBundleService extends GrpcService<VoteResultBundleService
     );
   }
 
-  public getBundleChanges(ballotResultId: string): Observable<PoliticalBusinessResultBundle> {
+  public getBundleChanges(ballotResultId: string, onRetry: () => {}): Observable<PoliticalBusinessResultBundle> {
     const req = new GetVoteResultBundleChangesRequest();
     req.setBallotResultId(ballotResultId);
     return this.requestServerStream(
       c => c.getBundleChanges,
       req,
       r => this.mapToBundle(r),
-    ).pipe(retryForeverWithBackoff());
+    ).pipe(retryForeverWithBackoff(onRetry));
   }
 
   public getBundle(bundleId: string): Promise<VoteResultBundleDetails> {

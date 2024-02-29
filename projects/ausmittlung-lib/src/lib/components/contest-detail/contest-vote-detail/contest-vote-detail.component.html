@@ -7,7 +7,7 @@
       [(resultEntryParams)]="resultDetail.entryParams"
       (done)="selectResultEntry = false; setFocus()"
       (resetResults)="resetResults()"
-      [readonly]="contestLocked || contentReadonly || !isErfassungElectionAdmin">
+      [readonly]="contestLocked || contentReadonly || !canEnterResults">
     </vo-ausm-contest-vote-detail-result-entry>
   </div>
 
@@ -18,7 +18,7 @@
         [eVoting]="eVoting"
         [totalCountOfVoters]="resultDetail.totalCountOfVoters"
         (countOfVotersChange)="updateCountOfVotersValid()"
-        [readonly]="resultReadonly || !isErfassungElectionAdmin"
+        [readonly]="resultReadonly || !canEnterResults"
         [ballotResult]="ballotResult">
       </vo-ausm-contest-vote-detail-ballot>
     </div>
@@ -28,15 +28,19 @@
           [eVoting]="eVoting"
           [totalCountOfVoters]="resultDetail.totalCountOfVoters"
           (countOfVotersChange)="updateCountOfVotersValid()"
-          [readonly]="resultReadonly || !isErfassungElectionAdmin"
+          [readonly]="resultReadonly || !canEnterResults"
           [resultDetail]="resultDetail">
         </vo-ausm-contest-vote-detail-detailed>
     </ng-template>
 
     <vo-ausm-contest-political-business-detail-footer
-      *ngIf="!contestLocked && (!contentReadonly || isResponsibleMonitorAuthority)"
+      *ngIf="!contestLocked
+        && (!contentReadonly || isResponsibleMonitorAuthority)
+        && (canAudit || (canFinishSubmission && (result.state === states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING || result.state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION)))"
       (selectResultEntry)="selectResultEntry = true"
       (validateAndSave)="validateAndSave()"
+      (validate)="validateAndSave()"
+      (save)="save()"
       (stateUpdate)="stateUpdate($event)"
       [canSelectResultEntry]="!resultDetail.vote.enforceResultEntryForCountingCircles
         || resultDetail.vote.resultEntry === entryVariants.VOTE_RESULT_ENTRY_DETAILED"
@@ -45,6 +49,8 @@
       [isActionExecuting]="isActionExecuting"
       [state]="result.state"
       [canValidateAndSave]="!contentReadonly && hasUnsavedChanges && countOfVotersValid"
+      [canValidate]="!contentReadonly && countOfVotersValid"
+      [canSave]="!contentReadonly && countOfVotersValid"
       [canSubmit]="!contentReadonly && !hasUnsavedChanges">
     </vo-ausm-contest-political-business-detail-footer>
   </ng-template>

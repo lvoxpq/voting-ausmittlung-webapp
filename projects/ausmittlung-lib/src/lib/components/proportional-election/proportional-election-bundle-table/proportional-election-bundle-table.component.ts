@@ -1,21 +1,22 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { ProportionalElectionReviewProcedure } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/proportional_election_pb';
 import { AfterViewInit, Component, Input } from '@angular/core';
 import { ProportionalElectionResultBundle } from '../../../models';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { UserService } from '../../../services/user.service';
-import { ElectionBundleTableComponent } from '../../election-bundle-table/election-bundle-table.component';
+import { ResultBundleTableComponent } from '../../result-bundle-table/result-bundle-table-component.directive';
 
 @Component({
   selector: 'vo-ausm-proportional-election-bundle-table',
   templateUrl: './proportional-election-bundle-table.component.html',
 })
 export class ProportionalElectionBundleTableComponent
-  extends ElectionBundleTableComponent<ProportionalElectionResultBundle>
+  extends ResultBundleTableComponent<ProportionalElectionResultBundle>
   implements AfterViewInit
 {
   public readonly columns = [
@@ -34,7 +35,10 @@ export class ProportionalElectionBundleTableComponent
   @Input()
   public reviewProcedure?: ProportionalElectionReviewProcedure;
 
-  constructor(userService: UserService, roleService: RoleService) {
+  @Input()
+  public newZhFeaturesEnabled: boolean = false;
+
+  constructor(userService: UserService, roleService: PermissionService) {
     super(userService, roleService);
   }
 

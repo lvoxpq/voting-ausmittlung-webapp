@@ -1,3 +1,9 @@
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
+ */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Contest, CountingCircle, ProtocolExport, ProtocolExportStateChange, ResultExportTemplate } from '../../models';
 import { ExportService } from '../../services/export.service';
@@ -209,8 +215,29 @@ export class ResultExportComponent implements OnInit, OnDestroy {
     }
 
     this.stateChangesSubscription = this.exportService
-      .getProtocolExportStateChanges(this.contestId, this.countingCircleId)
+      .getProtocolExportStateChanges(this.contestId, this.countingCircleId, this.onProtocolExportStateChangeListenerRetry.bind(this))
       .subscribe(changed => this.protocolExportStateChanged(changed));
+  }
+
+  private async onProtocolExportStateChangeListenerRetry(): Promise<void> {
+    if (!this.stateChangesSubscription) {
+      return;
+    }
+
+    // When the export state change listener fails, it is being retried with an exponential backoff
+    // During that retry backoff, changes aren't being delivered -> we need to poll for them
+    const data = await this.exportService.listProtocolExports(this.contestId, this.countingCircleId);
+    const templates = data.templates as ProtocolExport[];
+    for (let template of templates) {
+      const syntheticStateChange: ProtocolExportStateChange = {
+        exportTemplateId: template.exportTemplateId,
+        protocolExportId: template.protocolExportId,
+        newState: template.state,
+        started: template.started,
+        fileName: template.fileName,
+      };
+      this.protocolExportStateChanged(syntheticStateChange);
+    }
   }
 
   private protocolExportStateChanged(changed: ProtocolExportStateChange): void {

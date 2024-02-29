@@ -67,6 +67,7 @@
       [candidates]="ballot.candidates"
       [hasEmptyVotes]="ballot.computedEmptyVoteCount > 0"
       (toggleCandidate)="toggleCandidate($event)"
+      [candidateCheckDigit]="candidateCheckDigit"
     >
     </vo-ausm-majority-election-ballot-candidates>
   </div>

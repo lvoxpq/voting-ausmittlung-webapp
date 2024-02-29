@@ -16,6 +16,7 @@
     "TOTAL": "Total",
     "BACK": "Zurück",
     "DELETE": "Löschen",
+    "ASSIGN": "Zuordnen",
     "CHANGES": {
       "TITLE": "Änderungen",
       "MSG": "Nicht gespeicherte Änderungen gehen verloren."
@@ -24,7 +25,8 @@
     "CLOSE": "Schliessen",
     "CONTINUE": "Weiter",
     "SHORTCUT_TITLE": "Tastenkombinationen",
-    "CONFIRM": "Bestätigen"
+    "CONFIRM": "Bestätigen",
+    "OPEN": "Öffnen"
   },
   "CONTEST": {
     "TITLE": "Urnengänge",
@@ -57,12 +59,15 @@
       "SWISS_ABROAD": "Auslandschweizer",
       "E_VOTING_ACTIVE": "E-Voting aktiviert",
       "COUNTING_CIRCLE_DETAILS_SAVED": "Stimmberechtigte und Stimmrechtsausweise erfolgreich gespeichert.",
+      "COUNT_OF_VOTERS_AND_VOTING_CARDS": "Stimmberechtigte und Stimmrechtsausweise",
+      "POLITICAL_BUSINESSES": "Geschäfte",
       "VOTING_CARDS": {
         "TITLE": "Stimmrechtsausweise",
         "1": "Urne",
-        "2": "brieflich",
         "2_VALID": "brieflich gültig",
         "2_INVALID": "brieflich ungültig",
+        "2_VALID_TG": "brieflich",
+        "2_INVALID_TG": "ausser Betracht",
         "3": "E-Voting",
         "4": "vorzeitig",
         "TOTAL_VALID": "Total gültige",
@@ -76,7 +81,9 @@
       "CONTACT_DATA": {
         "TITLE": "Kontaktdaten",
         "TITLE_AUTHORITY": "Kontaktdaten der zuständigen Behörde",
-        "TITLE_DETAILS": "Kontakt Oberbehörde",
+        "TITLE_DETAILS": "Kontakte",
+        "TITLE_DETAILS_OLD": "Kontakt Oberbehörde",
+        "TITLE_DIALOG": "Kontaktinformationen",
         "NO_DATA": "Keine Kontaktdaten erfasst",
         "PHONE": "Telefon",
         "EMAIL": "E-Mail",
@@ -90,8 +97,28 @@
         "UPDATE_FOR_CONTEST": "Bitte aktualisieren Sie die Kontaktdaten für den Urnengang",
         "UPDATE_REMARK": "Die folgenden Anpassungen an den Kontaktdaten sind nur temporär für den aktuellen Urnengang gültig. Die permanenten Kontaktdaten können innerhalb der VOTING Basis-Services angepasst werden."
       },
+      "ELECTORATE": {
+        "DIALOG_TITLE": "Elektorate anpassen",
+        "EDIT": "Elektorate",
+        "EDIT_OLD": "Elektorate anpassen...",
+        "ADD": "Elektorat hinzufügen...",
+        "DOMAIN_OF_INFLUENCE_TYPES": "Geschäftsebenen",
+        "ASSIGN_OPEN": "Ebenen zuordnen",
+        "NO_DATA": "Keine Elektorate vorhanden...",
+        "ASSIGN": {
+          "TITLE": "Geschäftsebenen zuordnen",
+          "DOMAIN_OF_INFLUENCE_TYPE_PREFIX": "Ebene",
+          "DOMAIN_OF_INFLUENCE_TYPE": "Geschäftsebene",
+          "SELECTED": "Ausgewählte Geschäftsebenen"
+        },
+        "CONFIRM_DETAILS_RESET": {
+          "TITLE": "Elektorate speichern?",
+          "MESSAGE": "Sind Sie sicher dass Sie die Elektorate speichern wollen? Eine Speicherung setzt alle erfassten Stimmrechtsausweise zurück."
+        }
+      },
       "STATE_ACTION": {
-        "LABEL": "Status aller Geschäfte ändern...",
+        "LABEL_OLD": "Status aller Geschäfte ändern...",
+        "LABEL": "Status ändern",
         "ALL_TO_AUDIT_TENTATIVELY": "Alle auf vorläufig geprüft",
         "RESET_RESULTS": "Status zurücksetzen und Teilergebnisse löschen",
         "SUBMIT_RESULTS": "Erfassung prüfen und beenden"
@@ -100,8 +127,10 @@
   },
   "POLITICAL_BUSINESS": {
     "NOT_SUBMITTED": "Ergebnisse wurden noch nicht erfasst.",
+    "SUBMIT": "Erfassen",
     "RESULTS_ENTRY": {
-      "EDIT": "(anpassen…)",
+      "EDIT_OLD": "(anpassen…)",
+      "EDIT": "Erfassungsvariante",
       "QUESTION": "Bitte wählen Sie die Methode aus, wie die Ergebnisse erfasst werden sollen",
       "SELECT": "Erfassungsparameter bestätigen",
       "NOT_SELECTED": "Die Erfassungsweise ist nicht eingestellt. Bitte kontaktieren Sie den zuständigen Wahlverantwortlichen.",
@@ -139,7 +168,9 @@
         "TEXT": "Bund abschliessen",
         "COMBINATION": "Ctrl + Alt + W"
       }
-    }
+    },
+    "SUBMISSION": "Erfassung",
+    "RESULT": "Ergebnis"
   },
   "VOTE": {
     "RESULT_ENTRY": {
@@ -237,6 +268,8 @@
       "TOTAL": "Total"
     },
     "BY_BUNDLE": "Einzelne Stimmzettel erfassen und Bundkontrolle",
+    "NO_BUNDLES": "Es sind noch keine Bunde erfasst",
+    "BALLOT_COUNT": "{{count}} Stimmzettel erfasst",
     "BUNDLE_OVERVIEW": "Bundeübersicht und einzelne Stimmzettel erfassen",
     "NEW_BUNDLE": "+ Neuen Bund erfassen",
     "BUNDLE_TABLES": {
@@ -313,7 +346,11 @@
           "2": "Fortlaufend über alle Bunde (z.B. 1-25, 26-50, 51-75, …)"
         }
       },
-      "COUNTING_CIRCLE": "Auszählungskreis"
+      "COUNTING_CIRCLE": "Auszählungskreis",
+      "CANDIDATE_CHECK_DIGIT": {
+        "TITLE": "Prüfziffer",
+        "USE": "Prüfziffer verwenden"
+      }
     },
     "NR_OF_MANDATES": "{{numberOfMandates}} Sitze",
     "VOTER_PARTICIPATION": "Wahlbeteiligung",
@@ -376,6 +413,7 @@
       "REVIEW": "Bund kontrollieren",
       "REJECT_REVIEW": "Bund zurück zur Überprüfung",
       "SUCCEED_REVIEW": "Bund auf kontrolliert",
+      "GENERATE": "Kontrollblatt generieren",
       "WITHOUT_LIST": "Wahlzettel ohne Parteibezeichnung",
       "REMOVE_RANGE": {
         "START": "Kandidat/in entfernen von",
@@ -409,13 +447,19 @@
     "SHOW_BALLOT": "Wahlzettel einsehen",
     "VOTE_COUNT": "Stimmen",
     "VOTE_COUNT_E_VOTING": "Elektronisch",
-    "VOTE_COUNT_CONVENTIONAL": "Konventionell"
+    "VOTE_COUNT_CONVENTIONAL": "Konventionell",
+    "NO_BUNDLES": "Es sind noch keine Bunde erfasst",
+    "BALLOT_COUNT": "{{count}} Wahlzettel erfasst"
   },
   "MAJORITY_ELECTION": {
     "TITLE": "Majorzwahl",
-    "BY_BALLOT_GROUPS": "Nach Wahlzettelgruppen erfassen",
+    "BY_BALLOT_GROUPS": "Wahlzettelgruppen erfassen",
+    "BY_BALLOT_GROUPS_OLD": "Nach Wahlzettelgruppen erfassen",
+    "BALLOT_GROUPS_COUNT": "{{count}} Wahlzettelgruppen erfasst",
+    "NO_BALLOT_GROUPS": "Es sind noch keine Wahlzettelgruppen erfasst",
     "BY_BUNDLE": "Einzelne Wahlzettel erfassen und Bundkontrolle",
     "MAP_WRITE_INS": "E-Voting Write-Ins zuweisen",
+    "MAP": "Zuweisen",
     "RESULT_ENTRY": {
       "NOT_SELECTED": "Die Erfassungsvariante sind nicht eingestellt. Bitte kontaktieren Sie die zuständige auszählungsverantwortliche Person.",
       "EDIT": "Erfassungsvariante anpassen…",
@@ -446,7 +490,6 @@
     "INDIVIDUAL": "Vereinzelte",
     "EMPTY_VOTES": "Leere Zeilen",
     "INVALID_VOTES": "Ungültige Stimmen",
-    "INVALID_BALLOT": "Ungültiger Wahlzettel",
     "BALLOT_DETAIL": {
       "SHORTCUT": {
         "ADD_CANDIDATE": {
@@ -473,6 +516,8 @@
     "SHOW_RESULTS": "Zur Ergebnisübersicht",
     "MODIFIED_LISTS": "Einzelne Wahlzettel erfassen und Bundkontrolle",
     "UNMODIFIED_LISTS": "Unveränderte Wahlzettel erfassen",
+    "UNMODIFIED_LISTS_COUNT": "{{count}} unveränderte Wahlzettel erfasst",
+    "NO_UNMODIFIED_LISTS": "Es sind noch keine unveränderte Wahlzettel erfasst",
     "TITLE": "Proporzwahl",
     "LISTS": "Listen",
     "LIST": {
@@ -510,7 +555,9 @@
     "ENTER_LIST_NUMBER": "Listen-Nr. eingeben",
     "BALLOT_DETAIL": {
       "ADD_CANDIDATE_HINT": "Nr eingeben (xx.xx)",
+      "ADD_CANDIDATE_HINT_WITH_CHECK_DIGIT": "Nr eingeben (xx.xxx)",
       "REMOVE_CANDIDATE_HINT": "Nr eingeben (xx)",
+      "REMOVE_CANDIDATE_HINT_WITH_CHECK_DIGIT": "Nr eingeben (xxx)",
       "SHORTCUT": {
         "ADD_CANDIDATE": {
           "TEXT": "Kandidat/in hinzufügen",
@@ -536,6 +583,10 @@
       "INVALID_EMPTY_BALLOT_WITHOUT_PARTY": {
         "TITLE": "Wahlzettel leer",
         "MSG": "Wahlzettel ohne Parteibezeichnung muss mindestens ein/e Kandidat/in beinhalten."
+      },
+      "INVALID_EMPTY_BALLOT_WITH_PARTY": {
+        "TITLE": "Wahlzettel leer",
+        "MSG": "Ein leerer Wahlzettel mit Parteibezeichnung kann nicht gespeichert werden. Bitte erfassen Sie mindestens eine kandidierende Person oder erfassen Sie diesen Wahlzettel als ungültig."
       }
     },
     "END_RESULTS": {
@@ -557,6 +608,9 @@
     "EDIT": "Bearbeiten",
     "DELETE": "Löschen",
     "VALIDATE_AND_SAVE": "Speichern",
+    "SAVE": "Speichern",
+    "VALIDATE": "Prüfen",
+    "SUBMIT_RESULTS": "Ergebnisse übermitteln",
     "SUBMISSION_DONE": "Prüfen und Erfassung beenden",
     "CORRECTION_DONE": "Korrektur beenden",
     "FLAG_FOR_CORRECTION": "zur Korrektur",
@@ -638,6 +692,13 @@
     "TYPE": "Ebene {{type}}",
     "TITLE": "Geschäftsebene"
   },
+  "COUNTING_MACHINES": {
+    "TITLE": "Technische Hilfsmittel",
+    "1": "keine technischen Hilfsmittel",
+    "2": "Geeichte Waagen",
+    "3": "Banknotenzählmaschinen",
+    "4": "Andere technische Hilfsmittel"
+  },
   "VOTING_CHANNELS": {
     "1": "Urne",
     "2": "brieflich",
@@ -673,6 +734,9 @@
     },
     "PLAUSIBILISATION": {
       "HEADER": "Die Plausibilisierung ergibt folgende Ergebnisse:"
+    },
+    "GROUP": {
+      "1": "Frage {{groupValue}}"
     },
     "VALUES": {
       "1": {
@@ -916,7 +980,14 @@
       "COULD_NOT_FIND_CANDIDATE": "Kein/e Kandidat/in mit der Nummer {{number}} gefunden…",
       "ASSIGN_SHORTCUT": "CTRL+Zahl um Write-In zuzuordnen",
       "COMPLETE": "Abschliessen",
-      "RESET": "Write-Ins zurücksetzen"
+      "RESET": "Write-Ins zurücksetzen",
+      "EMPTY_VOTES": "Nicht wählbar",
+      "INVALID_BALLOT": "Ungültiger Wahlzettel (z.B. Beleidigung oder Verletzung des Wahlgeheimnis)",
+      "RESETTED": "Write-Ins erfolgreich zurückgesetzt",
+      "MAPPED": "Write-Ins zugewiesen",
+      "MAPPED_FOR": "Write-Ins von {{election}} zugewiesen.",
+      "MAPPED_DUPLICATED_CANDIDATES": "In {{count}} Fällen wurde Write-Ins Kandidierenden zugewiesen, welche auf demselben Wahlzettel bereits eine Stimme erhalten haben.",
+      "MAPPED_INVALID_DUE_TO_EMPTY_BALLOT": "{{count}} Wahlzettel wurden ungültig, da sie nach der Zuweisung der Write-Ins leer wurden."
     },
     "IMPORTED": {
       "TITLE": "E-Voting Import",

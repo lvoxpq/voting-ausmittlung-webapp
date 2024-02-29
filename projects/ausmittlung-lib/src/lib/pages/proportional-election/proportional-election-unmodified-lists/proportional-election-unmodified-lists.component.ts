@@ -1,26 +1,28 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
 import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
-import { Component, OnDestroy, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ProportionalElectionUnmodifiedListResults } from '../../../models';
 import { ProportionalElectionResultService } from '../../../services/proportional-election-result.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { sum } from '../../../services/utils/array.utils';
 import { NumberComponent } from '@abraxas/base-components';
+import { Permissions } from '../../../models/permissions.model';
 
 @Component({
   selector: 'vo-ausm-proportional-election-unmodified-lists',
   templateUrl: './proportional-election-unmodified-lists.component.html',
   styleUrls: ['./proportional-election-unmodified-lists.component.scss'],
 })
-export class ProportionalElectionUnmodifiedListsComponent implements OnDestroy {
+export class ProportionalElectionUnmodifiedListsComponent implements OnInit, OnDestroy {
   @ViewChildren(NumberComponent)
   public listResultComponents?: QueryList<NumberComponent>;
 
@@ -28,15 +30,16 @@ export class ProportionalElectionUnmodifiedListsComponent implements OnDestroy {
   public total: number = 0;
   public loading: boolean = true;
   public saving: boolean = false;
-  public isErfassungElectionAdmin: Observable<boolean>;
+  public canEdit: boolean = false;
   public canSave: boolean = false;
   public hasChanges: boolean = false;
   public resultReadOnly: boolean = false;
+  public newZhFeaturesEnabled: boolean = false;
 
   private readonly routeParamsSubscription: Subscription;
+  private readonly routeDataSubscription: Subscription;
 
   constructor(
-    roleService: RoleService,
     private readonly i18n: TranslateService,
     private readonly toast: SnackbarService,
     private readonly dialog: DialogService,
@@ -44,9 +47,16 @@ export class ProportionalElectionUnmodifiedListsComponent implements OnDestroy {
     private readonly router: Router,
     private readonly resultService: ProportionalElectionResultService,
     private readonly themeService: ThemeService,
+    private readonly permissionService: PermissionService,
   ) {
-    this.isErfassungElectionAdmin = roleService.isErfassungElectionAdmin;
     this.routeParamsSubscription = route.params.subscribe(({ resultId }) => this.loadData(resultId));
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
+  }
+
+  public async ngOnInit(): Promise<void> {
+    this.canEdit = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.EnterResults);
   }
 
   public async back(): Promise<void> {
@@ -89,6 +99,7 @@ export class ProportionalElectionUnmodifiedListsComponent implements OnDestroy {
 
   public ngOnDestroy(): void {
     this.routeParamsSubscription.unsubscribe();
+    this.routeDataSubscription.unsubscribe();
   }
 
   private async loadData(resultId: string): Promise<void> {

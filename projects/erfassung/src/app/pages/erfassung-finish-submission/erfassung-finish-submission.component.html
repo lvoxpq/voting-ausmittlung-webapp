@@ -2,7 +2,7 @@
              header="SUBMISSION_DONE.TITLE">
   <vo-lib-page-header header>
     <vo-ausm-breadcrumbs left [items]="breadcrumbs"></vo-ausm-breadcrumbs>
-    <vo-ausm-contest-header center [contest]="contest"></vo-ausm-contest-header>
+    <vo-ausm-contest-header center [contest]="contest" [countingCircle]="countingCircle" [state]="state"></vo-ausm-contest-header>
     <div right>
       <bc-button variant="tertiary"
                  [disabled]="selectedResults.selected.length === 0 || loadingResults || finishingResultSubmissions"
@@ -53,7 +53,7 @@
       <ng-container bcColumnDef="countingCircleResultState">
         <th bc-header-cell *bcHeaderCellDef>{{ 'SUBMISSION_DONE.COUNTING_CIRCLE_RESULT_STATE' | translate }}</th>
         <td bc-cell *bcCellDef="let element">
-          <vo-ausm-result-state-box [state]="element.state"></vo-ausm-result-state-box>
+          <vo-ausm-result-state-box [state]="element.state" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-result-state-box>
         </td>
       </ng-container>
 

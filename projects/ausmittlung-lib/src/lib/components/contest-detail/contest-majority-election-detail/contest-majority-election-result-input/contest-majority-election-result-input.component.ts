@@ -1,16 +1,11 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, ElementRef, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
-import {
-  MajorityElectionCandidateResult,
-  MajorityElectionResult,
-  MajorityElectionWriteInMapping,
-  SecondaryMajorityElectionResult,
-} from '../../../../models';
-import { adjustWriteIns, resetWriteIns } from '../../../../services/utils/write-ins-mapping.utils';
+import { MajorityElectionCandidateResult, MajorityElectionResult, SecondaryMajorityElectionResult } from '../../../../models';
 
 @Component({
   selector: 'vo-ausm-contest-majority-election-result-input',
@@ -36,14 +31,7 @@ export class ContestMajorityElectionResultInputComponent {
   public readonly: boolean = true;
 
   @Input()
-  public set mappedWriteIns(mappings: MajorityElectionWriteInMapping[] | undefined) {
-    if (!mappings) {
-      return;
-    }
-
-    resetWriteIns(this.result);
-    adjustWriteIns(this.result, mappings);
-  }
+  public newZhFeaturesEnabled: boolean = false;
 
   @Input()
   public buttonsTemplate?: TemplateRef<HTMLElement>;

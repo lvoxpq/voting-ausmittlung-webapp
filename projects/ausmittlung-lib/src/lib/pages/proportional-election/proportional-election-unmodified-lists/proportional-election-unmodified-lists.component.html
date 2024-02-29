@@ -1,7 +1,7 @@
 <vo-lib-page [contentLoading]="loading"
              header="PROPORTIONAL_ELECTION.UNMODIFIED_LISTS">
   <ng-container *ngIf="result">
-    <vo-ausm-proportional-election-info [electionResult]="result.electionResult"></vo-ausm-proportional-election-info>
+    <vo-ausm-proportional-election-info [electionResult]="result.electionResult" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-proportional-election-info>
 
     <div class="content content-box">
       <bc-label [label]="'APP.NR' | translate"></bc-label>
@@ -13,7 +13,7 @@
         <span>{{listResult.list.orderNumber}}</span>
         <span>{{listResult.list.shortDescription}}</span>
         <span>{{listResult.list.description}}</span>
-        <bc-number [disabled]="(isErfassungElectionAdmin | async) !== true || resultReadOnly"
+        <bc-number [disabled]="!canEdit || resultReadOnly"
                    [ngModel]="listResult.conventionalVoteCount"
                    [allowUndefined]="false"
                    (ngModelChange)="listResult.conventionalVoteCount = +$event; updateTotalAndSetChanges()"
@@ -31,7 +31,7 @@
                        [saveLabel]="'APP.SAVE_AND_NEXT' | translate"
                        (cancel)="back()"
                        (save)="save()"
-                       [hasSaveButton]="(isErfassungElectionAdmin | async) === true && !resultReadOnly"
+                       [hasSaveButton]="canEdit && !resultReadOnly"
                        [canSave]="canSave && hasChanges"
                        [saving]="saving"></vo-lib-button-bar>
   </ng-container>

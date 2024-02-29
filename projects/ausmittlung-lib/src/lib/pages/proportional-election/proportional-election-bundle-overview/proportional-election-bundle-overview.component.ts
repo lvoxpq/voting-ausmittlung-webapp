@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { ProportionalElectionReviewProcedure } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/proportional_election_pb';
@@ -17,7 +18,7 @@ import {
 import { PoliticalBusinessResultBundle, ProportionalElectionResultBundle, ProportionalElectionResultBundles } from '../../../models';
 import { ProportionalElectionResultBundleService } from '../../../services/proportional-election-result-bundle.service';
 import { ResultExportService } from '../../../services/result-export.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { PoliticalBusinessBundleOverviewComponent } from '../../political-business-bundle-overview/political-business-bundle-overview.component';
 import { ProportionalElectionBallotComponent } from '../proportional-election-ballot/proportional-election-ballot.component';
 
@@ -28,7 +29,7 @@ import { ProportionalElectionBallotComponent } from '../proportional-election-ba
 })
 export class ProportionalElectionBundleOverviewComponent extends PoliticalBusinessBundleOverviewComponent<ProportionalElectionResultBundles> {
   constructor(
-    roleService: RoleService,
+    permissionService: PermissionService,
     i18n: TranslateService,
     toast: SnackbarService,
     dialog: DialogService,
@@ -38,7 +39,7 @@ export class ProportionalElectionBundleOverviewComponent extends PoliticalBusine
     resultExportService: ResultExportService,
     private readonly resultBundleService: ProportionalElectionResultBundleService,
   ) {
-    super(roleService, i18n, toast, dialog, route, router, themeService, resultExportService);
+    super(permissionService, i18n, toast, dialog, route, router, themeService, resultExportService);
   }
 
   @HostListener('document:keydown.control.alt.q')
@@ -110,8 +111,8 @@ export class ProportionalElectionBundleOverviewComponent extends PoliticalBusine
     return this.resultBundleService.getBundles(resultId);
   }
 
-  protected startChangesListener(resultId: string): Observable<ProportionalElectionResultBundle> {
-    return this.resultBundleService.getBundleChanges(resultId);
+  protected startChangesListener(resultId: string, onRetry: () => {}): Observable<ProportionalElectionResultBundle> {
+    return this.resultBundleService.getBundleChanges(resultId, onRetry);
   }
 
   private async exportBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {

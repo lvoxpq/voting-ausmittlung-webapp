@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import {
@@ -29,13 +30,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import {
-  AusmittlungLibModule,
-  getCommonProviders,
-  GRPC_ENV_INJECTION_TOKEN,
-  REST_API_URL_INJECTION_TOKEN,
-  RoleService as BaseRoleService,
-} from 'ausmittlung-lib';
+import { AusmittlungLibModule, getCommonProviders, GRPC_ENV_INJECTION_TOKEN, REST_API_URL_INJECTION_TOKEN } from 'ausmittlung-lib';
 import { GrpcLanguageInterceptor } from '../../../ausmittlung-lib/src/lib/services/interceptors/grpc-language.interceptor';
 import { HttpLanguageInterceptor } from '../../../ausmittlung-lib/src/lib/services/interceptors/http-language.interceptor';
 import { environment } from '../environments/environment';
@@ -43,7 +38,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ErfassungContestDetailComponent } from './pages/erfassung-contest-detail/erfassung-contest-detail.component';
 import { ErfassungContestOverviewComponent } from './pages/erfassung-contest-overview/erfassung-contest-overview.component';
-import { RoleService } from './services/role.service';
 import { WebpackTranslateLoader } from './services/webpack-translate-loader';
 import { ErfassungFinishSubmissionComponent } from './pages/erfassung-finish-submission/erfassung-finish-submission.component';
 
@@ -88,10 +82,6 @@ registerLocaleData(localeDeCh);
     {
       provide: ENV_INJECTION_TOKEN,
       useValue: environment.env,
-    },
-    {
-      provide: BaseRoleService,
-      useClass: RoleService,
     },
     {
       provide: REST_API_URL_INJECTION_TOKEN,

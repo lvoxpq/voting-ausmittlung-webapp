@@ -1,16 +1,20 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
-import { Component, Input } from '@angular/core';
-import { VotingCardResultDetail, CountOfVotersInformation, Contest, DomainOfInfluenceType } from 'ausmittlung-lib';
+import { Component, Input, OnDestroy } from '@angular/core';
+import { Contest, CountOfVotersInformation, DomainOfInfluenceType, VotingCardResultDetail } from 'ausmittlung-lib';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { DomainOfInfluenceCanton } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/domain_of_influence_pb';
 
 @Component({
   selector: 'app-end-result-page',
   templateUrl: './end-result-page.component.html',
 })
-export class EndResultPageComponent {
+export class EndResultPageComponent implements OnDestroy {
   @Input()
   public loading: boolean = false;
 
@@ -24,8 +28,25 @@ export class EndResultPageComponent {
   public countOfVotersInformation?: CountOfVotersInformation;
 
   @Input()
-  public votingCards?: VotingCardResultDetail;
+  public votingCards?: VotingCardResultDetail[];
 
   @Input()
   public domainOfInfluenceType?: DomainOfInfluenceType;
+
+  @Input()
+  public canton?: DomainOfInfluenceCanton;
+
+  public newZhFeaturesEnabled: boolean = false;
+
+  private readonly routeDataSubscription: Subscription;
+
+  constructor(route: ActivatedRoute) {
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
+  }
+
+  public async ngOnDestroy(): Promise<void> {
+    this.routeDataSubscription.unsubscribe();
+  }
 }

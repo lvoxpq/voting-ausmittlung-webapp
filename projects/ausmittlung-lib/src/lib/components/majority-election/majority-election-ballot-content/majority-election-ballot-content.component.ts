@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { TextComponent } from '@abraxas/base-components';
@@ -31,6 +32,9 @@ export class MajorityElectionBallotContentComponent implements OnChanges {
 
   @Input()
   public ballot!: MajorityElectionResultBallotBase;
+
+  @Input()
+  public candidateCheckDigit: boolean = false;
 
   @Output()
   public contentChanged: EventEmitter<void> = new EventEmitter<void>();
@@ -133,7 +137,7 @@ export class MajorityElectionBallotContentComponent implements OnChanges {
     const candidates = this.ballot.computedEmptyVoteCount > 0 ? this.ballot.candidates : this.ballot.candidates.filter(c => c.selected);
     this.selectableCandidatesByNumber = groupBySingle(
       candidates,
-      x => x.number,
+      x => (this.candidateCheckDigit ? `${x.number}${x.checkDigit}` : x.number),
       x => x,
     );
   }

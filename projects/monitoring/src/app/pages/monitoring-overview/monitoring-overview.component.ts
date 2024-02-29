@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { DialogService } from '@abraxas/voting-lib';
@@ -27,11 +28,13 @@ import {
 export class MonitoringOverviewComponent implements OnDestroy {
   public loading: boolean = true;
   public resultOverview?: ResultOverview;
+  public newZhFeaturesEnabled: boolean = false;
 
   @ViewChild(MonitoringCockpitGridComponent)
   public grid!: MonitoringCockpitGridComponent;
 
-  private readonly routeSubscription: Subscription;
+  private readonly routeParamsSubscription: Subscription;
+  private readonly routeDataSubscription: Subscription;
 
   constructor(
     private readonly router: Router,
@@ -39,11 +42,15 @@ export class MonitoringOverviewComponent implements OnDestroy {
     private readonly resultService: ResultService,
     private readonly dialogService: DialogService,
   ) {
-    this.routeSubscription = this.route.params.subscribe(({ contestId }) => this.loadData(contestId));
+    this.routeParamsSubscription = this.route.params.subscribe(({ contestId }) => this.loadData(contestId));
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
   }
 
   public async ngOnDestroy(): Promise<void> {
-    this.routeSubscription.unsubscribe();
+    this.routeParamsSubscription.unsubscribe();
+    this.routeDataSubscription.unsubscribe();
   }
 
   public async import(): Promise<void> {

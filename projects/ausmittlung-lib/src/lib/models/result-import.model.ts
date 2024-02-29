@@ -1,12 +1,14 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import {
   MajorityElectionContestWriteInMappings as MajorityElectionContestWriteInMappingsProto,
   MajorityElectionWriteInMapping as MajorityElectionWriteInMappingProto,
   MajorityElectionWriteInMappings as MajorityElectionWriteInMappingsProto,
+  MajorityElectionWriteInMappingsChange as WriteInMappingsChangeProto,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/majority_election_write_in_pb';
 import {
   ResultImport as ResultImportProto,
@@ -25,6 +27,7 @@ export {
   MajorityElectionWriteInMappingsProto,
   MajorityElectionWriteInMappingProto,
   ResultImportChangeProto,
+  WriteInMappingsChangeProto,
 };
 
 export interface MajorityElectionWriteInMappings {

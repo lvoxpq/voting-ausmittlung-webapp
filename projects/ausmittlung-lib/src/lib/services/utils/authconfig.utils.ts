@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 // Builds the scope for the authentication config.
@@ -8,8 +9,11 @@
 // so the backend is able to read the roles of both apps.
 import { AUDIENCE_CLIENTID_PREFIX, DEFAULT_SCOPE } from '@abraxas/base-components';
 
-export function buildScope(clientIdErfassung: string, clientIdMonitoring: string): string {
-  return (
-    DEFAULT_SCOPE + ' offline_access ' + AUDIENCE_CLIENTID_PREFIX + clientIdErfassung + ' ' + AUDIENCE_CLIENTID_PREFIX + clientIdMonitoring
-  );
+export function buildScope(
+  clientIdErfassung: string,
+  clientIdMonitoring: string,
+  clientIdentity: string,
+  clientPermission: string,
+): string {
+  return `${DEFAULT_SCOPE} offline_access ${AUDIENCE_CLIENTID_PREFIX}${clientIdErfassung} ${AUDIENCE_CLIENTID_PREFIX}${clientIdMonitoring} ${AUDIENCE_CLIENTID_PREFIX}${clientIdentity} ${AUDIENCE_CLIENTID_PREFIX}${clientPermission}`;
 }

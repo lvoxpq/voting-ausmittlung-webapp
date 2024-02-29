@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import {
@@ -46,7 +47,6 @@ import {
   getCommonProviders,
   GRPC_ENV_INJECTION_TOKEN,
   REST_API_URL_INJECTION_TOKEN,
-  RoleService as BaseRoleService,
 } from 'ausmittlung-lib';
 import { GrpcLanguageInterceptor } from '../../../ausmittlung-lib/src/lib/services/interceptors/grpc-language.interceptor';
 import { HttpLanguageInterceptor } from '../../../ausmittlung-lib/src/lib/services/interceptors/http-language.interceptor';
@@ -79,7 +79,6 @@ import { MonitoringOverviewComponent } from './pages/monitoring-overview/monitor
 import { ProportionalElectionEndResultComponent } from './pages/proportional-election-end-result/proportional-election-end-result.component';
 import { VoteEndResultComponent } from './pages/vote-end-result/vote-end-result.component';
 import { BreadcrumbsService } from './services/breadcrumbs.service';
-import { RoleService } from './services/role.service';
 import { WebpackTranslateLoader } from './services/webpack-translate-loader';
 import { ExportCockpitPoliticalBusinessesComponent } from './components/export-cockpit-political-businesses/export-cockpit-political-businesses.component';
 import { ProportionalElectionManualEndResultDialogComponent } from './components/proportional-election-manual-end-result-dialog/proportional-election-manual-end-result-dialog.component';
@@ -165,10 +164,6 @@ registerLocaleData(localeDeCh);
     {
       provide: ENV_INJECTION_TOKEN,
       useValue: environment.env,
-    },
-    {
-      provide: BaseRoleService,
-      useClass: RoleService,
     },
     {
       provide: REST_API_URL_INJECTION_TOKEN,

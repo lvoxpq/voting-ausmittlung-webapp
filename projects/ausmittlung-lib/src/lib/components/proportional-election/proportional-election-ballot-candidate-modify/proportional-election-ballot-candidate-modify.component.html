@@ -5,7 +5,12 @@
     optionalText=""
     [label]="'ELECTION.BALLOT_DETAIL.REMOVE_CANDIDATE' | translate"
     [disabled]="readonly"
-    [hint]="'PROPORTIONAL_ELECTION.BALLOT_DETAIL.REMOVE_CANDIDATE_HINT' | translate"
+    [hint]="
+      (candidateCheckDigit
+        ? 'PROPORTIONAL_ELECTION.BALLOT_DETAIL.REMOVE_CANDIDATE_HINT_WITH_CHECK_DIGIT'
+        : 'PROPORTIONAL_ELECTION.BALLOT_DETAIL.REMOVE_CANDIDATE_HINT'
+      ) | translate
+    "
     [(value)]="removeCandidateValue"
     (valueChange)="tryRemoveCandidate($event)"
   ></bc-text>
@@ -23,7 +28,12 @@
     [label]="'ELECTION.BALLOT_DETAIL.ADD_CANDIDATE_SHORTCUT' | translate"
     [disabled]="readonly || !canAddCandidate"
     [(ngModel)]="addCandidateValue"
-    [hint]="'PROPORTIONAL_ELECTION.BALLOT_DETAIL.ADD_CANDIDATE_HINT' | translate"
+    [hint]="
+      (candidateCheckDigit
+        ? 'PROPORTIONAL_ELECTION.BALLOT_DETAIL.ADD_CANDIDATE_HINT_WITH_CHECK_DIGIT'
+        : 'PROPORTIONAL_ELECTION.BALLOT_DETAIL.ADD_CANDIDATE_HINT'
+      ) | translate
+    "
     (ngModelChange)="tryAddCandidate($event)"
     (keydown.enter)="contentCompleted.emit($event)"
   ></bc-text>

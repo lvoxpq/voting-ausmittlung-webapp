@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import {
@@ -8,7 +9,7 @@ import {
   ValidationSummaries as ValidationSummariesProto,
   ValidationResult as ValidationResultProto,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/validation_pb';
-import { Validation } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/validation_pb';
+import { Validation, ValidationGroup } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/validation_pb';
 
 export { Validation, ValidationSummaryProto, ValidationResultProto, ValidationSummariesProto };
 
@@ -24,11 +25,13 @@ export interface ValidationResult {
   data?: any;
   translationId: string;
   translationListItemsCount?: number;
+  validationGroup: ValidationGroup;
+  groupValue: string;
 }
 
 export interface ValidationSummary {
   title: string;
-  requiredValidationResults: ValidationResult[];
-  optionalValidationResults: ValidationResult[];
+  requiredValidationResults: Record<string, ValidationResult[]>;
+  optionalValidationResults: Record<string, ValidationResult[]>;
   isValid: boolean;
 }

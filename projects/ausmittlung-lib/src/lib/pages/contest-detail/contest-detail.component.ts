@@ -1,11 +1,12 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { AuthorizationService, Tenant } from '@abraxas/base-components';
-import { DialogService } from '@abraxas/voting-lib';
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { DialogService, SnackbarService } from '@abraxas/voting-lib';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ContestDetailSidebarComponent } from '../../components/contest-detail/contest-detail-sidebar/contest-detail-sidebar.component';
@@ -13,22 +14,39 @@ import { ContestPoliticalBusinessDetailComponent } from '../../components/contes
 import {
   MajorityElectionWriteInMappingDialogComponent,
   ResultImportWriteInMappingDialogData,
-  // eslint-disable-next-line max-len
 } from '../../components/majority-election-write-in-mappings/majority-election-write-in-mapping-dialog/majority-election-write-in-mapping-dialog.component';
-import { ContestCountingCircleDetails, CountingCircleResultState, ResultList, ResultListResult } from '../../models';
+import {
+  ContestCountingCircleDetails,
+  CountingCircleResultState,
+  DomainOfInfluenceType,
+  ResultList,
+  ResultListResult,
+  VotingChannel,
+} from '../../models';
 import { BreadcrumbItem, BreadcrumbsService } from '../../services/breadcrumbs.service';
 import { PoliticalBusinessResultService } from '../../services/political-business-result.service';
 import { ResultService } from '../../services/result.service';
-import { RoleService } from '../../services/role.service';
-import { groupBySingle } from '../../services/utils/array.utils';
+import { distinct, flatten, groupBySingle } from '../../services/utils/array.utils';
 import { ResultImportService } from '../../services/result-import.service';
+import { PermissionService } from '../../services/permission.service';
+import { Permissions } from '../../models/permissions.model';
+import { ContactPersonEditDialogResult } from '../../components/contest-detail/contest-detail-sidebar/contact-person-edit-dialog/contact-person-edit-dialog.component';
+import { ContactDialogComponent, ContactDialogComponentData } from '../../components/contact-dialog/contact-dialog.component';
+import {
+  ContestCountingCircleElectoratesUpdateDialogComponent,
+  ContestCountingCircleElectoratesUpdateDialogData,
+  ContestCountingCircleElectoratesUpdateDialogResult,
+} from '../../components/contest-counting-circle-electorates-update-dialog/contest-counting-circle-electorates-update-dialog.component';
+import { DomainOfInfluenceCanton } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/domain_of_influence_pb';
+import { ErrorToastUtil } from '@abraxas/voting-lib/lib/services/error-toast.util';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'vo-ausm-contest-detail',
   templateUrl: './contest-detail.component.html',
   styleUrls: ['./contest-detail.component.scss'],
 })
-export class ContestDetailComponent implements AfterViewInit, OnDestroy {
+export class ContestDetailComponent implements OnInit, AfterViewInit, OnDestroy {
   public resultList?: ResultList;
   public loading: boolean = true;
 
@@ -51,16 +69,20 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
   @ViewChildren(ContestPoliticalBusinessDetailComponent)
   public politicalBusinessesDetails?: QueryList<ContestPoliticalBusinessDetailComponent>;
 
-  public isErfassungElectionAdmin: boolean = false;
+  public newZhFeaturesEnabled: boolean = false;
+  public countingMachineEnabled: boolean = false;
+  public domainOfInfluenceTypes: DomainOfInfluenceType[] = [];
+  public canton: DomainOfInfluenceCanton = DomainOfInfluenceCanton.DOMAIN_OF_INFLUENCE_CANTON_UNSPECIFIED;
 
   public readonly breadcrumbs: BreadcrumbItem[];
 
-  private readonly isErfassungElectionAdminSubscription: Subscription;
   private readonly routeParamsSubscription: Subscription;
   private readonly routeQueryParamsSubscription: Subscription;
+  private readonly routeDataSubscription: Subscription;
   private politicalBusinessesDetailsChangeSubscription?: Subscription;
   private stateChangesSubscription?: Subscription;
   private importChangesSubscription?: Subscription;
+  private writeInChangesSubscription?: Subscription;
 
   @ViewChild(ContestDetailSidebarComponent)
   private contestDetailSidebarComponent?: ContestDetailSidebarComponent;
@@ -68,8 +90,13 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
   private politicalBusinessIdToExpand?: string;
   private resultsById: Record<string, ResultListResult> = {};
 
+  public canFinishSubmission: boolean = false;
+  public canEditContactPerson: boolean = false;
+  public canEditElectorates: boolean = false;
+  public canMapWriteIns: boolean = false;
+  private canReadWriteIns: boolean = false;
+
   constructor(
-    roleService: RoleService,
     breadcrumbsService: BreadcrumbsService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
@@ -79,21 +106,30 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     private readonly cd: ChangeDetectorRef,
     private readonly dialogService: DialogService,
     private readonly politicalBusinessResultService: PoliticalBusinessResultService,
+    private readonly permissionService: PermissionService,
+    private readonly toast: SnackbarService,
+    private readonly i18n: TranslateService,
   ) {
     this.breadcrumbs = breadcrumbsService.contestDetail;
-    this.isErfassungElectionAdminSubscription = roleService.isErfassungElectionAdmin.subscribe(x => {
-      const wasAdmin = this.isErfassungElectionAdmin;
-      this.isErfassungElectionAdmin = x;
-      if (!wasAdmin && this.isErfassungElectionAdmin) {
-        this.mapWriteIns();
-      }
-    });
     this.routeQueryParamsSubscription = this.route.queryParams.subscribe(({ politicalBusinessId }) =>
       this.tryExpandPoliticalBusinesses(politicalBusinessId),
     );
     this.routeParamsSubscription = this.route.params.subscribe(({ contestId, countingCircleId }) =>
       this.loadData(contestId, countingCircleId),
     );
+
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+      this.countingMachineEnabled = contestCantonDefaults.countingMachineEnabled;
+    });
+  }
+
+  public async ngOnInit(): Promise<void> {
+    this.canFinishSubmission = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.FinishSubmission);
+    this.canMapWriteIns = await this.permissionService.hasPermission(Permissions.MajorityElectionWriteIn.Update);
+    this.canReadWriteIns = await this.permissionService.hasPermission(Permissions.MajorityElectionWriteIn.Read);
+    this.canEditContactPerson = await this.permissionService.hasPermission(Permissions.CountingCircleContactPerson.Update);
+    this.canEditElectorates = await this.permissionService.hasPermission(Permissions.ContestCountingCircleElectorate.Update);
   }
 
   public async mapWriteIns(): Promise<void> {
@@ -104,7 +140,7 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
       this.resultList.contest.locked ||
       !this.resultList.contest.eVotingResultsImported ||
       !this.resultList.hasUnmappedEVotingWriteIns ||
-      !this.isErfassungElectionAdmin
+      !this.canMapWriteIns
     ) {
       return;
     }
@@ -147,9 +183,9 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     this.routeParamsSubscription?.unsubscribe();
     this.routeQueryParamsSubscription?.unsubscribe();
     this.politicalBusinessesDetailsChangeSubscription?.unsubscribe();
-    this.isErfassungElectionAdminSubscription?.unsubscribe();
     this.stateChangesSubscription?.unsubscribe();
     this.importChangesSubscription?.unsubscribe();
+    this.routeDataSubscription?.unsubscribe();
   }
 
   public updateCountOfVoters(newData: ContestCountingCircleDetails): void {
@@ -168,21 +204,41 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private stateUpdated(resultId: string, newState: CountingCircleResultState, comment?: string): void {
+  private async onStateChangeListenerRetry(): Promise<void> {
+    if (!this.stateChangesSubscription || !this.resultList?.contest?.id) {
+      return;
+    }
+
+    // When the export state change listener fails, it is being retried with an exponential backoff
+    // During that retry backoff, changes aren't being delivered -> we need to poll for them
+    const data = await this.resultService.getList(this.resultList.contest.id, this.resultList.countingCircle.id);
+    for (const result of data.results) {
+      this.stateUpdated(result.id, result.state);
+    }
+  }
+
+  private stateUpdated(resultId: string, newState: CountingCircleResultState): void {
     if (!this.resultList) {
       return;
     }
 
     const result = this.resultsById[resultId] || {};
-    if (!result) {
+    if (!result || result.state === newState) {
       return;
     }
 
     result.state = newState;
-    if (result.state === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE) {
-      result.submissionDoneTimestamp = new Date();
+
+    switch (result.state) {
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING:
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION:
+        result.submissionDoneTimestamp = undefined;
+        break;
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE:
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE:
+        result.submissionDoneTimestamp = new Date();
+        break;
     }
-    result.hasComments = result.hasComments || !!comment;
 
     this.resultList.state = Math.min(...this.resultList.results.map(r => r.state));
     this.updateSidebarReadonly();
@@ -193,6 +249,19 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     this.loading = true;
     try {
       this.resultList = await this.resultService.getList(contestId, countingCircleId);
+      if (this.newZhFeaturesEnabled && this.resultList.mustUpdateContactPersons) {
+        await this.openContactDialog(false);
+      }
+
+      this.domainOfInfluenceTypes = distinct(
+        this.resultList.results.map(r => r.politicalBusiness.domainOfInfluence!.type),
+        x => x,
+      );
+
+      if (this.resultList.results.length > 0) {
+        this.canton = this.resultList.results[0].politicalBusiness.domainOfInfluence!.canton;
+      }
+
       this.updateSidebarReadonly();
       this.tenant = await this.auth.getActiveTenant();
       this.tryExpandPoliticalBusinesses();
@@ -247,14 +316,23 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
 
     this.stateChangesSubscription?.unsubscribe();
     this.stateChangesSubscription = this.resultService
-      .getStateChanges(this.resultList.contest.id)
+      .getStateChanges(this.resultList.contest.id, this.onStateChangeListenerRetry.bind(this))
       .subscribe(({ id, newState }) => this.stateUpdated(id, newState));
 
-    if (this.isErfassungElectionAdmin) {
+    if (this.canMapWriteIns && this.resultList.details.eVoting) {
       this.importChangesSubscription?.unsubscribe();
       this.importChangesSubscription = this.resultImportService
         .getImportChanges(this.resultList.contest.id, this.resultList.countingCircle.id)
         .subscribe(({ hasWriteIns }) => this.importUpdated(hasWriteIns));
+    }
+
+    if (this.canReadWriteIns && this.resultList.details.eVoting) {
+      this.writeInChangesSubscription?.unsubscribe();
+      this.writeInChangesSubscription = this.resultImportService
+        .getWriteInMappingChanges(this.resultList.contest.id, this.resultList.countingCircle.id)
+        .subscribe(change =>
+          this.writeInMappingsUpdated(change.resultId, change.isReset, change.duplicatedCandidates, change.invalidDueToEmptyBallot),
+        );
     }
   }
 
@@ -283,5 +361,126 @@ export class ContestDetailComponent implements AfterViewInit, OnDestroy {
     this.resultList = await this.resultService.getList(this.resultList.contest.id, this.resultList.countingCircle.id);
 
     await this.mapWriteIns();
+  }
+
+  private async writeInMappingsUpdated(
+    resultId: string,
+    isReset: boolean,
+    duplicatedCandidates: number,
+    invalidDueToEmptyBallot: number,
+  ): Promise<void> {
+    if (!this.resultList) {
+      return;
+    }
+
+    // update result list with the updated write in mappings
+    this.resultList = await this.resultService.getList(this.resultList.contest.id, this.resultList.countingCircle.id);
+
+    const result = this.resultList?.results.find(r => r.id === resultId);
+    if (!result) {
+      return;
+    }
+
+    if (isReset) {
+      this.toast.success(this.i18n.instant('RESULT_IMPORT.WRITE_INS.RESETTED'));
+      return;
+    }
+
+    let message = this.i18n.instant('RESULT_IMPORT.WRITE_INS.MAPPED_FOR', { election: result.politicalBusiness.shortDescription });
+    if (duplicatedCandidates === 0 && invalidDueToEmptyBallot === 0) {
+      this.toast.success(message);
+      return;
+    }
+
+    if (duplicatedCandidates > 0) {
+      message += '\n' + this.i18n.instant('RESULT_IMPORT.WRITE_INS.MAPPED_DUPLICATED_CANDIDATES', { count: duplicatedCandidates });
+    }
+
+    if (invalidDueToEmptyBallot > 0) {
+      message += '\n' + this.i18n.instant('RESULT_IMPORT.WRITE_INS.MAPPED_INVALID_DUE_TO_EMPTY_BALLOT', { count: invalidDueToEmptyBallot });
+    }
+
+    await this.dialogService.alert('RESULT_IMPORT.WRITE_INS.MAPPED', message);
+  }
+
+  public async openContactDialog(showCancel: boolean = true): Promise<void> {
+    if (!this.resultList || this.resultList?.results.length === 0) {
+      return;
+    }
+
+    const data: ContactDialogComponentData = {
+      domainOfInfluences: distinct(
+        this.resultList.results.map(x => x.politicalBusiness.domainOfInfluence!),
+        x => x.id,
+      ),
+      resultList: this.resultList,
+      readonly: !this.resultList.currentTenantIsResponsible || !this.canEditContactPerson || this.resultList.contest.locked,
+      showCancel,
+    };
+
+    const dialogResult = await this.dialogService.openForResult<ContactDialogComponent, ContactPersonEditDialogResult>(
+      ContactDialogComponent,
+      data,
+      { disableClose: !showCancel },
+    );
+
+    if (dialogResult) {
+      this.resultList = dialogResult.resultList;
+    }
+  }
+
+  public async openElectoratesDialog(): Promise<void> {
+    if (!this.resultList || !this.resultList.electorateSummary || !this.canEditElectorates) {
+      return;
+    }
+
+    const data: ContestCountingCircleElectoratesUpdateDialogData = {
+      contestId: this.resultList.contest.id,
+      countingCircleId: this.resultList.countingCircle.id,
+      readonly: this.resultList.contest.locked,
+      electorates: this.resultList.electorateSummary.contestCountingCircleElectoratesList,
+    };
+
+    const result = await this.dialogService.openForResult<
+      ContestCountingCircleElectoratesUpdateDialogComponent,
+      ContestCountingCircleElectoratesUpdateDialogResult
+    >(ContestCountingCircleElectoratesUpdateDialogComponent, data);
+
+    if (!result) {
+      return;
+    }
+
+    for (const vc of this.resultList.details.votingCards.filter(vc => vc.channel !== VotingChannel.VOTING_CHANNEL_E_VOTING)) {
+      vc.countOfReceivedVotingCards = undefined;
+    }
+
+    this.resultList.electorateSummary.contestCountingCircleElectoratesList = result.electorates;
+    this.resultList.electorateSummary.effectiveElectoratesList = [];
+
+    for (const electorate of result.electorates) {
+      const doiTypes = electorate.domainOfInfluenceTypesList.filter(doiType => this.domainOfInfluenceTypes.includes(doiType));
+      if (doiTypes.length > 0) {
+        this.resultList.electorateSummary.effectiveElectoratesList.push({
+          domainOfInfluenceTypesList: doiTypes,
+        });
+      }
+    }
+
+    const effectiveDoiTypes = flatten(this.resultList.electorateSummary.effectiveElectoratesList.map(e => e.domainOfInfluenceTypesList));
+    const requiredUnusedDoiTypes = this.domainOfInfluenceTypes.filter(doiType => !effectiveDoiTypes.includes(doiType));
+
+    if (requiredUnusedDoiTypes.length > 0) {
+      this.resultList.electorateSummary.effectiveElectoratesList.push({
+        domainOfInfluenceTypesList: requiredUnusedDoiTypes,
+      });
+    }
+
+    // ascending sort by the first doi type of a electorate.
+    this.resultList.electorateSummary.effectiveElectoratesList.sort(
+      (a, b) => a.domainOfInfluenceTypesList[0] - b.domainOfInfluenceTypesList[0],
+    );
+
+    // trigger cd
+    this.resultList.details.votingCards = [...this.resultList.details.votingCards];
   }
 }

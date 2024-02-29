@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
@@ -21,7 +22,7 @@ import {
 } from '../../../models';
 import { PoliticalBusinessResultBaseService } from '../../../services/political-business-result-base.service';
 import { PoliticalBusinessResultService } from '../../../services/political-business-result.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { SecondFactorTransactionService } from '../../../services/second-factor-transaction.service';
 import { sum } from '../../../services/utils/array.utils';
 import {
@@ -30,6 +31,7 @@ import {
   ValidationOverviewDialogResult,
 } from '../../validation-overview-dialog/validation-overview-dialog.component';
 import { ContestPoliticalBusinessDetailComponent } from './contest-political-business-detail.component';
+import { Permissions } from '../../../models/permissions.model';
 
 @Directive()
 export abstract class AbstractContestPoliticalBusinessDetailComponent<
@@ -61,8 +63,9 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
   public isResponsibleMonitorAuthority: boolean = false;
 
   public resultDetail?: T;
-  public isErfassungElectionAdmin: boolean = false;
-  public isMonitoringElectionAdmin: boolean = false;
+  public canEnterResults: boolean = false;
+  public canFinishSubmission: boolean = false;
+  public canAudit: boolean = false;
 
   public readonly states: typeof CountingCircleResultState = CountingCircleResultState;
 
@@ -75,8 +78,6 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
   private readonly parentExpandedSubscription?: Subscription;
   private readonly parentCountingCircleDetailsUpdatedSubscription?: Subscription;
   private readonly stateChangeSubscription?: Subscription;
-  private readonly isErfassungElectionAdminSubscription?: Subscription;
-  private readonly isMonitoringElectionAdminSubscription?: Subscription;
 
   protected constructor(
     protected readonly i18n: TranslateService,
@@ -86,7 +87,7 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     protected readonly secondFactorTransactionService: SecondFactorTransactionService,
     protected readonly politicalBusinessResultService: PoliticalBusinessResultService,
     protected readonly cd: ChangeDetectorRef,
-    roleService: RoleService,
+    protected readonly permissionService: PermissionService,
     private readonly parent: ContestPoliticalBusinessDetailComponent,
   ) {
     this.parentExpandedSubscription = parent.expanded$.pipe(filter(x => x)).subscribe(() => this.expanded());
@@ -98,21 +99,19 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     this.stateChangeSubscription = this.politicalBusinessResultService.resultStateChanged$
       .pipe(filter(({ resultId }) => this.result.id === resultId))
       .subscribe(state => this.resultStateUpdated(state.newState));
-
-    this.isErfassungElectionAdminSubscription = roleService.isErfassungElectionAdmin.subscribe(x => (this.isErfassungElectionAdmin = x));
-    this.isMonitoringElectionAdminSubscription = roleService.isMonitoringElectionAdmin.subscribe(x => (this.isMonitoringElectionAdmin = x));
   }
 
-  public ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
     this.setResultReadonly();
+    this.canEnterResults = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.EnterResults);
+    this.canFinishSubmission = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.FinishSubmission);
+    this.canAudit = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.Audit);
   }
 
   public ngOnDestroy(): void {
     this.parentExpandedSubscription?.unsubscribe();
     this.parentCountingCircleDetailsUpdatedSubscription?.unsubscribe();
     this.stateChangeSubscription?.unsubscribe();
-    this.isErfassungElectionAdminSubscription?.unsubscribe();
-    this.isMonitoringElectionAdminSubscription?.unsubscribe();
   }
 
   public countingCircleDetailsUpdated(values: ContestCountingCircleDetails): void {

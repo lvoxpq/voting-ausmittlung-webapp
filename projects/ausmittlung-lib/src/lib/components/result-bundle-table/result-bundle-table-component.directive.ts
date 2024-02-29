@@ -1,20 +1,21 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { BallotBundleState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/ballot_bundle_pb';
-import { EventEmitter, Input, OnDestroy, OnInit, Output, Directive, ViewChild, AfterViewInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { AfterViewInit, Directive, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PoliticalBusinessResultBundle, User } from '../../models';
-import { RoleService } from '../../services/role.service';
+import { PermissionService } from '../../services/permission.service';
 import { UserService } from '../../services/user.service';
 import { AdvancedTablePaginatorComponent } from '@abraxas/base-components';
 import { MatTableDataSource } from '@angular/material/table';
+import { Permissions } from '../../models/permissions.model';
 
 @Directive()
-export abstract class ElectionBundleTableComponent<T extends PoliticalBusinessResultBundle = PoliticalBusinessResultBundle>
-  implements OnInit, OnDestroy, AfterViewInit
+export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResultBundle = PoliticalBusinessResultBundle>
+  implements OnInit, AfterViewInit
 {
   public readonly bundleStates: typeof BallotBundleState = BallotBundleState;
   public readonly dataSource = new MatTableDataSource<T>();
@@ -58,22 +59,23 @@ export abstract class ElectionBundleTableComponent<T extends PoliticalBusinessRe
   public paginator?: AdvancedTablePaginatorComponent;
 
   public currentUser?: User;
-  public isErfassungCreator: boolean = false;
-  public isErfassungElectionAdmin: boolean = false;
-  public isMonitoringElectionAdmin: boolean = false;
+  public canDeleteBundle: boolean = false;
+  public canReviewBundle: boolean = false;
+  public canUpdate: boolean = false;
+  public canUpdateAll: boolean = false;
+  public canRead: boolean = false;
+  public canReadAll: boolean = false;
 
-  private readonly isErfassungCreatorSubscription: Subscription;
-  private readonly isErfassungElectionAdminSubscription: Subscription;
-  private readonly isMonitoringElectionAdminSubscription: Subscription;
-
-  protected constructor(private readonly userService: UserService, roleService: RoleService) {
-    this.isErfassungCreatorSubscription = roleService.isErfassungCreator.subscribe(x => (this.isErfassungCreator = x));
-    this.isErfassungElectionAdminSubscription = roleService.isErfassungElectionAdmin.subscribe(x => (this.isErfassungElectionAdmin = x));
-    this.isMonitoringElectionAdminSubscription = roleService.isMonitoringElectionAdmin.subscribe(x => (this.isMonitoringElectionAdmin = x));
-  }
+  protected constructor(private readonly userService: UserService, private readonly permissionService: PermissionService) {}
 
   public async ngOnInit(): Promise<void> {
     this.currentUser = await this.userService.getUser();
+    this.canDeleteBundle = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBundle.Delete);
+    this.canReviewBundle = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBundle.Review);
+    this.canUpdate = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBallot.Update);
+    this.canUpdateAll = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBundle.UpdateAll);
+    this.canRead = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBallot.Read);
+    this.canReadAll = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBallot.ReadAll);
   }
 
   public ngAfterViewInit(): void {
@@ -82,26 +84,20 @@ export abstract class ElectionBundleTableComponent<T extends PoliticalBusinessRe
     }
   }
 
-  public ngOnDestroy(): void {
-    this.isErfassungCreatorSubscription.unsubscribe();
-    this.isErfassungElectionAdminSubscription.unsubscribe();
-    this.isMonitoringElectionAdminSubscription.unsubscribe();
-  }
-
   public selectBundle(bundle: T): void {
     const isCreator = this.currentUser?.secureConnectId === bundle.createdBy.secureConnectId;
 
     if (
       !isCreator &&
       bundle.state === BallotBundleState.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW &&
-      (this.isErfassungElectionAdmin || this.isErfassungCreator) &&
+      this.canReviewBundle &&
       this.isReviewProcedureElectronically()
     ) {
       this.reviewBundle.emit(bundle);
       return;
     }
 
-    if (!this.isErfassungElectionAdmin && !this.isMonitoringElectionAdmin && !(this.isErfassungCreator && isCreator)) {
+    if (!this.canReadAll && !(this.canRead && isCreator)) {
       return;
     }
 

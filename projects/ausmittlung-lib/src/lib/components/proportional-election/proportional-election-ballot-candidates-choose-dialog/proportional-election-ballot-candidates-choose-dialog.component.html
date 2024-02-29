@@ -20,6 +20,7 @@
         *ngFor="let candidate of candidates"
         (click)="done(candidate)"
         [candidate]="candidate"
+        [candidateCheckDigit]="candidateCheckDigit"
       >
       </vo-ausm-proportional-election-ballot-candidates-choose-entry>
     </div>

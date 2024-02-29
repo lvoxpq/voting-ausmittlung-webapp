@@ -1,11 +1,18 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { majorityElectionResultRoute, proportionalElectionResultRoute, ResultExportComponent, voteResultRoute } from 'ausmittlung-lib';
+import {
+  majorityElectionResultRoute,
+  proportionalElectionResultRoute,
+  ResultExportComponent,
+  voteResultRoute,
+  ContestCantonDefaultsResolver,
+} from 'ausmittlung-lib';
 import { ErfassungContestDetailComponent } from './pages/erfassung-contest-detail/erfassung-contest-detail.component';
 import { ErfassungContestOverviewComponent } from './pages/erfassung-contest-overview/erfassung-contest-overview.component';
 import { AuthThemeGuard, ThemeService } from '@abraxas/voting-lib';
@@ -37,14 +44,23 @@ const routes: Routes = [
           {
             path: ':contestId/:countingCircleId',
             component: ErfassungContestDetailComponent,
+            resolve: {
+              contestCantonDefaults: ContestCantonDefaultsResolver,
+            },
           },
           {
             path: ':contestId/:countingCircleId/exports',
             component: ResultExportComponent,
+            resolve: {
+              contestCantonDefaults: ContestCantonDefaultsResolver,
+            },
           },
           {
             path: ':contestId/:countingCircleId/finish-submission',
             component: ErfassungFinishSubmissionComponent,
+            resolve: {
+              contestCantonDefaults: ContestCantonDefaultsResolver,
+            },
           },
         ],
       },

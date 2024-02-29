@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { ProportionalElectionResultBundleServicePromiseClient } from '@abraxas/voting-ausmittlung-service-proto/grpc/proportional_election_result_bundle_service_grpc_web_pb';
@@ -59,14 +60,14 @@ export class ProportionalElectionResultBundleService extends GrpcService<Proport
     );
   }
 
-  public getBundleChanges(electionResultId: string): Observable<ProportionalElectionResultBundle> {
+  public getBundleChanges(electionResultId: string, onRetry: () => {}): Observable<ProportionalElectionResultBundle> {
     const req = new GetProportionalElectionResultBundleChangesRequest();
     req.setElectionResultId(electionResultId);
     return this.requestServerStream(
       c => c.getBundleChanges,
       req,
       r => this.mapToBundle(r),
-    ).pipe(retryForeverWithBackoff());
+    ).pipe(retryForeverWithBackoff(onRetry));
   }
 
   public getBundle(bundleId: string): Promise<ProportionalElectionResultBundleDetails> {

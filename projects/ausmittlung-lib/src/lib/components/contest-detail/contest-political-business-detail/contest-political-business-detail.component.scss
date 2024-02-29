@@ -1,4 +1,5 @@
 @use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
 
 ::ng-deep.header-content {
   width: 100%;
@@ -6,6 +7,12 @@
 
 ::ng-deep.mat-expansion-panel-header {
   font-size: 1rem;
+}
+
+.with-border ::ng-deep.mat-expansion-panel-body {
+  padding-top: 1rem !important;
+  border-top: 1px solid $color-grey-6;
+  padding-bottom: 0.5rem !important;
 }
 
 div[header] {
@@ -24,7 +31,13 @@ div[header] {
   }
 
   > :first-child {
-    flex-grow: 1;
+    width: 45.5%; // to center the domain of influence type
+  }
+
+  > .container {
+    width: 10rem;
+    display: flex;
+    justify-content: center;
   }
 
   .header-icon {

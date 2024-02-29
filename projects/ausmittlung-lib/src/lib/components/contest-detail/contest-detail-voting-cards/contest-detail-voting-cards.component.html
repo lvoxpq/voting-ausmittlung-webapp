@@ -1,6 +1,10 @@
 <h4 class="mt-4" translate>CONTEST.DETAIL.VOTING_CARDS.TITLE</h4>
-<vo-ausm-contest-detail-voting-cards-doi-type *ngFor="let doiType of domainOfInfluenceTypes"
-                                              [readonly]="readonly"
-                                              [doiType]="doiType"
-                                              [votingCardDetails]="votingCardsByDoiType[doiType]!">
-</vo-ausm-contest-detail-voting-cards-doi-type>
+
+<vo-ausm-contest-detail-voting-cards-electorate *ngFor="let electorateVotingCards of electorateVotingCardsList"
+                                                [readonly]="readonly"
+                                                [domainOfInfluenceTypes]="electorateVotingCards.domainOfInfluenceTypes"
+                                                [votingCardDetails]="electorateVotingCards.votingCards"
+                                                (votingCardDetailsChange)="handleElectorateVotingCardsChange($event)"
+                                                [newZhFeaturesEnabled]="newZhFeaturesEnabled"
+                                                [canton]="canton">
+</vo-ausm-contest-detail-voting-cards-electorate>

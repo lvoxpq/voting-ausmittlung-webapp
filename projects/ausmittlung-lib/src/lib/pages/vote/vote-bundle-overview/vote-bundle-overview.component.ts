@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { VoteReviewProcedure } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/vote_pb';
@@ -15,7 +16,7 @@ import {
 } from '../../../components/political-business-new-bundle-number/political-business-new-bundle-number.component';
 import { PoliticalBusinessResultBundle, VoteResultBundles } from '../../../models';
 import { ResultExportService } from '../../../services/result-export.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { VoteResultBundleService } from '../../../services/vote-result-bundle.service';
 import { PoliticalBusinessBundleOverviewComponent } from '../../political-business-bundle-overview/political-business-bundle-overview.component';
 import { VoteBallotComponent } from '../vote-ballot/vote-ballot.component';
@@ -31,7 +32,7 @@ export class VoteBundleOverviewComponent extends PoliticalBusinessBundleOverview
 
   constructor(
     private readonly resultBundleService: VoteResultBundleService,
-    roleService: RoleService,
+    permissionService: PermissionService,
     i18n: TranslateService,
     toast: SnackbarService,
     dialog: DialogService,
@@ -40,7 +41,7 @@ export class VoteBundleOverviewComponent extends PoliticalBusinessBundleOverview
     themeService: ThemeService,
     resultExportService: ResultExportService,
   ) {
-    super(roleService, i18n, toast, dialog, route, router, themeService, resultExportService);
+    super(permissionService, i18n, toast, dialog, route, router, themeService, resultExportService);
   }
 
   @HostListener('document:keydown.control.alt.q')
@@ -113,8 +114,8 @@ export class VoteBundleOverviewComponent extends PoliticalBusinessBundleOverview
     return this.resultBundleService.getBundles(params.ballotResultId);
   }
 
-  protected startChangesListener(resultId: string, params: Params): Observable<PoliticalBusinessResultBundle> {
-    return this.resultBundleService.getBundleChanges(params.ballotResultId);
+  protected override startChangesListener(resultId: string, params: Params, onRetry: () => {}): Observable<PoliticalBusinessResultBundle> {
+    return this.resultBundleService.getBundleChanges(params.ballotResultId, onRetry);
   }
 
   private async exportBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {

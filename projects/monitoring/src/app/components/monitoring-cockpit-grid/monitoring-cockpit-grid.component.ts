@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
@@ -27,44 +28,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./monitoring-cockpit-grid.component.scss'],
 })
 export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
-  public domainOfInfluenceTypeFilter?: DomainOfInfluenceType;
-  public politicalBusinessFilter?: SimplePoliticalBusiness;
-  public countingCircleFilter?: CountingCircle;
-  public onlyCorrected: boolean = false;
-  public showDetails: boolean = false;
-  public plausibiliseLoading: boolean = false;
-
-  public gridTemplateColumns: string = '';
-  public readOnly: boolean = true;
-
-  public filteredDomainOfInfluenceTypes: DomainOfInfluenceType[] = [];
-  public filteredPoliticalBusinessesByDoiType: Record<number, SimplePoliticalBusiness[]> = [];
-  public filteredPoliticalBusinesses: SimplePoliticalBusiness[] = [];
-  public filteredCountingCircleResults: FilteredCountingCircleResults[] = [];
-
-  public countingCircles: CountingCircle[] = [];
-  public countingCircleResults: FilteredCountingCircleResults[] = [];
-
-  public selectedTabIndex: number = 0;
-  public countCorrected: number = 0;
-  public countNotCorrected: number = 0;
-
-  private politicalBusinesses: SimplePoliticalBusiness[] = [];
-  private readonly tabCheckedStates: CountingCircleResultState[] = [
-    CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY,
-    CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED,
-  ];
-
-  private resultsById: Record<
-    string,
-    { result: ResultOverviewCountingCircleResult; countingCircleResults: FilteredCountingCircleResults }
-  > = {};
-
-  private contestId: string = '';
-
-  private stateChangesSubscription?: Subscription;
-
-  constructor(private readonly router: Router, private readonly route: ActivatedRoute, private readonly resultService: ResultService) {}
+  @Input()
+  public newZhFeaturesEnabled: boolean = false;
 
   @Input()
   public set resultOverview(ro: ResultOverview) {
@@ -104,6 +69,45 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
 
     this.startChangesListener();
   }
+
+  public domainOfInfluenceTypeFilter?: DomainOfInfluenceType;
+  public politicalBusinessFilter?: SimplePoliticalBusiness;
+  public countingCircleFilter?: CountingCircle;
+  public onlyCorrected: boolean = false;
+  public showDetails: boolean = false;
+  public plausibiliseLoading: boolean = false;
+
+  public gridTemplateColumns: string = '';
+  public readOnly: boolean = true;
+
+  public filteredDomainOfInfluenceTypes: DomainOfInfluenceType[] = [];
+  public filteredPoliticalBusinessesByDoiType: Record<number, SimplePoliticalBusiness[]> = [];
+  public filteredPoliticalBusinesses: SimplePoliticalBusiness[] = [];
+  public filteredCountingCircleResults: FilteredCountingCircleResults[] = [];
+
+  public countingCircles: CountingCircle[] = [];
+  public countingCircleResults: FilteredCountingCircleResults[] = [];
+
+  public selectedTabIndex: number = 0;
+  public countCorrected: number = 0;
+  public countNotCorrected: number = 0;
+
+  private politicalBusinesses: SimplePoliticalBusiness[] = [];
+  private readonly tabCheckedStates: CountingCircleResultState[] = [
+    CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY,
+    CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED,
+  ];
+
+  private resultsById: Record<
+    string,
+    { result: ResultOverviewCountingCircleResult; countingCircleResults: FilteredCountingCircleResults }
+  > = {};
+
+  private contestId: string = '';
+
+  private stateChangesSubscription?: Subscription;
+
+  constructor(private readonly router: Router, private readonly route: ActivatedRoute, private readonly resultService: ResultService) {}
 
   public ngOnInit(): void {
     this.startChangesListener();
@@ -194,8 +198,23 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
 
     this.stateChangesSubscription?.unsubscribe();
     this.stateChangesSubscription = this.resultService
-      .getStateChanges(this.contestId)
+      .getStateChanges(this.contestId, this.onStateChangeListenerRetry.bind(this))
       .subscribe(({ id, newState }) => this.updateState(id, newState));
+  }
+
+  private async onStateChangeListenerRetry(): Promise<void> {
+    if (!this.stateChangesSubscription) {
+      return;
+    }
+
+    // When the export state change listener fails, it is being retried with an exponential backoff
+    // During that retry backoff, changes aren't being delivered -> we need to poll for them
+    const data = await this.resultService.getOverview(this.contestId);
+    for (const countingCircleResult of data.countingCircleResults) {
+      for (const result of countingCircleResult.results) {
+        this.updateState(result.id, result.state);
+      }
+    }
   }
 
   private updateState(id: string, newState: CountingCircleResultState): void {
@@ -205,10 +224,19 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
     }
 
     result.state = newState;
+
     countingCircleResults.minResultState = this.getMinResultState(countingCircleResults);
-    if (newState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE) {
-      result.submissionDoneTimestamp = new Date();
+    switch (result.state) {
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING:
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION:
+        result.submissionDoneTimestamp = undefined;
+        break;
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE:
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE:
+        result.submissionDoneTimestamp = new Date();
+        break;
     }
+
     this.updateFilters();
   }
 
@@ -274,7 +302,7 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
     this.filteredDomainOfInfluenceTypes = distinct(
       this.filteredPoliticalBusinesses.map(x => x.domainOfInfluence!.type as DomainOfInfluenceType),
       x => x,
-    );
+    ).sort();
   }
 
   private updateGrid(): void {

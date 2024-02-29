@@ -7,6 +7,7 @@
       [canAddCandidate]="ballotUiData.emptyVoteCount > 0"
       [addableCandidatesByNumber]="ballotUiData.addableCandidatesByNumber"
       [removableCandidatesByNumber]="ballotUiData.removableCandidatesByNumber"
+      [candidateCheckDigit]="candidateCheckDigit"
       (addCandidate)="addCandidate($event)"
       (removeCandidate)="removeCandidate($event)"
       (removeCandidateRange)="removeCandidateRange($event)"
@@ -32,6 +33,7 @@
   <div>
     <vo-ausm-proportional-election-ballot-candidates [positions]="ballotUiData.listPositions"
                                                      [readonly]="disabled || readonly"
+                                                     [candidateCheckDigit]="candidateCheckDigit"
                                                      (addCandidate)="addCandidateAtPosition($event)"
                                                      (removeCandidate)="removeCandidateAtPosition($event)">
     </vo-ausm-proportional-election-ballot-candidates>

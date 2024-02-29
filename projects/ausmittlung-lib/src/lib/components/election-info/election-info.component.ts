@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, Input } from '@angular/core';
@@ -16,4 +17,7 @@ export class ElectionInfoComponent {
 
   @Input()
   public electionResult!: ProportionalElectionResult | MajorityElectionResult;
+
+  @Input()
+  public newZhFeaturesEnabled: boolean = false;
 }

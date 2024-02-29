@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { ExportServicePromiseClient } from '@abraxas/voting-ausmittlung-service-proto/grpc/export_service_grpc_web_pb';
@@ -85,7 +86,11 @@ export class ExportService extends GrpcService<ExportServicePromiseClient> {
     return this.requestEmptyResp(c => c.startProtocolExports, req);
   }
 
-  public getProtocolExportStateChanges(contestId: string, countingCircleId: string | undefined): Observable<ProtocolExportStateChange> {
+  public getProtocolExportStateChanges(
+    contestId: string,
+    countingCircleId: string | undefined,
+    onRetry: () => {},
+  ): Observable<ProtocolExportStateChange> {
     const req = new GetProtocolExportStateChangesRequest();
     req.setContestId(contestId);
 
@@ -97,7 +102,7 @@ export class ExportService extends GrpcService<ExportServicePromiseClient> {
       c => c.getProtocolExportStateChanges,
       req,
       r => this.mapToProtocolExportStateChange(r),
-    ).pipe(retryForeverWithBackoff());
+    ).pipe(retryForeverWithBackoff(onRetry));
   }
 
   public listResultExportConfigurations(contestId: string): Promise<ResultExportConfiguration[]> {

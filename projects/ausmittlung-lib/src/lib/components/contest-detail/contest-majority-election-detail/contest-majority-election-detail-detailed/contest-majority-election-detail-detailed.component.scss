@@ -4,14 +4,11 @@
   @extend .mb-3;
 
   display: flex;
-  justify-content: space-between;
+  column-gap: 2rem;
+  overflow-x: auto;
 
   &.results {
     display: block;
-  }
-
-  vo-ausm-ballot-count-input {
-    @extend .mr-3;
   }
 
   .detail {
@@ -20,8 +17,8 @@
     margin-top: 2rem;
     min-width: 32rem;
   }
+}
 
-  .large-ml {
-    margin-left: calc(41.5rem - 1px); // 40 rem: width of count of voters, 1.5rem margin, 1px border
-  }
+.space-between {
+  justify-content: space-between;
 }

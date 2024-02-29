@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { DialogService } from '@abraxas/voting-lib';
@@ -12,7 +13,10 @@ import {
 } from '../../../services/proportional-election-ballot-ui.service';
 import { ProportionalElectionBallotCandidateModifyComponent } from '../proportional-election-ballot-candidate-modify/proportional-election-ballot-candidate-modify.component';
 import { RemoveCandidateRangeData } from '../proportional-election-ballot-candidate-remove-range/proportional-election-ballot-candidate-remove-range.component';
-import { ProportionalElectionBallotCandidatesChooseDialogComponent } from '../proportional-election-ballot-candidates-choose-dialog/proportional-election-ballot-candidates-choose-dialog.component';
+import {
+  ProportionalElectionBallotCandidatesChooseDialogComponent,
+  ProportionalElectionBallotCandidatesChooseDialogData,
+} from '../proportional-election-ballot-candidates-choose-dialog/proportional-election-ballot-candidates-choose-dialog.component';
 import {
   AddCandidatePositionEvent,
   CandidatePositionEvent,
@@ -42,6 +46,9 @@ export class ProportionalElectionBallotContentComponent {
 
   @Input()
   public showRemoveRange: boolean = false;
+
+  @Input()
+  public candidateCheckDigit: boolean = false;
 
   @Output()
   public contentChanged: EventEmitter<void> = new EventEmitter<void>();
@@ -79,11 +86,13 @@ export class ProportionalElectionBallotContentComponent {
 
   public async addCandidateAtPosition({ position, listCandidate, candidate }: AddCandidatePositionEvent): Promise<void> {
     if (!candidate) {
-      candidate = await this.dialogService.openForResult(
-        ProportionalElectionBallotCandidatesChooseDialogComponent,
-        Object.values(this.ballotUiData.addableCandidatesByNumber),
-        { autoFocus: false },
-      );
+      const data: ProportionalElectionBallotCandidatesChooseDialogData = {
+        candidates: Object.values(this.ballotUiData.addableCandidatesByNumber),
+        candidateCheckDigit: this.electionResult.entryParams.candidateCheckDigit,
+      };
+      candidate = await this.dialogService.openForResult(ProportionalElectionBallotCandidatesChooseDialogComponent, data, {
+        autoFocus: false,
+      });
 
       if (!candidate) {
         return;

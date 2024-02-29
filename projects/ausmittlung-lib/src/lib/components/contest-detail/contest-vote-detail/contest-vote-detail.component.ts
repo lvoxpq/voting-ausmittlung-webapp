@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
@@ -19,7 +20,7 @@ import {
   VoteResultEntry,
 } from '../../../models';
 import { PoliticalBusinessResultService } from '../../../services/political-business-result.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { SecondFactorTransactionService } from '../../../services/second-factor-transaction.service';
 import { VoteResultService } from '../../../services/vote-result.service';
 import { AbstractContestPoliticalBusinessDetailComponent } from '../contest-political-business-detail/contest-political-business-detail-base.component';
@@ -47,7 +48,7 @@ export class ContestVoteDetailComponent extends AbstractContestPoliticalBusiness
     parent: ContestPoliticalBusinessDetailComponent,
     i18n: TranslateService,
     toast: SnackbarService,
-    roleService: RoleService,
+    roleService: PermissionService,
     voteResultService: VoteResultService,
     dialog: DialogService,
     secondFactorTransactionService: SecondFactorTransactionService,
@@ -61,18 +62,13 @@ export class ContestVoteDetailComponent extends AbstractContestPoliticalBusiness
     return !isEqual(this.resultDetail, this.lastSavedVoteResult);
   }
 
-  public async validateAndSave(): Promise<void> {
+  public async save(): Promise<void> {
     if (!this.resultDetail) {
       return;
     }
 
     try {
       this.isActionExecuting = true;
-
-      const validationConfirm = await this.confirmValidationOverviewDialog(false);
-      if (!validationConfirm) {
-        return;
-      }
 
       if (this.resultDetail.entry === VoteResultEntry.VOTE_RESULT_ENTRY_FINAL_RESULTS) {
         if (this.resultDetail.state === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION) {
@@ -85,6 +81,21 @@ export class ContestVoteDetailComponent extends AbstractContestPoliticalBusiness
       }
       this.lastSavedVoteResult = cloneDeep(this.resultDetail);
       this.toast.success(this.i18n.instant('APP.SAVED'));
+    } finally {
+      this.isActionExecuting = false;
+    }
+  }
+
+  public async validateAndSave(): Promise<void> {
+    try {
+      this.isActionExecuting = true;
+
+      const validationConfirm = await this.confirmValidationOverviewDialog(false);
+      if (!validationConfirm) {
+        return;
+      }
+
+      await this.save();
     } finally {
       this.isActionExecuting = false;
     }

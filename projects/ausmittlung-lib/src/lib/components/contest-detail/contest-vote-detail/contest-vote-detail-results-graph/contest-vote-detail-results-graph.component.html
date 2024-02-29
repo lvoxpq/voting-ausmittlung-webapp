@@ -1,0 +1,19 @@
+<ng-container *ngIf="ballotResult">
+  <h4 class="mb-2" translate>POLITICAL_BUSINESS.RESULT</h4>
+  <div *ngFor="let questionResult of ballotResult.questionResults" [ngClass]="eVoting ? 'result-graph-e-voting' : 'result-graph'">
+    <vo-ausm-vote-results-graph
+      [countLeft]="questionResult.totalCountOfAnswer1"
+      [countRight]="questionResult.totalCountOfAnswer2"
+      [resultLabelLeft]="questionResult.question | translateVoteQuestion: false:'answer1Short':ballotResult.questionResults.length"
+      [resultLabelRight]="questionResult.question | translateVoteQuestion: false:'answer2Short':ballotResult.questionResults.length">
+    </vo-ausm-vote-results-graph>
+  </div>
+  <div *ngFor="let tieBreakQuestionResult of ballotResult.tieBreakQuestionResults" [ngClass]="eVoting ? 'result-graph-e-voting' : 'result-graph'">
+    <vo-ausm-vote-results-graph
+      [countLeft]="tieBreakQuestionResult.totalCountOfAnswer1"
+      [countRight]="tieBreakQuestionResult.totalCountOfAnswer2"
+      [resultLabelLeft]="tieBreakQuestionResult.question | translateVoteQuestion: true:'answer1Short':ballotResult.questionResults.length"
+      [resultLabelRight]="tieBreakQuestionResult.question | translateVoteQuestion: true:'answer2Short':ballotResult.questionResults.length">
+    </vo-ausm-vote-results-graph>
+  </div>
+</ng-container>

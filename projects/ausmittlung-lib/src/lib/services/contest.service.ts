@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { ContestServicePromiseClient } from '@abraxas/voting-ausmittlung-service-proto/grpc/contest_service_grpc_web_pb';
@@ -13,7 +14,7 @@ import {
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/contest_requests_pb';
 import { GrpcBackendService, GrpcEnvironment, GrpcService } from '@abraxas/voting-lib';
 import { Inject, Injectable } from '@angular/core';
-import { CountingCircle, PoliticalBusinessUnion } from '../models';
+import { CountingCircle, DomainOfInfluenceCantonDefaults, PoliticalBusinessUnion } from '../models';
 import { Contest, ContestProto, ContestSummary, ContestSummaryProto } from '../models/contest.model';
 import { GRPC_ENV_INJECTION_TOKEN } from './tokens';
 

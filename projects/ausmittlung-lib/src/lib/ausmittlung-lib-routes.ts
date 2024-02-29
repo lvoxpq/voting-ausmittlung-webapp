@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Route } from '@angular/router';
@@ -16,6 +17,7 @@ import { ProportionalElectionUnmodifiedListsComponent } from './pages/proportion
 import { VoteBallotReviewComponent } from './pages/vote/vote-ballot-review/vote-ballot-review.component';
 import { VoteBallotComponent } from './pages/vote/vote-ballot/vote-ballot.component';
 import { VoteBundleOverviewComponent } from './pages/vote/vote-bundle-overview/vote-bundle-overview.component';
+import { ResultCantonDefaultsResolver } from './services/resolvers/result-canton-defaults.resolver';
 
 export const proportionalElectionResultRoute: Route = {
   path: 'proportional-election-result/:resultId',
@@ -23,6 +25,9 @@ export const proportionalElectionResultRoute: Route = {
     {
       path: 'unmodified',
       component: ProportionalElectionUnmodifiedListsComponent,
+      resolve: {
+        contestCantonDefaults: ResultCantonDefaultsResolver,
+      },
     },
     {
       path: 'bundles',
@@ -31,20 +36,32 @@ export const proportionalElectionResultRoute: Route = {
           path: '',
           pathMatch: 'full',
           component: ProportionalElectionBundleOverviewComponent,
+          resolve: {
+            contestCantonDefaults: ResultCantonDefaultsResolver,
+          },
         },
         {
           path: ':bundleId/review',
           component: ProportionalElectionBallotReviewComponent,
+          resolve: {
+            contestCantonDefaults: ResultCantonDefaultsResolver,
+          },
         },
         {
           path: ':bundleId/:ballotNumber',
           component: ProportionalElectionBallotComponent,
+          resolve: {
+            contestCantonDefaults: ResultCantonDefaultsResolver,
+          },
         },
       ],
     },
     {
       path: 'results',
       component: ProportionalElectionResultsComponent,
+      resolve: {
+        contestCantonDefaults: ResultCantonDefaultsResolver,
+      },
     },
   ],
 };
@@ -55,6 +72,9 @@ export const majorityElectionResultRoute: Route = {
     {
       path: 'ballot-groups',
       component: MajorityElectionBallotGroupsComponent,
+      resolve: {
+        contestCantonDefaults: ResultCantonDefaultsResolver,
+      },
     },
     {
       path: 'bundles',
@@ -63,14 +83,23 @@ export const majorityElectionResultRoute: Route = {
           path: '',
           pathMatch: 'full',
           component: MajorityElectionBundleOverviewComponent,
+          resolve: {
+            contestCantonDefaults: ResultCantonDefaultsResolver,
+          },
         },
         {
           path: ':bundleId/review',
           component: MajorityElectionBallotReviewComponent,
+          resolve: {
+            contestCantonDefaults: ResultCantonDefaultsResolver,
+          },
         },
         {
           path: ':bundleId/:ballotNumber',
           component: MajorityElectionBallotComponent,
+          resolve: {
+            contestCantonDefaults: ResultCantonDefaultsResolver,
+          },
         },
       ],
     },
@@ -87,14 +116,23 @@ export const voteResultRoute: Route = {
           path: '',
           pathMatch: 'full',
           component: VoteBundleOverviewComponent,
+          resolve: {
+            contestCantonDefaults: ResultCantonDefaultsResolver,
+          },
         },
         {
           path: ':bundleId/review',
           component: VoteBallotReviewComponent,
+          resolve: {
+            contestCantonDefaults: ResultCantonDefaultsResolver,
+          },
         },
         {
           path: ':bundleId/:ballotNumber',
           component: VoteBallotComponent,
+          resolve: {
+            contestCantonDefaults: ResultCantonDefaultsResolver,
+          },
         },
       ],
     },

@@ -1,4 +1,4 @@
-# ✨ Changelog (`v1.54.2`)
+# ✨ Changelog (`v1.72.1`)
 
 All notable changes to this project will be documented in this file.
 
@@ -8,11 +8,214 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version Info
 
 ```text
-This version -------- v1.54.2
-Previous version ---- v1.53.17
+This version -------- v1.72.1
+Previous version ---- v1.54.2
 Initial version ----- v1.25.0
-Total commits ------- 9
+Total commits ------- 38
 ```
+
+## [v1.72.1] - 2024-02-28
+
+### :arrows_counterclockwise: Changed
+
+- fix write in mapping candidate width
+
+## [v1.72.0] - 2024-02-28
+
+### :new: Added
+
+- live updates of write in mapping changes
+
+## [v1.71.0] - 2024-02-27
+
+### :arrows_counterclockwise: Changed
+
+- adjust write in mappings
+
+## [v1.70.1] - 2024-02-20
+
+### 🔄 Changed
+
+- Enable electorates for non-zh
+
+## [v1.70.0] - 2024-02-19
+
+### 🔄 Changed
+
+- change majority election ballot group description
+
+## [v1.69.1] - 2024-02-14
+
+### 🔄 Changed
+
+- disallow empty lists with party in proportional elections
+
+## [v1.69.0] - 2024-02-14
+
+### 🔄 Changed
+
+- set order of domain of influence types
+
+## [v1.68.1] - 2024-02-07
+
+### 🔄 Changed
+
+- adjust state box colors
+
+## [v1.68.0] - 2024-02-06
+
+### 🆕 Added
+
+- Double proportional election mandate algorithms
+
+## [v1.67.3] - 2024-02-05
+
+### 🔄 Changed
+
+- voting card labels for canton TG
+
+## [v1.67.2] - 2024-02-05
+
+### :arrows_counterclockwise: Changed
+
+- fall back to polling when state change listeners do not work
+
+## [v1.67.1] - 2024-02-02
+
+### 🔄 Changed
+
+- update voting-lib to v2.6.3
+
+## [v1.67.0] - 2024-01-31
+
+### 🆕 Added
+
+- Added counting circle electorate
+
+## [v1.66.0] - 2024-01-29
+
+### 🔄 Changed
+
+- allow creator of a bundle to print preview
+
+## [v1.65.0] - 2024-01-29
+
+### 🆕 Added
+
+- add candidate check digit
+
+## [v1.64.0] - 2024-01-24
+
+### 🔄 Changed
+
+- contest election detail ux improvements
+
+## [v1.63.1] - 2024-01-23
+
+### 🔄 Changed
+
+- swiss abroad only used if allowed
+
+## [v1.63.0] - 2024-01-22
+
+### 🔄 Changed
+
+- move contest contact data to header
+
+## [v1.62.0] - 2024-01-18
+
+### 🔄 Changed
+
+- split save and validate political business
+
+## [v1.61.0] - 2024-01-17
+
+### 🆕 Added
+
+- show domain of influence type on political businesses
+
+## [v1.60.0] - 2024-01-17
+
+### 🔄 Changed
+
+- move contact data button to contest detail header
+
+## [v1.59.0] - 2024-01-16
+
+### 🔄 Changed
+
+- contest vote detail ux improvements
+
+## [v1.58.0] - 2024-01-16
+
+### 🔄 Changed
+
+- contest detail ux improvements
+
+## [v1.57.0] - 2024-01-12
+
+### :arrows_counterclockwise: Changed
+
+- correctly set permissions in OnPush strategy
+
+### :lock: Security
+
+- change from roles to permissions
+
+## [v1.56.1] - 2024-01-05
+
+### 🔄 Changed
+
+- Timestamp handling with result corrections
+
+## [v1.56.0] - 2023-12-20
+
+### 🆕 Added
+
+- Add counting machine to counting circle details
+
+## [v1.55.0] - 2023-12-19
+
+### 🆕 Added
+
+- add multiple vote ballots
+
+## [v1.54.8] - 2023-12-12
+
+### 🔄 Changed
+
+- Set voting cards on counting circle correctly after live updates
+
+## [v1.54.7] - 2023-11-28
+
+### :arrows_counterclockwise: Changed
+
+- apply strict policy for files that should not be cached
+
+## [v1.54.6] - 2023-11-27
+
+### :arrows_counterclockwise: Changed
+
+- configure caching for statically named resource config.js
+- set version tag for referenced config.js in index.html to enforce initial client-side cache invalidation
+
+## [v1.54.5] - 2023-11-24
+
+### :arrows_counterclockwise: Changed
+
+- remove space in audience clientid prefix
+
+## [v1.54.4] - 2023-11-24
+
+### :new: Added
+
+- add support for custom oauth scopes.
+
+## [v1.54.3] - 2023-11-23
+
+### 🔄 Changed
+
+- revert empty and invalid vote count for single majority mandate
 
 ## [v1.54.2] - 2023-11-16
 
@@ -83,6 +286,321 @@ This reverts commit 60ee4e312750c5b9d82b3ab87107bccc48cb7971.
 ### 🆕 Added
 
 - pop up for bundle creation
+
+### 🔄 Changed
+
+- next ballot enabled for continuous ballot numbers
+
+### 🔄 Changed
+
+- information text for missing entryvariations or entryparameters
+
+### 🔄 Changed
+
+- ballots without a party need at least one candidate
+
+### 🔄 Changed
+
+- enable automatic exports during testing phase
+
+### 🔄 Changed
+
+- update empty vote count only if it really changed
+
+### 🔄 Changed
+
+- improved save behavior of result entry
+
+### 🔄 Changed
+
+- change initial focus for candidate choose dialog
+
+### 🔄 Changed
+
+- set focus on page load for list results and ballot groups
+
+### 🆕 Added
+
+- added typeahead debounce for counting circle filter
+
+### 🔄 Changed
+
+- rename detail result entry labels
+
+### 🔄 Changed
+
+- ballot without list button placement
+
+### 🔄 Changed
+
+- navigate back from bundle
+
+### 🔄 Changed
+
+- disable automatic export during testing phase
+
+### ❌ Removed
+
+- remove second factor transaction for owned political businesses
+
+### 🔄 Changed
+
+- proportional election ballot candidate position scrolls into view if not visible
+
+### 🆕 Added
+
+- add import change listener
+
+### 🔄 Changed
+
+- change button disable and error class to property and color
+
+### 🆕 Added
+
+- Multiple counting circle results submission finished
+
+### 🔄 Changed
+
+- Button arrangement in ballot edit header
+- Focus add candidate if no candidate can be removed on proportional election ballots
+- Focus add candidate when removing all candidates on proportional election ballots
+
+### 🔄 Changed
+
+- Make certain contact person fields required
+
+### 🔄 Changed
+
+- Change export data date label
+
+### ❌ Removed
+
+- remove wrong proportional election can submit checks
+
+### 🆕 Added
+
+- reset write ins for majority election
+
+### 🔄 Changed
+
+- update cd-templates to resolve blocking deploy-trigger
+
+### 🔄 Changed
+
+- select the only corrected tab in the monitoring cockpit grid, when all counting circles are corrected
+
+### 🔄 Changed
+
+- add all voting cards for end result page
+
+### 🔄 Changed
+
+- hide export button for monitoring contest detail component
+
+### 🔄 Changed
+
+- dialog width in the bundle number dialog
+
+### 🔄 Changed
+
+- New export page instead of dialog
+
+### ❌ Removed
+
+- remove export button from end result page
+
+### ❌ Removed
+
+- remove internal description, invalid votes and individual empty ballots allowed from elections
+
+### 🔄 Changed
+
+- fix(VOTING-2418): hide proportional election end result columns and protocolls before finalized
+
+### 🆕 Added
+
+- Added export configuration political business metadata, needed for Seantis
+
+### 🔄 Changed
+
+- fix selection of adding proportional election candidate
+
+### ❌ Removed
+
+- remove proportional election list paginator for a new bundle
+
+### 🔄 Changed
+
+- add optional text for formfield default options
+
+### 🔄 Changed
+
+- changed path to logo for whitelabeling
+
+### 🆕 Added
+
+- add white labeling logo for customers
+
+### 🔄 Changed
+
+- allow zero accounted ballots for political businesses
+
+### 🔄 Changed
+
+- ballot bundle sample size must be greater than zero
+
+### 🔒 Security
+
+- configure client refresh token flow (rfc-6749)
+
+### 🆕 Added
+
+- add eVoting write in mapping to invalid ballot
+
+### 🆕 Added
+
+- add result state change listener for erfassung
+
+### 🔄 Changed
+
+- update can set state on result after on init
+
+### 🔄 Changed
+
+- set all results to audited tentatively depending responsible tenant
+
+### 🆕 Added
+
+- Reset counting circle results in testing phase
+
+### 🔄 Changed
+
+- Fixed majority election lot decision typo
+
+### 🔄 Changed
+
+- no empty vote count and no invalid vote count for single mandate
+
+### 🔄 Changed
+
+- Updated voting-library to fix layouting issues
+
+### 🆕 Added
+
+- add second factor transaction
+
+### 🔒 Security
+
+- disable style inline optimization to allow a more restictive CPS eleminating script-src unsafe-inline
+
+### 🆕 Added
+
+- review procedure for vote, majority election and proportional election
+
+### 🔄 Changed
+
+- Send correct counting circle contact person data to the backend, according proto validators
+
+### 🆕 Added
+
+- add white labling
+
+### 🔄 Changed
+
+- Cleaned up code smells
+- Fixed bug where bundle review did not work
+
+### ❌ Removed
+
+- TenantGuard, tenant is no longer in the URL
+
+### 🔒 Security
+
+- Changed auth flow to PKCE
+- Use "Fragment" response mode
+- Update dependencies
+
+### 🆕 Added
+
+- gzip on
+- outdated error page
+
+### 🔄 Changed
+
+- base href replacement regex
+
+### 🔄 Changed
+
+- Fixed switching of tabs in the export dialog
+
+### 🆕 Added
+
+- config.js: definitions of window env-handler (replacement ngssc)
+
+### ❌ Removed
+
+- ngssc-library
+
+### 🔒 Security
+
+- The default NGINX listen port is now 8080 instead of 80
+- nginx:1.19-alpine image changed to nginxinc/nginx-unprivileged:1.20-alpine
+
+### 🆕 Added
+
+- config.js: definitions of window env-handler (replacement ngssc)
+
+### ❌ Removed
+
+- ngssc-library
+
+### 🔒 Security
+
+- The default NGINX listen port is now 8080 instead of 80
+- nginx:1.19-alpine image changed to nginxinc/nginx-unprivileged:1.20-alpine
+
+### 🔒 Security
+
+- nginxinc/nginx-unprivileged:1.20-alpine image changed to nginxinc/nginx-unprivileged:1.22-alpine
+
+### 🆕 Added
+
+- config.js: definitions of window env-handler (replacement ngssc)
+
+### ❌ Removed
+
+- ngssc-library
+
+### 🔒 Security
+
+- The default NGINX listen port is now 8080 instead of 80
+- nginx:1.19-alpine image changed to nginxinc/nginx-unprivileged:1.20-alpine
+
+### 🔄 Changed
+
+- Proportional Election unmodified lists save button title adjusted
+- Proportional Election unmodified lists save button navigates back after save succeeded.
+
+### 🔄 Changed
+
+- improve vote ballot ux behavior
+- fixed submit bundle popup cancel for elections
+
+### 🔄 Changed
+
+- improve proportional create bundle behavior
+
+### 🆕 Added
+
+- add shortcut dialog for bundle overview
+
+### 🔄 Changed
+
+- Vote percent indicator for majority elections should show correct value if no accounted ballots are entered yet (by using the sum of the candidate votes instead).
+
+### 🔄 Changed
+
+- Adjusted page title of the vote review bundle page
 
 ## [v1.53.14] - 2023-10-10
 
@@ -302,219 +820,6 @@ This reverts commit 60ee4e312750c5b9d82b3ab87107bccc48cb7971.
 ### 🔄 Changed
 
 - select the only corrected tab in the monitoring cockpit grid, when all counting circles are corrected
-
-### 🔄 Changed
-
-- add all voting cards for end result page
-
-### 🔄 Changed
-
-- hide export button for monitoring contest detail component
-
-### 🔄 Changed
-
-- dialog width in the bundle number dialog
-
-### 🔄 Changed
-
-- New export page instead of dialog
-
-### ❌ Removed
-
-- remove export button from end result page
-
-### ❌ Removed
-
-- remove internal description, invalid votes and individual empty ballots allowed from elections
-
-### 🔄 Changed
-
-- fix(VOTING-2418): hide proportional election end result columns and protocolls before finalized
-
-### 🆕 Added
-
-- Added export configuration political business metadata, needed for Seantis
-
-### 🔄 Changed
-
-- fix selection of adding proportional election candidate
-
-### ❌ Removed
-
-- remove proportional election list paginator for a new bundle
-
-### 🔄 Changed
-
-- add optional text for formfield default options
-
-### 🔄 Changed
-
-- changed path to logo for whitelabeling
-
-### 🆕 Added
-
-- add white labeling logo for customers
-
-### 🔄 Changed
-
-- allow zero accounted ballots for political businesses
-
-### 🔄 Changed
-
-- ballot bundle sample size must be greater than zero
-
-### 🔒 Security
-
-- configure client refresh token flow (rfc-6749)
-
-### 🆕 Added
-
-- add eVoting write in mapping to invalid ballot
-
-### 🆕 Added
-
-- add result state change listener for erfassung
-
-### 🔄 Changed
-
-- update can set state on result after on init
-
-### 🔄 Changed
-
-- set all results to audited tentatively depending responsible tenant
-
-### 🆕 Added
-
-- Reset counting circle results in testing phase
-
-### 🔄 Changed
-
-- Fixed majority election lot decision typo
-
-### 🔄 Changed
-
-- no empty vote count and no invalid vote count for single mandate
-
-### 🔄 Changed
-
-- Updated voting-library to fix layouting issues
-
-### 🆕 Added
-
-- add second factor transaction
-
-### 🔒 Security
-
-- disable style inline optimization to allow a more restictive CPS eleminating script-src unsafe-inline
-
-### 🆕 Added
-
-- review procedure for vote, majority election and proportional election
-
-### 🔄 Changed
-
-- Send correct counting circle contact person data to the backend, according proto validators
-
-### 🆕 Added
-
-- add white labling
-
-### 🔄 Changed
-
-- Cleaned up code smells
-- Fixed bug where bundle review did not work
-
-### ❌ Removed
-
-- TenantGuard, tenant is no longer in the URL
-
-### 🔒 Security
-
-- Changed auth flow to PKCE
-- Use "Fragment" response mode
-- Update dependencies
-
-### 🆕 Added
-
-- gzip on
-- outdated error page
-
-### 🔄 Changed
-
-- base href replacement regex
-
-### 🔄 Changed
-
-- Fixed switching of tabs in the export dialog
-
-### 🆕 Added
-
-- config.js: definitions of window env-handler (replacement ngssc)
-
-### ❌ Removed
-
-- ngssc-library
-
-### 🔒 Security
-
-- The default NGINX listen port is now 8080 instead of 80
-- nginx:1.19-alpine image changed to nginxinc/nginx-unprivileged:1.20-alpine
-
-### 🆕 Added
-
-- config.js: definitions of window env-handler (replacement ngssc)
-
-### ❌ Removed
-
-- ngssc-library
-
-### 🔒 Security
-
-- The default NGINX listen port is now 8080 instead of 80
-- nginx:1.19-alpine image changed to nginxinc/nginx-unprivileged:1.20-alpine
-
-### 🔒 Security
-
-- nginxinc/nginx-unprivileged:1.20-alpine image changed to nginxinc/nginx-unprivileged:1.22-alpine
-
-### 🆕 Added
-
-- config.js: definitions of window env-handler (replacement ngssc)
-
-### ❌ Removed
-
-- ngssc-library
-
-### 🔒 Security
-
-- The default NGINX listen port is now 8080 instead of 80
-- nginx:1.19-alpine image changed to nginxinc/nginx-unprivileged:1.20-alpine
-
-### 🔄 Changed
-
-- Proportional Election unmodified lists save button title adjusted
-- Proportional Election unmodified lists save button navigates back after save succeeded.
-
-### 🔄 Changed
-
-- improve vote ballot ux behavior
-- fixed submit bundle popup cancel for elections
-
-### 🔄 Changed
-
-- improve proportional create bundle behavior
-
-### 🆕 Added
-
-- add shortcut dialog for bundle overview
-
-### 🔄 Changed
-
-- Vote percent indicator for majority elections should show correct value if no accounted ballots are entered yet (by using the sum of the candidate votes instead).
-
-### 🔄 Changed
-
-- Adjusted page title of the vote review bundle page
 
 ## [v1.44.0] - 2023-03-01
 

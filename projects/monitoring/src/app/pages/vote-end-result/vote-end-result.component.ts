@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
@@ -31,7 +32,7 @@ export class VoteEndResultComponent implements OnDestroy {
     private readonly dialog: DialogService,
     private readonly secondFactorTransactionService: SecondFactorTransactionService,
   ) {
-    this.routeSubscription = this.route.params.subscribe(({ voteId }) => this.loadData(voteId));
+    this.routeSubscription = this.route.params.subscribe(({ politicalBusinessId }) => this.loadData(politicalBusinessId));
   }
 
   public async ngOnDestroy(): Promise<void> {

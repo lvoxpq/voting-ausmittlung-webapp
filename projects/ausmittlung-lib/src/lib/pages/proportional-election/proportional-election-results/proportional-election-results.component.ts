@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, OnDestroy } from '@angular/core';
@@ -16,7 +17,9 @@ import {
 import { BreadcrumbItem, BreadcrumbsService } from '../../../services/breadcrumbs.service';
 import { ProportionalElectionResultService } from '../../../services/proportional-election-result.service';
 import { ResultService } from '../../../services/result.service';
-import { RoleService } from '../../../services/role.service';
+import { distinct } from '../../../services/utils/array.utils';
+import { DomainOfInfluenceType } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/domain_of_influence_pb';
+import { DomainOfInfluenceCanton } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/domain_of_influence_pb';
 
 @Component({
   selector: 'vo-ausm-proportional-election-results',
@@ -52,24 +55,31 @@ export class ProportionalElectionResultsComponent implements OnDestroy {
   public listResults: ProportionalElectionListResult[] = [];
   public selectedListResult?: ProportionalElectionListResult;
   public loading: boolean = true;
+  public newZhFeaturesEnabled: boolean = false;
+  public domainOfInfluenceTypes: DomainOfInfluenceType[] = [];
+  public canton: DomainOfInfluenceCanton = DomainOfInfluenceCanton.DOMAIN_OF_INFLUENCE_CANTON_UNSPECIFIED;
 
   public breadcrumbs: BreadcrumbItem[];
 
   private readonly routeParamsSubscription: Subscription;
+  private readonly routeDataSubscription: Subscription;
 
   constructor(
-    roleService: RoleService,
+    route: ActivatedRoute,
     private readonly breadcrumbsService: BreadcrumbsService,
-    private readonly route: ActivatedRoute,
     private readonly resultService: ResultService,
     private readonly proportionalElectionResultService: ProportionalElectionResultService,
   ) {
     this.breadcrumbs = breadcrumbsService.forProportionalElectionResults();
     this.routeParamsSubscription = route.params.subscribe(({ resultId }) => this.loadData(resultId));
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
   }
 
   public ngOnDestroy(): void {
     this.routeParamsSubscription.unsubscribe();
+    this.routeDataSubscription.unsubscribe();
   }
 
   public selectListResult(listResult: ProportionalElectionListResult): void {
@@ -90,6 +100,11 @@ export class ProportionalElectionResultsComponent implements OnDestroy {
       );
       this.listResults = await this.proportionalElectionResultService.getListResults(resultId);
       this.breadcrumbs = this.breadcrumbsService.forProportionalElectionResults(this.electionResult);
+      this.domainOfInfluenceTypes = distinct(
+        this.contestResultList.results.map(r => r.politicalBusiness.domainOfInfluence!.type),
+        x => x,
+      );
+      this.canton = this.electionResult.politicalBusiness.domainOfInfluence!.canton;
     } finally {
       this.loading = false;
     }

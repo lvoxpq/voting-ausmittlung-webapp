@@ -1,0 +1,39 @@
+<vo-lib-dialog>
+  <h3 header>{{'CONTEST.DETAIL.COUNT_OF_VOTERS_AND_VOTING_CARDS' | translate}}</h3>
+
+  <div content class="container">
+    <vo-ausm-contest-detail-count-of-voters [readonly]="readonly"
+                                            [eVoting]="eVoting"
+                                            [swissAbroadHaveVotingRightsOnAnyBusiness]="swissAbroadHaveVotingRightsOnAnyBusiness"
+                                            [countOfVoters]="countOfVoters"></vo-ausm-contest-detail-count-of-voters>
+
+    <vo-ausm-contest-detail-voting-cards *ngIf="domainOfInfluenceTypes"
+                                         [readonly]="readonly"
+                                         [(votingCards)]="votingCards"
+                                         [enabledVotingCardChannels]="enabledVotingCardChannels"
+                                         [domainOfInfluenceTypes]="domainOfInfluenceTypes"
+                                         [electorates]="electorateSummary?.effectiveElectoratesList"
+                                         [newZhFeaturesEnabled]="newZhFeaturesEnabled"
+                                         [canton]="canton"></vo-ausm-contest-detail-voting-cards>
+
+    <ng-container *ngIf="countingMachineEnabled">
+      <h4 translate class="mt-2">COUNTING_MACHINES.TITLE</h4>
+      <bc-dropdown [required]="true"
+                   [disabled]="readonly"
+                   [items]="countingMachines"
+                   displayExpr="description"
+                   valueExpr="value"
+                   [(value)]="countingMachine"
+                   [clearable]="false"></bc-dropdown>
+    </ng-container>
+  </div>
+
+  <div footer>
+    <vo-lib-button-bar [hasSaveButton]="!readonly"
+                       [canSave]="!countingMachineEnabled || !!countingMachine"
+                       (save)="save()"
+                       [sticky]="false"
+                       [cancelLabel]="(readonly ? 'APP.CLOSE' : 'COMMON.CANCEL') | translate"
+                       (cancel)="done()"></vo-lib-button-bar>
+  </div>
+</vo-lib-dialog>

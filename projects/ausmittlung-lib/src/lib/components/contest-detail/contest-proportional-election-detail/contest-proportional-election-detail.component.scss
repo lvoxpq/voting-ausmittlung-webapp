@@ -4,6 +4,8 @@
   @extend .mb-3;
 
   display: flex;
+  column-gap: 3rem;
+  overflow-x: auto;
 
   vo-ausm-ballot-count-input {
     @extend .mr-3;

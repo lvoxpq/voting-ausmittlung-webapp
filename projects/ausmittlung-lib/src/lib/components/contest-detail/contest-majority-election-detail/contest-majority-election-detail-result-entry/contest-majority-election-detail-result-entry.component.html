@@ -7,7 +7,9 @@
     <vo-ausm-election-result-entry-params *ngIf="resultEntry === resultEntries.MAJORITY_ELECTION_RESULT_ENTRY_DETAILED"
                                           class="entry-params"
                                           [resultEntryParams]="resultEntryParams"
-                                          [enforceEmptyVoteCounting]="election.enforceEmptyVoteCountingForCountingCircles">
+                                          [enforceEmptyVoteCounting]="election.enforceEmptyVoteCountingForCountingCircles"
+                                          [enforceCandidateCheckDigit]="election.enforceCandidateCheckDigitForCountingCircles"
+                                          [useCandidateCheckDigit]="useCandidateCheckDigit">
       <bc-radio-button-group
         [label]="'MAJORITY_ELECTION.RESULT_ENTRY.REVIEW_PROCEDURE.TITLE' | translate"
         orientation="vertical"

@@ -1,10 +1,12 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { DialogService } from '@abraxas/voting-lib';
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Permissions } from '../../models/permissions.model';
 
 @Component({
   selector: 'vo-ausm-ballot-header',
@@ -12,6 +14,8 @@ import { Component, EventEmitter, HostListener, Input, Output } from '@angular/c
   styleUrls: ['./ballot-header.component.scss'],
 })
 export class BallotHeaderComponent {
+  public readonly deleteBallotPermission = Permissions.PoliticalBusinessResultBallot.Delete;
+
   @Input()
   public readonly: boolean = true;
 

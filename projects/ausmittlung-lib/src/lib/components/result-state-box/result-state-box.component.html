@@ -1,4 +1,4 @@
-<div [ngClass]="'result-state-' + state"
+<div [ngClass]="'result-state-' + state + (newZhFeaturesEnabled ? '' : '-old')"
      class="colorbox">
   <span>{{('COUNTING_CIRCLE_RESULT_STATE.' + state) | translate}}</span>
   <span *ngIf="timestamp">

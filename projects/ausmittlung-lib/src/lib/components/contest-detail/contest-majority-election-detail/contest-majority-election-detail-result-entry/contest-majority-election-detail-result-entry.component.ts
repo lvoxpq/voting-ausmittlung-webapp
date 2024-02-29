@@ -1,22 +1,25 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { RadioButton } from '@abraxas/base-components';
 import { MajorityElectionReviewProcedure } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/majority_election_pb';
 import { EnumUtil } from '@abraxas/voting-lib';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { isEqual } from 'lodash';
 import { MajorityElection, MajorityElectionResultEntry, MajorityElectionResultEntryParams } from '../../../../models';
 import { MajorityElectionResultService } from '../../../../services/majority-election-result.service';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'vo-ausm-contest-majority-election-detail-result-entry',
   templateUrl: './contest-majority-election-detail-result-entry.component.html',
   styleUrls: ['./contest-majority-election-detail-result-entry.component.scss'],
 })
-export class ContestMajorityElectionDetailResultEntryComponent implements OnInit {
+export class ContestMajorityElectionDetailResultEntryComponent implements OnInit, OnDestroy {
   public readonly resultEntries: typeof MajorityElectionResultEntry = MajorityElectionResultEntry;
 
   public readonly resultEntryVariants: RadioButton[];
@@ -55,8 +58,10 @@ export class ContestMajorityElectionDetailResultEntryComponent implements OnInit
   public reviewProcedureChoices: RadioButton[];
   private originalResultEntry: MajorityElectionResultEntry = MajorityElectionResultEntry.MAJORITY_ELECTION_RESULT_ENTRY_UNSPECIFIED;
   private originalResultEntryParams!: MajorityElectionResultEntryParams;
+  public useCandidateCheckDigit: boolean = false;
+  private readonly routeSubscription: Subscription;
 
-  constructor(private readonly resultService: MajorityElectionResultService, enumUtil: EnumUtil) {
+  constructor(private readonly resultService: MajorityElectionResultService, enumUtil: EnumUtil, route: ActivatedRoute) {
     this.resultEntryVariants = enumUtil
       .getArrayWithDescriptions<MajorityElectionResultEntry>(MajorityElectionResultEntry, 'MAJORITY_ELECTION.RESULT_ENTRY.LONG.')
       .map(x => ({ displayText: x.description, value: x.value } as RadioButton));
@@ -70,6 +75,10 @@ export class ContestMajorityElectionDetailResultEntryComponent implements OnInit
         value: item.value,
         displayText: item.description,
       }));
+
+    this.routeSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.useCandidateCheckDigit = contestCantonDefaults.majorityElectionUseCandidateCheckDigit;
+    });
   }
 
   public ngOnInit(): void {
@@ -88,6 +97,7 @@ export class ContestMajorityElectionDetailResultEntryComponent implements OnInit
         automaticBallotBundleNumberGeneration,
         ballotNumberGeneration,
         reviewProcedure,
+        candidateCheckDigit,
       } = this.election;
       this.resultEntryParams = {
         ballotBundleSize,
@@ -96,6 +106,7 @@ export class ContestMajorityElectionDetailResultEntryComponent implements OnInit
         automaticBallotBundleNumberGeneration,
         ballotNumberGeneration,
         reviewProcedure,
+        candidateCheckDigit,
       };
     }
 
@@ -104,6 +115,10 @@ export class ContestMajorityElectionDetailResultEntryComponent implements OnInit
     for (const variant of this.resultEntryVariants) {
       variant.disabled = this.election.enforceResultEntryForCountingCircles;
     }
+  }
+
+  public ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
   }
 
   public async save(): Promise<void> {

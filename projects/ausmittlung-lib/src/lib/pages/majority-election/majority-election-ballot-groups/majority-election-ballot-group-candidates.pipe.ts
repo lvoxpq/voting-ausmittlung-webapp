@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
@@ -25,6 +26,7 @@ export class MajorityElectionBallotGroupCandidatesPipe implements PipeTransform 
       lastName: '',
       party: '',
       position: 0,
+      checkDigit: 0,
     };
   }
 

@@ -48,3 +48,12 @@
 <div>
   <ng-content></ng-content>
 </div>
+<div *ngIf="useCandidateCheckDigit">
+  <bc-label [label]="'ELECTION.RESULT_ENTRY.CANDIDATE_CHECK_DIGIT.TITLE' | translate" [disabled]="enforceCandidateCheckDigit"></bc-label>
+  <bc-checkbox
+    [(checked)]="resultEntryParams.candidateCheckDigit"
+    [label]="'ELECTION.RESULT_ENTRY.CANDIDATE_CHECK_DIGIT.USE' | translate"
+    [disabled]="enforceCandidateCheckDigit"
+  >
+  </bc-checkbox>
+</div>

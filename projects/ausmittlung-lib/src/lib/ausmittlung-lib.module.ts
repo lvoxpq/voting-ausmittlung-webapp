@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import {
@@ -22,6 +23,7 @@ import {
   TabsModule,
   TextareaModule,
   TextModule,
+  DividerModule,
 } from '@abraxas/base-components';
 import { VotingLibModule } from '@abraxas/voting-lib';
 import { CommonModule } from '@angular/common';
@@ -48,7 +50,7 @@ import { ContactPersonEditComponent } from './components/contact-person-edit/con
 import { ContestDetailCountOfVotersComponent } from './components/contest-detail/contest-detail-count-of-voters/contest-detail-count-of-voters.component';
 import { ContactPersonEditDialogComponent } from './components/contest-detail/contest-detail-sidebar/contact-person-edit-dialog/contact-person-edit-dialog.component';
 import { ContestDetailSidebarComponent } from './components/contest-detail/contest-detail-sidebar/contest-detail-sidebar.component';
-import { ContestDetailVotingCardsDoiTypeComponent } from './components/contest-detail/contest-detail-voting-cards-doi-type/contest-detail-voting-cards-doi-type.component';
+import { ContestDetailVotingCardsElectorateComponent } from './components/contest-detail/contest-detail-voting-cards-electorate/contest-detail-voting-cards-electorate.component';
 import { ContestDetailVotingCardsExpansionPanelComponent } from './components/contest-detail/contest-detail-voting-cards-expansion-panel/contest-detail-voting-cards-expansion-panel.component';
 import { ContestDetailVotingCardsComponent } from './components/contest-detail/contest-detail-voting-cards/contest-detail-voting-cards.component';
 import { ContestInfoComponent } from './components/contest-detail/contest-info/contest-info.component';
@@ -73,8 +75,8 @@ import { ContestVoteDetailComponent } from './components/contest-detail/contest-
 import { ContestHeaderComponent } from './components/contest-header/contest-header.component';
 import { ContestListComponent } from './components/contest-list/contest-list.component';
 import { ContestPastUnlockDialogComponent } from './components/contest-past-unlock-dialog/contest-past-unlock-dialog.component';
-import { ElectionBallotReviewButtonBarComponent } from './components/election-ballot-review-button-bar/election-ballot-review-button-bar.component';
-import { ElectionBundleStateChipComponent } from './components/election-bundle-state-chip/election-bundle-state-chip.component';
+import { ResultBallotReviewButtonBarComponent } from './components/result-ballot-review-button-bar/result-ballot-review-button-bar.component';
+import { ResultBundleStateChipComponent } from './components/result-bundle-state-chip/result-bundle-state-chip.component';
 import { ElectionInfoComponent } from './components/election-info/election-info.component';
 import { ElectionResultEntryParamsComponent } from './components/election-result-entry-params/election-result-entry-params.component';
 import { InfoPanelEntryComponent } from './components/info-panel/info-panel-entry/info-panel-entry.component';
@@ -132,6 +134,17 @@ import { AdmonitionComponent } from './components/admonition/admonition.componen
 import { ResultExportComponent } from './pages/result-export/result-export.component';
 import { ValidationSummaryComponent } from './components/validation-summary/validation-summary.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { ValidationGroupPipe } from './pipes/validation-group.pipe';
+import { PermissionDirective } from './directives/permission.directive';
+import { ContestStateChangeButtonComponent } from './components/contest-detail/contest-state-change-button/contest-state-change-button.component';
+import { ContestDetailInfoComponent } from './components/contest-detail/contest-detail-info/contest-detail-info.component';
+import { MatButtonModule } from '@angular/material/button';
+import { ContestDetailInfoDialogComponent } from './components/contest-detail/contest-detail-info-dialog/contest-detail-info-dialog.component';
+import { ContestVoteDetailResultsGraphComponent } from './components/contest-detail/contest-vote-detail/contest-vote-detail-results-graph/contest-vote-detail-results-graph.component';
+import { ContactDialogComponent } from './components/contact-dialog/contact-dialog.component';
+import { ContestDetailSubmissionTileComponent } from './components/contest-detail/contest-detail-submission-tile/contest-detail-submission-tile.component';
+import { ContestCountingCircleElectoratesUpdateDialogComponent } from './components/contest-counting-circle-electorates-update-dialog/contest-counting-circle-electorates-update-dialog.component';
+import { ContestCountingCircleElectorateAssignDialogComponent } from './components/contest-counting-circle-electorate-assign-dialog/contest-counting-circle-electorate-assign-dialog.component';
 
 @NgModule({
   declarations: [
@@ -184,7 +197,7 @@ import { MatMenuModule } from '@angular/material/menu';
     PoliticalBusinessBallotButtonBarComponent,
     MajorityElectionBallotContentComponent,
     MajorityElectionBallotCandidatesComponent,
-    ElectionBallotReviewButtonBarComponent,
+    ResultBallotReviewButtonBarComponent,
     MajorityElectionBallotContentsComponent,
     ContestMajorityElectionResultComponent,
     MajorityElectionSecondaryInfoComponent,
@@ -203,7 +216,7 @@ import { MatMenuModule } from '@angular/material/menu';
     ContactPersonDialogComponent,
     ProportionalElectionBallotCandidatesChooseDialogComponent,
     ProportionalElectionBallotCandidatesChooseEntryComponent,
-    ElectionBundleStateChipComponent,
+    ResultBundleStateChipComponent,
     ContestVoteDetailResultEntryParamsComponent,
     ContestVoteDetailDetailedComponent,
     VoteBundleOverviewComponent,
@@ -224,7 +237,7 @@ import { MatMenuModule } from '@angular/material/menu';
     ProportionalElectionBallotCandidateRemoveRangeComponent,
     MajorityElectionWriteInMappingComponent,
     MajorityElectionWriteInMappingDialogComponent,
-    ContestDetailVotingCardsDoiTypeComponent,
+    ContestDetailVotingCardsElectorateComponent,
     BindCssVarDirective,
     TranslateVoteQuestionPipe,
     ContestPastUnlockDialogComponent,
@@ -232,6 +245,16 @@ import { MatMenuModule } from '@angular/material/menu';
     ShortcutDialogComponent,
     AdmonitionComponent,
     ResultExportComponent,
+    ValidationGroupPipe,
+    PermissionDirective,
+    ContestStateChangeButtonComponent,
+    ContestDetailInfoComponent,
+    ContestDetailInfoDialogComponent,
+    ContestVoteDetailResultsGraphComponent,
+    ContactDialogComponent,
+    ContestDetailSubmissionTileComponent,
+    ContestCountingCircleElectoratesUpdateDialogComponent,
+    ContestCountingCircleElectorateAssignDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -262,6 +285,8 @@ import { MatMenuModule } from '@angular/material/menu';
     TableModule,
     LoadingBarModule,
     MatMenuModule,
+    MatButtonModule,
+    DividerModule,
   ],
   exports: [
     ContestDetailComponent,
@@ -286,6 +311,7 @@ import { MatMenuModule } from '@angular/material/menu';
     TranslateVoteQuestionPipe,
     ResultStateBoxComponent,
     ValidationOverviewDialogComponent,
+    ContestDetailInfoComponent,
   ],
 })
 export class AusmittlungLibModule {

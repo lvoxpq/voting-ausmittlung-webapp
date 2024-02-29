@@ -15,7 +15,7 @@
       <span class="candidate-toggle"
             [class.removed-from-list]="position.listCandidate.removedFromList"
             [class.clickable]="!readonly && (!position.listCandidate.removedFromList || !position.listCandidate.accumulated)"
-            (click)="toggleCandidate(position, position.listCandidate)">{{position.listCandidate.numberIncludingList}}</span>
+            (click)="toggleCandidate(position, position.listCandidate)">{{position.listCandidate.numberIncludingList + (candidateCheckDigit ? position.listCandidate.checkDigit : '')}}</span>
       <span class="candidate-toggle"
             [class.removed-from-list]="position.listCandidate.removedFromList"
             [class.clickable]="!readonly && (!position.listCandidate.removedFromList || !position.listCandidate.accumulated)"
@@ -36,7 +36,7 @@
                    (click)="toggleCandidate(position, position.replacementCandidate); $event.preventDefault()"></bc-checkbox>
       <span class="candidate-toggle"
             [class.clickable]="!readonly"
-            (click)="toggleCandidate(position, position.replacementCandidate)">{{position.replacementCandidate.numberIncludingList}}</span>
+            (click)="toggleCandidate(position, position.replacementCandidate)">{{position.replacementCandidate.numberIncludingList + (candidateCheckDigit ? position.replacementCandidate.checkDigit : '')}}</span>
       <span class="candidate-toggle"
             [class.clickable]="!readonly"
             (click)="toggleCandidate(position, position.replacementCandidate)">{{position.replacementCandidate.politicalLastName}} {{position.replacementCandidate.politicalFirstName}}</span>

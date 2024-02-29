@@ -1,20 +1,22 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { VoteResult } from '../../../../models';
 import { BallotCountInputComponent } from '../../../ballot-count-input/ballot-count-input.component';
 import { ThemeService } from '@abraxas/voting-lib';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'vo-ausm-contest-vote-detail-detailed',
   templateUrl: './contest-vote-detail-detailed.component.html',
   styleUrls: ['./contest-vote-detail-detailed.component.scss'],
 })
-export class ContestVoteDetailDetailedComponent {
+export class ContestVoteDetailDetailedComponent implements OnDestroy {
   @Input()
   public resultDetail!: VoteResult;
 
@@ -33,7 +35,19 @@ export class ContestVoteDetailDetailedComponent {
   @ViewChild(BallotCountInputComponent)
   private ballotCountInputComponent!: BallotCountInputComponent;
 
-  constructor(private readonly router: Router, private readonly themeService: ThemeService) {}
+  public newZhFeaturesEnabled: boolean = false;
+
+  private readonly routeSubscription: Subscription;
+
+  constructor(private readonly router: Router, private readonly themeService: ThemeService, route: ActivatedRoute) {
+    this.routeSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
+  }
+
+  public ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
+  }
 
   public async openBundles(voteResultId: string, ballotResultId: string): Promise<void> {
     if (!this.resultDetail) {

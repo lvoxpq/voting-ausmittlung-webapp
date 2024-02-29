@@ -9,7 +9,7 @@
                  [disabled]="readonly || (!candidate.selected && !hasEmptyVotes)"
                  (checkedChange)="emitToggleCandidate(candidate, $event)"></bc-checkbox>
     <span [class.clickable]="!readonly && (candidate.selected || hasEmptyVotes)"
-          (click)="emitToggleCandidate(candidate)">{{candidate.number}}</span>
+          (click)="emitToggleCandidate(candidate)">{{candidate.number + (candidateCheckDigit ? candidate.checkDigit : '')}}</span>
     <span [class.clickable]="!readonly && (candidate.selected || hasEmptyVotes)"
           (click)="emitToggleCandidate(candidate)">{{candidate.politicalLastName}} {{candidate.politicalFirstName}}</span>
     <span [class.clickable]="!readonly && (candidate.selected || hasEmptyVotes)"

@@ -3,8 +3,6 @@
   </app-ballot-end-result-count-of-voters>
 
   <div class="ballot-results">
-    <h3>{{endResult.ballot.description}}</h3>
-
     <div *ngFor="let questionEndResult of endResult.questionEndResults">
       <app-question-popular-majority-algorithm-end-result *ngIf="isPopularMajorityAlgorithm; else countingCircleAlgorithm"
                                                           [eVoting]="eVoting"

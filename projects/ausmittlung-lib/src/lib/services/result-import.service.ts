@@ -1,12 +1,14 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import {
   DeleteResultImportDataRequest,
   GetMajorityElectionWriteInMappingsRequest,
   GetResultImportChangesRequest,
+  GetMajorityElectionWriteInMappingChangesRequest,
   ListResultImportsRequest,
   MapMajorityElectionWriteInRequest,
   MapMajorityElectionWriteInsRequest,
@@ -23,6 +25,7 @@ import {
   PoliticalBusinessType,
   ResultImport,
   ResultImportChangeProto,
+  WriteInMappingsChangeProto,
 } from '../models';
 import { MajorityElectionWriteInMappingsProto, MajorityElectionWriteInMappingTarget } from '../models/result-import.model';
 import { PoliticalBusinessService } from './political-business.service';
@@ -131,6 +134,17 @@ export class ResultImportService extends GrpcService<ResultImportServicePromiseC
     req.setElectionId(electionId);
     req.setPoliticalBusinessType(pbType);
     await this.requestEmptyResp(c => c.resetMajorityElectionWriteIns, req);
+  }
+
+  public getWriteInMappingChanges(contestId: string, countingCircleId: string): Observable<WriteInMappingsChangeProto.AsObject> {
+    const req = new GetMajorityElectionWriteInMappingChangesRequest();
+    req.setContestId(contestId);
+    req.setCountingCircleId(countingCircleId);
+    return this.requestServerStream(
+      c => c.getMajorityElectionWriteInMappingChanges,
+      req,
+      r => r.toObject(),
+    ).pipe(retryForeverWithBackoff());
   }
 
   public getImportChanges(contestId: string, countingCircleId: string): Observable<ResultImportChangeProto.AsObject> {

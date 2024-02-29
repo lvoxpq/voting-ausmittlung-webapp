@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { BallotBundleState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/ballot_bundle_pb';
@@ -16,8 +17,9 @@ import {
   ProportionalElectionResult,
   VoteResult,
 } from '../../models';
-import { RoleService } from '../../services/role.service';
+import { PermissionService } from '../../services/permission.service';
 import { UserService } from '../../services/user.service';
+import { Permissions } from '../../models/permissions.model';
 
 @Directive()
 export abstract class PoliticalBusinessBallotComponent<
@@ -41,9 +43,13 @@ export abstract class PoliticalBusinessBallotComponent<
   public currentMaxBallotNumber: number = 0;
   public bundleInProcessOrCorrection: boolean = false;
 
-  public readonly isErfassungUser: Observable<boolean>;
+  public canSubmitBundle: boolean = false;
+  public canUpdateBallot: boolean = false;
+
+  public newZhFeaturesEnabled: boolean = false;
 
   private routeParamsSubscription: Subscription = Subscription.EMPTY;
+  private routeDataSubscription: Subscription;
 
   protected constructor(
     protected readonly userService: UserService,
@@ -52,19 +58,24 @@ export abstract class PoliticalBusinessBallotComponent<
     protected readonly i18n: TranslateService,
     private readonly router: Router,
     private readonly toast: SnackbarService,
-    private readonly roleService: RoleService,
+    private readonly permissionService: PermissionService,
   ) {
-    this.isErfassungUser = this.roleService.isErfassungUser;
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
   }
 
   protected abstract get deletedBallotLabel(): string;
 
-  public ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
     this.routeParamsSubscription = this.route.params.subscribe(params => this.loadOrCreate(params));
+    this.canSubmitBundle = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBundle.FinishSubmission);
+    this.canUpdateBallot = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBallot.Update);
   }
 
   public ngOnDestroy(): void {
     this.routeParamsSubscription.unsubscribe();
+    this.routeDataSubscription.unsubscribe();
   }
 
   public async navigateToBallot(ballotNr: number): Promise<void> {

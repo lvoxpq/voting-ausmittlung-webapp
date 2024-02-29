@@ -1,12 +1,11 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
-import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { BallotReviewStepperComponent } from '../../../components/ballot-review-stepper/ballot-review-stepper.component';
 import { BallotResult, BallotReview, PoliticalBusinessResultBundle, ReviewState, VoteResult, VoteResultBallot } from '../../../models';
@@ -31,25 +30,28 @@ export class VoteBallotReviewComponent implements OnDestroy {
 
   public canSucceed: boolean = false;
   public correctionOngoing: boolean = false;
+  public newZhFeaturesEnabled: boolean = false;
 
   @ViewChild(BallotReviewStepperComponent)
   public reviewStepper!: BallotReviewStepperComponent;
 
   private readonly routeParamsSubscription: Subscription;
+  private readonly routeDataSubscription: Subscription;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly dialog: DialogService,
-    private readonly toast: SnackbarService,
-    private readonly i18n: TranslateService,
     private readonly resultBundleService: VoteResultBundleService,
   ) {
     this.routeParamsSubscription = this.route.params.subscribe(({ bundleId }) => this.loadData(bundleId));
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
   }
 
   public ngOnDestroy(): void {
     this.routeParamsSubscription.unsubscribe();
+    this.routeDataSubscription.unsubscribe();
   }
 
   public updateState(): void {

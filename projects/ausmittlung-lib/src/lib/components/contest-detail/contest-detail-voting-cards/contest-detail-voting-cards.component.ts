@@ -1,26 +1,59 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DomainOfInfluenceType, VotingCardChannel, VotingCardResultDetail } from '../../../models';
+import {
+  CountingCircleElectorate,
+  DomainOfInfluenceType,
+  ElectorateVotingCardResultDetail,
+  VotingCardChannel,
+  VotingCardResultDetail,
+} from '../../../models';
 import { groupBy } from '../../../services/utils/array.utils';
+import { DomainOfInfluenceCanton } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/domain_of_influence_pb';
 
 @Component({
   selector: 'vo-ausm-contest-detail-voting-cards',
   templateUrl: './contest-detail-voting-cards.component.html',
 })
 export class ContestDetailVotingCardsComponent implements OnInit {
-  public votingCardsByDoiType: { [key in keyof typeof DomainOfInfluenceType]?: VotingCardResultDetail[] } = {};
+  public electorateVotingCardsList: { votingCards: ElectorateVotingCardResultDetail[]; domainOfInfluenceTypes: DomainOfInfluenceType[] }[] =
+    [];
 
+  private _votingCardsByDoiType: { [key in keyof typeof DomainOfInfluenceType]?: VotingCardResultDetail[] } = {};
   private _domainOfInfluenceTypes?: DomainOfInfluenceType[];
   private _enabledVotingCardChannels: VotingCardChannel[] = [];
   private _votingCards?: VotingCardResultDetail[];
+  private _readonly: boolean = true;
+  private _electorates: CountingCircleElectorate[] = [];
   private initialized: boolean = false;
 
   @Input()
-  public readonly: boolean = true;
+  public set readonly(v: boolean) {
+    if (this._readonly === v) {
+      return;
+    }
+
+    this._readonly = v;
+    this.updateVotingCards();
+  }
+
+  public get readonly(): boolean {
+    return this._readonly;
+  }
+
+  @Input()
+  public set electorates(v: CountingCircleElectorate[]) {
+    if (v === this._electorates) {
+      return;
+    }
+
+    this._electorates = v;
+    this.updateVotingCards();
+  }
 
   @Output()
   public votingCardsChange: EventEmitter<VotingCardResultDetail[]> = new EventEmitter<VotingCardResultDetail[]>();
@@ -59,6 +92,12 @@ export class ContestDetailVotingCardsComponent implements OnInit {
     this.updateVotingCards();
   }
 
+  @Input()
+  public newZhFeaturesEnabled: boolean = false;
+
+  @Input()
+  public canton: DomainOfInfluenceCanton = DomainOfInfluenceCanton.DOMAIN_OF_INFLUENCE_CANTON_UNSPECIFIED;
+
   public ngOnInit(): void {
     this.initialized = true;
     this.updateVotingCards();
@@ -74,7 +113,7 @@ export class ContestDetailVotingCardsComponent implements OnInit {
     );
 
     const allVotingCards: VotingCardResultDetail[] = [];
-    this.votingCardsByDoiType = {};
+    this._votingCardsByDoiType = {};
     for (const doiType of this._domainOfInfluenceTypes) {
       const votingCardsForDoiType = vcByDoiType[doiType] ?? [];
       const byChannel = groupBy(
@@ -92,12 +131,62 @@ export class ContestDetailVotingCardsComponent implements OnInit {
               channel: c.votingChannel,
             }));
       allVotingCards.push(...vcDetails);
-      this.votingCardsByDoiType[doiType] = vcDetails;
+      this._votingCardsByDoiType[doiType] = vcDetails;
     }
+
+    this.buildElectorateVotingCards();
 
     if (!this.readonly) {
       this._votingCards = allVotingCards;
       this.votingCardsChange.emit(allVotingCards);
     }
+  }
+
+  public handleElectorateVotingCardsChange(electorateVotingCards: ElectorateVotingCardResultDetail[]) {
+    const electorateDoiTypes = electorateVotingCards[0].domainOfInfluenceTypes;
+
+    for (const doiType of electorateDoiTypes) {
+      const doiVotingCards = this._votingCardsByDoiType[doiType]!;
+
+      for (const doiVc of doiVotingCards) {
+        const electorateVc = electorateVotingCards.find(e => e.channel === doiVc.channel && e.valid === doiVc.valid)!;
+        doiVc.countOfReceivedVotingCards = electorateVc.countOfReceivedVotingCards;
+      }
+    }
+  }
+
+  private buildElectorateVotingCards(): void {
+    this.electorateVotingCardsList = [];
+
+    if (!this._electorates || this._electorates.length == 0) {
+      for (const doiType of this.domainOfInfluenceTypes) {
+        this.buildElectorateVotingCardsByDoiVotingCards(this._votingCardsByDoiType[doiType]!, [doiType]);
+      }
+      return;
+    }
+
+    for (const electorate of this._electorates) {
+      this.buildElectorateVotingCardsByDoiVotingCards(
+        this._votingCardsByDoiType[electorate.domainOfInfluenceTypesList[0]]!,
+        electorate.domainOfInfluenceTypesList,
+      );
+    }
+  }
+
+  private buildElectorateVotingCardsByDoiVotingCards(
+    votingCards: VotingCardResultDetail[],
+    domainOfInfluenceTypes: DomainOfInfluenceType[],
+  ) {
+    let electorateVotingCards: ElectorateVotingCardResultDetail[] = votingCards.map(vc => ({
+      channel: vc.channel,
+      valid: vc.valid,
+      countOfReceivedVotingCards: vc.countOfReceivedVotingCards,
+      domainOfInfluenceTypes,
+    }));
+
+    this.electorateVotingCardsList.push({
+      votingCards: electorateVotingCards,
+      domainOfInfluenceTypes,
+    });
   }
 }

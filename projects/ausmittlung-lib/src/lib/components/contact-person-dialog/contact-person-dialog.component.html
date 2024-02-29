@@ -2,13 +2,25 @@
   <h3 header>{{'CONTEST.DETAIL.CONTACT_DATA.TITLE_AUTHORITY' | translate}}</h3>
 
   <div content>
-    <div class="my-2">
-      <vo-ausm-contact-person-data *ngIf="!isEmpty; else noData"
-                                   [contactPerson]="contactPerson"></vo-ausm-contact-person-data>
-      <ng-template #noData>
-        <span class="no-data" translate>CONTEST.DETAIL.CONTACT_DATA.NO_DATA</span>
-      </ng-template>
-    </div>
+    <ng-container *ngFor="let domainOfInfluence of domainOfInfluences">
+      <div class="my-2 mb-4">
+        <h4 *ngIf="newZhFeaturesEnabled">{{ domainOfInfluence.name }}</h4>
+        <vo-ausm-contact-person-data
+          *ngIf="
+            !!domainOfInfluence.contactPerson.firstName ||
+              !!domainOfInfluence.contactPerson.familyName ||
+              !!domainOfInfluence.contactPerson.phone ||
+              !!domainOfInfluence.contactPerson.mobilePhone ||
+              !!domainOfInfluence.contactPerson.email;
+            else noData
+          "
+          [contactPerson]="domainOfInfluence.contactPerson"
+        ></vo-ausm-contact-person-data>
+      </div>
+    </ng-container>
+    <ng-template #noData>
+      <span class="no-data" translate>CONTEST.DETAIL.CONTACT_DATA.NO_DATA</span>
+    </ng-template>
   </div>
 
   <div footer>

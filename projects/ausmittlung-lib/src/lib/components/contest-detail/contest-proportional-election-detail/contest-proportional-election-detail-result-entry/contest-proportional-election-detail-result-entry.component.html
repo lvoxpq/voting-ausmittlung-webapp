@@ -1,7 +1,9 @@
 <div *ngIf="!readonly; else readonlyContent">
   <ng-container *ngIf="!confirmationRequested; else confirmContent">
     <vo-ausm-election-result-entry-params [enforceEmptyVoteCounting]="election.enforceEmptyVoteCountingForCountingCircles"
-                                          [resultEntryParams]="resultEntryParams">
+                                          [resultEntryParams]="resultEntryParams"
+                                          [enforceCandidateCheckDigit]="election.enforceCandidateCheckDigitForCountingCircles"
+                                          [useCandidateCheckDigit]="useCandidateCheckDigit">
       <bc-radio-button-group
         [label]="'PROPORTIONAL_ELECTION.RESULT_ENTRY.REVIEW_PROCEDURE.TITLE' | translate"
         orientation="vertical"

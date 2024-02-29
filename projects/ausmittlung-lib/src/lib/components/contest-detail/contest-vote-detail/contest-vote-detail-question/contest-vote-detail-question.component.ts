@@ -1,17 +1,20 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { BallotQuestionResult, TieBreakQuestionResult } from '../../../../models';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'vo-ausm-contest-vote-detail-question',
   templateUrl: './contest-vote-detail-question.component.html',
   styleUrls: ['./contest-vote-detail-question.component.scss'],
 })
-export class ContestVoteDetailQuestionComponent {
+export class ContestVoteDetailQuestionComponent implements OnDestroy {
   @Input()
   public isTieBreakQuestion: boolean = false;
 
@@ -26,6 +29,20 @@ export class ContestVoteDetailQuestionComponent {
 
   @Input()
   public readonly: boolean = true;
+
+  public newZhFeaturesEnabled: boolean = false;
+
+  private readonly routeSubscription: Subscription;
+
+  constructor(route: ActivatedRoute) {
+    this.routeSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
+  }
+
+  public ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
+  }
 
   public updateTotal(): void {
     const conventionalSubTotal = this.result.conventionalSubTotal;

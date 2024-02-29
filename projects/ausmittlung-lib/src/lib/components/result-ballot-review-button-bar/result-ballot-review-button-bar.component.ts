@@ -1,16 +1,17 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'vo-ausm-election-ballot-review-button-bar',
-  templateUrl: './election-ballot-review-button-bar.component.html',
-  styleUrls: ['./election-ballot-review-button-bar.component.scss'],
+  selector: 'vo-ausm-result-ballot-review-button-bar',
+  templateUrl: './result-ballot-review-button-bar.component.html',
+  styleUrls: ['./result-ballot-review-button-bar.component.scss'],
 })
-export class ElectionBallotReviewButtonBarComponent {
+export class ResultBallotReviewButtonBarComponent {
   @Input()
   public disabled: boolean = true;
 

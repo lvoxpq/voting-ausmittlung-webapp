@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
@@ -14,4 +15,7 @@ import { ProportionalElectionResult } from '../../../models';
 export class ProportionalElectionInfoComponent {
   @Input()
   public electionResult!: ProportionalElectionResult;
+
+  @Input()
+  public newZhFeaturesEnabled: boolean = false;
 }

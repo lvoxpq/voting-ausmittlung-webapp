@@ -3,13 +3,13 @@
 .content {
   display: flex;
   overflow-x: auto;
+  column-gap: 5rem;
 
   vo-ausm-ballot-count-input {
-    @extend .mr-3;
-
     flex-shrink: 1;
   }
 
+  // TODO: can be removed if new UI is standard
   .vote-result-ballot-detail {
     @extend .mx-4;
 

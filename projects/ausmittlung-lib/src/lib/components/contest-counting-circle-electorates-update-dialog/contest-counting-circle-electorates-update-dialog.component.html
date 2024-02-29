@@ -1,0 +1,49 @@
+<vo-lib-dialog>
+  <h1 header>{{ 'CONTEST.DETAIL.ELECTORATE.DIALOG_TITLE' | translate }}</h1>
+
+  <div content class="container">
+    <div class="electorates" *ngFor="let electorate of electorates; let index = index">
+      <bc-text
+        [label]="'CONTEST.DETAIL.ELECTORATE.DOMAIN_OF_INFLUENCE_TYPES' | translate"
+        [disabled]="true"
+        [required]="true"
+        [value]="electorateLabelByIndex.get(index)"></bc-text>
+      <bc-button
+        *ngIf="!readonly; else empty"
+        variant="tertiary"
+        icon="plus"
+        [label]="'CONTEST.DETAIL.ELECTORATE.ASSIGN_OPEN' | translate"
+        (buttonClick)="assign(electorate)"></bc-button>
+      <bc-icon
+        *ngIf="!readonly; else empty"
+        icon="trash"
+        iconColor="error"
+        class="clickable"
+        (click)="remove(index)"></bc-icon>
+    </div>
+
+    <p *ngIf="electorates.length === 0" class="no-data my-2">{{'CONTEST.DETAIL.ELECTORATE.NO_DATA' | translate}}</p>
+
+    <bc-button
+      *ngIf="!readonly"
+      class="mt-2"
+      variant="tertiary"
+      icon="plus"
+      [label]="'CONTEST.DETAIL.ELECTORATE.ADD' | translate"
+      (buttonClick)="add()"></bc-button>
+  </div>
+
+  <div footer>
+    <vo-lib-button-bar
+      [hasSaveButton]="!readonly"
+      [saving]="saving"
+      [canSave]="canSave"
+      (save)="save()"
+      (cancel)="cancel()"
+    ></vo-lib-button-bar>
+  </div>
+</vo-lib-dialog>
+
+<ng-template #empty>
+  <div></div>
+</ng-template>

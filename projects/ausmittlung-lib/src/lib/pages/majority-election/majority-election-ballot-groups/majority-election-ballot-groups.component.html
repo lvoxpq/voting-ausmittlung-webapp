@@ -5,7 +5,7 @@
              [sidebarOpen]="true"
              header="MAJORITY_ELECTION.BALLOT_GROUP.TITLE">
   <ng-container *ngIf="result">
-    <vo-ausm-majority-election-info [electionResult]="result.electionResult"></vo-ausm-majority-election-info>
+    <vo-ausm-majority-election-info [electionResult]="result.electionResult" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-majority-election-info>
 
     <div class="content content-box">
       <bc-label [label]="'APP.NR' | translate"></bc-label>
@@ -15,9 +15,9 @@
       <ng-container *ngFor="let ballotGroup of result.ballotGroupResults">
         <span>{{ballotGroup.ballotGroup.position}}</span>
         <span class="clickable" (click)="page.sidebarOpen = true; focusedBallotGroup = ballotGroup">
-          {{ballotGroup.ballotGroup.shortDescription}}
+          {{ballotGroup.ballotGroup.description}}
         </span>
-        <bc-number [disabled]="(isErfassungElectionAdmin | async) !== true || resultReadOnly"
+        <bc-number [disabled]="!canEdit || resultReadOnly"
                    [ngModel]="ballotGroup.voteCount"
                    [allowUndefined]="false"
                    (ngModelChange)="ballotGroup.voteCount = +$event; updateTotalAndSetChanges()"
@@ -37,7 +37,7 @@
                        [saveLabel]="'APP.SAVE_AND_NEXT' | translate"
                        (cancel)="back()"
                        (save)="save()"
-                       [hasSaveButton]="(isErfassungElectionAdmin | async) === true && !resultReadOnly"
+                       [hasSaveButton]="canEdit && !resultReadOnly"
                        [canSave]="canSave && hasChanges"
                        [saving]="saving"></vo-lib-button-bar>
   </ng-container>

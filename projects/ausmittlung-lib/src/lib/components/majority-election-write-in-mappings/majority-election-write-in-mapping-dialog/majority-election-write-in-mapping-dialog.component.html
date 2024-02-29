@@ -24,7 +24,7 @@
         [canShowResetMappings]="electionHasWriteIns && !!electionId"
         [readOnly]="saving"
         [election]="selectedElection"
-        [invalidVotes]="hasInvalidVotes"
+        [supportsInvalidVotes]="hasInvalidVotes"
         [writeInMappings]="mappings"
         (writeInMappingsChange)="setMappings($event)"
         (showNextElection)="selectedElectionChange(selectedElectionIndex + 1)"

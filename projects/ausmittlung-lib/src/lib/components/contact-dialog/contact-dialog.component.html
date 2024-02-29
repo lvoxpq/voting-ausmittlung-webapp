@@ -1,0 +1,73 @@
+<vo-lib-dialog>
+  <h1 header>{{ 'CONTEST.DETAIL.CONTACT_DATA.TITLE_DIALOG' | translate }}</h1>
+
+  <div content class="container">
+    <div class="left">
+      <h2>{{ 'CONTEST.DETAIL.CONTACT_DATA.TITLE_AUTHORITY' | translate }}</h2>
+      <ng-container *ngFor="let domainOfInfluence of domainOfInfluences">
+        <div class="my-2 mb-4">
+          <h3>{{ domainOfInfluence.name }}</h3>
+          <vo-ausm-contact-person-data
+            *ngIf="
+              !!domainOfInfluence.contactPerson.firstName ||
+                !!domainOfInfluence.contactPerson.familyName ||
+                !!domainOfInfluence.contactPerson.phone ||
+                !!domainOfInfluence.contactPerson.mobilePhone ||
+                !!domainOfInfluence.contactPerson.email;
+              else noData
+            "
+            [contactPerson]="domainOfInfluence.contactPerson"
+          ></vo-ausm-contact-person-data>
+        </div>
+      </ng-container>
+      <ng-template #noData>
+        <span class="no-data" translate>CONTEST.DETAIL.CONTACT_DATA.NO_DATA</span>
+      </ng-template>
+    </div>
+    <div class="line"></div>
+    <div class="right">
+      <h2 translate>CONTEST.DETAIL.CONTACT_DATA.UPDATE_FOR_CONTEST</h2>
+      <p translate>CONTEST.DETAIL.CONTACT_DATA.UPDATE_REMARK</p>
+
+      <h3 class="mb-1" translate>CONTEST.DETAIL.CONTACT_DATA.TITLE</h3>
+      <span class="subtitle" translate>CONTEST.DETAIL.CONTACT_DATA.DURING_EVENT</span>
+      <vo-ausm-contact-person-edit
+        class="form"
+        [readonly]="readonly"
+        [contactPerson]="countingCircle.contactPersonDuringEvent"
+      ></vo-ausm-contact-person-edit>
+
+      <h3 class="mb-1 mt-4" translate>CONTEST.DETAIL.CONTACT_DATA.TITLE</h3>
+      <span class="subtitle" translate>CONTEST.DETAIL.CONTACT_DATA.AFTER_EVENT</span>
+      <bc-checkbox
+        class="my-2"
+        [label]="'CONTEST.DETAIL.CONTACT_DATA.SAME_CONTACT_PERSON' | translate"
+        [disabled]="readonly"
+        [(checked)]="countingCircle.contactPersonSameDuringEventAsAfter"
+      >
+      </bc-checkbox>
+      <vo-ausm-contact-person-edit
+        *ngIf="!countingCircle.contactPersonSameDuringEventAsAfter"
+        class="form"
+        [readonly]="readonly"
+        [contactPerson]="countingCircle.contactPersonAfterEvent"
+      ></vo-ausm-contact-person-edit>
+    </div>
+  </div>
+
+  <div footer>
+    <vo-lib-button-bar
+      [hasCancelButton]="showCancel"
+      [hasSaveButton]="!readonly"
+      [saving]="saving"
+      [canSave]="
+        !!countingCircle.contactPersonDuringEvent?.phone &&
+        !!countingCircle.contactPersonDuringEvent?.mobilePhone &&
+        (countingCircle.contactPersonSameDuringEventAsAfter ||
+          (!!countingCircle.contactPersonAfterEvent?.phone && !!countingCircle.contactPersonAfterEvent?.mobilePhone))
+      "
+      (save)="save()"
+      (cancel)="cancel()"
+    ></vo-lib-button-bar>
+  </div>
+</vo-lib-dialog>

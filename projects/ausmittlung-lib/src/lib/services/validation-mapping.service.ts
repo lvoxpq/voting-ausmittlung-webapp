@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import {
@@ -25,6 +26,7 @@ import {
   ValidationSummariesProto,
   ValidationSummaries,
 } from '../models';
+import { groupBy } from './utils/array.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -49,8 +51,16 @@ export class ValidationMappingService {
   public mapToValidationSummary(v: ValidationSummaryProto): ValidationSummary {
     const validationResults = v.getValidationResultsList().map(x => this.mapToValidationResult(x));
     return {
-      requiredValidationResults: validationResults.filter(x => !x.isOptional),
-      optionalValidationResults: validationResults.filter(x => x.isOptional),
+      requiredValidationResults: groupBy(
+        validationResults.filter(x => !x.isOptional),
+        x => x.groupValue,
+        x => x,
+      ),
+      optionalValidationResults: groupBy(
+        validationResults.filter(x => x.isOptional),
+        x => x.groupValue,
+        x => x,
+      ),
       isValid: v.getIsValid(),
       title: v.getTitle(),
     };

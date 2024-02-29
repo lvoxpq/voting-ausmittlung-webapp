@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 /*
@@ -12,7 +13,7 @@ export * from './lib/ausmittlung-lib.module';
 export * from './lib/services/tokens';
 export * from './lib/services/contest.service';
 export * from './lib/services/result.service';
-export * from './lib/services/role.service';
+export * from './lib/services/permission.service';
 export * from './lib/services/vote-result.service';
 export * from './lib/services/proportional-election-result.service';
 export * from './lib/services/majority-election-result.service';
@@ -48,6 +49,7 @@ export * from './lib/components/vote-results-graph/vote-results-graph.component'
 export * from './lib/components/voting-data-source-tabs/voting-data-source-tabs.component';
 export * from './lib/components/validation-overview-dialog/validation-overview-dialog.component';
 export * from './lib/components/result-state-box/result-state-box.component';
+export * from './lib/components/contest-detail/contest-detail-info/contest-detail-info.component';
 
 // pipes
 export * from './lib/pipes/translate-vote-question.pipe';
@@ -64,6 +66,11 @@ export * from './lib/services/utils/authconfig.utils';
 
 // providers
 export * from './lib/providers/common-providers';
+
+// resolvers
+export * from './lib/services/resolvers/contest-canton-defaults.resolver';
+export * from './lib/services/resolvers/political-business-canton-defaults.resolver';
+export * from './lib/services/resolvers/result-canton-defaults.resolver';
 
 // tokens
 export * from './lib/tokens';

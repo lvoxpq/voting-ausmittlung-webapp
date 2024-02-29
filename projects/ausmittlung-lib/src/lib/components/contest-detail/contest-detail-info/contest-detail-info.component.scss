@@ -1,0 +1,55 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+@use 'sass:map';
+
+.container {
+  @extend .p-3;
+
+  background-color: $color-grey-7;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 4px;
+  row-gap: 1rem;
+  column-gap: 7rem;
+}
+
+.count-of-voters {
+  display: flex;
+  column-gap: 5rem;
+}
+
+.info-entries {
+  display: flex;
+  column-gap: 3rem;
+}
+
+.info-value {
+  display: block;
+  margin-top: 0.125rem;
+}
+
+.title-spacer {
+  height: 1.35rem;
+}
+
+h5 {
+  margin-bottom: 0.25rem;
+  color: $color-grey-2;
+}
+
+// TODO: copied from base-components, can be removed after base-components update and replacement of the button
+button {
+  display: block;
+  border-radius: 40px;
+  min-width: 32px;
+  width: 40px;
+  padding: 0;
+
+  &.mat-button-base {
+    height: 40px;
+  }
+
+  &[disabled] {
+    opacity: 0.4;
+  }
+}

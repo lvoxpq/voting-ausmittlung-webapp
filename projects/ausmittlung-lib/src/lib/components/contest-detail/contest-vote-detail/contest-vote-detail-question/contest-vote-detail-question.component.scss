@@ -7,10 +7,7 @@
 
 .question-results {
   display: flex;
-
-  > :not(:first-child) {
-    @extend .ml-4;
-  }
+  column-gap: 1.5rem;
 
   .result-entry {
     bc-number {
@@ -31,4 +28,19 @@
       }
     }
   }
+}
+
+.question-results.vertical {
+  flex-direction: column;
+  row-gap: 0.5rem;
+}
+
+.source-label {
+  width: 5.5rem;
+  align-self: flex-end;
+  margin-bottom: 2.3rem;
+}
+
+::ng-deep .label-space .formfield .mat-form-field-appearance-outline.has-label {
+  margin-top: 29px;
 }

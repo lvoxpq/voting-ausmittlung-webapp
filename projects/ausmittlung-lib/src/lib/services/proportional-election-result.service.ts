@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { PoliticalBusinessType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/political_business_pb';
@@ -161,6 +162,7 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     resultEntryParamsReq.setBallotBundleSize(resultEntryParams.ballotBundleSize);
     resultEntryParamsReq.setBallotNumberGeneration(resultEntryParams.ballotNumberGeneration);
     resultEntryParamsReq.setReviewProcedure(resultEntryParams.reviewProcedure);
+    resultEntryParamsReq.setCandidateCheckDigit(resultEntryParams.candidateCheckDigit);
     req.setResultEntryParams(resultEntryParamsReq);
     return this.requestEmptyResp(c => c.defineEntry, req);
   }

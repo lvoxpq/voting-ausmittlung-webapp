@@ -7,7 +7,8 @@
                                             [showInvalidVotes]="showInvalidVotes"
                                             [automaticEmptyVoteCounting]="automaticEmptyVoteCounting"
                                             (contentCompleted)="contentCompleted.emit($event)"
-                                            [readonly]="readonly"></vo-ausm-majority-election-ballot-content>
+                                            [readonly]="readonly"
+                                            [candidateCheckDigit]="candidateCheckDigit"></vo-ausm-majority-election-ballot-content>
   <vo-ausm-majority-election-ballot-content *ngFor="let secondaryElectionBallot of ballot.secondaryMajorityElectionBallots"
                                             class="my-2"
                                             (contentChanged)="contentChanged.emit()"
@@ -17,6 +18,7 @@
                                             [showInvalidVotes]="showInvalidVotes"
                                             [automaticEmptyVoteCounting]="automaticEmptyVoteCounting"
                                             [readonly]="readonly"
+                                            [candidateCheckDigit]="candidateCheckDigit"
                                             (contentCompleted)="contentCompleted.emit($event)">
   </vo-ausm-majority-election-ballot-content>
 </ng-container>

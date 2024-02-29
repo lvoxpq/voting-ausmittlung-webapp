@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
@@ -31,21 +32,25 @@ interface KeyboardMessage {
 const individualCandidateId = 'const-candidate-id-individual';
 const invalidCandidateId = 'const-candidate-id-invalid';
 const emptyCandidateId = 'const-candidate-id-empty';
+const invalidBallotId = 'const-ballot-id-invalid';
 
-const invalidCandidateNr = '97';
-const individualCandidateNr = '98';
-const emptyCandidateNr = '99';
+const invalidCandidateNr = '96';
+const individualCandidateNr = '97';
+const emptyCandidateNr = '98';
+const invalidBallotNr = '99';
 
 const mappingTargetsByCandidateId: Record<string, MajorityElectionWriteInMappingTarget> = {
   [individualCandidateId]: MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_INDIVIDUAL,
   [invalidCandidateId]: MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_INVALID,
   [emptyCandidateId]: MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_EMPTY,
+  [invalidBallotId]: MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_INVALID_BALLOT,
 };
 
 const candidateIdByMappingTarget: Record<MajorityElectionWriteInMappingTarget, string | undefined> = {
   [MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_INDIVIDUAL]: individualCandidateId,
   [MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_INVALID]: invalidCandidateId,
   [MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_EMPTY]: emptyCandidateId,
+  [MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_INVALID_BALLOT]: invalidBallotId,
   [MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_UNSPECIFIED]: undefined,
   [MajorityElectionWriteInMappingTarget.MAJORITY_ELECTION_WRITE_IN_MAPPING_TARGET_CANDIDATE]: undefined,
 };
@@ -72,7 +77,7 @@ export class MajorityElectionWriteInMappingComponent implements OnChanges {
   public writeInMappings: MajorityElectionWriteInMapping[] = [];
 
   @Input()
-  public invalidVotes: boolean = false;
+  public supportsInvalidVotes: boolean = false;
 
   @Input()
   public canShowNextElection: boolean = false;
@@ -291,22 +296,16 @@ export class MajorityElectionWriteInMappingComponent implements OnChanges {
           ? await this.majorityElectionService.listCandidatesOfSecondaryElection(this.election.id)
           : await this.majorityElectionService.listCandidates(this.election.id);
 
-      const candidates = [
-        ...candidatesResp,
-        this.createFakeCandidate(individualCandidateId, individualCandidateNr, 'MAJORITY_ELECTION.INDIVIDUAL'),
-      ];
+      const candidates = [...candidatesResp];
 
-      // In elections with a single mandate, add an invalid ballot fake candidate, since empty votes and invalid votes are not possible.
-      if (this.election.numberOfMandates === 1) {
-        candidates.splice(-1, 0, this.createFakeCandidate(invalidCandidateId, invalidCandidateNr, 'MAJORITY_ELECTION.INVALID_BALLOT'));
+      if (this.supportsInvalidVotes) {
+        candidates.push(this.createFakeCandidate(invalidCandidateId, invalidCandidateNr, 'MAJORITY_ELECTION.INVALID_VOTES'));
       } else {
-        candidates.push(this.createFakeCandidate(emptyCandidateId, emptyCandidateNr, 'MAJORITY_ELECTION.EMPTY_VOTES'));
-
-        if (this.invalidVotes) {
-          // add before other fake candidates
-          candidates.splice(-2, 0, this.createFakeCandidate(invalidCandidateId, invalidCandidateNr, 'MAJORITY_ELECTION.INVALID_VOTES'));
-        }
+        candidates.push(this.createFakeCandidate(emptyCandidateId, emptyCandidateNr, 'RESULT_IMPORT.WRITE_INS.EMPTY_VOTES'));
       }
+
+      candidates.push(this.createFakeCandidate(individualCandidateId, individualCandidateNr, 'MAJORITY_ELECTION.INDIVIDUAL'));
+      candidates.push(this.createFakeCandidate(invalidBallotId, invalidBallotNr, 'RESULT_IMPORT.WRITE_INS.INVALID_BALLOT'));
 
       this.candidatesWithMappings = candidates.map(candidate => ({
         candidate,
@@ -334,6 +333,7 @@ export class MajorityElectionWriteInMappingComponent implements OnChanges {
       politicalFirstName: '',
       politicalLastName: this.i18n.instant(name),
       position: -1,
+      checkDigit: 0,
     };
   }
 }

@@ -2,7 +2,7 @@
              header="EXPORTS.TITLE">
   <vo-lib-page-header header>
     <vo-ausm-breadcrumbs left [items]="breadcrumbs"></vo-ausm-breadcrumbs>
-    <vo-ausm-contest-header center [contest]="contest"></vo-ausm-contest-header>
+    <vo-ausm-contest-header center [contest]="contest" [countingCircle]="countingCircle"></vo-ausm-contest-header>
     <div right>
       <bc-button *ngIf="selectedTab === tabs.PROTOCOLS"
                  variant="tertiary"

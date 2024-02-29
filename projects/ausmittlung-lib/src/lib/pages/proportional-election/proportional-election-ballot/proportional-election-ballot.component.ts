@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { BallotBundleState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/ballot_bundle_pb';
@@ -24,7 +25,7 @@ import {
 import { ProportionalElectionResultBundleService } from '../../../services/proportional-election-result-bundle.service';
 import { ProportionalElectionResultService } from '../../../services/proportional-election-result.service';
 import { ProportionalElectionService } from '../../../services/proportional-election.service';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { UserService } from '../../../services/user.service';
 import { ElectionBallotComponent } from '../../election-ballot/election-ballot.component';
 
@@ -53,13 +54,13 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
     toast: SnackbarService,
     i18n: TranslateService,
     userService: UserService,
-    roleService: RoleService,
+    permissionService: PermissionService,
     private readonly resultBundleService: ProportionalElectionResultBundleService,
     private readonly resultService: ProportionalElectionResultService,
     private readonly electionService: ProportionalElectionService,
     private readonly ballotUiService: ProportionalElectionBallotUiService,
   ) {
-    super(userService, route, dialog, i18n, router, toast, roleService);
+    super(userService, route, dialog, i18n, router, toast, permissionService);
   }
 
   public get ballotBundleSize(): number | undefined {
@@ -84,6 +85,7 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
       this.electionCandidates,
       this.politicalBusinessResult!.entryParams.automaticEmptyVoteCounting,
       this.politicalBusinessResult!.election.numberOfMandates,
+      this.politicalBusinessResult!.election.candidateCheckDigit,
       this.ballot,
     );
     this.contentChanged();
@@ -154,6 +156,7 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
       this.electionCandidates,
       this.politicalBusinessResult!.entryParams.automaticEmptyVoteCounting,
       this.politicalBusinessResult!.election.numberOfMandates,
+      this.politicalBusinessResult!.election.candidateCheckDigit,
       this.ballot,
     );
     return this.ballot;
@@ -180,6 +183,7 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
       this.electionCandidates,
       this.politicalBusinessResult!.entryParams.automaticEmptyVoteCounting,
       this.politicalBusinessResult!.election.numberOfMandates,
+      this.politicalBusinessResult!.election.candidateCheckDigit,
       this.ballot,
     );
   }
@@ -233,6 +237,10 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
       return false;
     }
 
+    if (!(await this.validateBallotWithPartyNotEmpty())) {
+      return false;
+    }
+
     return super.validateBallot();
   }
 
@@ -249,6 +257,19 @@ export class ProportionalElectionBallotComponent extends ElectionBallotComponent
     await this.dialog.alert(
       this.i18n.instant('PROPORTIONAL_ELECTION.BALLOT_DETAIL.INVALID_EMPTY_BALLOT_WITHOUT_PARTY.TITLE'),
       this.i18n.instant('PROPORTIONAL_ELECTION.BALLOT_DETAIL.INVALID_EMPTY_BALLOT_WITHOUT_PARTY.MSG'),
+    );
+
+    return false;
+  }
+
+  private async validateBallotWithPartyNotEmpty(): Promise<boolean> {
+    if (!this.ballot || this.ballotUiData.numberOfMandates !== this.ballotUiData.emptyVoteCount) {
+      return true;
+    }
+
+    await this.dialog.alert(
+      this.i18n.instant('PROPORTIONAL_ELECTION.BALLOT_DETAIL.INVALID_EMPTY_BALLOT_WITH_PARTY.TITLE'),
+      this.i18n.instant('PROPORTIONAL_ELECTION.BALLOT_DETAIL.INVALID_EMPTY_BALLOT_WITH_PARTY.MSG'),
     );
 
     return false;

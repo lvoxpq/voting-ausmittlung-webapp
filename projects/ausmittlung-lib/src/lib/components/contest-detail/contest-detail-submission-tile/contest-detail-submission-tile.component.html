@@ -1,0 +1,5 @@
+<div class="tile">
+  <h5>{{ title }}</h5>
+  <p>{{ text }}</p>
+  <bc-button variant="tertiary" [label]="buttonText | translate" [disabled]="disabled" (buttonClick)="buttonClick.emit()"></bc-button>
+</div>

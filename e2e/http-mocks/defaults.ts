@@ -1,3 +1,9 @@
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
+ */
+
 import { Message } from 'google-protobuf';
 import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
 import { RequestMock } from 'testcafe';

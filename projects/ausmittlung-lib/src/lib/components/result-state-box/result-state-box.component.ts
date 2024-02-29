@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
@@ -18,4 +19,7 @@ export class ResultStateBoxComponent {
 
   @Input()
   public timestamp?: Date;
+
+  @Input()
+  public newZhFeaturesEnabled: boolean = false;
 }

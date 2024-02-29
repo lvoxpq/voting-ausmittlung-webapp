@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { BallotType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/vote_pb';
@@ -13,8 +14,6 @@ import { BallotResult, VoteResultBallot, VoteResultBallotQuestionAnswer, VoteRes
   styleUrls: ['./vote-ballot-content.component.scss'],
 })
 export class VoteBallotContentComponent {
-  public BallotType: typeof BallotType = BallotType;
-
   @Input()
   public readonly: boolean = false;
 

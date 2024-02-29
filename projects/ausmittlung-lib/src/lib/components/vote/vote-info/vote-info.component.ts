@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, Input } from '@angular/core';
@@ -13,4 +14,7 @@ import { VoteResult } from '../../../models';
 export class VoteInfoComponent {
   @Input()
   public voteResult!: VoteResult;
+
+  @Input()
+  public newZhFeaturesEnabled: boolean = false;
 }

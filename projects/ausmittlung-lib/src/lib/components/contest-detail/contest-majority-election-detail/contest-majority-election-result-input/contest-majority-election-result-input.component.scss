@@ -17,8 +17,9 @@
 
   // variable workaround due to angular bug https://github.com/angular/angular/issues/28897
   grid-template-columns: repeat(var(--candidate-results-column-count), fit-content(15rem)) 5rem;
-  grid-gap: 0.5rem 0.8rem;
+  grid-gap: 0.5rem;
   margin-top: 0.5rem;
+  align-items: center;
 
   &.large-ml {
     margin-left: calc(41.5rem - 1px); // 40 rem: width of count of voters, 1.5rem margin, 1px border
@@ -31,4 +32,8 @@
   .candidate-candidacy {
     grid-column-start: 2;
   }
+}
+
+::ng-deep .candidate-results .mat-form-field-wrapper {
+  padding-bottom: 0;
 }

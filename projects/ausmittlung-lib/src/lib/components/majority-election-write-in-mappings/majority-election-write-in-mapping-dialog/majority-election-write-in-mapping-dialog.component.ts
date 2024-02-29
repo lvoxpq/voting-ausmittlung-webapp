@@ -1,14 +1,12 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
-import { SnackbarService } from '@abraxas/voting-lib';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { MajorityElectionWriteInMapping, SimplePoliticalBusiness } from '../../../models';
-import { MajorityElectionService } from '../../../services/majority-election.service';
 import { ResultImportService } from '../../../services/result-import.service';
 import { groupBySingle } from '../../../services/utils/array.utils';
 import { MajorityElectionWriteInMappingTarget } from '@abraxas/voting-ausmittlung-service-proto/grpc/shared/majority_election_write_in_pb';
@@ -35,7 +33,6 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
 
   private hasInvalidVotesByElectionId: Record<string, boolean> = {};
   private mappingsByElectionId: Record<string, MajorityElectionWriteInMapping[]> = {};
-  private mappingsReset: boolean = false;
 
   private electionsById: Record<string, SimplePoliticalBusiness> = {};
   private importId: string = '';
@@ -43,10 +40,7 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
   private readonly countingCircleId: string;
 
   constructor(
-    private readonly dialogRef: MatDialogRef<ResultImportWriteInMappingDialogResult>,
-    private readonly toast: SnackbarService,
-    private readonly i18n: TranslateService,
-    private readonly majorityElectionService: MajorityElectionService,
+    private readonly dialogRef: MatDialogRef<void>,
     private readonly resultImportService: ResultImportService,
     @Inject(MAT_DIALOG_DATA) dialogData: ResultImportWriteInMappingDialogData,
   ) {
@@ -110,7 +104,7 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
   }
 
   public close(): void {
-    this.dialogRef.close({ mappings: this.mappingsReset ? [] : this.mappings });
+    this.dialogRef.close();
   }
 
   public async save(): Promise<void> {
@@ -127,8 +121,6 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
         this.selectedElection.businessType,
         this.mappings,
       );
-
-      this.mappingsReset = false;
     } finally {
       this.saving = false;
     }
@@ -147,8 +139,6 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
         this.contestId,
         this.selectedElection.businessType,
       );
-
-      this.mappingsReset = true;
     } finally {
       this.saving = false;
     }
@@ -160,7 +150,7 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
 
   private selectElection(index: number): void {
     if (index === this.elections.length) {
-      this.dialogRef.close({ mappings: this.mappings });
+      this.dialogRef.close();
       return;
     }
 
@@ -176,8 +166,4 @@ export interface ResultImportWriteInMappingDialogData {
   contestId: string;
   countingCircleId: string;
   electionId?: string;
-}
-
-export interface ResultImportWriteInMappingDialogResult {
-  mappings: MajorityElectionWriteInMapping[];
 }

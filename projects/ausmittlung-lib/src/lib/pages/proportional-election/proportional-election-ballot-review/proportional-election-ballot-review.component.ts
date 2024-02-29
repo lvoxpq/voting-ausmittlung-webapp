@@ -1,9 +1,10 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
-import { DialogService, SnackbarService } from '@abraxas/voting-lib';
+import { DialogService } from '@abraxas/voting-lib';
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -43,27 +44,32 @@ export class ProportionalElectionBallotReviewComponent implements OnDestroy {
 
   public canSucceed: boolean = false;
   public correctionOngoing: boolean = false;
+  public newZhFeaturesEnabled: boolean = false;
 
   @ViewChild(BallotReviewStepperComponent)
   public reviewStepper!: BallotReviewStepperComponent;
 
   private readonly routeParamsSubscription: Subscription;
+  private readonly routeDataSubscription: Subscription;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly dialog: DialogService,
-    private readonly toast: SnackbarService,
     private readonly i18n: TranslateService,
     private readonly electionService: ProportionalElectionService,
     private readonly resultBundleService: ProportionalElectionResultBundleService,
     private readonly ballotUiService: ProportionalElectionBallotUiService,
   ) {
     this.routeParamsSubscription = this.route.params.subscribe(({ bundleId }) => this.loadData(bundleId));
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
   }
 
   public ngOnDestroy(): void {
     this.routeParamsSubscription.unsubscribe();
+    this.routeDataSubscription.unsubscribe();
   }
 
   public updateState(): void {
@@ -108,6 +114,7 @@ export class ProportionalElectionBallotReviewComponent implements OnDestroy {
         await this.getElectionCandidates(),
         this.electionResult.entryParams.automaticEmptyVoteCounting,
         this.electionResult.election.numberOfMandates,
+        this.electionResult!.election.candidateCheckDigit,
         this.ballot,
       );
       this.correctionOngoing = true;
@@ -125,6 +132,7 @@ export class ProportionalElectionBallotReviewComponent implements OnDestroy {
       [],
       this.electionResult.entryParams.automaticEmptyVoteCounting,
       this.electionResult.election.numberOfMandates,
+      this.electionResult.election.candidateCheckDigit,
       this.ballot,
     );
     this.correctionOngoing = false;
@@ -170,6 +178,7 @@ export class ProportionalElectionBallotReviewComponent implements OnDestroy {
         [],
         this.electionResult.entryParams.automaticEmptyVoteCounting,
         this.electionResult.election.numberOfMandates,
+        this.electionResult.election.candidateCheckDigit,
         this.ballot,
       );
     } finally {

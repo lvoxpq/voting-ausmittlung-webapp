@@ -1,3 +1,9 @@
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
+ */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, Subscription } from 'rxjs';
@@ -5,16 +11,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import {
-  ResultListResult,
-  Contest,
   BreadcrumbItem,
-  ResultService,
   BreadcrumbsService,
+  Contest,
+  CountingCircle,
+  CountingCircleResultState,
+  ResultListResult,
+  ResultService,
+  SecondFactorTransactionService,
+  ValidationOverviewDialogComponent,
   ValidationOverviewDialogData,
   ValidationOverviewDialogResult,
-  ValidationOverviewDialogComponent,
-  SecondFactorTransactionService,
-  CountingCircleResultState,
 } from 'ausmittlung-lib';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -31,7 +38,6 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
     'politicalBusinessType',
     'countingCircleResultState',
   ];
-
   public loadingResults: boolean = true;
   public finishingResultSubmissions: boolean = false;
 
@@ -40,10 +46,14 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
   public readyForCorrectionResults: ResultListResult[] = [];
   public allResultsSelected: boolean = false;
   public contest?: Contest;
+  public countingCircle?: CountingCircle;
+  public state?: CountingCircleResultState;
   public countingCircleResultStates: typeof CountingCircleResultState = CountingCircleResultState;
 
   public breadcrumbs: BreadcrumbItem[] = [];
+  public newZhFeaturesEnabled: boolean = false;
 
+  private routeDataSubscription: Subscription;
   private routeParamsSubscription: Subscription = Subscription.EMPTY;
 
   private contestId: string = '';
@@ -62,6 +72,9 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
     private readonly i18n: TranslateService,
   ) {
     this.breadcrumbs = this.breadcrumbsService.forFinishSubmission();
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
   }
 
   public get selectableResults(): ResultListResult[] {
@@ -78,6 +91,7 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.routeParamsSubscription.unsubscribe();
+    this.routeDataSubscription.unsubscribe();
     this.stateChangesSubscription?.unsubscribe();
   }
 
@@ -141,6 +155,8 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
         r => r.state === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION,
       );
       this.contest = data.contest;
+      this.countingCircle = data.countingCircle;
+      this.state = data.state;
       this.updateAllResultsSelected();
     } finally {
       this.loadingResults = false;

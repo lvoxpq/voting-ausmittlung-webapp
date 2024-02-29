@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { BallotType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/vote_pb';
@@ -20,7 +21,7 @@ import {
   VoteResultBallotQuestionAnswer,
   VoteResultBallotTieBreakQuestionAnswer,
 } from '../../../models';
-import { RoleService } from '../../../services/role.service';
+import { PermissionService } from '../../../services/permission.service';
 import { UserService } from '../../../services/user.service';
 import { VoteResultBundleService } from '../../../services/vote-result-bundle.service';
 import { VoteResultService } from '../../../services/vote-result.service';
@@ -44,11 +45,11 @@ export class VoteBallotComponent extends PoliticalBusinessBallotComponent<VoteRe
     toast: SnackbarService,
     i18n: TranslateService,
     userService: UserService,
-    roleService: RoleService,
+    permissionService: PermissionService,
     private readonly resultBundleService: VoteResultBundleService,
     private readonly resultService: VoteResultService,
   ) {
-    super(userService, route, dialog, i18n, router, toast, roleService);
+    super(userService, route, dialog, i18n, router, toast, permissionService);
   }
 
   protected get deletedBallotLabel(): string {

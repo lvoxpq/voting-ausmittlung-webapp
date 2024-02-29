@@ -6,8 +6,8 @@
                               [participationLabel]="'VOTE.VOTER_PARTICIPATION'"
                               [countOfVoters]="ballotResult.countOfVoters"
                               (countOfVotersChange)="countOfVotersChange.emit()"></vo-ausm-ballot-count-input>
-  <div class="vote-result-ballot-detail">
-    <h4 class="mb-2" translate>VOTE.BALLOT.TITLE</h4>
+  <div [class.vote-result-ballot-detail]="!newZhFeaturesEnabled">
+    <h4 class="mb-2">{{ (newZhFeaturesEnabled ? 'POLITICAL_BUSINESS.SUBMISSION' : 'VOTE.BALLOT.TITLE') | translate }}</h4>
     <div *ngFor="let questionResult of ballotResult.questionResults"
          class="mb-4">
       <vo-ausm-contest-vote-detail-question [eVoting]="eVoting"
@@ -23,5 +23,9 @@
                                             [ballotNumberOfQuestions]="ballotResult.questionResults.length"
                                             [result]="tieBreakQuestionResult"></vo-ausm-contest-vote-detail-question>
     </div>
+  </div>
+  <div *ngIf="newZhFeaturesEnabled">
+    <vo-ausm-contest-vote-detail-results-graph [ballotResult]="ballotResult"
+                                               [eVoting]="eVoting"></vo-ausm-contest-vote-detail-results-graph>
   </div>
 </div>

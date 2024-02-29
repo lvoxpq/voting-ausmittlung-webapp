@@ -1,10 +1,14 @@
-<bc-expansion-panel (expandedChange)="expandedChanged($event)">
+<bc-expansion-panel (expandedChange)="expandedChanged($event)" [class.with-border]="newZhFeaturesEnabled">
   <div header>
     <div>
       <h4 [class.not-responsible]="contentReadonly && !isResponsibleMonitorAuthority">
         {{result.politicalBusiness.title}}
       </h4>
     </div>
+    <div *ngIf="newZhFeaturesEnabled" class="container">
+      <bc-status-label class="center" [label]="'DOMAIN_OF_INFLUENCE_TYPES.' + result.politicalBusiness.domainOfInfluence?.type | translate"></bc-status-label>
+    </div>
+    <div class="spacer"></div>
     <ng-container [ngSwitch]="result.politicalBusiness.businessType">
       <vo-ausm-contest-proportional-election-detail-header
         *ngSwitchCase="politicalBusinessType.POLITICAL_BUSINESS_TYPE_PROPORTIONAL_ELECTION"
@@ -15,9 +19,9 @@
     </ng-container>
     <div class="mr-2">
       <bc-button
-        *ngIf="result.politicalBusiness.domainOfInfluence && result.politicalBusiness.domainOfInfluence.contactPerson"
+        *ngIf="!newZhFeaturesEnabled && result.politicalBusiness.domainOfInfluence && result.politicalBusiness.domainOfInfluence.contactPerson"
         variant="tertiary"
-        [label]="'CONTEST.DETAIL.CONTACT_DATA.TITLE_DETAILS' | translate"
+        [label]="'CONTEST.DETAIL.CONTACT_DATA.TITLE_DETAILS_OLD' | translate"
         (buttonClick)="openContactPerson(); $event.stopPropagation()"></bc-button>
     </div>
     <div class="header-icon mr-2">
@@ -26,7 +30,8 @@
                icon="comment"></bc-icon>
     </div>
     <vo-ausm-result-state-box [state]="result.state"
-                              [timestamp]="result.submissionDoneTimestamp"></vo-ausm-result-state-box>
+                              [timestamp]="result.submissionDoneTimestamp"
+                              [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-result-state-box>
   </div>
 
   <div *ngIf="!contentReadonly || (result.state !== states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING && result.state !== states.COUNTING_CIRCLE_RESULT_STATE_INITIAL); else resultNotSubmitted">
@@ -59,7 +64,9 @@
     </div>
 
     <ng-template #businessNotActive>
-      {{'CONTEST.DETAIL.NOT_ACTIVE' | translate}}
+      <div class="mb-2">
+        {{'CONTEST.DETAIL.NOT_ACTIVE' | translate}}
+      </div>
     </ng-template>
   </div>
 

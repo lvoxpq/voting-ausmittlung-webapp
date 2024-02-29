@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Highlightable } from '@angular/cdk/a11y';
@@ -15,6 +16,9 @@ import { ProportionalElectionCandidate } from '../../../../models';
 export class ProportionalElectionBallotCandidatesChooseEntryComponent implements Highlightable {
   @Input()
   public candidate!: ProportionalElectionCandidate;
+
+  @Input()
+  public candidateCheckDigit: boolean = false;
 
   @HostBinding('class.active')
   public active: boolean = false;

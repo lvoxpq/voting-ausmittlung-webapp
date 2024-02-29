@@ -1,7 +1,7 @@
 <vo-lib-page [contentLoading]="loading"
              header="VOTE.BUNDLE_OVERVIEW">
   <ng-container *ngIf="result">
-    <vo-ausm-vote-info [voteResult]="result.politicalBusinessResult"></vo-ausm-vote-info>
+    <vo-ausm-vote-info [voteResult]="result.politicalBusinessResult" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-vote-info>
     <div class="my-4">
       <div class="shortcut-container">
         <bc-icon class="clickable-icon" icon="question-circle-o" (click)="showShortcutDialog()"></bc-icon>
@@ -27,13 +27,14 @@
                                    (succeedBundleReview)="succeedBundleReview($event)"
                                    (rejectBundleReview)="rejectBundleReview($event)"
                                    (deleteBundle)="deleteBundle($event)"
-                                   [reviewProcedure]="result.politicalBusinessResult.entryParams?.reviewProcedure">
+                                   [reviewProcedure]="result.politicalBusinessResult.entryParams?.reviewProcedure"
+                                   [newZhFeaturesEnabled]="newZhFeaturesEnabled">
         </vo-ausm-vote-bundle-table>
       </ng-template>
     </div>
     <div class="sticky-buttons">
       <vo-lib-button-bar [cancelLabel]="'APP.BACK' | translate"
-                         [hasSaveButton]="(isErfassungUser | async) === true && !resultReadOnly"
+                         [hasSaveButton]="canCreateBundle && !resultReadOnly"
                          [saveLabel]="'VOTE.NEW_BUNDLE' | translate"
                          [canSave]="true"
                          [saving]="isCreatingBundle"

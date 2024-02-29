@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
@@ -20,6 +21,9 @@ export class MajorityElectionBallotCandidatesComponent {
 
   @Input()
   public readonly: boolean = true;
+
+  @Input()
+  public candidateCheckDigit: boolean = false;
 
   @Output()
   public toggleCandidate: EventEmitter<MajorityElectionBallotCandidate> = new EventEmitter<MajorityElectionBallotCandidate>();

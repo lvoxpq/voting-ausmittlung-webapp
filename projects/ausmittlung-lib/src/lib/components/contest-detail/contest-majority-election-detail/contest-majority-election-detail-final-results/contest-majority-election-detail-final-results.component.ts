@@ -1,23 +1,26 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MajorityElection, MajorityElectionResult, MajorityElectionWriteInMapping } from '../../../../models';
+import { Component, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { MajorityElection, MajorityElectionResult } from '../../../../models';
 import { BallotCountInputComponent } from '../../../ballot-count-input/ballot-count-input.component';
 import {
   MajorityElectionWriteInMappingDialogComponent,
   ResultImportWriteInMappingDialogData,
 } from '../../../majority-election-write-in-mappings/majority-election-write-in-mapping-dialog/majority-election-write-in-mapping-dialog.component';
 import { DialogService } from '@abraxas/voting-lib';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'vo-ausm-contest-majority-election-detail-final-results',
   templateUrl: './contest-majority-election-detail-final-results.component.html',
   styleUrls: ['./contest-majority-election-detail-final-results.component.scss'],
 })
-export class ContestMajorityElectionDetailFinalResultsComponent {
+export class ContestMajorityElectionDetailFinalResultsComponent implements OnDestroy {
   @Input()
   public readonly: boolean = true;
 
@@ -39,9 +42,19 @@ export class ContestMajorityElectionDetailFinalResultsComponent {
   @ViewChild(BallotCountInputComponent)
   private ballotCountInputComponent!: BallotCountInputComponent;
 
-  public mappedWriteIns?: MajorityElectionWriteInMapping[];
+  public newZhFeaturesEnabled: boolean = false;
 
-  constructor(private readonly dialogService: DialogService) {}
+  private readonly routeSubscription: Subscription;
+
+  constructor(private readonly dialogService: DialogService, route: ActivatedRoute) {
+    this.routeSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
+  }
+
+  public ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
+  }
 
   public setFocus(): void {
     this.ballotCountInputComponent.setFocus();
@@ -58,7 +71,6 @@ export class ContestMajorityElectionDetailFinalResultsComponent {
       electionId: electionId,
     };
 
-    const result = await this.dialogService.openForResult(MajorityElectionWriteInMappingDialogComponent, data);
-    this.mappedWriteIns = result?.mappings;
+    this.dialogService.open(MajorityElectionWriteInMappingDialogComponent, data);
   }
 }

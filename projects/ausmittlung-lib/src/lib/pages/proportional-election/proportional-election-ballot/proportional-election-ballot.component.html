@@ -2,11 +2,12 @@
              header="ELECTION.BALLOT_DETAIL.TITLE">
   <ng-container *ngIf="politicalBusinessResult && bundle">
     <div class="content">
-      <vo-ausm-proportional-election-info [electionResult]="politicalBusinessResult"></vo-ausm-proportional-election-info>
+      <vo-ausm-proportional-election-info [electionResult]="politicalBusinessResult" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-proportional-election-info>
 
       <div>
         <vo-ausm-proportional-election-bundle-table [bundleSize]="politicalBusinessResult.entryParams.ballotBundleSize"
-                                                    [bundles]="[bundle]"></vo-ausm-proportional-election-bundle-table>
+                                                    [bundles]="[bundle]"
+                                                    [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-proportional-election-bundle-table>
       </div>
 
       <div class="content-box">
@@ -19,9 +20,7 @@
           [maxBallotNumber]="currentMaxBallotNumber"
           [disabled]="loadingBallot"
           [actionExecuting]="actionExecuting"
-          [readonly]="(isErfassungUser | async) !== true
-            || !bundleInProcessOrCorrection
-            || politicalBusinessResult.election.contest!.locked"
+          [readonly]="!bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
           [canDeleteBallot]="!!ballot && ballot.number === currentMaxBallotNumber"
           (deleteBallot)="deleteBallotAndNavigate()"
           (ballotNumberChange)="navigateToBallot($event)">
@@ -30,7 +29,7 @@
               *ngIf="!loadingBallot
                 && !!ballot
                 && bundleInProcessOrCorrection
-                && (isErfassungUser | async) === true
+                && canUpdateBallot
                 && !politicalBusinessResult.election.contest!.locked"
               class="mx-2 mb-2"
               variant="tertiary"
@@ -42,7 +41,7 @@
               *ngIf="!loadingBallot
                 && !!ballot
                 && bundleInProcessOrCorrection
-                && (isErfassungUser | async) === true
+                && canUpdateBallot
                 && !politicalBusinessResult.election.contest!.locked"
               class="mx-2 mb-2"
               variant="tertiary"
@@ -63,8 +62,9 @@
             [disabled]="actionExecuting"
             (contentChanged)="contentChanged()"
             [readonly]="!bundleInProcessOrCorrection
-              || (isErfassungUser | async) !== true
+              || !canUpdateBallot
               || politicalBusinessResult.election.contest!.locked"
+            [candidateCheckDigit]="politicalBusinessResult.entryParams.candidateCheckDigit"
             (contentCompleted)="ballotBundleSize && bundle.countOfBallots !== ballotBundleSize
               ? footer.emitCreateBallot($event)
               : submitBundleAndNavigate()">
@@ -79,7 +79,7 @@
         class="content-box"
         [disabled]="loadingBallot"
         [actionExecuting]="actionExecuting"
-        [readonly]="(isErfassungUser | async) !== true || !bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
+        [readonly]="!canSubmitBundle || !bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
         [canSubmitBundle]="bundle.countOfBallots > 0"
         [nextBallotEnabled]="!ballot || ballot.number % politicalBusinessResult.entryParams.ballotBundleSize !== 0"
         (nextBallot)="nextBallot()"

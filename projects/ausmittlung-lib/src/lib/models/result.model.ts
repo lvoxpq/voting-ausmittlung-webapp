@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
@@ -17,6 +18,7 @@ import { Contest } from './contest.model';
 import { CountingCircle } from './counting-circle.model';
 import { PoliticalBusiness, SimplePoliticalBusiness } from './political-business.model';
 import { VotingCardChannel } from './voting-channel.model';
+import { ContestCountingCircleElectorateSummary } from './contest-counting-circle-electorate.model';
 
 export {
   ResultStateChangeProto,
@@ -55,6 +57,7 @@ export interface ResultList {
   mustUpdateContactPersons: boolean;
   hasUnmappedEVotingWriteIns: boolean;
   enabledVotingCardChannels: VotingCardChannel[];
+  electorateSummary: ContestCountingCircleElectorateSummary;
 }
 
 export interface ResultListResult {

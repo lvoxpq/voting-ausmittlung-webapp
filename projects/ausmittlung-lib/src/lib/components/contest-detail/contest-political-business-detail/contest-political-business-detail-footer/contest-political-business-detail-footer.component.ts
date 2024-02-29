@@ -1,20 +1,23 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
 import { DialogService } from '@abraxas/voting-lib';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
 import { StateChange } from '../../../../models';
-import { RoleService } from '../../../../services/role.service';
+import { PermissionService } from '../../../../services/permission.service';
 import {
   ConfirmCommentDialogComponent,
   ConfirmCommentDialogData,
   ConfirmCommentDialogResult,
 } from '../../../confirm-comment-dialog/confirm-comment-dialog.component';
+import { Permissions } from '../../../../models/permissions.model';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'vo-ausm-contest-political-business-detail-footer',
@@ -22,15 +25,15 @@ import {
   styleUrls: ['./contest-political-business-detail-footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContestPoliticalBusinessDetailFooterComponent {
+export class ContestPoliticalBusinessDetailFooterComponent implements OnInit, OnDestroy {
   @Input()
   public entryDescriptionDetail?: any;
 
-  @Input()
+  @Input() // TODO: can be removed if new UI is standard
   public entryDescription: string = 'POLITICAL_BUSINESS.RESULTS_ENTRY.SELECTED';
 
-  @Input()
-  public editEntryText: string = 'POLITICAL_BUSINESS.RESULTS_ENTRY.EDIT';
+  @Input() // TODO: can be removed if new UI is standard
+  public editEntryText: string = 'POLITICAL_BUSINESS.RESULTS_ENTRY.EDIT_OLD';
 
   @Input()
   public isActionExecuting: boolean = false;
@@ -40,6 +43,12 @@ export class ContestPoliticalBusinessDetailFooterComponent {
 
   @Input()
   public canValidateAndSave: boolean = false;
+
+  @Input()
+  public canValidate: boolean = false;
+
+  @Input()
+  public canSave: boolean = false;
 
   @Input()
   public canSubmit: boolean = false;
@@ -57,16 +66,43 @@ export class ContestPoliticalBusinessDetailFooterComponent {
   public validateAndSave: EventEmitter<void> = new EventEmitter<void>();
 
   @Output()
+  public validate: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
+  public save: EventEmitter<void> = new EventEmitter<void>();
+
+  @Output()
   public stateUpdate: EventEmitter<StateChange> = new EventEmitter<StateChange>();
 
-  public readonly isErfassungElectionAdmin: Observable<boolean>;
-  public readonly isMonitoringElectionAdmin: Observable<boolean>;
+  public canEnterResults: boolean = false;
+  public canFinishSubmission: boolean = false;
+  public canAudit: boolean = false;
+  public newZhFeaturesEnabled: boolean = false;
 
   public readonly states: typeof CountingCircleResultState = CountingCircleResultState;
+  public readonly routeSubscription: Subscription;
 
-  constructor(roleService: RoleService, private readonly dialogService: DialogService, private readonly i18n: TranslateService) {
-    this.isErfassungElectionAdmin = roleService.isErfassungElectionAdmin;
-    this.isMonitoringElectionAdmin = roleService.isMonitoringElectionAdmin;
+  constructor(
+    private readonly permissionService: PermissionService,
+    private readonly dialogService: DialogService,
+    private readonly i18n: TranslateService,
+    private readonly cd: ChangeDetectorRef,
+    route: ActivatedRoute,
+  ) {
+    this.routeSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
+  }
+
+  public async ngOnInit(): Promise<void> {
+    this.canEnterResults = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.EnterResults);
+    this.canFinishSubmission = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.FinishSubmission);
+    this.canAudit = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.Audit);
+    this.cd.detectChanges();
+  }
+
+  public ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
   }
 
   public async updateState(newState: CountingCircleResultState): Promise<void> {

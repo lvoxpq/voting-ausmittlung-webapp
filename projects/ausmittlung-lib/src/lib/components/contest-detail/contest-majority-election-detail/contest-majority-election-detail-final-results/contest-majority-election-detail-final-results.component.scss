@@ -32,4 +32,8 @@
   .large-ml {
     margin-left: calc(41.5rem - 1px); // 40 rem: width of count of voters, 1.5rem margin, 1px border
   }
+
+  .max-width {
+    max-width: 32rem;
+  }
 }

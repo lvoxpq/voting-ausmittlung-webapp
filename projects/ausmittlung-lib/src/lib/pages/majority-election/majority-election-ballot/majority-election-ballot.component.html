@@ -2,11 +2,12 @@
              header="ELECTION.BALLOT_DETAIL.TITLE">
   <ng-container *ngIf="politicalBusinessResult && politicalBusinessResult.entryParams && bundle">
     <div class="content">
-      <vo-ausm-majority-election-info [electionResult]="politicalBusinessResult"></vo-ausm-majority-election-info>
+      <vo-ausm-majority-election-info [electionResult]="politicalBusinessResult" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-majority-election-info>
 
       <div>
         <vo-ausm-majority-election-bundle-table [bundleSize]="politicalBusinessResult.entryParams.ballotBundleSize"
-                                                [bundles]="[bundle]"></vo-ausm-majority-election-bundle-table>
+                                                [bundles]="[bundle]"
+                                                [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-majority-election-bundle-table>
       </div>
 
       <div class="content-box">
@@ -18,9 +19,7 @@
           [maxBallotNumber]="currentMaxBallotNumber"
           [disabled]="loadingBallot"
           [actionExecuting]="actionExecuting"
-          [readonly]="(isErfassungUser | async) !== true
-            || !bundleInProcessOrCorrection
-            || politicalBusinessResult.election.contest!.locked"
+          [readonly]="!bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
           [canDeleteBallot]="!!ballot && ballot.number === currentMaxBallotNumber"
           (deleteBallot)="deleteBallotAndNavigate()"
           (ballotNumberChange)="navigateToBallot($event)">
@@ -34,8 +33,9 @@
           [showInvalidVotes]="politicalBusinessResult.election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes"
           [automaticEmptyVoteCounting]="politicalBusinessResult.entryParams.automaticEmptyVoteCounting"
           [readonly]="!bundleInProcessOrCorrection
-            || (isErfassungUser | async) !== true
+            || !canUpdateBallot
             || politicalBusinessResult.election.contest!.locked"
+          [candidateCheckDigit]="politicalBusinessResult.entryParams.candidateCheckDigit"
           (contentCompleted)="ballotBundleSize && bundle.countOfBallots !== ballotBundleSize
             ? footer.emitCreateBallot($event)
             : submitBundleAndNavigate()">
@@ -49,7 +49,7 @@
         class="content-box"
         [disabled]="loadingBallot"
         [actionExecuting]="actionExecuting"
-        [readonly]="(isErfassungUser | async) !== true || !bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
+        [readonly]="!canSubmitBundle || !bundleInProcessOrCorrection || politicalBusinessResult.election.contest!.locked"
         [canSubmitBundle]="bundle.countOfBallots > 0"
         [nextBallotEnabled]="!ballot || ballot.number % politicalBusinessResult.entryParams.ballotBundleSize !== 0"
         (nextBallot)="nextBallot()"

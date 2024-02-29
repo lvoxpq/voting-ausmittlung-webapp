@@ -10,15 +10,17 @@
   ></vo-ausm-ballot-navigation>
   <div class="ballot-header-body">
     <ng-content select="[center]"></ng-content>
-    <bc-button
-      *ngIf="!readonly"
-      class="mb-2"
-      color="error"
-      variant="tertiary"
-      [disabled]="disabled || actionExecuting || !canDeleteBallot"
-      [label]="labelDelete | translate"
-      (buttonClick)="confirmDeleteBallot()"
-    ></bc-button>
+    <ng-container *voAusmPermission="deleteBallotPermission">
+      <bc-button
+        *ngIf="!readonly"
+        class="mb-2"
+        color="error"
+        variant="tertiary"
+        [disabled]="disabled || actionExecuting || !canDeleteBallot"
+        [label]="labelDelete | translate"
+        (buttonClick)="confirmDeleteBallot()"
+      ></bc-button>
+    </ng-container>
   </div>
   <ng-content select="[right]"></ng-content>
   <bc-spinner *ngIf="actionExecuting"></bc-spinner>

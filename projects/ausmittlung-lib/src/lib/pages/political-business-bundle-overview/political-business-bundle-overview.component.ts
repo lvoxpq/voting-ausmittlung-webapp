@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { BallotBundleState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/ballot_bundle_pb';
@@ -16,11 +17,14 @@ import {
   PoliticalBusinessResultBundle,
   ProportionalElectionResultBundle,
   ProportionalElectionResultBundles,
+  ProtocolExport,
+  ProtocolExportStateChange,
   VoteResultBundles,
 } from '../../models';
 import { ResultExportService } from '../../services/result-export.service';
-import { RoleService } from '../../services/role.service';
+import { PermissionService } from '../../services/permission.service';
 import { groupBy, groupBySingle } from '../../services/utils/array.utils';
+import { Permissions } from '../../models/permissions.model';
 
 @Directive()
 export abstract class PoliticalBusinessBundleOverviewComponent<
@@ -30,7 +34,8 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
   public result?: T;
   public resultReadOnly: boolean = true;
   public loading: boolean = true;
-  public isErfassungUser: Observable<boolean>;
+  public canCreateBundle: boolean = false;
+  public newZhFeaturesEnabled: boolean = false;
 
   public openBundles: PoliticalBusinessResultBundle[] | ProportionalElectionResultBundle[] = [];
   public reviewedBundles: PoliticalBusinessResultBundle[] | ProportionalElectionResultBundle[] = [];
@@ -39,10 +44,11 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
   private bundlesById: Record<string, PoliticalBusinessResultBundle | ProportionalElectionResultBundle> = {};
 
   private routeParamsSubscription?: Subscription;
+  private routeDataSubscription: Subscription;
   private bundleStateChangesSubscription?: Subscription;
 
   protected constructor(
-    roleService: RoleService,
+    protected readonly permissionService: PermissionService,
     protected readonly i18n: TranslateService,
     protected readonly toast: SnackbarService,
     protected readonly dialog: DialogService,
@@ -51,15 +57,19 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
     protected readonly themeService: ThemeService,
     protected readonly resultExportService: ResultExportService,
   ) {
-    this.isErfassungUser = roleService.isErfassungUser;
+    this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
+      this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+    });
   }
 
-  public ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
     this.routeParamsSubscription = this.route.params.subscribe(params => this.loadData(params));
+    this.canCreateBundle = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBundle.Create);
   }
 
   public ngOnDestroy(): void {
     this.routeParamsSubscription?.unsubscribe();
+    this.routeDataSubscription.unsubscribe();
     this.bundleStateChangesSubscription?.unsubscribe();
   }
 
@@ -132,6 +142,7 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
   protected abstract startChangesListener(
     resultId: string,
     params: Params,
+    onRetry: () => {},
   ): Observable<PoliticalBusinessResultBundle | ProportionalElectionResultBundle>;
 
   protected getUsedBundleNumbers(bundles: PoliticalBusinessResultBundle[]): number[] {
@@ -164,10 +175,27 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
           this.result.politicalBusinessResult.state !== CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION);
 
       if (!this.resultReadOnly) {
-        this.bundleStateChangesSubscription = this.startChangesListener(params.resultId, params).subscribe(x => this.bundleUpdated(x));
+        this.bundleStateChangesSubscription = this.startChangesListener(
+          params.resultId,
+          params,
+          this.onChangesListenerRetry.bind(this, params),
+        ).subscribe(x => this.bundleUpdated(x));
       }
     } finally {
       this.loading = false;
+    }
+  }
+
+  private async onChangesListenerRetry(params: Params): Promise<void> {
+    if (!this.bundleStateChangesSubscription) {
+      return;
+    }
+
+    // When the change listener fails, it is being retried with an exponential backoff
+    // During that retry backoff, changes aren't being delivered -> we need to poll for them
+    const result = await this.loadBundles(params.resultId, params);
+    for (const bundle of result.bundles) {
+      this.bundleUpdated(bundle);
     }
   }
 
@@ -178,6 +206,11 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
 
     const bundle = this.bundlesById[b.id];
     if (!!bundle) {
+      if (bundle.state === b.state) {
+        // Nothing got updated, probably a "synthetic change" from a polling attempt
+        return;
+      }
+
       const oldState = bundle.state;
       Object.assign(this.bundlesById[b.id], b);
       this.moveBundle(b, oldState);

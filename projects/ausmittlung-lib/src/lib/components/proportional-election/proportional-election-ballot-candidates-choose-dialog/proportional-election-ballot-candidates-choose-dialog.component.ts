@@ -1,6 +1,7 @@
-/*!
- * (c) Copyright 2022 by Abraxas Informatik AG
- * For license information see LICENSE file
+/**
+ * (c) Copyright 2024 by Abraxas Informatik AG
+ *
+ * For license information see LICENSE file.
  */
 
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
@@ -21,6 +22,7 @@ interface SearchableCandidate extends ProportionalElectionCandidate {
 export class ProportionalElectionBallotCandidatesChooseDialogComponent implements AfterViewInit {
   public readonly allCandidates: SearchableCandidate[];
   public candidates: ProportionalElectionCandidate[];
+  public candidateCheckDigit: boolean;
 
   @ViewChildren(ProportionalElectionBallotCandidatesChooseEntryComponent)
   public candidateEntries!: QueryList<ProportionalElectionBallotCandidatesChooseEntryComponent>;
@@ -28,15 +30,16 @@ export class ProportionalElectionBallotCandidatesChooseDialogComponent implement
   private keyManager?: ActiveDescendantKeyManager<ProportionalElectionBallotCandidatesChooseEntryComponent>;
 
   constructor(
-    private readonly dialogRef: MatDialogRef<ProportionalElectionCandidate[]>,
-    @Inject(MAT_DIALOG_DATA) dialogData: ProportionalElectionCandidate[],
+    private readonly dialogRef: MatDialogRef<ProportionalElectionBallotCandidatesChooseDialogData>,
+    @Inject(MAT_DIALOG_DATA) dialogData: ProportionalElectionBallotCandidatesChooseDialogData,
     private readonly cd: ChangeDetectorRef,
   ) {
-    this.allCandidates = dialogData.map(c => ({
+    this.allCandidates = dialogData.candidates.map(c => ({
       ...c,
       queryable: `${c.description} ${c.listDescription}`.toUpperCase(),
     }));
-    this.candidates = dialogData;
+    this.candidates = dialogData.candidates;
+    this.candidateCheckDigit = dialogData.candidateCheckDigit;
   }
 
   public ngAfterViewInit(): void {
@@ -71,4 +74,9 @@ export class ProportionalElectionBallotCandidatesChooseDialogComponent implement
       this.keyManager?.setFirstItemActive();
     }
   }
+}
+
+export interface ProportionalElectionBallotCandidatesChooseDialogData {
+  candidates: ProportionalElectionCandidate[];
+  candidateCheckDigit: boolean;
 }

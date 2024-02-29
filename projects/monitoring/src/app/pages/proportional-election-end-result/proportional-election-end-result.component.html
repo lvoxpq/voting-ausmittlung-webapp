@@ -3,7 +3,8 @@
                      [countOfVotersInformation]="endResult?.countOfVotersInformation"
                      [votingCards]="endResult?.votingCards"
                      [domainOfInfluenceType]="endResult?.election?.domainOfInfluence?.type"
-                     [swissAbroadHaveVotingRights]="endResult?.election.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE">
+                     [swissAbroadHaveVotingRights]="endResult?.election.swissAbroadVotingRight === swissAbroadVotingRights.SWISS_ABROAD_VOTING_RIGHT_ON_EVERY_COUNTING_CIRCLE"
+                     [canton]="endResult?.election?.domainOfInfluence?.canton">
   <ng-container *ngIf="endResult">
     <vo-ausm-info-panel>
       <vo-ausm-info-panel-entry label="END_RESULT.POLITICAL_BUSINESS">
@@ -59,7 +60,7 @@
   <vo-ausm-voting-data-source-tabs *ngIf="endResult && endResult.contest.eVoting"
                                    class="mt-2 mb-2"
                                    (dataSourceChange)="setDataPrefix($event)"></vo-ausm-voting-data-source-tabs>
-  <vo-lib-split-screen [class.mt-2]="endResult && !endResult.contest.eVoting">-->
+  <vo-lib-split-screen [class.mt-2]="endResult && !endResult.contest.eVoting">
     <bc-advanced-table
       left
       *ngIf="endResult"
