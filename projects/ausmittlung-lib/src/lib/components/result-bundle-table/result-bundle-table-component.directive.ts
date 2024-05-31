@@ -9,20 +9,31 @@ import { AfterViewInit, Directive, EventEmitter, Input, OnInit, Output, ViewChil
 import { PoliticalBusinessResultBundle, User } from '../../models';
 import { PermissionService } from '../../services/permission.service';
 import { UserService } from '../../services/user.service';
-import { AdvancedTablePaginatorComponent } from '@abraxas/base-components';
-import { MatTableDataSource } from '@angular/material/table';
 import { Permissions } from '../../models/permissions.model';
+import { FilterDirective, PaginatorComponent, SortDirective, TableDataSource } from '@abraxas/base-components';
+import { SelectionModel } from '@angular/cdk/collections';
+import { EnumItemDescription, EnumUtil } from '@abraxas/voting-lib';
 
 @Directive()
 export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResultBundle = PoliticalBusinessResultBundle>
   implements OnInit, AfterViewInit
 {
   public readonly bundleStates: typeof BallotBundleState = BallotBundleState;
-  public readonly dataSource = new MatTableDataSource<T>();
+  public readonly dataSource = new TableDataSource<T>();
+
+  public readonly bundleSizeColumn = 'bundleSize';
+  public readonly createdByColumn = 'createdBy';
+  public readonly reviewedByColumn = 'reviewedBy';
+  public readonly numberColumn = 'number';
+  public readonly selectColumn = 'select';
+  public readonly countOfBallotsColumn = 'countOfBallots';
+  public readonly stateColumn = 'state';
+  public readonly actionsColumn = 'actions';
 
   @Input()
   public set bundles(bundles: T[]) {
     this.dataSource.data = bundles;
+    this.selection.clear();
   }
 
   @Input()
@@ -38,7 +49,16 @@ export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResu
   public enableActions: boolean = false;
 
   @Input()
+  public enableFiltering: boolean = false;
+
+  @Input()
+  public enableSorting: boolean = false;
+
+  @Input()
   public readOnly: boolean = false;
+
+  @Input()
+  public enableReviewMultiple: boolean = false;
 
   @Output()
   public openDetail: EventEmitter<T> = new EventEmitter<T>();
@@ -50,13 +70,19 @@ export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResu
   public deleteBundle: EventEmitter<T> = new EventEmitter<T>();
 
   @Output()
-  public succeedBundleReview: EventEmitter<T> = new EventEmitter<T>();
+  public succeedBundleReview: EventEmitter<T[]> = new EventEmitter<T[]>();
 
   @Output()
   public rejectBundleReview: EventEmitter<T> = new EventEmitter<T>();
 
-  @ViewChild(AdvancedTablePaginatorComponent)
-  public paginator?: AdvancedTablePaginatorComponent;
+  @ViewChild(PaginatorComponent)
+  public paginator?: PaginatorComponent;
+
+  @ViewChild(SortDirective, { static: true })
+  public sort!: SortDirective;
+
+  @ViewChild(FilterDirective, { static: true })
+  public filter!: FilterDirective;
 
   public currentUser?: User;
   public canDeleteBundle: boolean = false;
@@ -66,7 +92,17 @@ export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResu
   public canRead: boolean = false;
   public canReadAll: boolean = false;
 
-  protected constructor(private readonly userService: UserService, private readonly permissionService: PermissionService) {}
+  public selection = new SelectionModel<T>(true, []);
+  public isAllSelected: boolean = false;
+  public canReviewMultiple: boolean = false;
+
+  public stateList: EnumItemDescription<BallotBundleState>[] = [];
+
+  protected constructor(
+    private readonly userService: UserService,
+    private readonly permissionService: PermissionService,
+    private readonly enumUtil: EnumUtil,
+  ) {}
 
   public async ngOnInit(): Promise<void> {
     this.currentUser = await this.userService.getUser();
@@ -76,12 +112,18 @@ export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResu
     this.canUpdateAll = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBundle.UpdateAll);
     this.canRead = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBallot.Read);
     this.canReadAll = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResultBallot.ReadAll);
+    this.stateList = this.enumUtil.getArrayWithDescriptions<BallotBundleState>(BallotBundleState, 'ELECTION.BUNDLE_STATES.');
+    this.dataSource.filterDataAccessor = (data: T, filterId: string) => this.dataAccessor(data, filterId);
+    this.dataSource.sortingDataAccessor = (data: T, filterId: string) => this.dataAccessor(data, filterId);
   }
 
   public ngAfterViewInit(): void {
     if (this.enablePagination && this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
+
+    this.dataSource.sort = this.sort;
+    this.dataSource.filter = this.filter;
   }
 
   public selectBundle(bundle: T): void {
@@ -104,5 +146,57 @@ export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResu
     this.openDetail.emit(bundle);
   }
 
+  public toggleAllRows(value: boolean) {
+    if (value === this.isAllSelected) {
+      return;
+    }
+
+    value ? this.selection.select(...this.dataSource.data) : this.selection.clear();
+    this.updateIsAllSelected();
+    this.updateCanReviewMultiple();
+  }
+
+  public toggleRow(row: T, value: boolean): void {
+    if (value === this.selection.isSelected(row)) {
+      return;
+    }
+
+    this.selection.toggle(row);
+    this.updateIsAllSelected();
+    this.updateCanReviewMultiple();
+  }
+
+  public updateIsAllSelected(): void {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    this.isAllSelected = numSelected === numRows;
+  }
+
+  public updateCanReviewMultiple(): void {
+    this.canReviewMultiple =
+      this.selection.selected.length > 0 &&
+      this.selection.selected.every(
+        x =>
+          x.state === BallotBundleState.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW &&
+          x.createdBy.secureConnectId !== this.currentUser?.secureConnectId,
+      );
+  }
+
   protected abstract isReviewProcedureElectronically(): boolean;
+
+  protected dataAccessor(data: T, filterId: string): string | number | Date {
+    if (filterId === this.bundleSizeColumn) {
+      return this.bundleSize ?? 0;
+    }
+
+    if (filterId === this.createdByColumn) {
+      return data.createdBy.fullName;
+    }
+
+    if (filterId === this.reviewedByColumn) {
+      return data.reviewedBy?.fullName ?? '';
+    }
+
+    return (data as Record<string, any>)[filterId] ?? '';
+  }
 }

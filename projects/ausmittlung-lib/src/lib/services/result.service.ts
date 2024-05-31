@@ -35,6 +35,8 @@ import {
   ResultOverviewProto,
   ResultStateChangeProto,
   ValidationSummaries,
+  PoliticalBusinessUnionProto,
+  PoliticalBusinessUnion,
 } from '../models';
 import { ContestCountingCircleDetailsService } from './contest-counting-circle-details.service';
 import { ContestService } from './contest.service';
@@ -42,6 +44,7 @@ import { PoliticalBusinessService } from './political-business.service';
 import { GRPC_ENV_INJECTION_TOKEN } from './tokens';
 import { ValidationMappingService } from './validation-mapping.service';
 import { SecondFactorTransaction } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/second_factor_transaction_pb';
+import { PoliticalBusinessUnionService } from './political-business-union.service';
 
 @Injectable({
   providedIn: 'root',
@@ -161,6 +164,8 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
       hasComments: data.getHasComments(),
       state: data.getState(),
       submissionDoneTimestamp: data.getSubmissionDoneTimestamp()?.toDate(),
+      auditedTentativelyTimestamp: data.getAuditedTentativelyTimestamp()?.toDate(),
+      plausibilisedTimestamp: data.getPlausibilisedTimestamp()?.toDate(),
       politicalBusiness: PoliticalBusinessService.mapToPoliticalBusiness(data.getPoliticalBusiness()!),
     };
   }
@@ -170,6 +175,8 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
       contest: ContestService.mapToContest(data.getContest()!),
       politicalBusinesses: data.getPoliticalBusinessesList().map(x => PoliticalBusinessService.mapToPoliticalBusiness(x)),
       countingCircleResults: data.getCountingCircleResultsList().map(x => this.mapToResultOverviewCountingCircleResults(x)),
+      currentTenantIsContestManager: data.getCurrentTenantIsContestManager(),
+      politicalBusinessUnions: data.getPoliticalBusinessUnionsList().map(x => PoliticalBusinessUnionService.mapToPoliticalBusinessUnion(x)),
     };
   }
 
@@ -185,6 +192,8 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
     return {
       ...obj,
       submissionDoneTimestamp: data.getSubmissionDoneTimestamp()?.toDate(),
+      auditedTentativelyTimestamp: data.getAuditedTentativelyTimestamp()?.toDate(),
+      plausibilisedTimestamp: data.getPlausibilisedTimestamp()?.toDate(),
     };
   }
 

@@ -17,7 +17,8 @@
         *ngFor="let ballotResult of resultDetail.results"
         [eVoting]="eVoting"
         [totalCountOfVoters]="resultDetail.totalCountOfVoters"
-        (countOfVotersChange)="updateCountOfVotersValid()"
+        (countOfVotersChange)="updateCountOfVotersValid(); updateUnsavedChanges()"
+        (countOfAnswersChanged)="updateUnsavedChanges()"
         [readonly]="resultReadonly || !canEnterResults"
         [ballotResult]="ballotResult">
       </vo-ausm-contest-vote-detail-ballot>
@@ -27,7 +28,7 @@
         <vo-ausm-contest-vote-detail-detailed
           [eVoting]="eVoting"
           [totalCountOfVoters]="resultDetail.totalCountOfVoters"
-          (countOfVotersChange)="updateCountOfVotersValid()"
+          (countOfVotersChange)="updateCountOfVotersValid(); updateUnsavedChanges()"
           [readonly]="resultReadonly || !canEnterResults"
           [resultDetail]="resultDetail">
         </vo-ausm-contest-vote-detail-detailed>
@@ -36,7 +37,7 @@
     <vo-ausm-contest-political-business-detail-footer
       *ngIf="!contestLocked
         && (!contentReadonly || isResponsibleMonitorAuthority)
-        && (canAudit || (canFinishSubmission && (result.state === states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING || result.state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION)))"
+        && (canAudit || canFinishSubmissionAndAudit || (canFinishSubmission && (result.state === states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING || result.state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION)))"
       (selectResultEntry)="selectResultEntry = true"
       (validateAndSave)="validateAndSave()"
       (validate)="validateAndSave()"
@@ -51,7 +52,10 @@
       [canValidateAndSave]="!contentReadonly && hasUnsavedChanges && countOfVotersValid"
       [canValidate]="!contentReadonly && countOfVotersValid"
       [canSave]="!contentReadonly && countOfVotersValid"
-      [canSubmit]="!contentReadonly && !hasUnsavedChanges">
+      [canSubmit]="!contentReadonly && !hasUnsavedChanges"
+      [contestId]="resultDetail.vote.contestId"
+      [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
+      [statePlausibilisedDisabled]="contestCantonDefaults?.statePlausibilisedDisabled">
     </vo-ausm-contest-political-business-detail-footer>
   </ng-template>
 </ng-container>

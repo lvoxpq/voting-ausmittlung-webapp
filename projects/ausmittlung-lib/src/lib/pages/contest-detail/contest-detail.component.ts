@@ -17,6 +17,7 @@ import {
 } from '../../components/majority-election-write-in-mappings/majority-election-write-in-mapping-dialog/majority-election-write-in-mapping-dialog.component';
 import {
   ContestCountingCircleDetails,
+  CountingCircle,
   CountingCircleResultState,
   DomainOfInfluenceType,
   ResultList,
@@ -38,8 +39,8 @@ import {
   ContestCountingCircleElectoratesUpdateDialogResult,
 } from '../../components/contest-counting-circle-electorates-update-dialog/contest-counting-circle-electorates-update-dialog.component';
 import { DomainOfInfluenceCanton } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/domain_of_influence_pb';
-import { ErrorToastUtil } from '@abraxas/voting-lib/lib/services/error-toast.util';
 import { TranslateService } from '@ngx-translate/core';
+import { ContestService } from '../../services/contest.service';
 
 @Component({
   selector: 'vo-ausm-contest-detail',
@@ -73,6 +74,7 @@ export class ContestDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   public countingMachineEnabled: boolean = false;
   public domainOfInfluenceTypes: DomainOfInfluenceType[] = [];
   public canton: DomainOfInfluenceCanton = DomainOfInfluenceCanton.DOMAIN_OF_INFLUENCE_CANTON_UNSPECIFIED;
+  public accessibleCountingCircles: CountingCircle[] = [];
 
   public readonly breadcrumbs: BreadcrumbItem[];
 
@@ -95,6 +97,7 @@ export class ContestDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   public canEditElectorates: boolean = false;
   public canMapWriteIns: boolean = false;
   private canReadWriteIns: boolean = false;
+  public readonly sidebarWith: string = '21rem';
 
   constructor(
     breadcrumbsService: BreadcrumbsService,
@@ -109,6 +112,7 @@ export class ContestDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     private readonly permissionService: PermissionService,
     private readonly toast: SnackbarService,
     private readonly i18n: TranslateService,
+    private readonly contestService: ContestService,
   ) {
     this.breadcrumbs = breadcrumbsService.contestDetail;
     this.routeQueryParamsSubscription = this.route.queryParams.subscribe(({ politicalBusinessId }) =>
@@ -238,6 +242,12 @@ export class ContestDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE:
         result.submissionDoneTimestamp = new Date();
         break;
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY:
+        result.auditedTentativelyTimestamp = new Date();
+        break;
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED:
+        result.plausibilisedTimestamp = new Date();
+        break;
     }
 
     this.resultList.state = Math.min(...this.resultList.results.map(r => r.state));
@@ -248,7 +258,10 @@ export class ContestDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   private async loadData(contestId: string, countingCircleId: string): Promise<void> {
     this.loading = true;
     try {
-      this.resultList = await this.resultService.getList(contestId, countingCircleId);
+      [this.accessibleCountingCircles, this.resultList] = await Promise.all([
+        this.contestService.getAccessibleCountingCircles(contestId),
+        await this.resultService.getList(contestId, countingCircleId),
+      ]);
       if (this.newZhFeaturesEnabled && this.resultList.mustUpdateContactPersons) {
         await this.openContactDialog(false);
       }

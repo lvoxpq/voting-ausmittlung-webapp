@@ -221,7 +221,7 @@ export class ContestDetailSidebarComponent implements OnInit, OnDestroy {
     const data: ValidationOverviewDialogData = {
       validationSummaries: [validationSummary],
       canEmitSave: validationSummary.isValid,
-      header: `VALIDATION.CONTEST_COUNTING_CIRCLE_DETAILS.HEADER.${validationSummary.isValid ? 'VALID' : 'INVALID'}`,
+      header: `VALIDATION.${validationSummary.isValid ? 'VALID' : 'INVALID'}`,
       saveLabel: !validationSummary.isValid ? 'APP.CONTINUE' : 'COMMON.SAVE',
     };
 

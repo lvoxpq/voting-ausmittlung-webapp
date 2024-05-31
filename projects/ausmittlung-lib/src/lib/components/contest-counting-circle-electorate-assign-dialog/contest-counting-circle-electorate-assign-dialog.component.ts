@@ -4,12 +4,12 @@
  * For license information see LICENSE file.
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, Inject } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EnumUtil } from '@abraxas/voting-lib';
 import { DomainOfInfluenceType } from '../../models';
+import { TableDataSource } from '@abraxas/base-components';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'vo-ausm-contest-counting-circle-electorate-assign-dialog',
@@ -20,7 +20,7 @@ export class ContestCountingCircleElectorateAssignDialogComponent {
   public readonly columns = ['select', 'domainOfInfluenceType'];
   public readonly columnsSelected = ['domainOfInfluenceType'];
 
-  public dataSource: MatTableDataSource<DomainOfInfluenceType> = new MatTableDataSource<DomainOfInfluenceType>();
+  public dataSource = new TableDataSource<DomainOfInfluenceType>();
   public selection = new SelectionModel<DomainOfInfluenceType>(true, []);
   public isAllSelected: boolean = false;
 

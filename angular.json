@@ -110,22 +110,25 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "monitoring:build",
-            "hmr": true
+            "hmr": true,
+            "buildTarget": "monitoring:build"
           },
           "configurations": {
             "local-sta": {
-              "browserTarget": "monitoring:build:local-sta"
+              "buildTarget": "monitoring:build:local-sta"
             },
             "production": {
-              "browserTarget": "monitoring:build:production"
+              "buildTarget": "monitoring:build:production"
             }
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["projects/monitoring/src/**/*.ts", "projects/monitoring/src/**/*.component.html"]
+            "lintFilePatterns": [
+              "projects/monitoring/src/**/*.ts",
+              "projects/monitoring/src/**/*.component.html"
+            ]
           }
         }
       }
@@ -238,28 +241,31 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "erfassung:build",
-            "hmr": true
+            "hmr": true,
+            "buildTarget": "erfassung:build"
           },
           "configurations": {
             "local-sta": {
-              "browserTarget": "erfassung:build:local-sta"
+              "buildTarget": "erfassung:build:local-sta"
             },
             "production": {
-              "browserTarget": "erfassung:build:production"
+              "buildTarget": "erfassung:build:production"
             }
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["projects/erfassung/src/**/*.ts", "projects/erfassung/src/**/*.component.html"]
+            "lintFilePatterns": [
+              "projects/erfassung/src/**/*.ts",
+              "projects/erfassung/src/**/*.component.html"
+            ]
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "erfassung:build"
+            "buildTarget": "erfassung:build"
           }
         }
       }
@@ -290,11 +296,13 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["projects/ausmittlung-lib/src/**/*.ts", "projects/ausmittlung-lib/src/**/*.component.html"]
+            "lintFilePatterns": [
+              "projects/ausmittlung-lib/src/**/*.ts",
+              "projects/ausmittlung-lib/src/**/*.component.html"
+            ]
           }
         }
       }
     }
-  },
-  "defaultProject": "erfassung"
+  }
 }

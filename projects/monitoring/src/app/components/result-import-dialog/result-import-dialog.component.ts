@@ -6,10 +6,10 @@
 
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ResultImportService } from 'ausmittlung-lib';
 import { EchType, ImportFile } from './import-file.model';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-result-import-dialog',

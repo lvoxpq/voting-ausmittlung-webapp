@@ -26,8 +26,16 @@ export class BallotEndResultComponent implements OnInit {
   public voteResultAlgorithm!: VoteResultAlgorithm;
 
   public isPopularMajorityAlgorithm: boolean = false;
+  public isCountingCircleAlgorithmAlgorithm: boolean = false;
 
   public ngOnInit(): void {
-    this.isPopularMajorityAlgorithm = this.voteResultAlgorithm === VoteResultAlgorithm.VOTE_RESULT_ALGORITHM_POPULAR_MAJORITY;
+    this.isPopularMajorityAlgorithm =
+      this.voteResultAlgorithm === VoteResultAlgorithm.VOTE_RESULT_ALGORITHM_POPULAR_MAJORITY ||
+      this.voteResultAlgorithm === VoteResultAlgorithm.VOTE_RESULT_ALGORITHM_POPULAR_AND_COUNTING_CIRCLE_MAJORITY;
+
+    this.isCountingCircleAlgorithmAlgorithm =
+      this.voteResultAlgorithm === VoteResultAlgorithm.VOTE_RESULT_ALGORITHM_COUNTING_CIRCLE_MAJORITY ||
+      this.voteResultAlgorithm === VoteResultAlgorithm.VOTE_RESULT_ALGORITHM_COUNTING_CIRCLE_UNANIMITY ||
+      this.voteResultAlgorithm === VoteResultAlgorithm.VOTE_RESULT_ALGORITHM_POPULAR_AND_COUNTING_CIRCLE_MAJORITY;
   }
 }

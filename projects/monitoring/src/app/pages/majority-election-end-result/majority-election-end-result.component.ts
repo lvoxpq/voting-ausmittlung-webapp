@@ -16,7 +16,7 @@ import {
   SecondFactorTransactionService,
   SwissAbroadVotingRight,
 } from 'ausmittlung-lib';
-import { Subscription } from 'rxjs';
+import { combineLatest, debounceTime, map, Subscription } from 'rxjs';
 import {
   MajorityElectionLotDecisionDialogComponent,
   MajorityElectionLotDecisionDialogData,
@@ -35,6 +35,7 @@ export class MajorityElectionEndResultComponent implements OnDestroy {
   public swissAbroadVotingRights: typeof SwissAbroadVotingRight = SwissAbroadVotingRight;
   public hasLotDecisions: boolean = false;
   public hasOpenRequiredLotDecisions: boolean = false;
+  public isPartialResult = false;
 
   private readonly routeSubscription: Subscription;
 
@@ -46,7 +47,15 @@ export class MajorityElectionEndResultComponent implements OnDestroy {
     private readonly toast: SnackbarService,
     private readonly secondFactorTransactionService: SecondFactorTransactionService,
   ) {
-    this.routeSubscription = this.route.params.subscribe(({ politicalBusinessId }) => this.loadData(politicalBusinessId));
+    this.routeSubscription = combineLatest([this.route.params, this.route.queryParams])
+      .pipe(
+        debounceTime(10), // could fire twice if both params change at the same time
+        map(results => ({ politicalBusinessId: results[0].politicalBusinessId, isPartialResult: results[1].partialResult })),
+      )
+      .subscribe(({ politicalBusinessId, isPartialResult }) => {
+        this.isPartialResult = isPartialResult;
+        this.loadData(politicalBusinessId);
+      });
   }
 
   public async ngOnDestroy(): Promise<void> {
@@ -119,7 +128,9 @@ export class MajorityElectionEndResultComponent implements OnDestroy {
   private async loadData(majorityElectionId: string): Promise<void> {
     this.loading = true;
     try {
-      this.endResult = await this.resultService.getEndResult(majorityElectionId);
+      this.endResult = this.isPartialResult
+        ? await this.resultService.getPartialEndResult(majorityElectionId)
+        : await this.resultService.getEndResult(majorityElectionId);
 
       const secondaryCandidateEndResults = Array.prototype.concat.apply(
         [],

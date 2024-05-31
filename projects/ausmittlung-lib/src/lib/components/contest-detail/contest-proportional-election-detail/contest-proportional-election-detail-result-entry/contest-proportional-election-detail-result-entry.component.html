@@ -1,5 +1,6 @@
 <div *ngIf="!readonly; else readonlyContent">
   <ng-container *ngIf="!confirmationRequested; else confirmContent">
+    <h5 translate>PROPORTIONAL_ELECTION.RESULT_ENTRY.TITLE</h5>
     <vo-ausm-election-result-entry-params [enforceEmptyVoteCounting]="election.enforceEmptyVoteCountingForCountingCircles"
                                           [resultEntryParams]="resultEntryParams"
                                           [enforceCandidateCheckDigit]="election.enforceCandidateCheckDigitForCountingCircles"
@@ -37,7 +38,7 @@
   <vo-lib-inline-spinner [loading]="isUpdatingResultEntryParams">
     <bc-button (buttonClick)="save()"
                [disabled]="isUpdatingResultEntryParams"
-               color="error"
+               color="warn"
                [label]="'APP.NEXT' | translate"
                class="ml-2"></bc-button>
   </vo-lib-inline-spinner>

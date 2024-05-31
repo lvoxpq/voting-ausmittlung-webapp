@@ -1,7 +1,12 @@
 .sticky-buttons {
   max-width: 25rem;
   position: sticky;
-  bottom: 0;
+  bottom: -1rem; // stick to the bottom, main of page has a margin bottom of 1rem
+
+  ::ng-deep .buttons {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
 }
 
 .shortcut-container {

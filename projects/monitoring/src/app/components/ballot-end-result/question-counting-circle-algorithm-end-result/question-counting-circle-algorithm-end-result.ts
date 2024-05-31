@@ -25,11 +25,16 @@ export class QuestionCountingCircleAlgorithmEndResultComponent implements OnInit
   @Input()
   public ballotNumberOfQuestions: number = 1;
 
+  @Input()
+  public showAcceptedLabel: boolean = true;
+
   public resultLabel: string = '';
   public isAccepted: boolean = false;
 
   public ngOnInit(): void {
-    const isMajorityResult = this.voteResultAlgorithm === VoteResultAlgorithm.VOTE_RESULT_ALGORITHM_COUNTING_CIRCLE_MAJORITY;
+    const isMajorityResult =
+      this.voteResultAlgorithm === VoteResultAlgorithm.VOTE_RESULT_ALGORITHM_COUNTING_CIRCLE_MAJORITY ||
+      this.voteResultAlgorithm === VoteResultAlgorithm.VOTE_RESULT_ALGORITHM_POPULAR_AND_COUNTING_CIRCLE_MAJORITY;
 
     if (!this.isTieBreakQuestion) {
       const questionEndResult = this.endResult as BallotQuestionEndResult;

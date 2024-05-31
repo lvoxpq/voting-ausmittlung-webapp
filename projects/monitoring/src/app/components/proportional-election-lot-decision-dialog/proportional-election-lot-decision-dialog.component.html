@@ -41,7 +41,8 @@
           <span>
             <bc-dropdown [(value)]="lotDecision.selectedRank"
                          (valueChange)="updateHasOpenRequiredLotDecisions()"
-                         [items]="lotDecision.selectableRanks"></bc-dropdown>
+                         [items]="lotDecision.selectableRanks"
+                         [subscriptSizing]="'dynamic'"></bc-dropdown>
           </span>
         </ng-template>
       </ng-container>

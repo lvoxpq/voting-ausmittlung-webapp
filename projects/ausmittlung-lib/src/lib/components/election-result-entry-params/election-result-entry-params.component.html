@@ -7,6 +7,7 @@
   [allowUndefined]="false"
   [value]="resultEntryParams.ballotBundleSize"
   (valueChange)="resultEntryParams.ballotBundleSize = +$event"
+  [subscriptSizing]="'dynamic'"
 ></bc-number>
 <bc-number
   class="numeric"
@@ -21,6 +22,7 @@
   "
   [value]="resultEntryParams.ballotBundleSampleSize"
   (valueChange)="resultEntryParams.ballotBundleSampleSize = +$event"
+  [subscriptSizing]="'dynamic'"
 ></bc-number>
 <div>
   <bc-label [label]="'ELECTION.RESULT_ENTRY.BALLOT_BUNDLE_NUMBER_GENERATION.TITLE' | translate"> </bc-label>

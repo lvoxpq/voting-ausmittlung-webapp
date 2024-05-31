@@ -1,10 +1,26 @@
-<div *ngIf="summary" class="my-2">
+<div *ngIf="summary">
   <h3 class="mb-2" *ngIf="summary.title">{{ summary.title }}</h3>
 
   <div *ngFor="let group of summary.requiredValidationResults | validationGroup" class="mb-2">
     <h4 *ngIf="group.key" class="mb-1">{{ group.key }}</h4>
-    <vo-ausm-validation-result *ngFor="let result of group.value" [result]="result">
-    </vo-ausm-validation-result>
+    <ng-container *ngIf="group.value | validValidation: false as invalidValidations">
+      <div *ngIf="invalidValidations.length > 0" class="mb-3">
+        <vo-ausm-validation-result *ngFor="let result of invalidValidations" [result]="result">
+        </vo-ausm-validation-result>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="group.value | validValidation as validValidations">
+      <bc-expansion-panel *ngIf="validValidations.length > 0">
+        <div header>
+          <h4 class="mb-0">
+            <bc-icon class="title-icon" icon="check-circle"></bc-icon>
+            <span translate>VALIDATION.SHOW_ALL</span>
+          </h4>
+        </div>
+        <vo-ausm-validation-result *ngFor="let result of validValidations" [result]="result">
+        </vo-ausm-validation-result>
+      </bc-expansion-panel>
+    </ng-container>
   </div>
 
   <ng-container *ngIf="(summary.optionalValidationResults | validationGroup).length > 0">

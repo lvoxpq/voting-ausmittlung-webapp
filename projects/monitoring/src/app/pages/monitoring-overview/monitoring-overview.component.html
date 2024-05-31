@@ -11,7 +11,7 @@
                  variant="tertiary"
                  [label]="'CONTEST.DETAIL.EXPORT' | translate"
                  (buttonClick)="export()"></bc-button>
-      <bc-button *ngIf="resultOverview && !resultOverview.contest.locked && resultOverview.contest.eVoting"
+      <bc-button *ngIf="resultOverview && !resultOverview.contest.locked && resultOverview.contest.eVoting && resultOverview.currentTenantIsContestManager"
                  class="ml-2"
                  variant="tertiary"
                  [label]="'CONTEST.DETAIL.IMPORT' | translate"
@@ -19,6 +19,24 @@
     </div>
   </vo-lib-page-header>
 
-  <app-monitoring-cockpit-grid *ngIf="resultOverview"
-                               [resultOverview]="resultOverview" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></app-monitoring-cockpit-grid>
+  <bc-tab-bar *ngIf="resultOverview?.currentTenantIsContestManager; else monitoringCockpitGrid">
+    <bc-tab [label]="'MONITORING_COCKPIT.TAB_MONITORING' | translate">
+      <ng-container *ngTemplateOutlet="monitoringCockpitGrid"></ng-container>
+    </bc-tab>
+    <bc-tab [label]="'MONITORING_COCKPIT.TAB_POLITICAL_BUSINESS_OVERVIEW' | translate">
+      <app-monitoring-political-businesses-overview *ngIf="resultOverview" [contestId]="contestId">
+      </app-monitoring-political-businesses-overview>
+    </bc-tab>
+  </bc-tab-bar>
+
+
 </vo-lib-page>
+
+<ng-template #monitoringCockpitGrid>
+  <app-monitoring-cockpit-grid
+    *ngIf="resultOverview"
+    [resultOverview]="resultOverview"
+    [newZhFeaturesEnabled]="newZhFeaturesEnabled"
+    [publishResultsEnabled]="publishResultsEnabled"
+  ></app-monitoring-cockpit-grid>
+</ng-template>

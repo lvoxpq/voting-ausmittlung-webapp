@@ -7,13 +7,51 @@
   },
   "MONITORING_COCKPIT": {
     "TITLE": "Monitoring Cockpit",
-    "TAB_TO_CHECK": "Zu prüfen ({{count}})",
-    "TAB_CHECKED": "Geprüft ({{count}})",
     "FILTER_COUNTING_CIRCLE": "Auszählungskreise",
     "NO_DATA": "Keine Daten vorhanden.",
-    "PLAUSIBILISE_ALL": "Alle plausibilisieren",
-    "RESET_ALL_TO_AUDIT_TENTATIVELY": "Alle Vorläufig geprüft setzen",
-    "VIEW_END_RESULTS": "Ergebnisübersicht anzeigen"
+    "ALL_TO_STATE": "Alle auf '{{state}}' setzen",
+    "VIEW_RESULTS": "Ergebnisse",
+    "TAB_MONITORING": "Monitoring",
+    "TAB_POLITICAL_BUSINESS_OVERVIEW": "Geschäftsübersicht",
+    "NOT_OWNED_POLITICAL_BUSINESS": {
+      "TITLE": "Gemeinde",
+      "SINGLE": "1 Geschäft",
+      "MULTIPLE": "{{count}} Geschäfte"
+    },
+    "FILTER_STATE": {
+      "TITLE": "Status des geringsten Fortschritts",
+      "ALL": "Alle"
+    }
+  },
+  "MONITORING_POLITICAL_BUSINESSES_OVERVIEW": {
+    "SHORT_DESCRIPTION": "Geschäft",
+    "NUMBER": "Nr.",
+    "STATE": "Fortschritt",
+    "DOMAIN_OF_INFLUENCE_TYPE": "E",
+    "COUNTING_CIRCLES": "Auszählungskreise",
+    "COUNTING_CIRCLE": "Auszählungskreis",
+    "DOMAIN_OF_INFLUENCE": "Wahlkreis",
+    "RECEIVED_BALLOTS": "eingeg",
+    "BLANK_BALLOTS": "leer",
+    "INVALID_BALLOTS": "ungültig",
+    "ACCOUNTED_BALLOTS": "gültig",
+    "NO_POLITICAL_BUSINESSES": "Keine Geschäfte vorhanden...",
+    "NO_COUNTING_CIRCLES": "Keine Auszählungskreise vorhanden...",
+    "POLITICAL_BUSINESS": {
+      "TITLE": "Geschäfte: {{count}}"
+    },
+    "COUNTING_CIRCLE_RESULT": {
+      "TITLE": "Auszählungskreise: {{count}}",
+      "TITLE_NO_DATA": "Auszählungskreise",
+      "NO_DATA": "Bitte wählen Sie ein Geschäft aus, um die dazugehörigen Auszählungskreise anzuzeigen."
+    },
+    "POLITICAL_BUSINESS_TYPE": {
+      "TITLE": "T",
+      "1": "SG",
+      "2": "WM",
+      "3": "WP",
+      "4": "WM"
+    }
   },
   "CONTEST": {
     "POLITICAL_BUSINESSES": "Geschäfte zum Monitoring",
@@ -39,6 +77,7 @@
   },
   "END_RESULT": {
     "OVERVIEW": "Ergebnisübersicht",
+    "OVERVIEW_PARTIAL_RESULT": "Ergebnisübersicht (Teilergebnisse)",
     "POLITICAL_BUSINESS": "Geschäft",
     "COUNT_OF_VOTERS": "Stimmberechtigte",
     "COUNTING_DONE": "Ausgezählt",
@@ -72,6 +111,80 @@
       "CONFIRM": {
         "TITLE": "Schlussergebnis setzen und Sitzverteilung auslösen?",
         "MESSAGE": "Mit der Bestätigung lösen Sie die Sitzverteilung aus. Der Ausmittlungsstand \"Schlussergebnis\" wird in verschiedenen Exports ausgewiesen."
+      }
+    },
+    "DOUBLE_PROPORTIONAL_RESULT": {
+      "REDIRECT": "Sitzverteilung"
+    }
+  },
+  "UNION_END_RESULT": {
+    "OVERVIEW": "Ergebnisübersicht",
+    "POLITICAL_BUSINESS": "Geschäft",
+    "DOMAIN_OF_INFLUENCE": "Wahlkreis",
+    "COUNT_OF_VOTERS": "Stimmberechtigte",
+    "BALLOT_COUNT": {
+      "RECEIVED": "eingegangene WZ",
+      "BLANK": "leere WZ",
+      "VALID": "gültige WZ",
+      "INVALID": "ungültige WZ"
+    },
+    "NUMBER_OF_MANDATES": "Sitze",
+    "COUNTING_DONE": "Ausgezählt",
+    "COUNTING_CIRCLE_COUNTING_DONE_OF": "{{countOfDoneCountingCircles}} von {{totalCountOfCountingCircles}}",
+    "ELECTION_COUNTING_DONE_OF": "{{countOfDoneElections}} von {{totalCountOfElections}}",
+    "FINALIZE": "Sitzverteilung auslösen",
+    "REVERT_FINALIZE": "Sitzverteilung zurücksetzen",
+    "DOUBLE_PROPORTIONAL_RESULT": {
+      "REDIRECT": "Sitzverteilung"
+    },
+    "PROPORTIONAL_ELECTION": {
+      "CONFIRM": {
+        "TITLE": "Schlussergebnis setzen und Sitzverteilung auslösen?",
+        "MESSAGE": "Mit der Bestätigung lösen Sie die Sitzverteilung aus."
+      }
+    }
+  },
+  "DOUBLE_PROPORTIONAL_RESULT": {
+    "TITLE": "Ausmittlung Doppelproporz",
+    "DISTRIBUTION_OF_MANDATES": "Sitzverteilung",
+    "SUPER_APPORTIONMENT": {
+      "TITLE": "Oberzuteilung",
+      "CANTONAL_QUORUM": "Kantonsquorum 3%",
+      "PROPORTIONAL_ELECTION_QUORUM": "Wahlkreisquorum 5%",
+      "VOTER_NUMBER": "Wählerzahl",
+      "QUOTIENT": "Quotient WZ / Wahlschlüssel ({{electionKey}})",
+      "EXPECTED_NUMBER_OF_MANDATES": "Sitzanspruch: {{numberOfMandates}}",
+      "STATES": {
+        "2": "Oberzuteilung konnte nicht vollständig durchgeführt werden!",
+        "3": "Es ist ein Losentscheid nötig!",
+        "4": "Oberzuteilung ist erfolgt"
+      },
+      "LOT_DECISION": {
+        "TITLE": "Losentscheid Varianten",
+        "SUB_TITLE": "Ausgeloste Variante auswählen und bestätigen",
+        "LOT": "Los",
+        "LIST": "Liste",
+        "UNION_LIST": "Listengruppe"
+      }
+    },
+    "SUB_APPORTIONMENT": {
+      "TITLE": "Unterzuteilung",
+      "DOMAIN_OF_INFLUENCES": "Wahlkreise",
+      "TOGGLE_NUMBER_OF_MANDATES_AND_VOTE_COUNT": "Sitze/Stimmen",
+      "NUMBER_OF_MANDATES": "Sitze",
+      "EXPECTED_NUMBER_OF_MANDATES": "Sitzanspruch: {{numberOfMandates}}",
+      "UNION_LIST_DIVISOR": "Listengruppendivisor",
+      "ELECTION_DIVISOR": "Wahlkreisdivisor",
+      "STATES": {
+        "2": "Unterzuteilung konnte nicht vollständig durchgeführt werden!",
+        "3": "Es ist ein Losentscheid nötig!",
+        "4": "Unterzuteilung ist erfolgt"
+      },
+      "LOT_DECISION": {
+        "TITLE": "Losentscheid Varianten",
+        "SUB_TITLE": "Ausgeloste Variante auswählen und bestätigen",
+        "LOT": "Los",
+        "LIST": "Liste"
       }
     }
   },

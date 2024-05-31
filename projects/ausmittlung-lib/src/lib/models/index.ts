@@ -35,3 +35,6 @@ export * from './contact-person.model';
 export * from './result-import.model';
 export * from './validation.model';
 export * from './voting-data-source.enum';
+export * from './proportional-election-union-end-result.model';
+export * from './double-proportional-result.model';
+export * from './proportional-election-union.model';

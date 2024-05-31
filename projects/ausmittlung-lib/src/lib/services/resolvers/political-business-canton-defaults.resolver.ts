@@ -5,8 +5,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { GetCantonDefaultsRequest } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/domain_of_influence_requests_pb';
 import { CantonDefaultsBaseResolver } from './canton-defaults-base.resolver';
+import { GetCantonDefaultsRequest } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/contest_requests_pb';
 
 @Injectable({
   providedIn: 'root',

@@ -19,6 +19,7 @@ import {
   FinalizeVoteEndResultRequest,
   GetBallotResultRequest,
   GetVoteEndResultRequest,
+  GetVotePartialEndResultRequest,
   GetVoteResultRequest,
   PrepareFinalizeVoteEndResultRequest,
   RevertVoteEndResultFinalizationRequest,
@@ -30,9 +31,11 @@ import {
   VoteResultFlagForCorrectionRequest,
   VoteResultPrepareCorrectionFinishedRequest,
   VoteResultPrepareSubmissionFinishedRequest,
+  VoteResultPublishRequest,
   VoteResultResetToSubmissionFinishedRequest,
   VoteResultsPlausibiliseRequest,
   VoteResultsResetToAuditedTentativelyRequest,
+  VoteResultSubmissionFinishedAndAuditedTentativelyRequest,
   VoteResultSubmissionFinishedRequest,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/vote_result_requests_pb';
 import {
@@ -295,6 +298,24 @@ export class VoteResultService extends PoliticalBusinessResultBaseService<
     await this.requestEmptyResp(c => c.resetToAuditedTentatively, req);
   }
 
+  public submissionFinishedAndAuditedTentatively(voteResultId: string): Promise<void> {
+    const req = new VoteResultSubmissionFinishedAndAuditedTentativelyRequest();
+    req.setVoteResultId(voteResultId);
+    return this.requestEmptyResp(c => c.submissionFinishedAndAuditedTentatively, req);
+  }
+
+  public publish(voteResultIds: string[]): Promise<void> {
+    const req = new VoteResultPublishRequest();
+    req.setVoteResultIdsList(voteResultIds);
+    return this.requestEmptyResp(c => c.publish, req);
+  }
+
+  public unpublish(voteResultIds: string[]): Promise<void> {
+    const req = new VoteResultPublishRequest();
+    req.setVoteResultIdsList(voteResultIds);
+    return this.requestEmptyResp(c => c.unpublish, req);
+  }
+
   public async enterCountOfVoters(voteResult: VoteResult): Promise<void> {
     const req = this.mapToEnterCountOfVotersRequest(voteResult);
     await this.requestEmptyResp(c => c.enterCountOfVoters, req);
@@ -308,6 +329,16 @@ export class VoteResultService extends PoliticalBusinessResultBaseService<
   public async enterCorrectionResults(voteResult: VoteResult): Promise<void> {
     const req = this.mapToEnterCorrectionResultsRequest(voteResult);
     await this.requestEmptyResp(c => c.enterCorrectionResults, req);
+  }
+
+  public getPartialEndResult(voteId: string): Promise<VoteEndResult> {
+    const req = new GetVotePartialEndResultRequest();
+    req.setVoteId(voteId);
+    return this.request(
+      c => c.getPartialEndResult,
+      req,
+      r => this.mapToVoteEndResult(r),
+    );
   }
 
   public getEndResult(voteId: string): Promise<VoteEndResult> {

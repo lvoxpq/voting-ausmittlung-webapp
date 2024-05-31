@@ -1,7 +1,50 @@
-<div *ngIf="result"
-     class="p-2 counting-circle-result"
-     (click)="openDetail.emit()"
-     [ngClass]="'result-state-' + result.state + (newZhFeaturesEnabled ? '' : '-old')">
-  <span>{{('COUNTING_CIRCLE_RESULT_STATE.' + result.state) | translate}}</span>
-  <span *ngIf="showDetails && result.submissionDoneTimestamp">{{result.submissionDoneTimestamp | date: 'shortTime'}}</span>
-</div>
+<ng-container *ngIf="newZhFeaturesEnabled; else oldUi">
+  <div
+    *ngIf="result"
+    class="p-2 counting-circle-result"
+    (click)="openDetail.emit()"
+    [ngClass]="'result-state-' + result.state"
+    [matTooltip]="stateDescriptionsByState[result.state] ?? 'COUNTING_CIRCLE_RESULT_STATE.' + result.state | translate"
+    matTooltipPosition="above"
+    matTooltipShowDelay="600"
+  >
+    <span *ngIf="result.submissionDoneTimestamp">{{
+        (result.state === states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY
+            ? result.auditedTentativelyTimestamp
+            : result.state === states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED
+              ? result.plausibilisedTimestamp
+              : result.submissionDoneTimestamp
+        ) | date: 'mediumTime'
+      }}</span>
+    <bc-switch
+      *ngIf="
+        showPublishSwitch &&
+        (result.state === states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY ||
+        result.state === states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED)
+      "
+      [checked]="result.published"
+      (checkedChange)="publishedChanged.emit($event)"
+      [disabled]="disabled"
+    ></bc-switch>
+  </div>
+</ng-container>
+
+<!-- TODO: can be removed if new UI is standard -->
+<ng-template #oldUi>
+  <div
+    *ngIf="result"
+    class="p-2 counting-circle-result"
+    (click)="openDetail.emit()"
+    [ngClass]="'result-state-' + result.state + '-old'"
+  >
+    <span>{{ 'COUNTING_CIRCLE_RESULT_STATE.' + result.state | translate }}</span>
+    <span *ngIf="showDetails && result.submissionDoneTimestamp">{{
+        (result.state === states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY
+            ? result.auditedTentativelyTimestamp
+            : result.state === states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED
+              ? result.plausibilisedTimestamp
+              : result.submissionDoneTimestamp
+        ) | date: 'shortTime'
+      }}</span>
+  </div>
+</ng-template>

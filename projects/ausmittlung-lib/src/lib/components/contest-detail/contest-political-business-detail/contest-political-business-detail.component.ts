@@ -9,7 +9,7 @@ import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-p
 import { DialogService } from '@abraxas/voting-lib';
 import { ChangeDetectorRef, Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { ContestCountingCircleDetails, PoliticalBusinessType, ResultListResult } from '../../../models';
+import { ContestCantonDefaults, ContestCountingCircleDetails, PoliticalBusinessType, ResultListResult } from '../../../models';
 import { CommentsDialogComponent, CommentsDialogComponentData } from '../../comments-dialog/comments-dialog.component';
 import {
   ContactPersonDialogComponent,
@@ -39,6 +39,9 @@ export class ContestPoliticalBusinessDetailComponent implements OnDestroy {
 
   @Input()
   public contestCountingCircleDetails!: ContestCountingCircleDetails;
+
+  @Input()
+  public contestCantonDefaults?: ContestCantonDefaults;
 
   @ViewChild(ExpansionPanelComponent, { static: true })
   public expansionPanel!: ExpansionPanelComponent;

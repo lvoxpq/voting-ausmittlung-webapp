@@ -4,6 +4,7 @@
     [required]="true"
     [disabled]="readonly"
     [(value)]="contactPerson.familyName"
+    [subscriptSizing]="'dynamic'"
   ></bc-text>
   <bc-text
     class="ml-2"
@@ -11,6 +12,7 @@
     [required]="true"
     [disabled]="readonly"
     [(value)]="contactPerson.firstName"
+    [subscriptSizing]="'dynamic'"
   ></bc-text>
 </div>
 <bc-text
@@ -18,16 +20,19 @@
   [required]="true"
   [disabled]="readonly"
   [(value)]="contactPerson.phone"
+  [subscriptSizing]="'dynamic'"
 ></bc-text>
 <bc-text
   [label]="'CONTEST.DETAIL.CONTACT_DATA.MOBILE_PHONE' | translate"
   [required]="true"
   [disabled]="readonly"
   [(value)]="contactPerson.mobilePhone"
+  [subscriptSizing]="'dynamic'"
 ></bc-text>
 <bc-text
   [label]="'CONTEST.DETAIL.CONTACT_DATA.EMAIL' | translate"
   [disabled]="readonly"
   [(value)]="contactPerson.email"
   type="email"
+  [subscriptSizing]="'dynamic'"
 ></bc-text>

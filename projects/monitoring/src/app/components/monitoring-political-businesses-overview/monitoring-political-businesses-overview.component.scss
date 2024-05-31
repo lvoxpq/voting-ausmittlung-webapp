@@ -1,0 +1,21 @@
+.container {
+  padding-top: 2rem;
+  display: flex;
+  column-gap: 5rem;
+
+  .left {
+    width: 67%;
+  }
+
+  .right {
+    width: 33%;
+  }
+}
+
+::ng-deep .cdk-overlay-container .bc-filter-panel {
+  min-width: fit-content !important;
+
+  .mat-mdc-option {
+    padding-right: 1rem !important;
+  }
+}

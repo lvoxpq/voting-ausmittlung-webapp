@@ -5,14 +5,8 @@
  */
 
 import { NumberComponent } from '@abraxas/base-components';
-import { Component, Input, ViewChild } from '@angular/core';
-import {
-  ContestCountingCircleDetails,
-  CountOfVotersInformation,
-  CountOfVotersInformationSubTotal,
-  SexType,
-  VoterType,
-} from '../../../models';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { CountOfVotersInformation, CountOfVotersInformationSubTotal, SexType, VoterType } from '../../../models';
 import { groupBySingle, sum } from '../../../services/utils/array.utils';
 
 @Component({
@@ -63,6 +57,9 @@ export class ContestDetailCountOfVotersComponent {
     this.updateTotal();
   }
 
+  @Output()
+  public countOfVotersChange: EventEmitter<CountOfVotersInformation> = new EventEmitter<CountOfVotersInformation>();
+
   public getDetail(voterType: VoterType, sex: SexType): CountOfVotersInformationSubTotal {
     const records = voterType === VoterType.VOTER_TYPE_SWISS ? this.swissVotersInformation : this.swissAbroadVotersInformation;
     let result = records[sex];
@@ -84,6 +81,10 @@ export class ContestDetailCountOfVotersComponent {
     this.totalSwiss = sum(Object.values(this.swissVotersInformation), x => x.countOfVoters);
     this.totalSwissAbroad = sum(Object.values(this.swissAbroadVotersInformation), x => x.countOfVoters);
     this.countOfVotersInformation.totalCountOfVoters = this.totalSwiss + this.totalSwissAbroad;
+
+    if (!this.readonly) {
+      this.countOfVotersChange.emit(this.countOfVotersInformation);
+    }
   }
 
   public setFocus(): void {

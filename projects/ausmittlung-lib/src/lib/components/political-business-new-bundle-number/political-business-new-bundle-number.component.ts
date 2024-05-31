@@ -41,7 +41,7 @@ export class PoliticalBusinessNewBundleNumberComponent {
     this.dialogRef.close();
   }
 
-  public updateBundleNumber(newNumber: number | string): void {
+  public updateBundleNumber(newNumber: number): void {
     if (!newNumber || newNumber < 0) {
       delete this.bundleNumber;
       return;

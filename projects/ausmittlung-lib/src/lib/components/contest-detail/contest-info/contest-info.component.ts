@@ -26,6 +26,9 @@ export class ContestInfoComponent {
   @Input()
   public showResetResultsInTestingPhase: boolean = false;
 
+  @Input()
+  public stateDescriptionsByState: Record<number, string> = {};
+
   @Output()
   public finishSubmission: EventEmitter<void> = new EventEmitter<void>();
 

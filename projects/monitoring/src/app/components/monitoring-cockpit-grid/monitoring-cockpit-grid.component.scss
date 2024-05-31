@@ -1,14 +1,11 @@
 @use '@abraxas/voting-lib/style/color' as *;
 @use '@abraxas/voting-lib/style/spacing' as *;
 
-.tabs-wrapper {
-  @extend .mb-3;
-}
-
 .cockpit-grid {
   display: grid;
   grid-gap: 8px;
   align-items: center;
+  padding-top: 2rem;
 }
 
 .filter {
@@ -28,6 +25,10 @@
     background-color: $color-primary;
     color: $color-white;
   }
+
+  &.not-clickable {
+    cursor: default;
+  }
 }
 
 .counting-circle-filter {
@@ -36,6 +37,10 @@
 
 .skip-col-1 {
   grid-column-start: 2;
+}
+
+.col-span-2 {
+  grid-column: span 2 / span 2;
 }
 
 .state-colorbox {
@@ -48,10 +53,29 @@
   cursor: pointer;
 }
 
-.tabs-disabled {
-  cursor: not-allowed;
+bc-segmented-control-group {
+  margin-bottom: 3px;
+}
 
-  bc-tab-bar {
-    pointer-events: none;
+::ng-deep bc-segmented-control-group .mat-button-toggle-button {
+  font-size: 1rem !important;
+  height: 2.7rem !important;
+}
+
+::ng-deep .counting-circle-filter .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+.not-owned-political-business-container {
+  background-color: $color-grey-7;
+  border: 1px solid $color-grey-6;
+  min-height: 2rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  span {
+    margin-left: 0.5rem;
   }
 }

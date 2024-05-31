@@ -165,9 +165,9 @@ export class MajorityElectionResultBundleService extends GrpcService<MajorityEle
     await this.requestEmptyResp(c => c.bundleCorrectionFinished, req);
   }
 
-  public async succeedBundleReview(bundleId: string): Promise<void> {
+  public async succeedBundleReview(bundleIds: string[]): Promise<void> {
     const req = new SucceedMajorityElectionBundleReviewRequest();
-    req.setBundleId(bundleId);
+    req.setBundleIdsList(bundleIds);
     await this.requestEmptyResp(c => c.succeedBundleReview, req);
   }
 

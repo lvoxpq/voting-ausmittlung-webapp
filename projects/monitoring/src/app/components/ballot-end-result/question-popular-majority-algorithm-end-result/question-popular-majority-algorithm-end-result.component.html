@@ -1,5 +1,3 @@
-<p
-  class="whitespace-pre-wrap mb-2">{{endResult.question | translateVoteQuestion: isTieBreakQuestion:'question':ballotNumberOfQuestions}}</p>
 <div class="question-results">
   <app-question-end-result-entry title="VOTE.COUNT_OF_VOTES.UNKNOWN"
                                  [labelLeft]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
@@ -27,7 +25,6 @@
                                    [hasUnspecifiedVoteCount]="ballotNumberOfQuestions > 1">
     </app-question-end-result-entry>
   </ng-container>
-  <div class="spacer"></div>
   <vo-ausm-vote-results-graph [countLeft]="endResult.totalCountOfAnswer1"
                               [countRight]="endResult.totalCountOfAnswer2"
                               [resultLabelLeft]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"

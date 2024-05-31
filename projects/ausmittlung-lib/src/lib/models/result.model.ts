@@ -19,6 +19,7 @@ import { CountingCircle } from './counting-circle.model';
 import { PoliticalBusiness, SimplePoliticalBusiness } from './political-business.model';
 import { VotingCardChannel } from './voting-channel.model';
 import { ContestCountingCircleElectorateSummary } from './contest-counting-circle-electorate.model';
+import { PoliticalBusinessUnion } from './political-business-union.model';
 
 export {
   ResultStateChangeProto,
@@ -33,6 +34,8 @@ export interface ResultOverview {
   contest: Contest;
   politicalBusinesses: SimplePoliticalBusiness[];
   countingCircleResults: ResultOverviewCountingCircleResults[];
+  currentTenantIsContestManager: boolean;
+  politicalBusinessUnions: PoliticalBusinessUnion[];
 }
 
 export interface ResultOverviewCountingCircleResults {
@@ -41,8 +44,13 @@ export interface ResultOverviewCountingCircleResults {
 }
 
 export interface ResultOverviewCountingCircleResult
-  extends Omit<ResultOverviewCountingCircleResultProto.AsObject, 'submissionDoneTimestamp'> {
+  extends Omit<
+    ResultOverviewCountingCircleResultProto.AsObject,
+    'submissionDoneTimestamp' | 'auditedTentativelyTimestamp' | 'plausibilisedTimestamp'
+  > {
   submissionDoneTimestamp?: Date;
+  auditedTentativelyTimestamp?: Date;
+  plausibilisedTimestamp?: Date;
 }
 
 export interface ResultList {
@@ -65,6 +73,8 @@ export interface ResultListResult {
   politicalBusiness: SimplePoliticalBusiness;
   state: CountingCircleResultState;
   submissionDoneTimestamp?: Date;
+  auditedTentativelyTimestamp?: Date;
+  plausibilisedTimestamp?: Date;
   hasComments: boolean;
 }
 

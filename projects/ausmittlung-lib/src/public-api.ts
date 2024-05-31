@@ -22,6 +22,9 @@ export * from './lib/services/export.service';
 export * from './lib/services/breadcrumbs.service';
 export * from './lib/services/result-import.service';
 export * from './lib/services/second-factor-transaction.service';
+export * from './lib/services/unsaved-changes.service';
+export * from './lib/services/proportional-election-union-result.service';
+export * from './lib/services/proportional-election.service';
 
 // pages
 export * from './lib/pages/contest-detail/contest-detail.component';
@@ -50,6 +53,8 @@ export * from './lib/components/voting-data-source-tabs/voting-data-source-tabs.
 export * from './lib/components/validation-overview-dialog/validation-overview-dialog.component';
 export * from './lib/components/result-state-box/result-state-box.component';
 export * from './lib/components/contest-detail/contest-detail-info/contest-detail-info.component';
+export * from './lib/components/boolean-status-label/boolean-status-label.component';
+export * from './lib/components/admonition/admonition.component';
 
 // pipes
 export * from './lib/pipes/translate-vote-question.pipe';
@@ -74,3 +79,6 @@ export * from './lib/services/resolvers/result-canton-defaults.resolver';
 
 // tokens
 export * from './lib/tokens';
+
+// guards
+export * from './lib/services/guards/has-unsaved-changes.guard';

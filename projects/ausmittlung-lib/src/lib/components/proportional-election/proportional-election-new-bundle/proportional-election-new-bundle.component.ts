@@ -4,16 +4,15 @@
  * For license information see LICENSE file.
  */
 
-import { NumberComponent } from '@abraxas/base-components';
+import { NumberComponent, TableDataSource } from '@abraxas/base-components';
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { ProportionalElectionList } from '../../../models';
 import { ProportionalElectionResultBundleService } from '../../../services/proportional-election-result-bundle.service';
 import { ProportionalElectionService } from '../../../services/proportional-election.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'vo-ausm-proportional-election-new-bundle',
@@ -22,7 +21,7 @@ import { ProportionalElectionService } from '../../../services/proportional-elec
 })
 export class ProportionalElectionNewBundleComponent implements OnInit {
   public readonly columns = ['select', 'orderNumber', 'shortDescription', 'description'];
-  public readonly dataSource = new MatTableDataSource<ProportionalElectionList>();
+  public readonly dataSource = new TableDataSource<ProportionalElectionList>();
   public readonly selection = new SelectionModel<ProportionalElectionList>(false, []);
   public loading: boolean = true;
   public saving: boolean = false;
@@ -104,7 +103,7 @@ export class ProportionalElectionNewBundleComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public updateBundleNumber(newNumber: number | string): void {
+  public updateBundleNumber(newNumber: number): void {
     if (!newNumber || newNumber < 0) {
       delete this.bundleNumber;
       return;

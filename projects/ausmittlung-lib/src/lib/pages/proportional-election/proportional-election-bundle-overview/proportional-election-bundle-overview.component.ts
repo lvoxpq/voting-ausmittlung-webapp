@@ -28,6 +28,8 @@ import { ProportionalElectionBallotComponent } from '../proportional-election-ba
   styleUrls: ['./proportional-election-bundle-overview.component.scss'],
 })
 export class ProportionalElectionBundleOverviewComponent extends PoliticalBusinessBundleOverviewComponent<ProportionalElectionResultBundles> {
+  public readonly reviewProcedures: typeof ProportionalElectionReviewProcedure = ProportionalElectionReviewProcedure;
+
   constructor(
     permissionService: PermissionService,
     i18n: TranslateService,
@@ -81,7 +83,7 @@ export class ProportionalElectionBundleOverviewComponent extends PoliticalBusine
     return super.reviewBundle(bundle);
   }
 
-  public async succeedBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {
+  public async succeedBundleReview(bundles: PoliticalBusinessResultBundle[]): Promise<void> {
     if (
       this.result?.politicalBusinessResult.entryParams?.reviewProcedure !==
       ProportionalElectionReviewProcedure.PROPORTIONAL_ELECTION_REVIEW_PROCEDURE_PHYSICALLY
@@ -89,7 +91,7 @@ export class ProportionalElectionBundleOverviewComponent extends PoliticalBusine
       return;
     }
 
-    return this.resultBundleService.succeedBundleReview(bundle.id);
+    return this.resultBundleService.succeedBundleReview(bundles.map(x => x.id));
   }
 
   public async rejectBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {

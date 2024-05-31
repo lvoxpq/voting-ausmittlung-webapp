@@ -4,8 +4,8 @@
                 [class.col-span-2]="!!countingCircle"
                 [class.col-span-3]="!countingCircle && !!state"
                 [class.col-span-4]="!countingCircle && !state"></bc-label>
-      <bc-label *ngIf="!!countingCircle" [label]="'CONTEST.DETAIL.INFO.COUNTING_CIRCLE' | translate" [class.col-span-2]="!state"></bc-label>
-      <bc-label *ngIf="!!state" [label]="'APP.STATE' | translate"></bc-label>
+    <bc-label *ngIf="!!state" [label]="'APP.STATE' | translate"></bc-label>
+    <bc-label *ngIf="!!countingCircle" [label]="'CONTEST.DETAIL.INFO.COUNTING_CIRCLE' | translate" [class.col-span-2]="!state"></bc-label>
       <span class="info-text">{{ contest.date | date:'dd.MM.yyyy' }}</span>
       <ng-container [ngSwitch]="contest.state">
         <bc-status-label *ngSwitchCase="states.CONTEST_STATE_TESTING_PHASE"
@@ -25,11 +25,21 @@
                          foregroundColor="dark"
                          backgroundColor="#95d2a4"
                          [label]="'CONTEST.PAST_UNLOCKED' | translate"></bc-status-label>
+        <div *ngSwitchDefault></div>
       </ng-container>
-      <span *ngIf="!!countingCircle" class="info-text">{{ countingCircle.name }}</span>
-      <vo-ausm-result-state-box *ngIf="!!state" [state]="state" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-result-state-box>
+    <vo-ausm-result-state-box *ngIf="!!state" [state]="state" [newZhFeaturesEnabled]="newZhFeaturesEnabled" [stateDescriptionsByState]="contest.cantonDefaults.countingCircleResultStateDescriptionsByState"></vo-ausm-result-state-box>
+    <ng-container *ngIf="!!countingCircle">
+        <span *ngIf="accessibleCountingCircles.length <= 1; else selectCountingCircle" class="info-text">{{ countingCircle.name }}</span>
+      </ng-container>
   </div>
 </ng-container>
+
+<ng-template #selectCountingCircle>
+  <bc-dropdown [items]="accessibleCountingCircles" [value]="selectedCountingCircle" (valueChange)="countingCircleChanged($event)"
+               [clearable]="false" [required]="true" displayExpr="name"
+               [subscriptSizing]="'dynamic'">
+  </bc-dropdown>
+</ng-template>
 
 <!-- TODO: can be removed if new UI is standard -->
 <ng-template #oldUi>

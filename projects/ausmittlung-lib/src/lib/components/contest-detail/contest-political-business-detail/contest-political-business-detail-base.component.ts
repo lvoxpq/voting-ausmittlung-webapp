@@ -4,12 +4,13 @@
  * For license information see LICENSE file.
  */
 
-import { DialogService, SnackbarService } from '@abraxas/voting-lib';
-import { ChangeDetectorRef, Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
+import { ChangeDetectorRef, Directive, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import {
+  ContestCantonDefaults,
   ContestCountingCircleDetails,
   CountingCircleResult,
   CountingCircleResultState,
@@ -32,6 +33,10 @@ import {
 } from '../../validation-overview-dialog/validation-overview-dialog.component';
 import { ContestPoliticalBusinessDetailComponent } from './contest-political-business-detail.component';
 import { Permissions } from '../../../models/permissions.model';
+import { VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL } from '../../../tokens';
+import { PoliticalBusinessType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/political_business_pb';
+import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { cloneDeep, isEqual } from 'lodash';
 
 @Directive()
 export abstract class AbstractContestPoliticalBusinessDetailComponent<
@@ -62,10 +67,15 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
   @Input()
   public isResponsibleMonitorAuthority: boolean = false;
 
+  @Input()
+  public contestCantonDefaults?: ContestCantonDefaults;
+
   public resultDetail?: T;
+  public lastSavedResultDetail?: T;
   public canEnterResults: boolean = false;
   public canFinishSubmission: boolean = false;
   public canAudit: boolean = false;
+  public canFinishSubmissionAndAudit: boolean = false;
 
   public readonly states: typeof CountingCircleResultState = CountingCircleResultState;
 
@@ -80,6 +90,7 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
   private readonly stateChangeSubscription?: Subscription;
 
   protected constructor(
+    @Inject(VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL) public readonly votingAusmittlungMonitoringWebAppUrl: string,
     protected readonly i18n: TranslateService,
     protected readonly toast: SnackbarService,
     protected readonly resultService: TService,
@@ -88,6 +99,8 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     protected readonly politicalBusinessResultService: PoliticalBusinessResultService,
     protected readonly cd: ChangeDetectorRef,
     protected readonly permissionService: PermissionService,
+    protected readonly themeService: ThemeService,
+    protected readonly unsavedChangesService: UnsavedChangesService,
     private readonly parent: ContestPoliticalBusinessDetailComponent,
   ) {
     this.parentExpandedSubscription = parent.expanded$.pipe(filter(x => x)).subscribe(() => this.expanded());
@@ -106,6 +119,9 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     this.canEnterResults = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.EnterResults);
     this.canFinishSubmission = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.FinishSubmission);
     this.canAudit = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.Audit);
+    this.canFinishSubmissionAndAudit = await this.permissionService.hasPermission(
+      Permissions.PoliticalBusinessResult.FinishSubmissionAndAudit,
+    );
   }
 
   public ngOnDestroy(): void {
@@ -133,6 +149,19 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     );
   }
 
+  public updateUnsavedChanges(): void {
+    if (!this.resultDetail) {
+      return;
+    }
+
+    if (this.hasUnsavedChanges) {
+      this.unsavedChangesService.addUnsavedChange(this.resultDetail.id);
+      return;
+    }
+
+    this.unsavedChangesService.removeUnsavedChange(this.resultDetail.id);
+  }
+
   public async stateUpdate(event: StateChange): Promise<void> {
     if (!this.resultDetail) {
       return;
@@ -141,13 +170,18 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     try {
       this.isActionExecuting = true;
 
+      const isAuditedTentativelyForSelfOwnedBusinesses =
+        event.oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING &&
+        event.newState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY;
+
       if (
         (event.oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION &&
           event.newState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE) ||
         (event.oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING &&
-          event.newState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE)
+          event.newState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE) ||
+        isAuditedTentativelyForSelfOwnedBusinesses
       ) {
-        const validationConfirm = await this.confirmValidationOverviewDialog(true);
+        const validationConfirm = await this.confirmValidationOverviewDialog(true, isAuditedTentativelyForSelfOwnedBusinesses);
         if (!validationConfirm) {
           return;
         }
@@ -156,25 +190,52 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
       await this.executeStateUpdate(this.resultDetail, event);
       this.toast.success(this.i18n.instant('APP.SAVED'));
       this.result.state = this.resultDetail.state = event.newState;
+
+      switch (this.result.state) {
+        case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING:
+        case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION:
+          this.result.submissionDoneTimestamp = undefined;
+          break;
+        case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE:
+        case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE:
+          this.result.submissionDoneTimestamp = new Date();
+          break;
+        case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY:
+          this.result.auditedTentativelyTimestamp = new Date();
+          break;
+        case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED:
+          this.result.plausibilisedTimestamp = new Date();
+          break;
+      }
+
       this.politicalBusinessResultService.resultStateChanged(this.resultDetail.id, event.newState, event.comment);
     } finally {
       this.isActionExecuting = false;
     }
   }
 
+  public get hasUnsavedChanges(): boolean {
+    return !isEqual(this.resultDetail, this.lastSavedResultDetail);
+  }
+
   protected abstract loadValidationSummary(): Promise<ValidationSummary>;
 
-  protected async confirmValidationOverviewDialog(isFinishingOperation: boolean): Promise<boolean> {
+  protected async confirmValidationOverviewDialog(
+    isFinishingOperation: boolean,
+    isAuditedTentativelyForSelfOwnedBusinesses: boolean = false,
+  ): Promise<boolean> {
     const validationSummary = await this.loadValidationSummary();
 
     const data: ValidationOverviewDialogData = {
       validationSummaries: [validationSummary],
       canEmitSave: !(isFinishingOperation && !validationSummary.isValid),
-      header: `VALIDATION.COUNTING_CIRCLE_RESULT.HEADER.${isFinishingOperation ? 'FINISHING_OPERATION' : 'SAVE_OPERATION'}.${
-        validationSummary.isValid ? 'VALID' : 'INVALID'
-      }`,
-      saveLabel: isFinishingOperation && !validationSummary.isValid ? 'APP.CONTINUE' : 'COMMON.SAVE',
-      validationResultsLabel: validationSummary.isValid ? undefined : 'VALIDATION.COUNTING_CIRCLE_RESULT.DESCRIPTION.INVALID',
+      header: `VALIDATION.${validationSummary.isValid ? 'VALID' : 'INVALID'}`,
+      saveLabel: isAuditedTentativelyForSelfOwnedBusinesses
+        ? 'ACTIONS.FINISH_SUBMISSION_AND_AUDIT_TENTATIVELY'
+        : isFinishingOperation && !validationSummary.isValid
+        ? 'APP.CONTINUE'
+        : 'COMMON.SAVE',
+      saveIcon: isAuditedTentativelyForSelfOwnedBusinesses ? 'external-link' : undefined,
     };
 
     const result = await this.dialog.openForResult<ValidationOverviewDialogComponent, ValidationOverviewDialogResult>(
@@ -186,6 +247,7 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
   }
 
   protected async executeStateUpdate({ id }: T, { oldState, newState, comment }: StateChange): Promise<void> {
+    this.lastSavedResultDetail!.state = newState;
     switch (newState) {
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE: {
         if (oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY) {
@@ -231,6 +293,18 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
           await this.resultService.resetToAuditedTentatively([id]);
           break;
         }
+
+        if (oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING) {
+          await this.resultService.submissionFinishedAndAuditedTentatively(id);
+
+          const politicalBusinessTypeUrl = this.getPoliticalBusinessTypeUrl(this.resultDetail?.politicalBusiness.politicalBusinessType);
+          window.open(
+            `${this.votingAusmittlungMonitoringWebAppUrl}/${this.themeService.theme$.value}/${politicalBusinessTypeUrl}/${this.resultDetail?.politicalBusinessId}`,
+            '_blank',
+          );
+          break;
+        }
+
         await this.resultService.auditedTentatively([id]);
         break;
       }
@@ -241,8 +315,10 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     }
   }
 
-  protected loadData(): Promise<T> {
-    return this.resultService.get(this.result.politicalBusiness.id, this.countingCircleId);
+  protected async loadData(): Promise<T> {
+    const detailedResult = await this.resultService.get(this.result.politicalBusiness.id, this.countingCircleId);
+    this.lastSavedResultDetail = cloneDeep(detailedResult);
+    return detailedResult;
   }
 
   protected areCountOfVotersValid(countOfVoters: PoliticalBusinessNullableCountOfVoters): boolean {
@@ -288,6 +364,17 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
 
       delete this.resultDetail;
       this.isDataLoaded = false;
+    }
+  }
+
+  private getPoliticalBusinessTypeUrl(politicalBusinessType?: PoliticalBusinessType) {
+    switch (politicalBusinessType) {
+      case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_VOTE:
+        return 'vote-end-results';
+      case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_MAJORITY_ELECTION:
+        return 'majority-election-end-results';
+      case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_PROPORTIONAL_ELECTION:
+        return 'proportional-election-end-results';
     }
   }
 }

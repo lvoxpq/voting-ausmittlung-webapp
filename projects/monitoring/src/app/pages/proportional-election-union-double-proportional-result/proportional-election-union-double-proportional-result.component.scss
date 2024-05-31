@@ -1,0 +1,16 @@
+@use '@abraxas/voting-lib/style/color' as *;
+
+.stepper {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  mat-horizontal-stepper {
+    margin: auto;
+  }
+
+  vo-ausm-admonition {
+    position: absolute;
+    right: 0;
+  }
+}

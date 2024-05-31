@@ -6,7 +6,7 @@
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
 import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -16,13 +16,23 @@ import { PermissionService } from '../../../services/permission.service';
 import { sum } from '../../../services/utils/array.utils';
 import { NumberComponent } from '@abraxas/base-components';
 import { Permissions } from '../../../models/permissions.model';
+import { HasUnsavedChanges } from '../../../services/guards/has-unsaved-changes.guard';
 
 @Component({
   selector: 'vo-ausm-proportional-election-unmodified-lists',
   templateUrl: './proportional-election-unmodified-lists.component.html',
   styleUrls: ['./proportional-election-unmodified-lists.component.scss'],
 })
-export class ProportionalElectionUnmodifiedListsComponent implements OnInit, OnDestroy {
+export class ProportionalElectionUnmodifiedListsComponent implements OnInit, OnDestroy, HasUnsavedChanges {
+  @HostListener('window:beforeunload')
+  public beforeUnload(): boolean {
+    if (!this.newZhFeaturesEnabled) {
+      return true;
+    }
+
+    return !this.hasChanges;
+  }
+
   @ViewChildren(NumberComponent)
   public listResultComponents?: QueryList<NumberComponent>;
 
@@ -59,17 +69,12 @@ export class ProportionalElectionUnmodifiedListsComponent implements OnInit, OnD
     this.canEdit = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.EnterResults);
   }
 
-  public async back(): Promise<void> {
-    if (!this.hasChanges) {
-      await this.navigateToContestDetail();
-      return;
-    }
+  public get hasUnsavedChanges(): boolean {
+    return this.hasChanges;
+  }
 
-    if (
-      await this.dialog.confirm(this.i18n.instant('APP.CHANGES.TITLE'), this.i18n.instant('APP.CHANGES.MSG'), this.i18n.instant('APP.NEXT'))
-    ) {
-      await this.navigateToContestDetail();
-    }
+  public async back(): Promise<void> {
+    await this.navigateToContestDetail();
   }
 
   public async save(): Promise<void> {

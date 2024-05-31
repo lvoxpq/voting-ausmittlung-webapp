@@ -1,0 +1,58 @@
+<vo-lib-page [contentLoading]="loading"
+             header="DOUBLE_PROPORTIONAL_RESULT.TITLE">
+
+  <vo-lib-page-header header>
+    <div left>
+      <bc-breadcrumbs>
+        <bc-breadcrumb-item link="../../../contests">{{'CONTEST.DETAIL.CONTESTS_TITLE' | translate}}</bc-breadcrumb-item>
+        <bc-breadcrumb-item [link]="'../../../contests/' + doubleProportionalResult?.contest?.id">
+          {{'MONITORING_COCKPIT.TITLE' | translate}}
+        </bc-breadcrumb-item>
+        <bc-breadcrumb-item link="../">{{'END_RESULT.OVERVIEW' | translate}}</bc-breadcrumb-item>
+        <bc-breadcrumb-item>{{'DOUBLE_PROPORTIONAL_RESULT.DISTRIBUTION_OF_MANDATES' | translate}}</bc-breadcrumb-item>
+      </bc-breadcrumbs>
+    </div>
+    <vo-ausm-contest-header center [contest]="doubleProportionalResult?.contest"></vo-ausm-contest-header>
+  </vo-lib-page-header>
+
+  <div class="mb-3" *ngIf="doubleProportionalResult && steps">
+    <div class="stepper">
+      <div></div>
+      <mat-horizontal-stepper labelPosition="bottom"
+                              (selectionChange)="selectedStepIndex = $event.selectedIndex">
+        <ng-template matStepperIcon="number" let-index="index">
+          <ng-container *ngTemplateOutlet="stepperHeader; context: {$implicit: index}"></ng-container>
+        </ng-template>
+        <ng-template matStepperIcon="edit" let-index="index">
+          <ng-container *ngTemplateOutlet="stepperHeader; context: {$implicit: index}"></ng-container>
+        </ng-template>
+        <mat-step *ngFor="let step of steps"
+                  [hasError]="step.hasError"
+                  [completed]="step.completed"
+                  [editable]="true">
+          <ng-template matStepLabel>
+            <span>{{step.label | translate}}</span>
+          </ng-template>
+        </mat-step>
+      </mat-horizontal-stepper>
+
+      <ng-template #stepperHeader let-index>
+        <ng-container *ngIf="!steps[index].hasError; else stepHasError">
+          <mat-icon>done</mat-icon>
+        </ng-container>
+        <ng-template #stepHasError>
+          <mat-icon>warning</mat-icon>
+        </ng-template>
+      </ng-template>
+    </div>
+
+    <ng-container *ngIf="doubleProportionalResult && steps">
+      <ng-container *ngIf="selectedStepIndex === 0; else subApportionmentView">
+        <app-double-proportional-result-super-apportionment [doubleProportionalResult]="doubleProportionalResult" (update)="handleApportionmentUpdate()"></app-double-proportional-result-super-apportionment>
+      </ng-container>
+      <ng-template #subApportionmentView>
+        <app-double-proportional-result-sub-apportionment [doubleProportionalResult]="doubleProportionalResult" (update)="handleApportionmentUpdate()"></app-double-proportional-result-sub-apportionment>
+      </ng-template>
+    </ng-container>
+  </div>
+</vo-lib-page>

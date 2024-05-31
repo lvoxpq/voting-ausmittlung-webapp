@@ -33,6 +33,14 @@
     "NO_RESULTS": "Keine Resultate verfügbar",
     "BREADCRUMB_TITLE": "Erfassung prüfen und beenden",
     "FINISH_SUBMISSION_SELECTED_ACTION": "Alle markierten prüfen und beenden",
-    "READY_FOR_CORRECTION_RESULT": "Geschäft {{title}} ist nicht verfügbar, da es sich im Status \"zur Korrektur\" befindet"
+    "READY_FOR_CORRECTION_RESULT": "Geschäft {{title}} ist nicht verfügbar, da es sich im Status \"{{state}}\" befindet"
+  },
+  "PAGINATOR": {
+    "ITEMS_PER_PAGE": "Einträge pro Seite",
+    "NEXT_PAGE": "Nächste Seite",
+    "PREVIOUS_PAGE": "Vorherige Seite",
+    "FIRST_PAGE": "Erste Seite",
+    "LAST_PAGE": "Letzte Seite",
+    "OF_LABEL": "von"
   }
 }

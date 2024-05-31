@@ -101,7 +101,7 @@ export class VoteBallotReviewComponent implements OnDestroy {
 
     this.actionExecuting = true;
     try {
-      await this.resultBundleService.succeedBundleReview(this.bundle.id);
+      await this.resultBundleService.succeedBundleReview([this.bundle.id]);
       await this.back();
     } finally {
       this.actionExecuting = false;

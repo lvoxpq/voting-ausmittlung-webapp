@@ -4,34 +4,33 @@
  * For license information see LICENSE file.
  */
 
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
-import { DomainOfInfluenceCantonDefaults } from '../../models';
-import { from, Observable, of, tap } from 'rxjs';
-import { DomainOfInfluenceService } from '../domain-of-influence.service';
-import { GetCantonDefaultsRequest } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/domain_of_influence_requests_pb';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { ContestCantonDefaults } from '../../models';
 import { Directive } from '@angular/core';
+import { ContestService } from '../contest.service';
+import { GetCantonDefaultsRequest } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/contest_requests_pb';
 
 @Directive()
-export abstract class CantonDefaultsBaseResolver implements Resolve<DomainOfInfluenceCantonDefaults> {
+export abstract class CantonDefaultsBaseResolver {
   private cachedId?: string;
-  private cachedCantonDefaults?: DomainOfInfluenceCantonDefaults;
+  private cachedCantonDefaults!: ContestCantonDefaults;
 
-  constructor(private readonly domainOfInfluenceService: DomainOfInfluenceService) {}
+  constructor(private readonly contestService: ContestService) {}
 
-  public resolve(route: ActivatedRouteSnapshot): Observable<DomainOfInfluenceCantonDefaults> {
+  public async resolve(route: ActivatedRouteSnapshot): Promise<ContestCantonDefaults> {
     const id = route.paramMap.get(this.idParam);
     if (!id) {
       throw new Error('id not set');
     }
 
     if (this.cachedId === id) {
-      return of(this.cachedCantonDefaults!);
+      return this.cachedCantonDefaults;
     }
 
+    const cantonDefaults = await this.contestService.getCantonDefaults(this.getCantonDefaultsRequest(id));
     this.cachedId = id;
-    return from(this.domainOfInfluenceService.getCantonDefaults(this.getCantonDefaultsRequest(id))).pipe(
-      tap(v => (this.cachedCantonDefaults = v)),
-    );
+    this.cachedCantonDefaults = cantonDefaults;
+    return cantonDefaults;
   }
 
   protected abstract get idParam(): string;

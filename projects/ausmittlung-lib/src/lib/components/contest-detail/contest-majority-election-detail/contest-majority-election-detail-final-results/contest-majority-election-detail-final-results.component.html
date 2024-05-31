@@ -24,7 +24,7 @@
                                                     [newZhFeaturesEnabled]="newZhFeaturesEnabled"
                                                     [class.primary-result-input]="!newZhFeaturesEnabled"
                                                     [readonly]="readonly"
-                                                    [showInvalidVotes]="election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes"
+                                                    [showInvalidVotes]="election.contest!.cantonDefaults!.majorityElectionInvalidVotes"
                                                     [showEmptyVotes]="election.numberOfMandates !== 1"
                                                     (contentChanged)="candidateResultChange.emit()"></vo-ausm-contest-majority-election-result-input>
     </div>
@@ -35,7 +35,7 @@
     *ngFor="let result of resultDetail.secondaryMajorityElectionResults"
     class="secondary-result-input"
     [showElectionHeader]="true"
-    [showInvalidVotes]="election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes"
+    [showInvalidVotes]="election.contest!.cantonDefaults!.majorityElectionInvalidVotes"
     [showEmptyVotes]="election.numberOfMandates !== 1"
     [eVoting]="eVoting"
     [newZhFeaturesEnabled]="newZhFeaturesEnabled"

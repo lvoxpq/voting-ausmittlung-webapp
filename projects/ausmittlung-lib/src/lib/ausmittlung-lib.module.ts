@@ -24,12 +24,12 @@ import {
   TextareaModule,
   TextModule,
   DividerModule,
+  PaginatorIntl,
 } from '@abraxas/base-components';
 import { VotingLibModule } from '@abraxas/voting-lib';
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatStepperModule } from '@angular/material/stepper';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -129,22 +129,27 @@ import { VoteBallotReviewComponent } from './pages/vote/vote-ballot-review/vote-
 import { VoteBallotComponent } from './pages/vote/vote-ballot/vote-ballot.component';
 import { VoteBundleOverviewComponent } from './pages/vote/vote-bundle-overview/vote-bundle-overview.component';
 import { TranslateVoteQuestionPipe } from './pipes/translate-vote-question.pipe';
-import { VOTING_BASIS_WEBAPP_URL } from './tokens';
+import { VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL, VOTING_BASIS_WEBAPP_URL } from './tokens';
 import { AdmonitionComponent } from './components/admonition/admonition.component';
 import { ResultExportComponent } from './pages/result-export/result-export.component';
 import { ValidationSummaryComponent } from './components/validation-summary/validation-summary.component';
-import { MatMenuModule } from '@angular/material/menu';
 import { ValidationGroupPipe } from './pipes/validation-group.pipe';
 import { PermissionDirective } from './directives/permission.directive';
 import { ContestStateChangeButtonComponent } from './components/contest-detail/contest-state-change-button/contest-state-change-button.component';
 import { ContestDetailInfoComponent } from './components/contest-detail/contest-detail-info/contest-detail-info.component';
-import { MatButtonModule } from '@angular/material/button';
 import { ContestDetailInfoDialogComponent } from './components/contest-detail/contest-detail-info-dialog/contest-detail-info-dialog.component';
 import { ContestVoteDetailResultsGraphComponent } from './components/contest-detail/contest-vote-detail/contest-vote-detail-results-graph/contest-vote-detail-results-graph.component';
 import { ContactDialogComponent } from './components/contact-dialog/contact-dialog.component';
 import { ContestDetailSubmissionTileComponent } from './components/contest-detail/contest-detail-submission-tile/contest-detail-submission-tile.component';
 import { ContestCountingCircleElectoratesUpdateDialogComponent } from './components/contest-counting-circle-electorates-update-dialog/contest-counting-circle-electorates-update-dialog.component';
 import { ContestCountingCircleElectorateAssignDialogComponent } from './components/contest-counting-circle-electorate-assign-dialog/contest-counting-circle-electorate-assign-dialog.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { TranslatedPaginatorIntl } from './providers/translatedPaginatorIntl';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { BooleanStatusLabelComponent } from './components/boolean-status-label/boolean-status-label.component';
+import { ValidValidationPipe } from './pipes/valid-validation.pipe';
 
 @NgModule({
   declarations: [
@@ -255,6 +260,8 @@ import { ContestCountingCircleElectorateAssignDialogComponent } from './componen
     ContestDetailSubmissionTileComponent,
     ContestCountingCircleElectoratesUpdateDialogComponent,
     ContestCountingCircleElectorateAssignDialogComponent,
+    BooleanStatusLabelComponent,
+    ValidValidationPipe,
   ],
   imports: [
     CommonModule,
@@ -312,16 +319,33 @@ import { ContestCountingCircleElectorateAssignDialogComponent } from './componen
     ResultStateBoxComponent,
     ValidationOverviewDialogComponent,
     ContestDetailInfoComponent,
+    BooleanStatusLabelComponent,
+    AdmonitionComponent,
   ],
 })
 export class AusmittlungLibModule {
-  public static forRoot(votingBasisWebAppUrl?: string): ModuleWithProviders<AusmittlungLibModule> {
+  public static forRoot(
+    votingBasisWebAppUrl?: string,
+    votingAusmittlungMonitoringWebApp?: string,
+  ): ModuleWithProviders<AusmittlungLibModule> {
     return {
       ngModule: AusmittlungLibModule,
       providers: [
         {
           provide: VOTING_BASIS_WEBAPP_URL,
           useValue: votingBasisWebAppUrl,
+        },
+        {
+          provide: PaginatorIntl,
+          useClass: TranslatedPaginatorIntl,
+        },
+        {
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: { subscriptSizing: 'dynamic' },
+        },
+        {
+          provide: VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL,
+          useValue: votingAusmittlungMonitoringWebApp,
         },
       ],
     };

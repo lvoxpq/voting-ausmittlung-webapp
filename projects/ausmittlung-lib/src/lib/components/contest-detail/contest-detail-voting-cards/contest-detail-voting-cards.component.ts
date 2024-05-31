@@ -153,6 +153,8 @@ export class ContestDetailVotingCardsComponent implements OnInit {
         doiVc.countOfReceivedVotingCards = electorateVc.countOfReceivedVotingCards;
       }
     }
+
+    this.votingCardsChange.emit(this._votingCards);
   }
 
   private buildElectorateVotingCards(): void {

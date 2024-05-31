@@ -40,8 +40,13 @@ export class ContestStateChangeButtonComponent implements OnDestroy, OnChanges, 
   @Input()
   public buttonText: string = 'CONTEST.DETAIL.STATE_ACTION.LABEL';
 
+  @Input()
+  public stateDescriptionsByState: Record<number, string> = {};
+
   @Output()
   public finishSubmission: EventEmitter<void> = new EventEmitter<void>();
+
+  public readonly states: typeof CountingCircleResultState = CountingCircleResultState;
 
   public isActionExecuting: boolean = false;
   public canSetAllToAuditedTentatively: boolean = false;
@@ -152,9 +157,11 @@ export class ContestStateChangeButtonComponent implements OnDestroy, OnChanges, 
       return;
     }
 
-    this.canSetAllToAuditedTentatively = this.resultList.results
-      .filter(x => this.tenant?.id === x.politicalBusiness.domainOfInfluence?.secureConnectId)
-      .every(
+    const owned = this.resultList.results.filter(x => this.tenant?.id === x.politicalBusiness.domainOfInfluence?.secureConnectId);
+
+    this.canSetAllToAuditedTentatively =
+      owned.length > 0 &&
+      owned.every(
         x =>
           x.state === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE ||
           x.state === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE,

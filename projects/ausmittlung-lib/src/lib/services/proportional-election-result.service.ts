@@ -19,9 +19,12 @@ import {
   EnterProportionalElectionUnmodifiedListResultRequest,
   EnterProportionalElectionUnmodifiedListResultsRequest,
   FinalizeProportionalElectionEndResultRequest,
+  GetProportionalElectionDoubleProportionalResultRequest,
+  GetProportionalElectionDoubleProportionalResultSuperApportionmentAvailableLotDecisionsRequest,
   GetProportionalElectionEndResultRequest,
   GetProportionalElectionListEndResultAvailableLotDecisionsRequest,
   GetProportionalElectionListResultsRequest,
+  GetProportionalElectionPartialEndResultRequest,
   GetProportionalElectionResultRequest,
   GetProportionalElectionUnmodifiedListResultsRequest,
   ProportionalElectionResultAuditedTentativelyRequest,
@@ -29,11 +32,14 @@ import {
   ProportionalElectionResultFlagForCorrectionRequest,
   ProportionalElectionResultPrepareCorrectionFinishedRequest,
   ProportionalElectionResultPrepareSubmissionFinishedRequest,
+  ProportionalElectionResultPublishRequest,
   ProportionalElectionResultResetToSubmissionFinishedRequest,
   ProportionalElectionResultsPlausibiliseRequest,
   ProportionalElectionResultsResetToAuditedTentativelyRequest,
+  ProportionalElectionResultSubmissionFinishedAndAuditedTentativelyRequest,
   ProportionalElectionResultSubmissionFinishedRequest,
   RevertProportionalElectionEndResultFinalizationRequest,
+  UpdateProportionalElectionDoubleProportionalResultSuperApportionmentLotDecisionRequest,
   UpdateProportionalElectionEndResultLotDecisionRequest,
   UpdateProportionalElectionListEndResultLotDecisionsRequest,
   ValidateEnterProportionalElectionCountOfVotersRequest,
@@ -42,6 +48,8 @@ import { GrpcBackendService, GrpcEnvironment } from '@abraxas/voting-lib';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+  DoubleProportionalResult,
+  DoubleProportionalResultSuperApportionmentLotDecision,
   mapToNullableCountOfVoters,
   PoliticalBusinessNullableCountOfVoters,
   ProportionalElectionCandidateEndResult,
@@ -73,6 +81,7 @@ import { PoliticalBusinessResultBaseService } from './political-business-result-
 import { ProportionalElectionService } from './proportional-election.service';
 import { GRPC_ENV_INJECTION_TOKEN } from './tokens';
 import { ValidationMappingService } from './validation-mapping.service';
+import { DoubleProportionalResultService } from './double-proportional-result.service';
 
 @Injectable({
   providedIn: 'root',
@@ -252,14 +261,71 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     await this.requestEmptyResp(c => c.resetToAuditedTentatively, req);
   }
 
+  public submissionFinishedAndAuditedTentatively(proportionalElectionResultId: string): Promise<void> {
+    const req = new ProportionalElectionResultSubmissionFinishedAndAuditedTentativelyRequest();
+    req.setElectionResultId(proportionalElectionResultId);
+    return this.requestEmptyResp(c => c.submissionFinishedAndAuditedTentatively, req);
+  }
+
+  public publish(proportionalElectionResultIds: string[]): Promise<void> {
+    const req = new ProportionalElectionResultPublishRequest();
+    req.setElectionResultIdsList(proportionalElectionResultIds);
+    return this.requestEmptyResp(c => c.publish, req);
+  }
+
+  public unpublish(proportionalElectionResultIds: string[]): Promise<void> {
+    const req = new ProportionalElectionResultPublishRequest();
+    req.setElectionResultIdsList(proportionalElectionResultIds);
+    return this.requestEmptyResp(c => c.unpublish, req);
+  }
+
+  public getPartialEndResult(proportionalElectionId: string): Promise<ProportionalElectionEndResult> {
+    const req = new GetProportionalElectionPartialEndResultRequest();
+    req.setProportionalElectionId(proportionalElectionId);
+    return this.request(
+      c => c.getPartialEndResult,
+      req,
+      r => ProportionalElectionResultService.mapToProportionalElectionEndResult(r),
+    );
+  }
+
   public getEndResult(proportionalElectionId: string): Promise<ProportionalElectionEndResult> {
     const req = new GetProportionalElectionEndResultRequest();
     req.setProportionalElectionId(proportionalElectionId);
     return this.request(
       c => c.getEndResult,
       req,
-      r => this.mapToProportionalElectionEndResult(r),
+      r => ProportionalElectionResultService.mapToProportionalElectionEndResult(r),
     );
+  }
+
+  public getDoubleProportionalResult(proportionalElectionId: string): Promise<DoubleProportionalResult> {
+    const req = new GetProportionalElectionDoubleProportionalResultRequest();
+    req.setProportionalElectionId(proportionalElectionId);
+    return this.request(
+      c => c.getDoubleProportionalResult,
+      req,
+      r => DoubleProportionalResultService.mapToDoubleProportionalResult(r),
+    );
+  }
+
+  public getDoubleProportionalResultSuperApportionmentAvailableLotDecisions(
+    proportionalElectionId: string,
+  ): Promise<DoubleProportionalResultSuperApportionmentLotDecision[]> {
+    const req = new GetProportionalElectionDoubleProportionalResultSuperApportionmentAvailableLotDecisionsRequest();
+    req.setProportionalElectionId(proportionalElectionId);
+    return this.request(
+      c => c.getDoubleProportionalResultSuperApportionmentAvailableLotDecisions,
+      req,
+      r => r.getLotDecisionsList().map(l => DoubleProportionalResultService.mapToDoubleProportionalSuperApportionmentLotDecision(l)),
+    );
+  }
+
+  public UpdateDoubleProportionalResultSuperApportionmentLotDecision(proportionalElectionId: string, lotNumber: number): Promise<void> {
+    const req = new UpdateProportionalElectionDoubleProportionalResultSuperApportionmentLotDecisionRequest();
+    req.setProportionalElectionId(proportionalElectionId);
+    req.setNumber(lotNumber);
+    return this.requestEmptyResp(c => c.updateDoubleProportionalResultSuperApportionmentLotDecision, req);
   }
 
   public getListEndResultAvailableLotDecisions(
@@ -341,7 +407,7 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     };
   }
 
-  private mapToProportionalElectionEndResult(data: ProportionalElectionEndResultProto): ProportionalElectionEndResult {
+  public static mapToProportionalElectionEndResult(data: ProportionalElectionEndResultProto): ProportionalElectionEndResult {
     return {
       contest: ContestService.mapToContest(data.getContest()!),
       election: ProportionalElectionService.mapToElection(data.getProportionalElection()!),
@@ -357,7 +423,7 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     };
   }
 
-  private mapToListEndResults(data: ProportionalElectionListEndResultProto[]): ProportionalElectionListEndResult[] {
+  private static mapToListEndResults(data: ProportionalElectionListEndResultProto[]): ProportionalElectionListEndResult[] {
     return data.map(x => ({
       list: x.getList()!.toObject(),
       numberOfMandates: x.getNumberOfMandates(),
@@ -373,7 +439,7 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     }));
   }
 
-  private mapToCandidateEndResults(data: ProportionalElectionCandidateEndResultProto[]): ProportionalElectionCandidateEndResult[] {
+  private static mapToCandidateEndResults(data: ProportionalElectionCandidateEndResultProto[]): ProportionalElectionCandidateEndResult[] {
     return data.map(x => ({
       candidate: x.getCandidate()!.toObject(),
       voteCount: x.getVoteCount(),

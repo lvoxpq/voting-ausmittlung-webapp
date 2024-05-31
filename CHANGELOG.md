@@ -1,4 +1,4 @@
-# ✨ Changelog (`v1.72.1`)
+# ✨ Changelog (`v2.7.0`)
 
 All notable changes to this project will be documented in this file.
 
@@ -8,11 +8,207 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version Info
 
 ```text
-This version -------- v1.72.1
-Previous version ---- v1.54.2
+This version -------- v2.7.0
+Previous version ---- v1.72.0
 Initial version ----- v1.25.0
-Total commits ------- 38
+Total commits ------- 37
 ```
+
+## [v2.7.0] - 2024-05-29
+
+### 🆕 Added
+
+- add published state to results
+
+## [v2.6.3] - 2024-05-28
+
+### 🔄 Changed
+
+- finish submission for multiple political businesses
+
+## [v2.6.2] - 2024-05-27
+
+### 🔄 Changed
+
+- change plausibilisiert state color
+
+## [v2.6.1] - 2024-05-22
+
+### 🔄 Changed
+
+- angular update UI optimizations
+
+## [v2.6.0] - 2024-05-21
+
+### 🆕 Added
+
+- add sort and filter for bundle table and political business overview tables
+
+## [v2.5.0] - 2024-05-16
+
+### 🆕 Added
+
+- double proportional lot decisions
+
+## [v2.4.4] - 2024-05-13
+
+### 🔄 Changed
+
+- app loading spinner
+
+## [v2.4.3] - 2024-05-08
+
+### 🔄 Changed
+
+- monitoring cockpit state filter
+
+## [v2.4.2] - 2024-05-07
+
+### 🔄 Changed
+
+- navigate to union results
+
+## [v2.4.1] - 2024-04-30
+
+### 🔄 Changed
+
+- result export table
+
+## [v2.4.0] - 2024-04-30
+
+### 🆕 Added
+
+- set multiple bundles to review succeed
+
+## [v2.3.0] - 2024-04-29
+
+### 🆕 Added
+
+- open contest if contest date matches today
+
+## [v2.2.5] - 2024-04-26
+
+### 🔄 Changed
+
+- allow counting circle switch on contest detail
+
+## [v2.2.4] - 2024-04-25
+
+### :arrows_counterclockwise: Changed
+
+- do not set all counting circles states when importing or deleting e-voting results
+
+## [v2.2.3] - 2024-04-24
+
+### 🔄 Changed
+
+- move canton defaults from doi to contest
+
+## [v2.2.2] - 2024-04-24
+
+### 🆕 Added
+
+- add config
+
+## [v2.2.1] - 2024-04-24
+
+### 🔄 Changed
+
+- show all voting cards in contest detail info
+
+## [v2.2.0] - 2024-04-23
+
+### 🔄 Changed
+
+- rework monitoring cockpit overview
+
+## [v2.1.0] - 2024-04-23
+
+### 🆕 Added
+
+- non cantonal double proportional result
+
+## [v2.0.0] - 2024-04-19
+
+BREAKING CHANGE: update to Angular 17 version
+
+### 🔄 Changed
+
+- Angular Update to version 17
+
+## [v1.76.0] - 2024-04-19
+
+### 🆕 Added
+
+- add state plausibilised disabled canton setting
+
+## [v1.75.1] - 2024-04-18
+
+### 🔄 Changed
+
+- ballot navigation icon buttons
+
+## [v1.75.0] - 2024-04-18
+
+### 🆕 Added
+
+- add counting circle result state descriptions
+
+## [v1.74.0] - 2024-04-15
+
+### 🔄 Changed
+
+- group validation results by validity
+
+### :new: Added
+
+- added partial end results
+
+### ❌ Removed
+
+- remove unions from election endresults
+
+### 🆕 Added
+
+- cantonal proportional election union results
+
+### 🆕 Added
+
+- add political business unions to result overview
+
+## [v1.73.1] - 2024-03-20
+
+### 🔄 Changed
+
+- voting cards order
+
+## [v1.73.0] - 2024-03-14
+
+### 🔄 Changed
+
+- fix count representation of filtered counting circles in monitoring
+
+### 🆕 Added
+
+- add monitoring political business overview
+
+### 🆕 Added
+
+- add vote result algorithm popular and counting circle majority
+
+### :arrows_counterclockwise: Changed
+
+- adjust a few permissions checks
+
+- add submission finish and audit tentatively for self owned businesses
+
+### 🆕 Added
+
+- add unsaved changes guard and unload host listener
+
+### 🔄 Changed
+
+- proportional election candidate choose queryable adjusted
 
 ## [v1.72.1] - 2024-02-28
 
@@ -98,61 +294,41 @@ Total commits ------- 38
 
 - allow creator of a bundle to print preview
 
-## [v1.65.0] - 2024-01-29
-
 ### 🆕 Added
 
 - add candidate check digit
-
-## [v1.64.0] - 2024-01-24
 
 ### 🔄 Changed
 
 - contest election detail ux improvements
 
-## [v1.63.1] - 2024-01-23
-
 ### 🔄 Changed
 
 - swiss abroad only used if allowed
-
-## [v1.63.0] - 2024-01-22
 
 ### 🔄 Changed
 
 - move contest contact data to header
 
-## [v1.62.0] - 2024-01-18
-
 ### 🔄 Changed
 
 - split save and validate political business
-
-## [v1.61.0] - 2024-01-17
 
 ### 🆕 Added
 
 - show domain of influence type on political businesses
 
-## [v1.60.0] - 2024-01-17
-
 ### 🔄 Changed
 
 - move contact data button to contest detail header
-
-## [v1.59.0] - 2024-01-16
 
 ### 🔄 Changed
 
 - contest vote detail ux improvements
 
-## [v1.58.0] - 2024-01-16
-
 ### 🔄 Changed
 
 - contest detail ux improvements
-
-## [v1.57.0] - 2024-01-12
 
 ### :arrows_counterclockwise: Changed
 
@@ -162,126 +338,80 @@ Total commits ------- 38
 
 - change from roles to permissions
 
-## [v1.56.1] - 2024-01-05
-
 ### 🔄 Changed
 
 - Timestamp handling with result corrections
-
-## [v1.56.0] - 2023-12-20
 
 ### 🆕 Added
 
 - Add counting machine to counting circle details
 
-## [v1.55.0] - 2023-12-19
-
 ### 🆕 Added
 
 - add multiple vote ballots
-
-## [v1.54.8] - 2023-12-12
 
 ### 🔄 Changed
 
 - Set voting cards on counting circle correctly after live updates
 
-## [v1.54.7] - 2023-11-28
-
 ### :arrows_counterclockwise: Changed
 
 - apply strict policy for files that should not be cached
-
-## [v1.54.6] - 2023-11-27
 
 ### :arrows_counterclockwise: Changed
 
 - configure caching for statically named resource config.js
 - set version tag for referenced config.js in index.html to enforce initial client-side cache invalidation
 
-## [v1.54.5] - 2023-11-24
-
 ### :arrows_counterclockwise: Changed
 
 - remove space in audience clientid prefix
-
-## [v1.54.4] - 2023-11-24
 
 ### :new: Added
 
 - add support for custom oauth scopes.
 
-## [v1.54.3] - 2023-11-23
-
 ### 🔄 Changed
 
 - revert empty and invalid vote count for single majority mandate
-
-## [v1.54.2] - 2023-11-16
 
 ### :arrows_counterclockwise: Changed
 
 - do not manually mark protocol exports as generating
 
-## [v1.54.1] - 2023-11-15
-
 ### :arrows_counterclockwise: Changed
 
 - correctly select all templates after data has been loaded
-
-## [v1.54.0] - 2023-11-15
 
 ### :arrows_counterclockwise: Changed
 
 - reworked export selected protocols feature
 
-## [v1.53.23] - 2023-11-09
-
 ### :new: Added
 
 - add environment indicator badge in header
-
-## [v1.53.22] - 2023-10-25
 
 ### 🔄 Changed
 
 - improve UX for re-generating single protocol exports
 
-## [v1.53.21] - 2023-10-24
-
 ### :arrows_counterclockwise: Changed
 
 - setup automatic refresh to only listen for the access_token lifetime since the IdP only responds with the access_token
 
-## [v1.53.20] - 2023-10-23
-
 This reverts commit 60ee4e312750c5b9d82b3ab87107bccc48cb7971.
-
-## [v1.53.19] - 2023-10-23
 
 ### 🔄 Changed
 
 - detect changes in majority election ballots correctly
 
-## [v1.53.18] - 2023-10-22
-
-### 🔄 Changed
-
-- disable retry button for 10 mins after the start of a protocol export
-
-## [v1.53.17] - 2023-10-20
-
 ### 🔄 Changed
 
 - Show total blank ballots on end results
 
-## [v1.53.16] - 2023-10-18
-
 ### 🔄 Changed
 
 - reset ballot should undo changes
-
-## [v1.53.15] - 2023-10-11
 
 ### 🆕 Added
 
@@ -601,6 +731,195 @@ This reverts commit 60ee4e312750c5b9d82b3ab87107bccc48cb7971.
 ### 🔄 Changed
 
 - Adjusted page title of the vote review bundle page
+
+## [v1.65.0] - 2024-01-29
+
+### 🆕 Added
+
+- add candidate check digit
+
+## [v1.64.0] - 2024-01-24
+
+### 🔄 Changed
+
+- contest election detail ux improvements
+
+## [v1.63.1] - 2024-01-23
+
+### 🔄 Changed
+
+- swiss abroad only used if allowed
+
+## [v1.63.0] - 2024-01-22
+
+### 🔄 Changed
+
+- move contest contact data to header
+
+## [v1.62.0] - 2024-01-18
+
+### 🔄 Changed
+
+- split save and validate political business
+
+## [v1.61.0] - 2024-01-17
+
+### 🆕 Added
+
+- show domain of influence type on political businesses
+
+## [v1.60.0] - 2024-01-17
+
+### 🔄 Changed
+
+- move contact data button to contest detail header
+
+## [v1.59.0] - 2024-01-16
+
+### 🔄 Changed
+
+- contest vote detail ux improvements
+
+## [v1.58.0] - 2024-01-16
+
+### 🔄 Changed
+
+- contest detail ux improvements
+
+## [v1.57.0] - 2024-01-12
+
+### :arrows_counterclockwise: Changed
+
+- correctly set permissions in OnPush strategy
+
+### :lock: Security
+
+- change from roles to permissions
+
+## [v1.56.1] - 2024-01-05
+
+### 🔄 Changed
+
+- Timestamp handling with result corrections
+
+## [v1.56.0] - 2023-12-20
+
+### 🆕 Added
+
+- Add counting machine to counting circle details
+
+## [v1.55.0] - 2023-12-19
+
+### 🆕 Added
+
+- add multiple vote ballots
+
+## [v1.54.8] - 2023-12-12
+
+### 🔄 Changed
+
+- Set voting cards on counting circle correctly after live updates
+
+## [v1.54.7] - 2023-11-28
+
+### :arrows_counterclockwise: Changed
+
+- apply strict policy for files that should not be cached
+
+## [v1.54.6] - 2023-11-27
+
+### :arrows_counterclockwise: Changed
+
+- configure caching for statically named resource config.js
+- set version tag for referenced config.js in index.html to enforce initial client-side cache invalidation
+
+## [v1.54.5] - 2023-11-24
+
+### :arrows_counterclockwise: Changed
+
+- remove space in audience clientid prefix
+
+## [v1.54.4] - 2023-11-24
+
+### :new: Added
+
+- add support for custom oauth scopes.
+
+## [v1.54.3] - 2023-11-23
+
+### 🔄 Changed
+
+- revert empty and invalid vote count for single majority mandate
+
+## [v1.54.2] - 2023-11-16
+
+### :arrows_counterclockwise: Changed
+
+- do not manually mark protocol exports as generating
+
+## [v1.54.1] - 2023-11-15
+
+### :arrows_counterclockwise: Changed
+
+- correctly select all templates after data has been loaded
+
+## [v1.54.0] - 2023-11-15
+
+### :arrows_counterclockwise: Changed
+
+- reworked export selected protocols feature
+
+## [v1.53.23] - 2023-11-09
+
+### :new: Added
+
+- add environment indicator badge in header
+
+## [v1.53.22] - 2023-10-25
+
+### 🔄 Changed
+
+- improve UX for re-generating single protocol exports
+
+## [v1.53.21] - 2023-10-24
+
+### :arrows_counterclockwise: Changed
+
+- setup automatic refresh to only listen for the access_token lifetime since the IdP only responds with the access_token
+
+## [v1.53.20] - 2023-10-23
+
+This reverts commit 60ee4e312750c5b9d82b3ab87107bccc48cb7971.
+
+## [v1.53.19] - 2023-10-23
+
+### 🔄 Changed
+
+- detect changes in majority election ballots correctly
+
+## [v1.53.18] - 2023-10-22
+
+### 🔄 Changed
+
+- disable retry button for 10 mins after the start of a protocol export
+
+## [v1.53.17] - 2023-10-20
+
+### 🔄 Changed
+
+- Show total blank ballots on end results
+
+## [v1.53.16] - 2023-10-18
+
+### 🔄 Changed
+
+- reset ballot should undo changes
+
+## [v1.53.15] - 2023-10-11
+
+### 🆕 Added
+
+- pop up for bundle creation
 
 ## [v1.53.14] - 2023-10-10
 

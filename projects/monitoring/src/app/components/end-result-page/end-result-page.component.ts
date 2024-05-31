@@ -15,11 +15,16 @@ import { DomainOfInfluenceCanton } from '@abraxas/voting-ausmittlung-service-pro
   templateUrl: './end-result-page.component.html',
 })
 export class EndResultPageComponent implements OnDestroy {
+  public hasPoliticalBusinessUnionContext: boolean = false;
+
   @Input()
   public loading: boolean = false;
 
   @Input()
   public contest?: Contest;
+
+  @Input()
+  public isPartialResult: boolean = false;
 
   @Input()
   public swissAbroadHaveVotingRights: boolean = false;
@@ -38,15 +43,21 @@ export class EndResultPageComponent implements OnDestroy {
 
   public newZhFeaturesEnabled: boolean = false;
 
+  private readonly routeSubscription: Subscription;
   private readonly routeDataSubscription: Subscription;
 
   constructor(route: ActivatedRoute) {
     this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
       this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
     });
+
+    this.routeSubscription = route.params.subscribe(({ politicalBusinessUnionId }) => {
+      this.hasPoliticalBusinessUnionContext = !!politicalBusinessUnionId;
+    });
   }
 
   public async ngOnDestroy(): Promise<void> {
+    this.routeSubscription.unsubscribe();
     this.routeDataSubscription.unsubscribe();
   }
 }

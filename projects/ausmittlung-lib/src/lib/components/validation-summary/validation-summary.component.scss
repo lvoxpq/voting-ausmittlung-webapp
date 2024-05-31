@@ -1,0 +1,8 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.title-icon {
+  @extend .mr-1;
+
+  color: $color-success;
+}

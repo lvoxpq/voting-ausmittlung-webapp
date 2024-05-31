@@ -31,6 +31,9 @@ export class ContestVoteDetailBallotComponent implements OnDestroy {
   @Output()
   public countOfVotersChange: EventEmitter<void> = new EventEmitter<void>();
 
+  @Output()
+  public countOfAnswersChanged: EventEmitter<void> = new EventEmitter<void>();
+
   @ViewChild(BallotCountInputComponent)
   private ballotCountInputComponent!: BallotCountInputComponent;
 

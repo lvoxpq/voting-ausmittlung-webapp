@@ -10,19 +10,17 @@
   (valueChange)="ballotNumberValue = +$event"
   (blur)="emitNewBallotNumber()"
   (keydown.enter)="emitNewBallotNumber()"
+  [subscriptSizing]="'dynamic'"
 ></bc-number>
 <div class="nav-buttons">
-  <bc-icon
-    [iconColor]="readonly || ballotNumberValue <= minBallotNumber ? 'basic' : 'info'"
-    (click)="emitNewBallotNumber(-1)"
+  <bc-button
     icon="angle-left"
-  >
-  </bc-icon>
-  <bc-icon
-    [iconColor]="readonly || ballotNumberValue >= maxBallotNumber ? 'basic' : 'info'"
-    class="ml-1"
-    (click)="emitNewBallotNumber(1)"
+    (buttonClick)="emitNewBallotNumber(-1)"
+    [disabled]="readonly || ballotNumberValue <= minBallotNumber"
+  ></bc-button>
+  <bc-button
     icon="angle-right"
-  >
-  </bc-icon>
+    (buttonClick)="emitNewBallotNumber(1)"
+    [disabled]="readonly || ballotNumberValue >= maxBallotNumber"
+  ></bc-button>
 </div>

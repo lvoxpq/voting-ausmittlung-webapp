@@ -17,7 +17,8 @@
                    [ngModel]="listResult.conventionalVoteCount"
                    [allowUndefined]="false"
                    (ngModelChange)="listResult.conventionalVoteCount = +$event; updateTotalAndSetChanges()"
-                   [min]="0"></bc-number>
+                   [min]="0"
+                   [subscriptSizing]="'dynamic'"></bc-number>
       </ng-container>
 
       <span class="total total-label">{{'APP.TOTAL' | translate}}</span>

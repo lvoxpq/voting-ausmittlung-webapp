@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="left">
+    <h2>{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.POLITICAL_BUSINESS.TITLE' | translate: { count: politicalBusinesses.length } }}</h2>
+    <app-political-business-table [politicalBusinesses]="politicalBusinesses" (politicalBusinessSelected)="openCountingCircleResults($event)"></app-political-business-table>
+  </div>
+  <div class="right">
+    <ng-container *ngIf="countingCircles.length !== 0; else countingCircleResults">
+      <h2>{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.COUNTING_CIRCLE_RESULT.TITLE' | translate: { count: countingCircles.length } }}</h2>
+      <app-counting-circle-table [countingCircles]="countingCircles" [countingCirclesById]="countingCirclesById"></app-counting-circle-table>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #countingCircleResults>
+  <h2 translate>MONITORING_POLITICAL_BUSINESSES_OVERVIEW.COUNTING_CIRCLE_RESULT.TITLE_NO_DATA</h2>
+  <span translate>MONITORING_POLITICAL_BUSINESSES_OVERVIEW.COUNTING_CIRCLE_RESULT.NO_DATA</span>
+</ng-template>
+

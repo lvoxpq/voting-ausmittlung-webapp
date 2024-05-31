@@ -2,12 +2,13 @@
              [enableSidebar]="!newZhFeaturesEnabled"
              [sidebarTemplate]="sidebar"
              [sidebarOpen]="!newZhFeaturesEnabled"
+             [sidebarWidth]="sidebarWith"
              [header]="'CONTEST.DETAIL.TITLE' | translate">
   <vo-lib-page-header header>
     <div left>
       <vo-ausm-breadcrumbs [items]="breadcrumbs"></vo-ausm-breadcrumbs>
     </div>
-    <vo-ausm-contest-header center [contest]="resultList?.contest" [countingCircle]="resultList?.countingCircle" [state]="resultList?.state"></vo-ausm-contest-header>
+    <vo-ausm-contest-header center [contest]="resultList?.contest" [countingCircle]="resultList?.countingCircle" [state]="resultList?.state" [accessibleCountingCircles]="accessibleCountingCircles"></vo-ausm-contest-header>
     <div right *ngIf="!!resultList">
       <bc-button *ngIf="newZhFeaturesEnabled"
                  variant="tertiary"
@@ -24,7 +25,8 @@
         [resultList]="resultList"
         [showResetResultsInTestingPhase]="showResetResultsInTestingPhase"
         [showSetAllAuditedTentatively]="showSetAllAuditedTentatively"
-        (finishSubmission)="finishSubmission()"></vo-ausm-contest-state-change-button>
+        (finishSubmission)="finishSubmission()"
+        [stateDescriptionsByState]="resultList.contest.cantonDefaults.countingCircleResultStateDescriptionsByState"></vo-ausm-contest-state-change-button>
       <bc-button *ngIf="showExport" variant="tertiary" (buttonClick)="export()" [label]="'CONTEST.DETAIL.EXPORT' | translate"></bc-button>
     </div>
   </vo-lib-page-header>
@@ -37,7 +39,8 @@
       [resultList]="resultList"
       [showResetResultsInTestingPhase]="showResetResultsInTestingPhase"
       [showSetAllAuditedTentatively]="showSetAllAuditedTentatively"
-      (finishSubmission)="finishSubmission()">
+      (finishSubmission)="finishSubmission()"
+      [stateDescriptionsByState]="resultList.contest.cantonDefaults.countingCircleResultStateDescriptionsByState">
     </vo-ausm-contest-info>
 
     <ng-container *ngIf="newZhFeaturesEnabled">
@@ -73,7 +76,8 @@
           [contestLocked]="resultList?.contest.locked"
           [isResponsibleMonitorAuthority]="tenant?.id === result.politicalBusiness.domainOfInfluence.secureConnectId"
           [contestCountingCircleDetails]="resultList.details"
-          [result]="result"></vo-ausm-contest-political-business-detail>
+          [result]="result"
+          [contestCantonDefaults]="resultList.contest.cantonDefaults"></vo-ausm-contest-political-business-detail>
       </div>
     </div>
   </div>

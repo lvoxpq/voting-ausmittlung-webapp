@@ -1,0 +1,60 @@
+<div *ngIf="doubleProportionalResult">
+  <div class="sub-apportionment-header">
+    <vo-ausm-admonition *ngIf="doubleProportionalResult.subApportionmentState > 1"
+                        [title]="'DOUBLE_PROPORTIONAL_RESULT.SUB_APPORTIONMENT.STATES.' + doubleProportionalResult.subApportionmentState | translate"
+                        [type]="doubleProportionalResult.subApportionmentState === dpResultApportionmentState.DOUBLE_PROPORTIONAL_RESULT_APPORTIONMENT_STATE_COMPLETED ? 'info' : 'warning'"
+    ></vo-ausm-admonition>
+  </div>
+
+  <app-double-proportional-result-sub-apportionment-lot-decision *ngIf="doubleProportionalResult.hasSubApportionmentRequiredLotDecision"
+                                                                  [doubleProportionalResult]="doubleProportionalResult"
+                                                                  (update)="handleLotDecisionUpdate()"
+  ></app-double-proportional-result-sub-apportionment-lot-decision>
+
+  <div class="sub-apportionment-table" *ngIf="doubleProportionalResult" [style.gridTemplateRows]="gridTemplateRowsStyle">
+    <!-- 1. col: domain of influences -->
+    <span class="sub-apportionment-table-entry bold header">{{ 'DOUBLE_PROPORTIONAL_RESULT.SUB_APPORTIONMENT.DOMAIN_OF_INFLUENCES' | translate }}</span>
+    <span class="sub-apportionment-table-entry"><!-- empty --></span>
+    <span class="sub-apportionment-table-entry" *ngFor="let row of doubleProportionalResult.rows">
+      {{ row.proportionalElection.domainOfInfluence.name }}
+    </span>
+    <span class="sub-apportionment-table-entry">{{ 'DOUBLE_PROPORTIONAL_RESULT.SUB_APPORTIONMENT.UNION_LIST_DIVISOR' | translate }}</span>
+
+    <!-- 2. col: sub apportionment number of mandates -->
+    <span class="sub-apportionment-table-entry bold header"><!-- empty --></span>
+    <span class="sub-apportionment-table-entry">{{ doubleProportionalResult.subApportionmentNumberOfMandates }}</span>
+    <span class="sub-apportionment-table-entry" *ngFor="let row of doubleProportionalResult.rows">{{ row.subApportionmentNumberOfMandates }}</span>
+    <span class="sub-apportionment-table-entry"><!-- empty --></span>
+
+    <!-- 3. col: expected number of mandates -->
+    <span class="sub-apportionment-table-entry bold header">
+      <bc-button
+        variant="tertiary"
+        icon="exchange"
+        [label]="'DOUBLE_PROPORTIONAL_RESULT.SUB_APPORTIONMENT.TOGGLE_NUMBER_OF_MANDATES_AND_VOTE_COUNT' | translate"
+        (buttonClick)="displayVoteCount = !displayVoteCount"></bc-button>
+    </span>
+    <span class="sub-apportionment-table-entry"><strong>{{ 'DOUBLE_PROPORTIONAL_RESULT.SUB_APPORTIONMENT.EXPECTED_NUMBER_OF_MANDATES' | translate: doubleProportionalResult }}</strong></span>
+    <span class="sub-apportionment-table-entry" *ngFor="let row of doubleProportionalResult.rows">
+      {{ 'DOUBLE_PROPORTIONAL_RESULT.SUB_APPORTIONMENT.NUMBER_OF_MANDATES' | translate }}
+    </span>
+    <span class="sub-apportionment-table-entry"><!-- empty --></span>
+
+    <!-- other cols: union lists -->
+    <ng-container *ngFor="let extColumn of extColumns">
+      <span class="sub-apportionment-table-entry bold header">{{ extColumn.unionList.orderNumber }} - {{ extColumn.unionList.shortDescription }}</span>
+      <span class="sub-apportionment-table-entry">{{ extColumn.subApportionmentNumberOfMandates }}</span>
+      <span class="sub-apportionment-table-entry" *ngFor="let cell of extColumn.cellData">
+        {{ displayVoteCount ? cell?.voteCount : cell?.numberOfMandates }}
+      </span>
+      <span class="sub-apportionment-table-entry">{{ extColumn.divisor | number: '1.3-3' }}</span>
+    </ng-container>
+
+    <!-- last col: election divisors -->
+    <span class="sub-apportionment-table-entry bold header">{{ 'DOUBLE_PROPORTIONAL_RESULT.SUB_APPORTIONMENT.ELECTION_DIVISOR' | translate }}</span>
+    <span class="sub-apportionment-table-entry"><!-- empty --></span>
+    <span class="sub-apportionment-table-entry" *ngFor="let row of doubleProportionalResult.rows">
+      {{ row.divisor | number: '1.3-3' }}
+    </span>
+  </div>
+</div>

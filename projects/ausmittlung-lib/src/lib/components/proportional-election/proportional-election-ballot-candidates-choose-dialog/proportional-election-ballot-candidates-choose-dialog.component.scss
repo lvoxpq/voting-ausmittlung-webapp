@@ -1,13 +1,6 @@
 @use '@abraxas/voting-lib/style/spacing' as *;
 
 :host {
-  // use fixed values, otherwise the dialog jumps around during search since the width/height changes
-  // according to the results.
-  height: 60vh;
-  width: 60vw;
-  max-height: 40rem;
-  max-width: 45rem;
-
   ::ng-deep vo-lib-dialog {
     width: 100%;
 
@@ -26,6 +19,12 @@
 [content] {
   @extend .px-1;
 
+  // use fixed values, otherwise the dialog jumps around during search since the width/height changes
+  // according to the results.
+  height: 60vh;
+  width: 60vw;
+  max-height: 40rem;
+  max-width: 45rem;
   display: flex;
   flex-direction: column;
   overflow-y: hidden;

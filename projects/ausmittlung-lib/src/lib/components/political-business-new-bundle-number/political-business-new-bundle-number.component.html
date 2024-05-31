@@ -8,7 +8,8 @@
                [value]="bundleNumber"
                [error]="duplicatedBundleNumber || !bundleNumber"
                [hint]="duplicatedBundleNumber ? ('POLITICAL_BUSINESS.DUPLICATED_BUNDLE_NUMBER' | translate) : ''"
-               (valueChange)="updateBundleNumber(+$event)"></bc-number>
+               (valueChange)="updateBundleNumber(+$event)"
+               [subscriptSizing]="'dynamic'"></bc-number>
   </div>
   <vo-lib-button-bar footer
                      (cancel)="close()"

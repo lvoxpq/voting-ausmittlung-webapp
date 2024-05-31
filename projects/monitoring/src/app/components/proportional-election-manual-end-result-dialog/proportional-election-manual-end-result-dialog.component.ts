@@ -6,7 +6,6 @@
 
 import { EnumItemDescription, EnumUtil, SnackbarService } from '@abraxas/voting-lib';
 import { Component, Inject, ViewChild } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { TranslateService } from '@ngx-translate/core';
 import { ProportionalElectionListEndResult, ProportionalElectionResultService } from 'ausmittlung-lib';
@@ -14,6 +13,7 @@ import {
   ProportionalElectionCandidateEndResultState,
   ProportionalElectionManualCandidateEndResult,
 } from '../../../../../ausmittlung-lib/src/public-api';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-proportional-election-manual-end-result-dialog',

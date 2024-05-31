@@ -7,3 +7,15 @@ table td:not(.action-menu) {
 th.actions-header {
   width: 2rem;
 }
+
+.bc-paginator-container {
+  padding: 0 !important;
+}
+
+.cdk-overlay-container .bc-filter-panel {
+  min-width: fit-content !important;
+
+  .mat-mdc-option {
+    padding-right: 1rem !important;
+  }
+}

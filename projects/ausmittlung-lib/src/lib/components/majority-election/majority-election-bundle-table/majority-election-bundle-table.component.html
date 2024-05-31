@@ -1,109 +1,149 @@
-<bc-advanced-table [dataSource]="dataSource">
-  <ng-container bcColumnDef="number">
-    <th bc-header-cell *bcHeaderCellDef>{{ 'POLITICAL_BUSINESS.BUNDLE_NUMBER' | translate }}</th>
-    <td bc-cell *bcCellDef="let element">{{ element.number }}</td>
-  </ng-container>
+<div class="container">
+  <bc-button *ngIf="enableReviewMultiple && canReviewBundle"
+             class="button"
+             variant="primary"
+             [disabled]="!canReviewMultiple"
+             (buttonClick)="succeedBundleReview.emit(selection.selected)"
+             [label]="'ELECTION.BALLOT_DETAIL.SUCCEED_MULTIPLE' | translate"></bc-button>
+  <bc-table selection filter sort [sortActive]="[{ id: numberColumn, direction: 'asc' }]"
+            [filterDisabled]="!enableFiltering" [sortDisabled]="!enableSorting" [dataSource]="dataSource">
+    <ng-container [columnDef]="selectColumn">
+      <bc-header-cell *headerCellDef>
+        <bc-checkbox class="ml-2 mb-0" (checkedChange)="toggleAllRows($event)"
+                     [checked]="selection.hasValue() && isAllSelected" [indeterminate]="selection.hasValue() && !isAllSelected">
+        </bc-checkbox>
+      </bc-header-cell>
+      <bc-data-cell *dataCellDef="let element">
+        <bc-checkbox class="ml-2" (checkedChange)="toggleRow(element, $event)"
+                     [checked]="selection.isSelected(element)">
+        </bc-checkbox>
+      </bc-data-cell>
+    </ng-container>
 
-  <ng-container bcColumnDef="bundleSize">
-    <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.BUNDLE_SIZE' | translate }}</th>
-    <td bc-cell *bcCellDef="let element">{{ bundleSize | number }}</td>
-  </ng-container>
+    <ng-container [columnDef]="numberColumn">
+      <bc-header-cell [filter]="enableFiltering" filterType="number" [sort]="enableSorting" *headerCellDef>
+        {{ 'POLITICAL_BUSINESS.BUNDLE_NUMBER' | translate }}
+      </bc-header-cell>
+      <bc-data-cell *dataCellDef="let element">{{ element.number }}</bc-data-cell>
+    </ng-container>
 
-  <ng-container bcColumnDef="createdBy">
-    <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.BUNDLE_CREATED_BY' | translate }}</th>
-    <td bc-cell *bcCellDef="let element">{{ element.createdBy.fullName }}</td>
-  </ng-container>
+    <ng-container [columnDef]="bundleSizeColumn">
+      <bc-header-cell [filter]="enableFiltering" filterType="number" [sort]="enableSorting" *headerCellDef>
+        {{ 'ELECTION.BUNDLE_SIZE' | translate }}
+      </bc-header-cell>
+      <bc-data-cell *dataCellDef="let element">{{ bundleSize | number }}</bc-data-cell>
+    </ng-container>
 
-  <ng-container bcColumnDef="countOfBallots">
-    <th bc-header-cell *bcHeaderCellDef>{{ 'PROPORTIONAL_ELECTION.COUNT_OF_LISTS' | translate }}</th>
-    <td bc-cell *bcCellDef="let element">{{ element.countOfBallots }}</td>
-  </ng-container>
+    <ng-container [columnDef]="createdByColumn">
+      <bc-header-cell [filter]="enableFiltering" filterType="text" [sort]="enableSorting" *headerCellDef>
+        {{ 'ELECTION.BUNDLE_CREATED_BY' | translate }}
+      </bc-header-cell>
+      <bc-data-cell *dataCellDef="let element">{{ element.createdBy.fullName }}</bc-data-cell>
+    </ng-container>
 
-  <ng-container bcColumnDef="state">
-    <th bc-header-cell *bcHeaderCellDef>{{ 'APP.STATE' | translate }}</th>
-    <td bc-cell *bcCellDef="let element">
-      <vo-ausm-result-bundle-state-chip [state]="element.state" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-result-bundle-state-chip>
-    </td>
-  </ng-container>
+    <ng-container [columnDef]="countOfBallotsColumn">
+      <bc-header-cell [filter]="enableFiltering" filterType="number" [sort]="enableSorting" *headerCellDef>
+        {{ 'PROPORTIONAL_ELECTION.COUNT_OF_LISTS' | translate }}
+      </bc-header-cell>
+      <bc-data-cell *dataCellDef="let element">{{ element.countOfBallots }}</bc-data-cell>
+    </ng-container>
 
-  <ng-container bcColumnDef="reviewedBy">
-    <th bc-header-cell *bcHeaderCellDef>{{ 'ELECTION.BUNDLE_REVIEWED_BY' | translate }}</th>
-    <td bc-cell *bcCellDef="let element">{{ element.reviewedBy?.fullName }}</td>
-  </ng-container>
+    <ng-container [columnDef]="stateColumn">
+      <bc-header-cell [filter]="enableFiltering" filterType="list" [filterItems]="stateList"
+        filterDisplayExpr="description" filterValueExpr="value" [sort]="enableSorting" *headerCellDef>
+        {{ 'APP.STATE' | translate }}
+      </bc-header-cell>
+      <bc-data-cell *dataCellDef="let element">
+        <vo-ausm-result-bundle-state-chip [state]="element.state" [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-result-bundle-state-chip>
+      </bc-data-cell>
+    </ng-container>
 
-  <ng-container bcColumnDef="actions">
-    <th bc-header-cell class="actions-header" *bcHeaderCellDef></th>
-    <td bc-cell *bcCellDef="let bundle">
-      <vo-lib-action-menu *ngIf="!readOnly; else readOnlyActionMenu">
-        <vo-lib-action-menu-item
-          *ngIf="(bundle.state === bundleStates.BALLOT_BUNDLE_STATE_IN_PROCESS
+    <ng-container [columnDef]="reviewedByColumn">
+      <bc-header-cell [filter]="enableFiltering" filterType="text" [sort]="enableSorting" *headerCellDef>
+        {{ 'ELECTION.BUNDLE_REVIEWED_BY' | translate }}
+      </bc-header-cell>
+      <bc-data-cell *dataCellDef="let element">{{ element.reviewedBy?.fullName }}</bc-data-cell>
+    </ng-container>
+
+    <ng-container [columnDef]="actionsColumn">
+      <bc-header-cell *headerCellDef class="actions-header"></bc-header-cell>
+      <bc-data-cell *dataCellDef="let bundle">
+        <vo-lib-action-menu *ngIf="!readOnly; else readOnlyActionMenu">
+          <vo-lib-action-menu-item
+            *ngIf="(bundle.state === bundleStates.BALLOT_BUNDLE_STATE_IN_PROCESS
             || bundle.state === bundleStates.BALLOT_BUNDLE_STATE_IN_CORRECTION)
             && (canUpdateAll || (canUpdate && bundle.createdBy.secureConnectId === currentUser?.secureConnectId))"
-          icon="edit"
-          text="ACTIONS.EDIT"
-          (click)="selectBundle(bundle)">
-        </vo-lib-action-menu-item>
-        <vo-lib-action-menu-item
-          *ngIf="(!canUpdate || (bundle.state !== bundleStates.BALLOT_BUNDLE_STATE_IN_PROCESS
+            icon="edit"
+            text="ACTIONS.EDIT"
+            (click)="selectBundle(bundle)">
+          </vo-lib-action-menu-item>
+          <vo-lib-action-menu-item
+            *ngIf="(!canUpdate || (bundle.state !== bundleStates.BALLOT_BUNDLE_STATE_IN_PROCESS
             && bundle.state !== bundleStates.BALLOT_BUNDLE_STATE_IN_CORRECTION))
             && (canReadAll || (canRead && bundle.createdBy.secureConnectId === currentUser?.secureConnectId))"
-          icon="info"
-          text="ELECTION.SHOW_BALLOT"
-          (click)="selectBundle(bundle)">
-        </vo-lib-action-menu-item>
-        <vo-lib-action-menu-item
-          *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
+            icon="info"
+            text="ELECTION.SHOW_BALLOT"
+            (click)="selectBundle(bundle)">
+          </vo-lib-action-menu-item>
+          <vo-lib-action-menu-item
+            *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
             && canReviewBundle
             && bundle.createdBy.secureConnectId !== currentUser?.secureConnectId
             && reviewProcedure === reviewProcedures.MAJORITY_ELECTION_REVIEW_PROCEDURE_ELECTRONICALLY"
-          icon="search"
-          text="ELECTION.BALLOT_DETAIL.REVIEW"
-          (click)="reviewBundle.emit(bundle)">
-        </vo-lib-action-menu-item>
-        <vo-lib-action-menu-item
-          *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
+            icon="search"
+            text="ELECTION.BALLOT_DETAIL.REVIEW"
+            (click)="reviewBundle.emit(bundle)">
+          </vo-lib-action-menu-item>
+          <vo-lib-action-menu-item
+            *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
             && canReviewBundle
             && reviewProcedure === reviewProcedures.MAJORITY_ELECTION_REVIEW_PROCEDURE_PHYSICALLY"
-          icon="print"
-          [text]="bundle.createdBy.secureConnectId !== currentUser?.secureConnectId ? 'ELECTION.BALLOT_DETAIL.REVIEW' : 'ELECTION.BALLOT_DETAIL.GENERATE'"
-          (click)="reviewBundle.emit(bundle)">
-        </vo-lib-action-menu-item>
-        <ng-container
-          *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
+            icon="print"
+            [text]="bundle.createdBy.secureConnectId !== currentUser?.secureConnectId ? 'ELECTION.BALLOT_DETAIL.REVIEW' : 'ELECTION.BALLOT_DETAIL.GENERATE'"
+            (click)="reviewBundle.emit(bundle)">
+          </vo-lib-action-menu-item>
+          <ng-container
+            *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
             && canReviewBundle
             && bundle.createdBy.secureConnectId !== currentUser?.secureConnectId
             && reviewProcedure === reviewProcedures.MAJORITY_ELECTION_REVIEW_PROCEDURE_PHYSICALLY">
+            <vo-lib-action-menu-item
+              icon="checkmark"
+              text="ELECTION.BALLOT_DETAIL.SUCCEED_REVIEW"
+              (click)="succeedBundleReview.emit([bundle])">
+            </vo-lib-action-menu-item>
+            <vo-lib-action-menu-item
+              icon="cancel"
+              text="ELECTION.BALLOT_DETAIL.REJECT_REVIEW"
+              (click)="rejectBundleReview.emit(bundle)">
+            </vo-lib-action-menu-item>
+          </ng-container>
           <vo-lib-action-menu-item
-            icon="checkmark"
-            text="ELECTION.BALLOT_DETAIL.SUCCEED_REVIEW"
-            (click)="succeedBundleReview.emit(bundle)">
+            *ngIf="canDeleteBundle && bundle.state !== bundleStates.BALLOT_BUNDLE_STATE_DELETED"
+            icon="trash"
+            text="ACTIONS.DELETE"
+            (click)="deleteBundle.emit(bundle)">
           </vo-lib-action-menu-item>
-          <vo-lib-action-menu-item
-            icon="cancel"
-            text="ELECTION.BALLOT_DETAIL.REJECT_REVIEW"
-            (click)="rejectBundleReview.emit(bundle)">
-          </vo-lib-action-menu-item>
-        </ng-container>
-        <vo-lib-action-menu-item
-          *ngIf="canDeleteBundle && bundle.state !== bundleStates.BALLOT_BUNDLE_STATE_DELETED"
-          icon="trash"
-          text="ACTIONS.DELETE"
-          (click)="deleteBundle.emit(bundle)">
-        </vo-lib-action-menu-item>
-      </vo-lib-action-menu>
-      <ng-template #readOnlyActionMenu>
-        <vo-lib-action-menu>
-          <vo-lib-action-menu-item icon="info"
-                                   text="ELECTION.SHOW_BALLOT"
-                                   (click)="selectBundle(bundle)"></vo-lib-action-menu-item>
         </vo-lib-action-menu>
-      </ng-template>
-    </td>
-  </ng-container>
+        <ng-template #readOnlyActionMenu>
+          <vo-lib-action-menu>
+            <vo-lib-action-menu-item icon="info"
+                                     text="ELECTION.SHOW_BALLOT"
+                                     (click)="selectBundle(bundle)"></vo-lib-action-menu-item>
+          </vo-lib-action-menu>
+        </ng-template>
+      </bc-data-cell>
+    </ng-container>
 
-  <tr bc-header-row *bcHeaderRowDef="columns"></tr>
-  <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"
-      [selectable]="rowSelectable"
-      (rowSelected)="selectBundle(row)"></tr>
-</bc-advanced-table>
-<bc-table-paginator *ngIf="enablePagination" [pageSize]="10" [showFirstLastButtons]="true" [tooltips]="false"></bc-table-paginator>
+    <bc-header-row *headerRowDef="let row; columns: columns"></bc-header-row>
+    <bc-data-row *dataRowDef="let row; columns: columns; let i = index" selectionToggle [selectionToggleValue]="row"
+                 selectionRow [selectionRowValue]="row" (click)="selectBundle(row)"></bc-data-row>
+
+    <ng-template noDataRow>
+      <tr class="bc-row-data">
+        <td class="bc-cell" colspan="5" translate>POLITICAL_BUSINESS.NO_BUNDLES</td>
+      </tr>
+    </ng-template>
+  </bc-table>
+  <bc-paginator *ngIf="enablePagination" showFirstLastButtons [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></bc-paginator>
+</div>

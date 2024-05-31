@@ -6,10 +6,10 @@
 
 import { BallotBundleState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/ballot_bundle_pb';
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
-import { OnDestroy, OnInit, Directive } from '@angular/core';
+import { Directive, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import {
   MajorityElectionResult,
   PoliticalBusinessResultBallot,
@@ -20,14 +20,24 @@ import {
 import { PermissionService } from '../../services/permission.service';
 import { UserService } from '../../services/user.service';
 import { Permissions } from '../../models/permissions.model';
+import { HasUnsavedChanges } from '../../services/guards/has-unsaved-changes.guard';
 
 @Directive()
 export abstract class PoliticalBusinessBallotComponent<
   TResult extends ProportionalElectionResult | MajorityElectionResult | VoteResult,
   TBundle extends PoliticalBusinessResultBundle,
   TBallot extends PoliticalBusinessResultBallot,
-> implements OnInit, OnDestroy
+> implements OnInit, OnDestroy, HasUnsavedChanges
 {
+  @HostListener('window:beforeunload')
+  public beforeUnload(): boolean {
+    if (!this.newZhFeaturesEnabled) {
+      return true;
+    }
+
+    return !this.hasChanges;
+  }
+
   public static readonly newId: string = 'new';
 
   public loading: boolean = true;
@@ -76,6 +86,14 @@ export abstract class PoliticalBusinessBallotComponent<
   public ngOnDestroy(): void {
     this.routeParamsSubscription.unsubscribe();
     this.routeDataSubscription.unsubscribe();
+  }
+
+  public get hasUnsavedChanges(): boolean {
+    if (!this.newZhFeaturesEnabled) {
+      return false;
+    }
+
+    return this.hasChanges;
   }
 
   public async navigateToBallot(ballotNr: number): Promise<void> {
@@ -137,8 +155,8 @@ export abstract class PoliticalBusinessBallotComponent<
       this.bundle.countOfBallots++;
       this.currentMaxBallotNumber++;
       this.ballot = await this.createNewBallot();
-      this.hasChanges = true;
       await this.router.navigate(['..', this.ballot.number], { relativeTo: this.route });
+      this.hasChanges = true;
     } finally {
       this.loadingBallot = false;
       this.actionExecuting = false;

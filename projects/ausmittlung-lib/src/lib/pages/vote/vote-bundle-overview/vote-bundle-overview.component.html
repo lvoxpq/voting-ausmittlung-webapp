@@ -8,7 +8,7 @@
       </div>
 
       <h3 translate>VOTE.BUNDLE_TABLES.OPEN</h3>
-      <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: openBundles}"></ng-container>
+      <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: openBundles, enableReviewMultiple: result.politicalBusinessResult.entryParams?.reviewProcedure === reviewProcedures.VOTE_REVIEW_PROCEDURE_PHYSICALLY}"></ng-container>
 
       <h3 translate>VOTE.BUNDLE_TABLES.REVIEWED</h3>
       <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: reviewedBundles}"></ng-container>
@@ -16,11 +16,13 @@
       <h3 translate>VOTE.BUNDLE_TABLES.DELETED</h3>
       <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: deletedBundles}"></ng-container>
 
-      <ng-template #bundleTable let-bundles="bundles">
+      <ng-template #bundleTable let-bundles="bundles" let-enableReviewMultiple="enableReviewMultiple">
         <vo-ausm-vote-bundle-table [bundles]="bundles"
                                    [rowSelectable]="true"
                                    [enablePagination]="true"
                                    [enableActions]="true"
+                                   [enableSorting]="true"
+                                   [enableFiltering]="true"
                                    [readOnly]="resultReadOnly"
                                    (openDetail)="openBundle($event)"
                                    (reviewBundle)="reviewBundle($event)"
@@ -28,7 +30,8 @@
                                    (rejectBundleReview)="rejectBundleReview($event)"
                                    (deleteBundle)="deleteBundle($event)"
                                    [reviewProcedure]="result.politicalBusinessResult.entryParams?.reviewProcedure"
-                                   [newZhFeaturesEnabled]="newZhFeaturesEnabled">
+                                   [newZhFeaturesEnabled]="newZhFeaturesEnabled"
+                                   [enableReviewMultiple]="enableReviewMultiple">
         </vo-ausm-vote-bundle-table>
       </ng-template>
     </div>

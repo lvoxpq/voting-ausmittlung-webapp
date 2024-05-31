@@ -1,0 +1,21 @@
+.state-colorbox {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1rem;
+  min-width: 4rem;
+  padding: 0.25rem;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.bc-column-state {
+  width: 6rem;
+}
+
+.bc-column-counting-circle {
+  width: 33%;
+}

@@ -6,9 +6,9 @@
 
 import { ActiveDescendantKeyManager } from '@angular/cdk/a11y';
 import { AfterViewInit, ChangeDetectorRef, Component, HostListener, Inject, QueryList, ViewChildren } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProportionalElectionCandidate } from '../../../models';
 import { ProportionalElectionBallotCandidatesChooseEntryComponent } from './proportional-election-ballot-candidates-choose-entry/proportional-election-ballot-candidates-choose-entry.component';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface SearchableCandidate extends ProportionalElectionCandidate {
   queryable: string;
@@ -36,7 +36,7 @@ export class ProportionalElectionBallotCandidatesChooseDialogComponent implement
   ) {
     this.allCandidates = dialogData.candidates.map(c => ({
       ...c,
-      queryable: `${c.description} ${c.listDescription}`.toUpperCase(),
+      queryable: `${c.description} ${c.listDescription} ${c.listNumber + c.number}`.toUpperCase(),
     }));
     this.candidates = dialogData.candidates;
     this.candidateCheckDigit = dialogData.candidateCheckDigit;

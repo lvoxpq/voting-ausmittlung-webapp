@@ -7,7 +7,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import {
@@ -24,6 +23,7 @@ import {
   ValidationOverviewDialogResult,
 } from 'ausmittlung-lib';
 import { TranslateService } from '@ngx-translate/core';
+import { TableDataSource } from '@abraxas/base-components';
 
 @Component({
   selector: 'app-erfassung-finish-submission',
@@ -41,7 +41,7 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
   public loadingResults: boolean = true;
   public finishingResultSubmissions: boolean = false;
 
-  public resultsDataSource: MatTableDataSource<ResultListResult> = new MatTableDataSource<ResultListResult>();
+  public resultsDataSource: TableDataSource<ResultListResult> = new TableDataSource<ResultListResult>();
   public selectedResults = new SelectionModel<ResultListResult>(true, []);
   public readyForCorrectionResults: ResultListResult[] = [];
   public allResultsSelected: boolean = false;
@@ -173,9 +173,8 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
     const data: ValidationOverviewDialogData = {
       validationSummaries: validationSummaries.summaries,
       canEmitSave: validationSummaries.isValid,
-      header: `VALIDATION.COUNTING_CIRCLE_RESULTS.HEADER.FINISHING_OPERATION.${validationSummaries.isValid ? 'VALID' : 'INVALID'}`,
+      header: `VALIDATION.${validationSummaries.isValid ? 'VALID' : 'INVALID'}`,
       saveLabel: !validationSummaries.isValid ? 'APP.CONTINUE' : 'COMMON.SAVE',
-      validationResultsLabel: validationSummaries.isValid ? undefined : 'VALIDATION.COUNTING_CIRCLE_RESULTS.DESCRIPTION.INVALID',
     };
 
     const result = await this.dialogService.openForResult<ValidationOverviewDialogComponent, ValidationOverviewDialogResult>(

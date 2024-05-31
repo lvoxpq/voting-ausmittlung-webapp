@@ -4,9 +4,11 @@
  * For license information see LICENSE file.
  */
 
+import { SegmentedControl } from '@abraxas/base-components/lib/components/formfields/segmented-control-group/segmented-control.model';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  ContestCantonDefaults,
   CountingCircle,
   CountingCircleResultState,
   distinct,
@@ -14,13 +16,20 @@ import {
   flatten,
   groupBy,
   groupBySingle,
+  MajorityElectionResultService,
+  PoliticalBusinessUnion,
+  ProportionalElectionResultService,
   ResultOverview,
   ResultOverviewCountingCircleResult,
   ResultOverviewCountingCircleResults,
   ResultService,
   SimplePoliticalBusiness,
+  VoteResultService,
 } from 'ausmittlung-lib';
 import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { AuthorizationService, Tenant } from '@abraxas/base-components';
+import { PoliticalBusinessType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/political_business_pb';
 
 @Component({
   selector: 'app-monitoring-cockpit-grid',
@@ -28,52 +37,23 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./monitoring-cockpit-grid.component.scss'],
 })
 export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
+  private static emptyStateFilter: CountingCircleResultState[] = [];
+  public readonly states: typeof CountingCircleResultState = CountingCircleResultState;
+  public readonly domainOfInfluenceTypes: typeof DomainOfInfluenceType = DomainOfInfluenceType;
+
   @Input()
   public newZhFeaturesEnabled: boolean = false;
 
   @Input()
-  public set resultOverview(ro: ResultOverview) {
-    this.stateChangesSubscription?.unsubscribe();
+  public publishResultsEnabled: boolean = false;
 
-    this.contestId = ro.contest.id;
-    this.readOnly = ro.contest.locked;
-    this.politicalBusinesses = ro.politicalBusinesses;
-    this.countingCircleResults = ro.countingCircleResults.sort(this.countingCircleResultsComparer).map(x => ({
-      ...x,
-      minResultState: this.getMinResultState(x),
-      isCorrected: false,
-      filteredResults: x.results,
-      resultsByPoliticalBusinessId: groupBySingle(
-        x.results,
-        y => y.politicalBusinessId,
-        y => y,
-      ),
-    }));
-    this.resultsById = groupBySingle(
-      flatten(this.countingCircleResults.map(r => r.results.map(x => ({ result: x, countingCircleResults: r })))),
-      x => x.result.id,
-      x => x,
-    );
-
-    this.countingCircles = this.countingCircleResults.map(x => x.countingCircle!);
-
-    if (ro.contest.locked) {
-      this.onlyCorrected = true;
-    }
-
-    this.updateFilters();
-
-    if (this.countNotCorrected === 0) {
-      this.onlyCorrectedFilterSelected(true);
-    }
-
-    this.startChangesListener();
-  }
+  @Input()
+  public resultOverview?: ResultOverview;
 
   public domainOfInfluenceTypeFilter?: DomainOfInfluenceType;
   public politicalBusinessFilter?: SimplePoliticalBusiness;
+  public politicalBusinessUnionFilter?: PoliticalBusinessUnion;
   public countingCircleFilter?: CountingCircle;
-  public onlyCorrected: boolean = false;
   public showDetails: boolean = false;
   public plausibiliseLoading: boolean = false;
 
@@ -83,17 +63,26 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
   public filteredDomainOfInfluenceTypes: DomainOfInfluenceType[] = [];
   public filteredPoliticalBusinessesByDoiType: Record<number, SimplePoliticalBusiness[]> = [];
   public filteredPoliticalBusinesses: SimplePoliticalBusiness[] = [];
+  public filteredPoliticalBusinessUnions: PoliticalBusinessUnion[] = [];
   public filteredCountingCircleResults: FilteredCountingCircleResults[] = [];
 
   public countingCircles: CountingCircle[] = [];
   public countingCircleResults: FilteredCountingCircleResults[] = [];
 
-  public selectedTabIndex: number = 0;
-  public countCorrected: number = 0;
-  public countNotCorrected: number = 0;
+  public politicalBusinessUnionByPoliticalBusinessId: Record<string, PoliticalBusinessUnion> = {};
+  public filteredPoliticalBusinessUnionsByDoiType: Record<number, PoliticalBusinessUnion[]> = [];
+  public politicalBusinessUnions: PoliticalBusinessUnion[] = [];
+
+  public contestCantonDefaults?: ContestCantonDefaults;
+  public allStateFilters: SegmentedControl[] = [];
+  public stateFilter: CountingCircleResultState[] = MonitoringCockpitGridComponent.emptyStateFilter;
+
+  public clearingFilter: boolean = false;
+  public publishing: boolean = false;
 
   private politicalBusinesses: SimplePoliticalBusiness[] = [];
-  private readonly tabCheckedStates: CountingCircleResultState[] = [
+  public notOwnedPoliticalBusinessIds: string[] = [];
+  private readonly isCorrectedStates: CountingCircleResultState[] = [
     CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY,
     CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED,
   ];
@@ -104,13 +93,104 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
   > = {};
 
   private contestId: string = '';
+  private tenant?: Tenant;
 
   private stateChangesSubscription?: Subscription;
 
-  constructor(private readonly router: Router, private readonly route: ActivatedRoute, private readonly resultService: ResultService) {}
+  constructor(
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly resultService: ResultService,
+    private readonly i18n: TranslateService,
+    private readonly auth: AuthorizationService,
+    private readonly voteResultService: VoteResultService,
+    private readonly proportionalElectionResultService: ProportionalElectionResultService,
+    private readonly majorityElectionResultService: MajorityElectionResultService,
+  ) {}
 
-  public ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
+    this.tenant = await this.auth.getActiveTenant();
+
+    if (!this.resultOverview) {
+      return;
+    }
+
+    this.stateChangesSubscription?.unsubscribe();
+
+    this.contestId = this.resultOverview.contest.id;
+    this.contestCantonDefaults = this.resultOverview.contest.cantonDefaults;
+    this.readOnly = this.resultOverview.contest.locked;
+    this.politicalBusinesses = this.resultOverview.politicalBusinesses.filter(
+      x => x.domainOfInfluence?.secureConnectId === this.tenant?.id,
+    );
+    this.notOwnedPoliticalBusinessIds = this.resultOverview.politicalBusinesses
+      .filter(x => x.domainOfInfluence?.secureConnectId !== this.tenant?.id)
+      .map(x => x.id);
+    this.politicalBusinessUnions = this.resultOverview.politicalBusinessUnions.filter(x => x.politicalBusinesses.length !== 0);
+    this.politicalBusinessUnionByPoliticalBusinessId = groupBySingle(
+      flatten(this.politicalBusinessUnions.map(u => u.politicalBusinesses.map(p => ({ union: u, politicalBusiness: p })))),
+      x => x.politicalBusiness.id,
+      x => x.union,
+    );
+    this.countingCircleResults = this.resultOverview.countingCircleResults.sort(this.countingCircleResultsComparer).map(x => ({
+      ...x,
+      minResultState: this.getMinResultState(x),
+      isCorrected: false,
+      filteredResults: x.results,
+      resultsByPoliticalBusinessId: groupBySingle(
+        x.results,
+        y => y.politicalBusinessId,
+        y => y,
+      ),
+      resultsByPoliticalBusinessUnionId: groupBy(
+        x.results.filter(y => !!this.politicalBusinessUnionByPoliticalBusinessId[y.politicalBusinessId]),
+        y => this.politicalBusinessUnionByPoliticalBusinessId[y.politicalBusinessId].id,
+        y => y,
+      ),
+      resultsByCountingCircleId: groupBy(
+        x.results.filter(y => this.notOwnedPoliticalBusinessIds.includes(y.politicalBusinessId)),
+        y => y.countingCircleId,
+        y => y,
+      ),
+    }));
+
+    this.resultsById = groupBySingle(
+      flatten(this.countingCircleResults.map(r => r.results.map(x => ({ result: x, countingCircleResults: r })))),
+      x => x.result.id,
+      x => x,
+    );
+
+    this.countingCircles = this.countingCircleResults.map(x => x.countingCircle!);
+
+    this.updateFilters();
     this.startChangesListener();
+
+    this.allStateFilters = [
+      {
+        displayText: this.i18n.instant('MONITORING_COCKPIT.FILTER_STATE.ALL'),
+        value: MonitoringCockpitGridComponent.emptyStateFilter,
+        disabled: false,
+      },
+      this.createSegmentedControl(CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING, [
+        CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING,
+        CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION,
+      ]),
+      this.createSegmentedControl(CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE, [
+        CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE,
+        CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE,
+      ]),
+      this.createSegmentedControl(CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY, [
+        CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY,
+      ]),
+    ];
+
+    if (!this.contestCantonDefaults.statePlausibilisedDisabled) {
+      this.allStateFilters.push(
+        this.createSegmentedControl(CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED, [
+          CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED,
+        ]),
+      );
+    }
   }
 
   public ngOnDestroy(): void {
@@ -118,14 +198,15 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
   }
 
   public domainOfInfluenceTypeFilterClicked(value: DomainOfInfluenceType): void {
-    if (this.politicalBusinessFilter) {
-      this.politicalBusinessFilter = undefined;
+    if (this.politicalBusinessFilter || this.politicalBusinessUnionFilter) {
+      delete this.politicalBusinessFilter;
+      delete this.politicalBusinessUnionFilter;
       this.updateFilters();
       return;
     }
 
     if (this.domainOfInfluenceTypeFilter === value) {
-      this.domainOfInfluenceTypeFilter = undefined;
+      delete this.domainOfInfluenceTypeFilter;
       this.updateFilters();
       return;
     }
@@ -136,8 +217,9 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
 
   public politicalBusinessFilterClicked(politicalBusiness: any, type: DomainOfInfluenceType): void {
     if (politicalBusiness === this.politicalBusinessFilter) {
-      this.domainOfInfluenceTypeFilter = undefined;
-      this.politicalBusinessFilter = undefined;
+      delete this.domainOfInfluenceTypeFilter;
+      delete this.politicalBusinessFilter;
+      delete this.politicalBusinessUnionFilter;
       this.updateFilters();
       return;
     }
@@ -147,25 +229,43 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
     this.updateFilters();
   }
 
-  public onlyCorrectedFilterSelected(onlyCorrected: boolean): void {
-    this.onlyCorrected = onlyCorrected;
-    this.countingCircleFilter = undefined;
+  public politicalBusinessUnionFilterClicked(union: PoliticalBusinessUnion, type: DomainOfInfluenceType): void {
+    if (union === this.politicalBusinessUnionFilter) {
+      delete this.domainOfInfluenceTypeFilter;
+      delete this.politicalBusinessFilter;
+      delete this.politicalBusinessUnionFilter;
+      this.updateFilters();
+      return;
+    }
+
+    this.domainOfInfluenceTypeFilter = type;
+    this.politicalBusinessUnionFilter = union;
     this.updateFilters();
   }
 
   public countingCircleFilterSelected(cc: CountingCircle | undefined): void {
+    if (this.clearingFilter) {
+      this.clearingFilter = false;
+      return;
+    }
+
+    if (this.stateFilter.length > 0) {
+      this.clearingFilter = true;
+      this.stateFilter = MonitoringCockpitGridComponent.emptyStateFilter;
+    }
+
     this.countingCircleFilter = cc;
     this.updateFilters();
   }
 
   public updateFilters(): void {
     this.updateFilteredPoliticalBusinesses();
+    this.updateFilteredPoliticalBusinessUnions();
     this.updateCountingCircleFilter();
     this.removeUnneededPoliticalBusiness();
     this.updatePoliticalBusinessFilterGroups();
     this.updateGrid();
-    this.updateFilterTabs();
-    this.showDetails = !!this.domainOfInfluenceTypeFilter || !!this.politicalBusinessFilter;
+    this.showDetails = !!this.domainOfInfluenceTypeFilter || !!this.politicalBusinessFilter || !!this.politicalBusinessUnionFilter;
   }
 
   public async openDetail(countingCircle: CountingCircle, politicalBusiness?: SimplePoliticalBusiness): Promise<void> {
@@ -177,18 +277,81 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
     });
   }
 
-  public setAllInSubmissionOrCorrection(): void {
-    const statesToUpdate = [
-      CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE,
-      CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE,
-    ];
-    const resultsToUpdate = Object.values(this.resultsById).filter(({ result: { state } }) => statesToUpdate.includes(state));
-
-    for (const {
-      result: { id },
-    } of resultsToUpdate) {
-      this.updateState(id, CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION);
+  public stateFilterSelected(states: CountingCircleResultState[]): void {
+    if (this.clearingFilter) {
+      this.clearingFilter = false;
+      return;
     }
+
+    if (!!this.countingCircleFilter) {
+      this.clearingFilter = true;
+      delete this.countingCircleFilter;
+    }
+
+    this.stateFilter = states;
+    this.updateFilters();
+  }
+
+  public async updatePublished(
+    published: boolean,
+    businessType: PoliticalBusinessType,
+    results: ResultOverviewCountingCircleResult[],
+  ): Promise<void> {
+    try {
+      this.publishing = true;
+
+      if (published) {
+        await this.publish(
+          businessType,
+          results.map(x => x.id),
+        );
+      } else {
+        await this.unpublish(
+          businessType,
+          results.map(x => x.id),
+        );
+      }
+    } finally {
+      this.publishing = false;
+    }
+  }
+
+  private async publish(businessType: PoliticalBusinessType, resultIds: string[]): Promise<void> {
+    switch (businessType) {
+      case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_VOTE:
+        await this.voteResultService.publish(resultIds);
+        break;
+      case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_PROPORTIONAL_ELECTION:
+        await this.proportionalElectionResultService.publish(resultIds);
+        break;
+      case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_MAJORITY_ELECTION:
+        await this.majorityElectionResultService.publish(resultIds);
+        break;
+    }
+  }
+
+  private async unpublish(businessType: PoliticalBusinessType, resultIds: string[]): Promise<void> {
+    switch (businessType) {
+      case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_VOTE:
+        await this.voteResultService.unpublish(resultIds);
+        break;
+      case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_PROPORTIONAL_ELECTION:
+        await this.proportionalElectionResultService.unpublish(resultIds);
+        break;
+      case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_MAJORITY_ELECTION:
+        await this.majorityElectionResultService.unpublish(resultIds);
+        break;
+    }
+  }
+
+  private createSegmentedControl(descriptionState: CountingCircleResultState, filterValues: CountingCircleResultState[]): SegmentedControl {
+    return {
+      displayText:
+        this.contestCantonDefaults?.countingCircleResultStateDescriptionsByState[descriptionState] ??
+        this.i18n.instant('COUNTING_CIRCLE_RESULT_STATE.' + descriptionState),
+      value: filterValues,
+      disabled: false,
+    };
   }
 
   private startChangesListener(): void {
@@ -235,18 +398,23 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE:
         result.submissionDoneTimestamp = new Date();
         break;
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY:
+        result.auditedTentativelyTimestamp = new Date();
+        break;
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED:
+        result.plausibilisedTimestamp = new Date();
+        break;
     }
 
     this.updateFilters();
   }
 
-  private updateFilterTabs(): void {
-    this.selectedTabIndex = this.onlyCorrected ? 1 : 0;
-    this.countCorrected = this.countingCircleResults.filter(cc => cc.isCorrected).length;
-    this.countNotCorrected = this.countingCircleResults.length - this.countCorrected;
-  }
-
   private updateFilteredPoliticalBusinesses(): void {
+    if (this.politicalBusinessUnionFilter) {
+      this.filteredPoliticalBusinesses = [];
+      return;
+    }
+
     if (!this.domainOfInfluenceTypeFilter) {
       this.filteredPoliticalBusinesses = this.politicalBusinesses;
       return;
@@ -261,6 +429,26 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
     }
   }
 
+  private updateFilteredPoliticalBusinessUnions(): void {
+    if (this.politicalBusinessFilter) {
+      this.filteredPoliticalBusinessUnions = [];
+      return;
+    }
+
+    if (!this.domainOfInfluenceTypeFilter) {
+      this.filteredPoliticalBusinessUnions = this.politicalBusinessUnions;
+      return;
+    }
+
+    if (!this.politicalBusinessUnionFilter) {
+      this.filteredPoliticalBusinessUnions = this.politicalBusinessUnions.filter(
+        x => x.politicalBusinesses[0].domainOfInfluence!.type === this.domainOfInfluenceTypeFilter,
+      );
+    } else {
+      this.filteredPoliticalBusinessUnions = [this.politicalBusinessUnionFilter];
+    }
+  }
+
   private updateCountingCircleFilter(): void {
     this.filteredCountingCircleResults = this.countingCircleResults;
 
@@ -271,18 +459,16 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
     }
 
     for (const cc of this.filteredCountingCircleResults) {
-      cc.filteredResults = this.filteredPoliticalBusinesses.map(pb => cc.resultsByPoliticalBusinessId[pb.id]).filter(r => !!r);
-      cc.isCorrected = cc.filteredResults.every(y => this.tabCheckedStates.includes(y.state));
+      cc.filteredResults = this.filteredPoliticalBusinesses
+        .concat(flatten(this.filteredPoliticalBusinessUnions.map(x => x.politicalBusinesses)))
+        .map(pb => cc.resultsByPoliticalBusinessId[pb.id])
+        .filter(r => !!r);
+      cc.isCorrected = cc.filteredResults.every(y => this.isCorrectedStates.includes(y.state));
     }
 
-    this.filteredCountingCircleResults = this.filteredCountingCircleResults.filter(x => x.filteredResults.length > 0);
-
-    if (!!this.countingCircleFilter) {
-      this.onlyCorrected = this.filteredCountingCircleResults[0].isCorrected;
-      return;
-    }
-
-    this.filteredCountingCircleResults = this.filteredCountingCircleResults.filter(x => x.isCorrected === this.onlyCorrected);
+    this.filteredCountingCircleResults = this.filteredCountingCircleResults.filter(
+      x => x.filteredResults.length > 0 && (this.stateFilter.length === 0 || this.stateFilter.includes(x.minResultState)),
+    );
   }
 
   private removeUnneededPoliticalBusiness(): void {
@@ -290,7 +476,16 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
       flatten(this.filteredCountingCircleResults.map(cc => cc.filteredResults)).map(r => r.politicalBusinessId),
     );
 
-    this.filteredPoliticalBusinesses = this.filteredPoliticalBusinesses.filter(pb => filteredPoliticalBusinessIds.has(pb.id));
+    const politicalBusinessIdsInUnions = new Set(
+      flatten(this.filteredPoliticalBusinessUnions.map(u => u.politicalBusinesses)).map(x => x.id),
+    );
+
+    this.filteredPoliticalBusinesses = this.filteredPoliticalBusinesses.filter(
+      pb => filteredPoliticalBusinessIds.has(pb.id) && !politicalBusinessIdsInUnions.has(pb.id),
+    );
+    this.filteredPoliticalBusinessUnions = this.filteredPoliticalBusinessUnions.filter(u =>
+      u.politicalBusinesses.some(pb => filteredPoliticalBusinessIds.has(pb.id)),
+    );
   }
 
   private updatePoliticalBusinessFilterGroups(): void {
@@ -300,15 +495,31 @@ export class MonitoringCockpitGridComponent implements OnInit, OnDestroy {
       pb => pb,
     );
     this.filteredDomainOfInfluenceTypes = distinct(
-      this.filteredPoliticalBusinesses.map(x => x.domainOfInfluence!.type as DomainOfInfluenceType),
+      this.filteredPoliticalBusinesses
+        .map(x => x.domainOfInfluence!.type as DomainOfInfluenceType)
+        .concat(this.filteredPoliticalBusinessUnions.map(x => x.politicalBusinesses[0].domainOfInfluence!.type as DomainOfInfluenceType)),
       x => x,
     ).sort();
+
+    this.filteredPoliticalBusinessUnionsByDoiType = groupBy(
+      this.filteredPoliticalBusinessUnions,
+      u => u.politicalBusinesses[0].domainOfInfluence?.type as number,
+      u => u,
+    );
   }
 
   private updateGrid(): void {
-    const polBusinessColCount = Math.max(this.filteredPoliticalBusinesses.length, 1);
+    const showNotOwnedPoliticalBusinessColumn =
+      this.notOwnedPoliticalBusinessIds.length > 0 &&
+      !this.politicalBusinessFilter &&
+      !this.politicalBusinessUnionFilter &&
+      !this.domainOfInfluenceTypeFilter;
+    const polBusinessColCount = Math.max(
+      this.filteredPoliticalBusinesses.length + this.filteredPoliticalBusinessUnions.length + (showNotOwnedPoliticalBusinessColumn ? 1 : 0),
+      1,
+    );
     // first two columns are the color box and the name of the counting circle
-    this.gridTemplateColumns = `2rem min-content repeat(${polBusinessColCount}, minmax(0, ${polBusinessColCount === 1 ? '25rem' : '1fr'}))`;
+    this.gridTemplateColumns = `2rem min-content repeat(${polBusinessColCount}, minmax(0, 1fr))`;
   }
 
   private getMinResultState(ccResults: ResultOverviewCountingCircleResults): CountingCircleResultState {
@@ -360,4 +571,6 @@ export interface FilteredCountingCircleResults extends ResultOverviewCountingCir
   isCorrected: boolean;
   filteredResults: ResultOverviewCountingCircleResult[];
   resultsByPoliticalBusinessId: Record<string, ResultOverviewCountingCircleResult>;
+  resultsByPoliticalBusinessUnionId: Record<string, ResultOverviewCountingCircleResult[]>;
+  resultsByCountingCircleId: Record<string, ResultOverviewCountingCircleResult[]>;
 }

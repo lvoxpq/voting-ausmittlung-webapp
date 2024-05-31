@@ -1,29 +1,5 @@
 @use '@abraxas/voting-lib/style/color' as *;
 
-$states: (
-  // initial
-  1: #f2f2f2,
-  // in Erfassung
-  2: #fbe5c4,
-  // zur Korrektur
-  3: #fec6c3,
-  // Erfassung beendet
-  4: #c4e6c3,
-  // Korrektur beendet
-  5: #c4e6c3,
-  // Vorläufig geprüft
-  6: #98d3f1,
-  // Alles plausibilisiert
-  7: #95d2a4
-);
-
-@each $name, $color in $states {
-  .result-state-#{$name} {
-    background-color: $color;
-    color: $color-grey-1;
-  }
-}
-
 // TODO: can be removed if new UI is standard
 
 $old-states: (
@@ -31,11 +7,11 @@ $old-states: (
   1: #e0e0e0,
   // in Erfassung
   2: #fcc900,
-  // zur Korrektur
+  // zur Kontrolle
   3: #c60000,
-  // Erfassung beendet
+  // übermittelt
   4: #1c9048,
-  // Korrektur beendet
+  // Kontrolle beendet
   5: #4cc1ae,
   // Vorläufig geprüft
   6: #1c69ce,

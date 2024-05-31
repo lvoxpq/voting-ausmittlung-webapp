@@ -9,7 +9,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SecondFactorTransactionService, SwissAbroadVotingRight, VoteEndResult, VoteResultService } from 'ausmittlung-lib';
-import { Subscription } from 'rxjs';
+import { combineLatest, debounceTime, map, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-vote-end-result',
@@ -21,6 +21,7 @@ export class VoteEndResultComponent implements OnDestroy {
   public finalizing: boolean = false;
   public endResult?: VoteEndResult;
   public swissAbroadVotingRights: typeof SwissAbroadVotingRight = SwissAbroadVotingRight;
+  public isPartialResult = false;
 
   private readonly routeSubscription: Subscription;
 
@@ -32,7 +33,15 @@ export class VoteEndResultComponent implements OnDestroy {
     private readonly dialog: DialogService,
     private readonly secondFactorTransactionService: SecondFactorTransactionService,
   ) {
-    this.routeSubscription = this.route.params.subscribe(({ politicalBusinessId }) => this.loadData(politicalBusinessId));
+    this.routeSubscription = combineLatest([this.route.params, this.route.queryParams])
+      .pipe(
+        debounceTime(10), // could fire twice if both params change at the same time
+        map(results => ({ politicalBusinessId: results[0].politicalBusinessId, isPartialResult: results[1].partialResult })),
+      )
+      .subscribe(({ politicalBusinessId, isPartialResult }) => {
+        this.isPartialResult = isPartialResult;
+        this.loadData(politicalBusinessId);
+      });
   }
 
   public async ngOnDestroy(): Promise<void> {
@@ -83,7 +92,9 @@ export class VoteEndResultComponent implements OnDestroy {
   private async loadData(voteId: string): Promise<void> {
     this.loading = true;
     try {
-      this.endResult = await this.resultService.getEndResult(voteId);
+      this.endResult = this.isPartialResult
+        ? await this.resultService.getPartialEndResult(voteId)
+        : await this.resultService.getEndResult(voteId);
     } finally {
       this.loading = false;
     }

@@ -24,15 +24,18 @@ import {
   GetMajorityElectionBallotGroupResultsRequest,
   GetMajorityElectionEndResultAvailableLotDecisionsRequest,
   GetMajorityElectionEndResultRequest,
+  GetMajorityElectionPartialEndResultRequest,
   GetMajorityElectionResultRequest,
   MajorityElectionResultAuditedTentativelyRequest,
   MajorityElectionResultCorrectionFinishedRequest,
   MajorityElectionResultFlagForCorrectionRequest,
   MajorityElectionResultPrepareCorrectionFinishedRequest,
   MajorityElectionResultPrepareSubmissionFinishedRequest,
+  MajorityElectionResultPublishRequest,
   MajorityElectionResultResetToSubmissionFinishedRequest,
   MajorityElectionResultsPlausibiliseRequest,
   MajorityElectionResultsResetToAuditedTentativelyRequest,
+  MajorityElectionResultSubmissionFinishedAndAuditedTentativelyRequest,
   MajorityElectionResultSubmissionFinishedRequest,
   RevertMajorityElectionEndResultFinalizationRequest,
   UpdateMajorityElectionEndResultLotDecisionRequest,
@@ -286,6 +289,34 @@ export class MajorityElectionResultService extends PoliticalBusinessResultBaseSe
     const req = new MajorityElectionResultsResetToAuditedTentativelyRequest();
     req.setElectionResultIdsList(majorityElectionResultIds);
     await this.requestEmptyResp(c => c.resetToAuditedTentatively, req);
+  }
+
+  public submissionFinishedAndAuditedTentatively(majorityElectionResultId: string): Promise<void> {
+    const req = new MajorityElectionResultSubmissionFinishedAndAuditedTentativelyRequest();
+    req.setElectionResultId(majorityElectionResultId);
+    return this.requestEmptyResp(c => c.submissionFinishedAndAuditedTentatively, req);
+  }
+
+  public publish(majorityElectionResultIds: string[]): Promise<void> {
+    const req = new MajorityElectionResultPublishRequest();
+    req.setElectionResultIdsList(majorityElectionResultIds);
+    return this.requestEmptyResp(c => c.publish, req);
+  }
+
+  public unpublish(majorityElectionResultIds: string[]): Promise<void> {
+    const req = new MajorityElectionResultPublishRequest();
+    req.setElectionResultIdsList(majorityElectionResultIds);
+    return this.requestEmptyResp(c => c.unpublish, req);
+  }
+
+  public getPartialEndResult(majorityElectionId: string): Promise<MajorityElectionEndResult> {
+    const req = new GetMajorityElectionPartialEndResultRequest();
+    req.setMajorityElectionId(majorityElectionId);
+    return this.request(
+      c => c.getPartialEndResult,
+      req,
+      r => this.mapToMajorityElectionEndResult(r),
+    );
   }
 
   public getEndResult(majorityElectionId: string): Promise<MajorityElectionEndResult> {

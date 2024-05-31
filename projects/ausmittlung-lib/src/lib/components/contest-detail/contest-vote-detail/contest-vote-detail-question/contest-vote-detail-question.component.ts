@@ -4,7 +4,7 @@
  * For license information see LICENSE file.
  */
 
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BallotQuestionResult, TieBreakQuestionResult } from '../../../../models';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -30,6 +30,9 @@ export class ContestVoteDetailQuestionComponent implements OnDestroy {
   @Input()
   public readonly: boolean = true;
 
+  @Output()
+  public countOfAnswersChanged: EventEmitter<void> = new EventEmitter<void>();
+
   public newZhFeaturesEnabled: boolean = false;
 
   private readonly routeSubscription: Subscription;
@@ -52,5 +55,7 @@ export class ContestVoteDetailQuestionComponent implements OnDestroy {
     this.result.totalCountOfAnswer2 = +(conventionalSubTotal.totalCountOfAnswer2 ?? 0) + +eVotingSubTotal.totalCountOfAnswer2;
     this.result.totalCountOfAnswerUnspecified =
       +(conventionalSubTotal.totalCountOfAnswerUnspecified ?? 0) + +eVotingSubTotal.totalCountOfAnswerUnspecified;
+
+    this.countOfAnswersChanged.emit();
   }
 }

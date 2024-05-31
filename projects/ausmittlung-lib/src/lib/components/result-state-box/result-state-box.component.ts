@@ -22,4 +22,7 @@ export class ResultStateBoxComponent {
 
   @Input()
   public newZhFeaturesEnabled: boolean = false;
+
+  @Input()
+  public stateDescriptionsByState: Record<number, string> = {};
 }

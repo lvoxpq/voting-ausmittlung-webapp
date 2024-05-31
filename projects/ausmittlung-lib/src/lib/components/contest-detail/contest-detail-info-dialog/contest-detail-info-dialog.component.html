@@ -5,11 +5,13 @@
     <vo-ausm-contest-detail-count-of-voters [readonly]="readonly"
                                             [eVoting]="eVoting"
                                             [swissAbroadHaveVotingRightsOnAnyBusiness]="swissAbroadHaveVotingRightsOnAnyBusiness"
-                                            [countOfVoters]="countOfVoters"></vo-ausm-contest-detail-count-of-voters>
+                                            [countOfVoters]="countOfVoters"
+                                            (countOfVotersChange)="contentChanged()"></vo-ausm-contest-detail-count-of-voters>
 
     <vo-ausm-contest-detail-voting-cards *ngIf="domainOfInfluenceTypes"
                                          [readonly]="readonly"
                                          [(votingCards)]="votingCards"
+                                         (votingCardsChange)="contentChanged()"
                                          [enabledVotingCardChannels]="enabledVotingCardChannels"
                                          [domainOfInfluenceTypes]="domainOfInfluenceTypes"
                                          [electorates]="electorateSummary?.effectiveElectoratesList"
@@ -24,7 +26,9 @@
                    displayExpr="description"
                    valueExpr="value"
                    [(value)]="countingMachine"
-                   [clearable]="false"></bc-dropdown>
+                   (valueChange)="contentChanged()"
+                   [clearable]="false"
+                   [subscriptSizing]="'dynamic'"></bc-dropdown>
     </ng-container>
   </div>
 
@@ -34,6 +38,6 @@
                        (save)="save()"
                        [sticky]="false"
                        [cancelLabel]="(readonly ? 'APP.CLOSE' : 'COMMON.CANCEL') | translate"
-                       (cancel)="done()"></vo-lib-button-bar>
+                       (cancel)="closeWithUnsavedChangesCheck()"></vo-lib-button-bar>
   </div>
 </vo-lib-dialog>

@@ -12,7 +12,13 @@ import {
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/proportional_election_requests_pb';
 import { GrpcBackendService, GrpcEnvironment, GrpcService } from '@abraxas/voting-lib';
 import { Inject, Injectable } from '@angular/core';
-import { ProportionalElection, ProportionalElectionCandidate, ProportionalElectionList, ProportionalElectionProto } from '../models';
+import {
+  ProportionalElection,
+  ProportionalElectionCandidate,
+  ProportionalElectionList,
+  ProportionalElectionMandateAlgorithm,
+  ProportionalElectionProto,
+} from '../models';
 import { ContestService } from './contest.service';
 import { GRPC_ENV_INJECTION_TOKEN } from './tokens';
 
@@ -32,6 +38,22 @@ export class ProportionalElectionService extends GrpcService<ProportionalElectio
       ...proto.toObject(),
       contest: !contest ? undefined : ContestService.mapToContest(contest),
     };
+  }
+
+  public static isUnionDoubleProportional(mandateAlgorithm: ProportionalElectionMandateAlgorithm) {
+    return (
+      mandateAlgorithm ===
+        ProportionalElectionMandateAlgorithm.PROPORTIONAL_ELECTION_MANDATE_ALGORITHM_DOUBLE_PROPORTIONAL_N_DOIS_5_DOI_OR_3_TOT_QUORUM ||
+      mandateAlgorithm ===
+        ProportionalElectionMandateAlgorithm.PROPORTIONAL_ELECTION_MANDATE_ALGORITHM_DOUBLE_PROPORTIONAL_N_DOIS_5_DOI_QUORUM
+    );
+  }
+
+  public static isNonUnionDoubleProportional(mandateAlgorithm: ProportionalElectionMandateAlgorithm) {
+    return (
+      mandateAlgorithm ===
+      ProportionalElectionMandateAlgorithm.PROPORTIONAL_ELECTION_MANDATE_ALGORITHM_DOUBLE_PROPORTIONAL_1_DOI_0_DOI_QUORUM
+    );
   }
 
   public async getLists(electionId: string): Promise<ProportionalElectionList[]> {

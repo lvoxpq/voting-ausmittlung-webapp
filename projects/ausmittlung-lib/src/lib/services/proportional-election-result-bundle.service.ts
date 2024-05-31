@@ -171,9 +171,9 @@ export class ProportionalElectionResultBundleService extends GrpcService<Proport
     await this.requestEmptyResp(c => c.bundleCorrectionFinished, req);
   }
 
-  public async succeedBundleReview(bundleId: string): Promise<void> {
+  public async succeedBundleReview(bundleIds: string[]): Promise<void> {
     const req = new SucceedProportionalElectionBundleReviewRequest();
-    req.setBundleId(bundleId);
+    req.setBundleIdsList(bundleIds);
     await this.requestEmptyResp(c => c.succeedBundleReview, req);
   }
 

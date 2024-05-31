@@ -5,10 +5,10 @@
  */
 
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
 import { CountingCircle, ResultList } from '../../../../models';
 import { ContestCountingCircleContactPersonService } from '../../../../services/contest-counting-circle-contact-person.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 // TODO: can be removed if new UI is standard
 @Component({

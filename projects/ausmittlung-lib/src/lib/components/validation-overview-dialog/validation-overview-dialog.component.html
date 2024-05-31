@@ -2,19 +2,14 @@
   <h3 header>{{ header | translate }}</h3>
 
   <div content>
-    <div class="my-2">
-      <p *ngIf="!!validationResultsLabel" class="mb-2">
-        {{ validationResultsLabel | translate }}
-      </p>
-
-      <vo-ausm-validation-summary *ngFor="let summary of validationSummaries" [summary]="summary"></vo-ausm-validation-summary>
-    </div>
+    <vo-ausm-validation-summary *ngFor="let summary of validationSummaries" [summary]="summary"></vo-ausm-validation-summary>
   </div>
 
   <div footer>
     <vo-lib-button-bar [sticky]="false"
                        [cancelLabel]="'APP.CLOSE' | translate"
                        [saveLabel]="saveLabel | translate"
+                       [saveIcon]="saveIcon"
                        (save)="save()"
                        (cancel)="close()"></vo-lib-button-bar>
   </div>

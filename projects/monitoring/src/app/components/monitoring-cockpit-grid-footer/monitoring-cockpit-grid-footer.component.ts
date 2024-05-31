@@ -9,9 +9,12 @@ import { SnackbarService } from '@abraxas/voting-lib';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
+  ContestCantonDefaults,
   CountingCircleResultState,
   DomainOfInfluenceType,
+  flatten,
   MajorityElectionResultService,
+  PoliticalBusinessUnion,
   ProportionalElectionResultService,
   SimplePoliticalBusiness,
   VoteResultService,
@@ -36,11 +39,20 @@ export class MonitoringCockpitGridFooterComponent {
   @Input()
   public filteredPoliticalBusinessesByDoiType: Record<number, SimplePoliticalBusiness[]> = [];
 
-  @Output()
-  public loadingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Input()
+  public filteredPoliticalBusinessUnionsByDoiType: Record<number, PoliticalBusinessUnion[]> = [];
+
+  @Input()
+  public politicalBusinessUnionByPoliticalBusinessId: Record<string, PoliticalBusinessUnion> = {};
 
   @Input()
   public readOnly: boolean = true;
+
+  @Input()
+  public contestCantonDefaults?: ContestCantonDefaults;
+
+  @Output()
+  public loadingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   private loadingValue: boolean = false;
 
@@ -61,27 +73,32 @@ export class MonitoringCockpitGridFooterComponent {
     this.loadingChange.emit(v);
   }
 
-  public async updateAllStates(politicalBusiness: SimplePoliticalBusiness, newState: CountingCircleResultState): Promise<void> {
+  public async updateAllStates(politicalBusinesses: SimplePoliticalBusiness[], newState: CountingCircleResultState): Promise<void> {
     this.loading = true;
 
-    const resultsToUpdate = this.filteredCountingCircleResults
-      .map(ccResult => ccResult.resultsByPoliticalBusinessId[politicalBusiness.id])
-      .filter(result => !!result && result.state !== newState);
-
-    if (resultsToUpdate.length === 0) {
-      this.loading = false;
-      return;
-    }
-
-    const resultIdsToUpdate = resultsToUpdate.map(result => result.id);
-
     try {
+      const resultsToUpdate = flatten(
+        politicalBusinesses.map(politicalBusiness =>
+          this.filteredCountingCircleResults
+            .map(ccResult => ccResult.resultsByPoliticalBusinessId[politicalBusiness.id])
+            .filter(result => !!result && result.state !== newState),
+        ),
+      );
+
+      if (resultsToUpdate.length === 0) {
+        this.loading = false;
+        return;
+      }
+
+      const politicalBusinessType = politicalBusinesses[0].businessType;
+      const resultIdsToUpdate = resultsToUpdate.map(result => result.id);
+
       switch (newState) {
         case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED:
-          await this.plausibilise(politicalBusiness, resultIdsToUpdate);
+          await this.plausibilise(politicalBusinessType, resultIdsToUpdate);
           break;
         case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY:
-          await this.resetToAuditedTentatively(politicalBusiness, resultIdsToUpdate);
+          await this.resetToAuditedTentatively(politicalBusinessType, resultIdsToUpdate);
           break;
       }
 
@@ -90,13 +107,14 @@ export class MonitoringCockpitGridFooterComponent {
       }
 
       this.refreshMinResultState(this.filteredCountingCircleResults);
+
       this.toast.success(this.i18n.instant('APP.SAVED'));
     } finally {
       this.loading = false;
     }
   }
 
-  private async plausibilise({ businessType }: SimplePoliticalBusiness, resultIdsToUpdate: string[]): Promise<void> {
+  private async plausibilise(businessType: PoliticalBusinessType, resultIdsToUpdate: string[]): Promise<void> {
     switch (businessType) {
       case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_VOTE:
         await this.voteResultService.plausibilise(resultIdsToUpdate);
@@ -110,7 +128,7 @@ export class MonitoringCockpitGridFooterComponent {
     }
   }
 
-  private async resetToAuditedTentatively({ businessType }: SimplePoliticalBusiness, resultIdsToUpdate: string[]): Promise<void> {
+  private async resetToAuditedTentatively(businessType: PoliticalBusinessType, resultIdsToUpdate: string[]): Promise<void> {
     switch (businessType) {
       case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_VOTE:
         await this.voteResultService.resetToAuditedTentatively(resultIdsToUpdate);

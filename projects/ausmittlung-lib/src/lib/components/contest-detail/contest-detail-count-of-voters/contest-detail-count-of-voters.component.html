@@ -10,6 +10,7 @@
     [(value)]="getDetail(voterTypes.VOTER_TYPE_SWISS, sexTypes.SEX_TYPE_MALE).countOfVoters"
     (valueChange)="updateTotal()"
     [label]="'CONTEST.DETAIL.MEN' | translate"
+    [subscriptSizing]="'dynamic'"
   ></bc-number>
 
   <bc-number
@@ -19,12 +20,14 @@
     [(value)]="getDetail(voterTypes.VOTER_TYPE_SWISS, sexTypes.SEX_TYPE_FEMALE).countOfVoters"
     (valueChange)="updateTotal()"
     [label]="'CONTEST.DETAIL.WOMEN' | translate"
+    [subscriptSizing]="'dynamic'"
   ></bc-number>
 
   <bc-number [disabled]="true"
              [required]="true"
              [value]="totalSwiss"
-             [label]="'CONTEST.DETAIL.TOTAL' | translate">
+             [label]="'CONTEST.DETAIL.TOTAL' | translate"
+             [subscriptSizing]="'dynamic'">
   </bc-number>
 </div>
 
@@ -38,6 +41,7 @@
       [(value)]="getDetail(voterTypes.VOTER_TYPE_SWISS_ABROAD, sexTypes.SEX_TYPE_MALE).countOfVoters"
       (valueChange)="updateTotal()"
       [label]="'CONTEST.DETAIL.MEN' | translate"
+      [subscriptSizing]="'dynamic'"
     ></bc-number>
 
     <bc-number
@@ -47,13 +51,15 @@
       [(value)]="getDetail(voterTypes.VOTER_TYPE_SWISS_ABROAD, sexTypes.SEX_TYPE_FEMALE).countOfVoters"
       (valueChange)="updateTotal()"
       [label]="'CONTEST.DETAIL.WOMEN' | translate"
+      [subscriptSizing]="'dynamic'"
     ></bc-number>
 
     <bc-number
       [disabled]="true"
       [required]="true"
       [value]="totalSwissAbroad"
-      [label]="'CONTEST.DETAIL.TOTAL' | translate">
+      [label]="'CONTEST.DETAIL.TOTAL' | translate"
+      [subscriptSizing]="'dynamic'">
     </bc-number>
   </div>
 </div>

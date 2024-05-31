@@ -19,7 +19,8 @@
                  displayExpr="description"
                  valueExpr="value"
                  [(value)]="resultListValue.details.countingMachine"
-                 [clearable]="false"></bc-dropdown>
+                 [clearable]="false"
+                 [subscriptSizing]="'dynamic'"></bc-dropdown>
   </ng-container>
 
   <vo-lib-inline-spinner *ngIf="!readonly && canEditCountingCircleDetails" [loading]="saving">

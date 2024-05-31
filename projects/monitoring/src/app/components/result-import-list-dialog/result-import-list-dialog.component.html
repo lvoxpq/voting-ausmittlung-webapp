@@ -2,61 +2,69 @@
   <div header>
     <h3 translate>RESULT_IMPORT.LIST_TITLE</h3>
     <div *ngIf="contestEVotingResultsImported">
-      <bc-button [label]="'RESULT_IMPORT.DELETE' | translate" color="error" (buttonClick)="deleteResults()"></bc-button>
+      <bc-button [label]="'RESULT_IMPORT.DELETE' | translate" color="warn" (buttonClick)="deleteResults()"></bc-button>
     </div>
   </div>
 
   <div content>
-    <bc-advanced-table [dataSource]="resultImports">
-      <ng-container bcColumnDef="fileName">
-        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.FILENAME' | translate }}</th>
-        <td bc-cell *bcCellDef="let element">{{ element.deleted ? ('RESULT_IMPORT.DELETED_FILE_NAME' | translate) : element.fileName }}</td>
+    <bc-table [dataSource]="resultImports">
+      <ng-container columnDef="fileName">
+        <bc-header-cell *headerCellDef>{{ 'RESULT_IMPORT.FILENAME' | translate }}</bc-header-cell>
+        <bc-data-cell *dataCellDef="let element">{{ element.deleted ? ('RESULT_IMPORT.DELETED_FILE_NAME' | translate) :
+          element.fileName }}</bc-data-cell>
       </ng-container>
-      <ng-container bcColumnDef="importType">
-        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.E_CH_STANDARD' | translate }}</th>
-        <td bc-cell *bcCellDef="let element">{{ element.deleted ? '' : ('RESULT_IMPORT.E_CH_TYPES.eCH-0222' | translate) }}</td>
+
+      <ng-container columnDef="importType">
+        <bc-header-cell *headerCellDef>{{ 'RESULT_IMPORT.E_CH_STANDARD' | translate }}</bc-header-cell>
+        <bc-data-cell *dataCellDef="let element">{{ element.deleted ? '' : ('RESULT_IMPORT.E_CH_TYPES.eCH-0222' |
+          translate) }}</bc-data-cell>
       </ng-container>
-      <ng-container bcColumnDef="startedBy">
-        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.STARTED_BY' | translate }}</th>
-        <td bc-cell *bcCellDef="let element">{{ element.startedBy.fullName }}</td>
+
+      <ng-container columnDef="startedBy">
+        <bc-header-cell *headerCellDef>{{ 'RESULT_IMPORT.STARTED_BY' | translate }}</bc-header-cell>
+        <bc-data-cell *dataCellDef="let element">{{ element.startedBy.fullName }}</bc-data-cell>
       </ng-container>
-      <ng-container bcColumnDef="started">
-        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.STARTED' | translate }}</th>
-        <td bc-cell *bcCellDef="let element">{{ element.started | date: 'dd.MM.yyyy - HH:mm' }}</td>
+
+      <ng-container columnDef="started">
+        <bc-header-cell *headerCellDef>{{ 'RESULT_IMPORT.STARTED' | translate }}</bc-header-cell>
+        <bc-data-cell *dataCellDef="let element">{{ element.started | date: 'dd.MM.yyyy - HH:mm' }}</bc-data-cell>
       </ng-container>
-      <ng-container bcColumnDef="importedCountingCircles">
-        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.IMPORTED_COUNTING_CIRCLES' | translate }}</th>
-        <td bc-cell *bcCellDef="let element">
+
+      <ng-container columnDef="importedCountingCircles">
+        <bc-header-cell *headerCellDef>{{ 'RESULT_IMPORT.IMPORTED_COUNTING_CIRCLES' | translate }}</bc-header-cell>
+        <bc-data-cell *dataCellDef="let element">
           <ul class="imported-counting-circle-list">
             <li *ngFor="let importedCountingCircle of element.importedCountingCirclesList">
               <span>{{ importedCountingCircle.name }}</span>
             </li>
           </ul>
-        </td>
+        </bc-data-cell>
       </ng-container>
-      <ng-container bcColumnDef="ignoredCountingCircles">
-        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.IGNORED_COUNTING_CIRCLES' | translate }}</th>
-        <td bc-cell *bcCellDef="let element">
+
+      <ng-container columnDef="ignoredCountingCircles">
+        <bc-header-cell *headerCellDef>{{ 'RESULT_IMPORT.IGNORED_COUNTING_CIRCLES' | translate }}</bc-header-cell>
+        <bc-data-cell *dataCellDef="let element">
           <ul class="ignored-counting-circle-list">
             <li *ngFor="let ignoredCountingCircle of element.ignoredCountingCirclesList">
               <span class="mr-2">{{ ignoredCountingCircle.countingCircleId }}</span>
-              <span *ngIf="ignoredCountingCircle.countingCircleDescription" class="mr-2">{{ ignoredCountingCircle.countingCircleDescription }}</span>
-              <span *ngIf="ignoredCountingCircle.isTestCountingCircle">{{ 'RESULT_IMPORT.IGNORED_COUNTING_CIRCLE.TEST_COUNTING_CIRCLE' | translate }}</span>
-              <span class="non-test-counting-circle" *ngIf="!ignoredCountingCircle.isTestCountingCircle">{{ 'RESULT_IMPORT.IGNORED_COUNTING_CIRCLE.NON_TEST_COUNTING_CIRCLE' | translate }}</span>
+              <span *ngIf="ignoredCountingCircle.countingCircleDescription" class="mr-2">{{
+                ignoredCountingCircle.countingCircleDescription }}</span>
+              <span *ngIf="ignoredCountingCircle.isTestCountingCircle">{{
+                'RESULT_IMPORT.IGNORED_COUNTING_CIRCLE.TEST_COUNTING_CIRCLE' | translate }}</span>
+              <span class="non-test-counting-circle" *ngIf="!ignoredCountingCircle.isTestCountingCircle">{{
+                'RESULT_IMPORT.IGNORED_COUNTING_CIRCLE.NON_TEST_COUNTING_CIRCLE' | translate }}</span>
             </li>
           </ul>
-        </td>
+        </bc-data-cell>
       </ng-container>
 
-      <tr bc-header-row *bcHeaderRowDef="columns"></tr>
-      <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"></tr>
-    </bc-advanced-table>
+      <bc-header-row *headerRowDef="let row; columns: columns"></bc-header-row>
+      <bc-data-row *dataRowDef="let row; columns: columns; let i = index"></bc-data-row>
+    </bc-table>
   </div>
 
   <div footer class="mr-3">
-    <vo-lib-button-bar footer
-                       [saveLabel]="'RESULT_IMPORT.IMPORT' | translate"
-                       (save)="showImportDialog()"
-                       (cancel)="close()"></vo-lib-button-bar>
+    <vo-lib-button-bar footer [saveLabel]="'RESULT_IMPORT.IMPORT' | translate" (save)="showImportDialog()"
+      (cancel)="close()"></vo-lib-button-bar>
   </div>
 </vo-lib-dialog>

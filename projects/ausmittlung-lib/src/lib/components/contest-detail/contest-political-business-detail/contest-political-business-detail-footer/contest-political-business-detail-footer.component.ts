@@ -5,8 +5,18 @@
  */
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
-import { DialogService } from '@abraxas/voting-lib';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { DialogService, ThemeService } from '@abraxas/voting-lib';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { StateChange } from '../../../../models';
 import { PermissionService } from '../../../../services/permission.service';
@@ -18,6 +28,7 @@ import {
 import { Permissions } from '../../../../models/permissions.model';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL } from '../../../../tokens';
 
 @Component({
   selector: 'vo-ausm-contest-political-business-detail-footer',
@@ -59,6 +70,15 @@ export class ContestPoliticalBusinessDetailFooterComponent implements OnInit, On
   @Input()
   public canSelectResultEntry: boolean = true;
 
+  @Input()
+  public contestId?: string;
+
+  @Input()
+  public stateDescriptionsByState: Record<number, string> = {};
+
+  @Input()
+  public statePlausibilisedDisabled: boolean = false;
+
   @Output()
   public selectResultEntry: EventEmitter<void> = new EventEmitter<void>();
 
@@ -76,6 +96,7 @@ export class ContestPoliticalBusinessDetailFooterComponent implements OnInit, On
 
   public canEnterResults: boolean = false;
   public canFinishSubmission: boolean = false;
+  public canFinishSubmissionAndAudit: boolean = false;
   public canAudit: boolean = false;
   public newZhFeaturesEnabled: boolean = false;
 
@@ -83,10 +104,12 @@ export class ContestPoliticalBusinessDetailFooterComponent implements OnInit, On
   public readonly routeSubscription: Subscription;
 
   constructor(
+    @Inject(VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL) public readonly votingAusmittlungMonitoringWebAppUrl: string,
     private readonly permissionService: PermissionService,
     private readonly dialogService: DialogService,
     private readonly i18n: TranslateService,
     private readonly cd: ChangeDetectorRef,
+    private readonly themeService: ThemeService,
     route: ActivatedRoute,
   ) {
     this.routeSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
@@ -97,6 +120,9 @@ export class ContestPoliticalBusinessDetailFooterComponent implements OnInit, On
   public async ngOnInit(): Promise<void> {
     this.canEnterResults = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.EnterResults);
     this.canFinishSubmission = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.FinishSubmission);
+    this.canFinishSubmissionAndAudit = await this.permissionService.hasPermission(
+      Permissions.PoliticalBusinessResult.FinishSubmissionAndAudit,
+    );
     this.canAudit = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.Audit);
     this.cd.detectChanges();
   }
@@ -116,6 +142,19 @@ export class ContestPoliticalBusinessDetailFooterComponent implements OnInit, On
       stateChange.comment = result.comment;
       this.stateUpdate.emit(stateChange);
     }
+  }
+
+  public finishSubmissionAndAuditTentatively(): void {
+    const stateChange: StateChange = {
+      newState: CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY,
+      oldState: this.state,
+      comment: '',
+    };
+    this.stateUpdate.emit(stateChange);
+  }
+
+  public createProtocol(): void {
+    window.open(`${this.votingAusmittlungMonitoringWebAppUrl}/${this.themeService.theme$.value}/contests/${this.contestId}`, '_blank');
   }
 
   private async confirmStateUpdate(stateChange: StateChange): Promise<ConfirmCommentDialogResult> {

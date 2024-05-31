@@ -8,7 +8,21 @@
                                                 [countingCircleResults]="countingCircleResults"
                                                 [filteredCountingCircleResults]="filteredCountingCircleResults"
                                                 [disabled]="loading"
-                                                (updateAllStates)="updateAllStates(politicalBusiness, $event)">
+                                                (updateAllStates)="updateAllStates([politicalBusiness], $event)"
+                                                [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
+                                                [statePlausibilisedDisabled]="contestCantonDefaults?.statePlausibilisedDisabled">
+    </app-monitoring-cockpit-grid-footer-buttons>
+  </ng-container>
+  <ng-container *ngFor="let politicalBusinessUnion of filteredPoliticalBusinessUnionsByDoiType[type]">
+    <app-monitoring-cockpit-grid-footer-buttons class="footer-row-entry"
+                                                [readOnly]="readOnly"
+                                                [politicalBusinessUnion]="politicalBusinessUnion"
+                                                [countingCircleResults]="countingCircleResults"
+                                                [filteredCountingCircleResults]="filteredCountingCircleResults"
+                                                [disabled]="loading"
+                                                (updateAllStates)="updateAllStates(politicalBusinessUnion.politicalBusinesses, $event)"
+                                                [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
+                                                [statePlausibilisedDisabled]="contestCantonDefaults?.statePlausibilisedDisabled">
     </app-monitoring-cockpit-grid-footer-buttons>
   </ng-container>
 </ng-container>

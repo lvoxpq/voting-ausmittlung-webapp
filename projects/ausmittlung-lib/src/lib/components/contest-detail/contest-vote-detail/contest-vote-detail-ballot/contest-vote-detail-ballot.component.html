@@ -13,7 +13,8 @@
       <vo-ausm-contest-vote-detail-question [eVoting]="eVoting"
                                             [readonly]="readonly"
                                             [ballotNumberOfQuestions]="ballotResult.questionResults.length"
-                                            [result]="questionResult"></vo-ausm-contest-vote-detail-question>
+                                            [result]="questionResult"
+                                            (countOfAnswersChanged)="countOfAnswersChanged.emit()"></vo-ausm-contest-vote-detail-question>
     </div>
     <div *ngFor="let tieBreakQuestionResult of ballotResult.tieBreakQuestionResults"
          class="mb-4">
@@ -21,7 +22,8 @@
                                             [readonly]="readonly"
                                             [isTieBreakQuestion]="true"
                                             [ballotNumberOfQuestions]="ballotResult.questionResults.length"
-                                            [result]="tieBreakQuestionResult"></vo-ausm-contest-vote-detail-question>
+                                            [result]="tieBreakQuestionResult"
+                                            (countOfAnswersChanged)="countOfAnswersChanged.emit()"></vo-ausm-contest-vote-detail-question>
     </div>
   </div>
   <div *ngIf="newZhFeaturesEnabled">

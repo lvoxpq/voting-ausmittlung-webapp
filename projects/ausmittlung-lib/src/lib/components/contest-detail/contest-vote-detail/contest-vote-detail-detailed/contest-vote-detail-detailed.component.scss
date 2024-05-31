@@ -9,6 +9,12 @@
     flex-shrink: 1;
   }
 
+  .flex {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+  }
+
   // TODO: can be removed if new UI is standard
   .vote-result-ballot-detail {
     @extend .mx-4;

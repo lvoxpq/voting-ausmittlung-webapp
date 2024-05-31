@@ -4,6 +4,7 @@
     <div class="count-of-voters">
       <div>
         <h5 translate *ngIf="swissAbroadHaveVotingRightsOnAnyBusiness">CONTEST.DETAIL.SWISS</h5>
+        <bc-label></bc-label>
         <div class="info-entries">
           <div class="info-entry">
             <bc-label [label]="'CONTEST.DETAIL.MEN' | translate"></bc-label>
@@ -21,6 +22,7 @@
       </div>
       <div *ngIf="swissAbroadHaveVotingRightsOnAnyBusiness">
         <h5 translate>CONTEST.DETAIL.SWISS_ABROAD</h5>
+        <bc-label></bc-label>
         <div class="info-entries">
           <div class="info-entry">
             <bc-label [label]="'CONTEST.DETAIL.MEN' | translate"></bc-label>
@@ -28,11 +30,11 @@
           </div>
           <div class="info-entry">
             <bc-label [label]="'CONTEST.DETAIL.WOMEN' | translate"></bc-label>
-            <span class="info-value">{{ swissAbroadMen }}</span>
+            <span class="info-value">{{ swissAbroadWomen }}</span>
           </div>
           <div class="info-entry">
             <bc-label [label]="'CONTEST.DETAIL.TOTAL' | translate"></bc-label>
-            <span class="info-value">{{ swissAbroadMen }}</span>
+            <span class="info-value">{{ totalSwissAbroad }}</span>
           </div>
         </div>
       </div>
@@ -41,19 +43,28 @@
   <div>
     <h3 translate>CONTEST.DETAIL.VOTING_CARDS.TITLE</h3>
     <div *ngIf="swissAbroadHaveVotingRightsOnAnyBusiness" class="title-spacer"></div>
-    <div class="info-entries">
-      <ng-container *ngFor="let votingCardResultSummary of votingCardResultSummaries">
-        <div class="info-entry">
-          <bc-label [label]="votingCardResultSummary.label"></bc-label>
-          <span class="info-value">{{ votingCardResultSummary.countOfReceivedVotingCards }}</span>
-        </div>
-      </ng-container>
-    </div>
+    <ng-container *ngFor="let votingCardResultSummary of votingCardResultSummaries">
+      <bc-label [label]="votingCardResultSummary.label"></bc-label>
+        <div class="info-entries">
+          <div *ngFor="let votingCard of votingCardResultSummary.votingCards" class="info-entry">
+            <bc-label [label]="'CONTEST.DETAIL.VOTING_CARDS.' + votingCard.channel + (votingCard.channel === votingChannels.VOTING_CHANNEL_BY_MAIL ? '_' + (votingCard.valid ? 'VALID' : 'INVALID') + (canton === domainOfInfluenceCantons.DOMAIN_OF_INFLUENCE_CANTON_TG ? '_TG' : '') : '') | translate"></bc-label>
+            <span class="info-value">{{ votingCard.countOfReceivedVotingCards ?? 0 }}</span>
+          </div>
+          <div *ngIf="votingCardResultSummary.hasInvalidVotingCardChannel && votingCardResultSummary.votingCards.length > 1">
+            <bc-label [label]="'CONTEST.DETAIL.VOTING_CARDS.TOTAL_VALID' | translate"></bc-label>
+            <span class="info-value">{{ votingCardResultSummary.totalValidVotingCards }}</span>
+          </div>
+          <div *ngIf="votingCardResultSummary.votingCards.length > 1">
+            <bc-label [label]="'CONTEST.DETAIL.VOTING_CARDS.TOTAL' | translate"></bc-label>
+            <span class="info-value">{{ votingCardResultSummary.totalVotingCards }}</span>
+          </div>
+      </div>
+    </ng-container>
   </div>
   <div class="spacer"></div>
   <button
     mat-button
     (click)="openDialog()">
-    <bc-icon [icon]="readonly ? 'info-circle-o' : 'edit'"></bc-icon>
+    <bc-icon [icon]="readonlyValue ? 'info-circle-o' : 'edit'"></bc-icon>
   </button>
 </div>

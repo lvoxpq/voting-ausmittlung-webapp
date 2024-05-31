@@ -5,7 +5,7 @@
  */
 
 import { DialogService } from '@abraxas/voting-lib';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResultOverview, ResultService } from 'ausmittlung-lib';
 import { Subscription } from 'rxjs';
@@ -13,7 +13,6 @@ import {
   ExportCockpitDialogComponent,
   ExportCockpitDialogData,
 } from '../../components/export-cockpit-dialog/export-cockpit-dialog.component';
-import { MonitoringCockpitGridComponent } from '../../components/monitoring-cockpit-grid/monitoring-cockpit-grid.component';
 import {
   ResultImportListDialogComponent,
   ResultImportListDialogData,
@@ -29,9 +28,8 @@ export class MonitoringOverviewComponent implements OnDestroy {
   public loading: boolean = true;
   public resultOverview?: ResultOverview;
   public newZhFeaturesEnabled: boolean = false;
-
-  @ViewChild(MonitoringCockpitGridComponent)
-  public grid!: MonitoringCockpitGridComponent;
+  public publishResultsEnabled: boolean = false;
+  public contestId?: string;
 
   private readonly routeParamsSubscription: Subscription;
   private readonly routeDataSubscription: Subscription;
@@ -45,6 +43,7 @@ export class MonitoringOverviewComponent implements OnDestroy {
     this.routeParamsSubscription = this.route.params.subscribe(({ contestId }) => this.loadData(contestId));
     this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
       this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+      this.publishResultsEnabled = contestCantonDefaults.publishResultsEnabled;
     });
   }
 
@@ -61,14 +60,9 @@ export class MonitoringOverviewComponent implements OnDestroy {
     const result: ResultImportListDialogResult = await this.dialogService.openForResult(ResultImportListDialogComponent, {
       contestId: this.resultOverview.contest.id,
     } as ResultImportListDialogData);
-    switch (result) {
-      case 'deleted':
-        this.resultOverview.contest.eVotingResultsImported = false;
-        this.grid.setAllInSubmissionOrCorrection();
-        break;
-      case 'imported':
-        this.grid.setAllInSubmissionOrCorrection();
-        break;
+
+    if (result === 'deleted') {
+      this.resultOverview.contest.eVotingResultsImported = false;
     }
   }
 
@@ -94,6 +88,7 @@ export class MonitoringOverviewComponent implements OnDestroy {
   }
 
   private async loadData(contestId: string): Promise<void> {
+    this.contestId = contestId;
     this.loading = true;
     try {
       this.resultOverview = await this.resultService.getOverview(contestId);

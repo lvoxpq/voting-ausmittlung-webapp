@@ -5,7 +5,7 @@
  */
 
 import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -23,6 +23,9 @@ import { AbstractContestPoliticalBusinessDetailComponent } from '../contest-poli
 import { ContestPoliticalBusinessDetailComponent } from '../contest-political-business-detail/contest-political-business-detail.component';
 import { Permissions } from '../../../models/permissions.model';
 import { Subscription } from 'rxjs';
+import { VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL } from '../../../tokens';
+import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'vo-ausm-contest-proportional-election-detail',
@@ -33,13 +36,7 @@ export class ContestProportionalElectionDetailComponent
   extends AbstractContestPoliticalBusinessDetailComponent<ProportionalElectionResult, ProportionalElectionResultService>
   implements OnInit, OnDestroy
 {
-  // set has edits to true by default
-  // since for proportional elections save and validate needs to be clicked before submit should be available
-  // and validations should be ran in the frontend before submitting
-  public hasEdits: boolean = true;
-
   public countOfVotersValid: boolean = true;
-
   public canReadListResults: boolean = false;
 
   @ViewChild(BallotCountInputComponent)
@@ -50,6 +47,7 @@ export class ContestProportionalElectionDetailComponent
   private readonly routeSubscription: Subscription;
 
   constructor(
+    @Inject(VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL) votingAusmittlungMonitoringWebAppUrl: string,
     parent: ContestPoliticalBusinessDetailComponent,
     i18n: TranslateService,
     toast: SnackbarService,
@@ -60,10 +58,24 @@ export class ContestProportionalElectionDetailComponent
     politicalBusinessResultService: PoliticalBusinessResultService,
     cd: ChangeDetectorRef,
     route: ActivatedRoute,
+    themeService: ThemeService,
+    unsavedChangesService: UnsavedChangesService,
     private readonly router: Router,
-    private readonly themeService: ThemeService,
   ) {
-    super(i18n, toast, resultService, dialog, secondFactorTransactionService, politicalBusinessResultService, cd, roleService, parent);
+    super(
+      votingAusmittlungMonitoringWebAppUrl,
+      i18n,
+      toast,
+      resultService,
+      dialog,
+      secondFactorTransactionService,
+      politicalBusinessResultService,
+      cd,
+      roleService,
+      themeService,
+      unsavedChangesService,
+      parent,
+    );
     this.routeSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
       this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
     });
@@ -112,8 +124,9 @@ export class ContestProportionalElectionDetailComponent
       this.isActionExecuting = true;
 
       await this.resultService.enterCountOfVoters(this.resultDetail.id, this.resultDetail.countOfVoters);
+      this.lastSavedResultDetail = cloneDeep(this.resultDetail);
       this.toast.success(this.i18n.instant('APP.SAVED'));
-      this.hasEdits = false;
+      this.unsavedChangesService.removeUnsavedChange(this.resultDetail.id);
     } finally {
       this.isActionExecuting = false;
     }

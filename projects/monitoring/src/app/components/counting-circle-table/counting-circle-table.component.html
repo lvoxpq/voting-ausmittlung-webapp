@@ -1,0 +1,43 @@
+<bc-table class="width" filter sort [sortActive]="[{ id: countingCircleColumn, direction: 'asc' }]" [dataSource]="dataSource">
+  <ng-container [columnDef]="stateColumn">
+    <bc-header-cell filter filterType="list" [filterItems]="stateList"
+                    filterDisplayExpr="description" filterValueExpr="value" sort *headerCellDef>
+      {{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.STATE' | translate }}
+    </bc-header-cell>
+    <bc-data-cell *dataCellDef="let element">
+      <div class="state-colorbox"
+           [ngClass]="'result-state-' + element.state">
+        {{ (element.state === countingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY ? element.auditedTentativelyTimestamp : (element.state === countingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED ? element.plausibilisedTimestamp : element.submissionDoneTimestamp)) | date: 'mediumTime' }}
+      </div>
+    </bc-data-cell>
+  </ng-container>
+  <ng-container [columnDef]="countingCircleColumn">
+    <bc-header-cell filter filterType="text" sort *headerCellDef>{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.COUNTING_CIRCLE' | translate }}</bc-header-cell>
+    <bc-data-cell *dataCellDef="let element">{{ countingCirclesById[element.countingCircleId].name }}</bc-data-cell>
+  </ng-container>
+  <ng-container [columnDef]="receivedBallotsColumn">
+    <bc-header-cell sort *headerCellDef>{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.RECEIVED_BALLOTS' | translate }}</bc-header-cell>
+    <bc-data-cell *dataCellDef="let element">{{ element.countOfVoters.totalReceivedBallots }}</bc-data-cell>
+  </ng-container>
+  <ng-container [columnDef]="blankBallotsColumn">
+    <bc-header-cell sort *headerCellDef>{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.BLANK_BALLOTS' | translate }}</bc-header-cell>
+    <bc-data-cell *dataCellDef="let element">{{ element.countOfVoters.totalBlankBallots }}</bc-data-cell>
+  </ng-container>
+  <ng-container [columnDef]="invalidBallotsColumn">
+    <bc-header-cell sort *headerCellDef>{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.INVALID_BALLOTS' | translate }}</bc-header-cell>
+    <bc-data-cell *dataCellDef="let element">{{ element.countOfVoters.totalInvalidBallots }}</bc-data-cell>
+  </ng-container>
+  <ng-container [columnDef]="accountedBallotsColumn">
+    <bc-header-cell sort *headerCellDef>{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.ACCOUNTED_BALLOTS' | translate }}</bc-header-cell>
+    <bc-data-cell *dataCellDef="let element">{{ element.countOfVoters.totalAccountedBallots }}</bc-data-cell>
+  </ng-container>
+  <bc-header-row *headerRowDef="let row; columns: columns"></bc-header-row>
+  <bc-data-row *dataRowDef="let row; columns: columns; let i = index"
+               class="clickable"
+               (click)="openDetail(row.countingCircleId, row.politicalBusinessId)"></bc-data-row>
+  <ng-template noDataRow>
+    <tr class="bc-row-data">
+      <td class="bc-cell" colspan="5" translate>MONITORING_POLITICAL_BUSINESSES_OVERVIEW.NO_COUNTING_CIRCLES</td>
+    </tr>
+  </ng-template>
+</bc-table>

@@ -4,15 +4,15 @@
  * For license information see LICENSE file.
  */
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { inject, NgModule } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterModule, Routes } from '@angular/router';
 import {
   ContestCantonDefaultsResolver,
-  PoliticalBusinessCantonDefaultsResolver,
-  ResultExportComponent,
   majorityElectionResultRoute,
   proportionalElectionResultRoute,
+  ResultExportComponent,
   voteResultRoute,
+  PoliticalBusinessCantonDefaultsResolver,
 } from 'ausmittlung-lib';
 import { MajorityElectionEndResultComponent } from './pages/majority-election-end-result/majority-election-end-result.component';
 import { MonitoringContestDetailComponent } from './pages/monitoring-contest-detail/monitoring-contest-detail.component';
@@ -21,6 +21,10 @@ import { MonitoringOverviewComponent } from './pages/monitoring-overview/monitor
 import { ProportionalElectionEndResultComponent } from './pages/proportional-election-end-result/proportional-election-end-result.component';
 import { VoteEndResultComponent } from './pages/vote-end-result/vote-end-result.component';
 import { AuthThemeGuard, ThemeService } from '@abraxas/voting-lib';
+import { ProportionalElectionUnionEndResultComponent } from './pages/proportional-election-union-end-result/proportional-election-union-end-result.component';
+import { ProportionalElectionUnionDoubleProportionalResultComponent } from './pages/proportional-election-union-double-proportional-result/proportional-election-union-double-proportional-result.component';
+import { ProportionalElectionDoubleProportionalResultComponent } from './pages/proportional-election-double-proportional-result/proportional-election-double-proportional-result.component';
+import { ContestDateGuard } from './services/contest-date.guard';
 
 const routes: Routes = [
   {
@@ -44,34 +48,35 @@ const routes: Routes = [
             path: '',
             pathMatch: 'full',
             component: MonitoringContestOverviewComponent,
+            canActivate: [(currentRoute: ActivatedRouteSnapshot) => inject(ContestDateGuard).canActivate(currentRoute)],
           },
           {
             path: ':contestId',
             pathMatch: 'full',
             component: MonitoringOverviewComponent,
             resolve: {
-              contestCantonDefaults: ContestCantonDefaultsResolver,
+              contestCantonDefaults: (route: ActivatedRouteSnapshot) => inject(ContestCantonDefaultsResolver).resolve(route),
             },
           },
           {
             path: ':contestId/exports',
             component: ResultExportComponent,
             resolve: {
-              contestCantonDefaults: ContestCantonDefaultsResolver,
+              contestCantonDefaults: (route: ActivatedRouteSnapshot) => inject(ContestCantonDefaultsResolver).resolve(route),
             },
           },
           {
             path: ':contestId/:countingCircleId',
             component: MonitoringContestDetailComponent,
             resolve: {
-              contestCantonDefaults: ContestCantonDefaultsResolver,
+              contestCantonDefaults: (route: ActivatedRouteSnapshot) => inject(ContestCantonDefaultsResolver).resolve(route),
             },
           },
           {
             path: ':contestId/:countingCircleId/exports',
             component: ResultExportComponent,
             resolve: {
-              contestCantonDefaults: ContestCantonDefaultsResolver,
+              contestCantonDefaults: (route: ActivatedRouteSnapshot) => inject(ContestCantonDefaultsResolver).resolve(route),
             },
           },
         ],
@@ -80,22 +85,41 @@ const routes: Routes = [
         path: 'vote-end-results/:politicalBusinessId',
         component: VoteEndResultComponent,
         resolve: {
-          contestCantonDefaults: PoliticalBusinessCantonDefaultsResolver,
+          contestCantonDefaults: (route: ActivatedRouteSnapshot) => inject(PoliticalBusinessCantonDefaultsResolver).resolve(route),
         },
       },
       {
         path: 'majority-election-end-results/:politicalBusinessId',
         component: MajorityElectionEndResultComponent,
         resolve: {
-          contestCantonDefaults: PoliticalBusinessCantonDefaultsResolver,
+          contestCantonDefaults: (route: ActivatedRouteSnapshot) => inject(PoliticalBusinessCantonDefaultsResolver).resolve(route),
         },
       },
       {
         path: 'proportional-election-end-results/:politicalBusinessId',
         component: ProportionalElectionEndResultComponent,
         resolve: {
-          contestCantonDefaults: PoliticalBusinessCantonDefaultsResolver,
+          contestCantonDefaults: (route: ActivatedRouteSnapshot) => inject(PoliticalBusinessCantonDefaultsResolver).resolve(route),
         },
+      },
+      {
+        path: 'proportional-election-end-results/:politicalBusinessId/double-proportional-results',
+        component: ProportionalElectionDoubleProportionalResultComponent,
+      },
+      {
+        path: 'proportional-election-union-end-results/:politicalBusinessUnionId',
+        component: ProportionalElectionUnionEndResultComponent,
+      },
+      {
+        path: 'proportional-election-union-end-results/:politicalBusinessUnionId/proportional-election-end-results/:politicalBusinessId',
+        component: ProportionalElectionEndResultComponent,
+        resolve: {
+          contestCantonDefaults: (route: ActivatedRouteSnapshot) => inject(PoliticalBusinessCantonDefaultsResolver).resolve(route),
+        },
+      },
+      {
+        path: 'proportional-election-union-end-results/:politicalBusinessUnionId/double-proportional-results',
+        component: ProportionalElectionUnionDoubleProportionalResultComponent,
       },
       proportionalElectionResultRoute,
       majorityElectionResultRoute,

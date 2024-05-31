@@ -1,0 +1,41 @@
+.bc-column-min-state {
+  width: 6rem;
+}
+
+.bc-column-political-business-number {
+  width: 8rem;
+}
+
+.bc-column-business-type {
+  width: 4rem;
+}
+
+.bc-column-short-description {
+  width: 30%;
+}
+
+.bc-column-domain-of-influence {
+  width: 20%;
+}
+
+.bc-column-domain-of-influence-type {
+  width: 5rem;
+}
+
+.bc-column-amount-of-counting-circles {
+  width: 8rem;
+}
+
+.state-colorbox {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1rem;
+  min-width: 4rem;
+  padding: 0.25rem;
+}
+
+.clickable {
+  cursor: pointer;
+}

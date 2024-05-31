@@ -9,7 +9,8 @@
                  displayExpr="description"
                  [value]="selectedConfig"
                  [clearable]="false"
-                 (valueChange)="setSelectedConfig($event)"></bc-dropdown>
+                 (valueChange)="setSelectedConfig($event)"
+                 [subscriptSizing]="'dynamic'"></bc-dropdown>
     <ng-container *ngIf="selectedConfig; else noData">
       <app-export-cockpit-political-businesses [politicalBusinesses]="dialogData.politicalBusinesses"
                                                [exportConfig]="selectedConfig"
@@ -28,7 +29,8 @@
                  [required]="true"
                  [min]="0"
                  [(ngModel)]="selectedConfig.intervalMinutes"
-                 (ngModelChange)="hasEdits = true"></bc-number>
+                 (ngModelChange)="hasEdits = true"
+                 [subscriptSizing]="'dynamic'"></bc-number>
       <div class="trigger-container mt-2">
         <div class="trigger">
           <bc-button (buttonClick)="saveAndTriggerManualExport()"

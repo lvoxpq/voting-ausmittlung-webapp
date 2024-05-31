@@ -30,7 +30,7 @@
           [ballot]="ballot"
           [loadingBallot]="loadingBallot"
           [disabled]="actionExecuting"
-          [showInvalidVotes]="politicalBusinessResult.election.domainOfInfluence!.cantonDefaults!.majorityElectionInvalidVotes"
+          [showInvalidVotes]="politicalBusinessResult.election.contest!.cantonDefaults!.majorityElectionInvalidVotes"
           [automaticEmptyVoteCounting]="politicalBusinessResult.entryParams.automaticEmptyVoteCounting"
           [readonly]="!bundleInProcessOrCorrection
             || !canUpdateBallot

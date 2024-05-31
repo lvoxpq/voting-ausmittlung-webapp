@@ -5,11 +5,11 @@
   width: 100%;
 }
 
-::ng-deep.mat-expansion-panel-header {
+::ng-deep.mat-expansion-panel .mat-expansion-panel-header {
   font-size: 1rem;
 }
 
-.with-border ::ng-deep.mat-expansion-panel-body {
+.with-border ::ng-deep.mat-expansion-panel .mat-expansion-panel-body {
   padding-top: 1rem !important;
   border-top: 1px solid $color-grey-6;
   padding-bottom: 0.5rem !important;

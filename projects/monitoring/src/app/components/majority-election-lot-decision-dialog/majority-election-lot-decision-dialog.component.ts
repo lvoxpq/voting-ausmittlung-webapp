@@ -6,7 +6,6 @@
 
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import {
   MajorityElectionEndResultAvailableLotDecision,
@@ -15,6 +14,7 @@ import {
   MajorityElectionResultService,
 } from 'ausmittlung-lib';
 import { ElectionLotDecisionDialogComponent } from '../election-lot-decision-dialog/election-lot-decision-dialog.component';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-majority-election-lot-decision-dialog',

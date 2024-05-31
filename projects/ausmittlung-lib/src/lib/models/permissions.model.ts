@@ -38,6 +38,7 @@ export class Permissions {
     StartSubmission: Permissions.PoliticalBusinessResultPrefix + ':start-submission',
     FinishSubmission: Permissions.PoliticalBusinessResultPrefix + ':finish-submission',
     Audit: Permissions.PoliticalBusinessResultPrefix + ':audit',
+    FinishSubmissionAndAudit: Permissions.PoliticalBusinessResultPrefix + ':finish-submission-and-audit',
   };
 
   private static readonly PoliticalBusinessResultBundlePrefix = 'PoliticalBusinessResultBundle';

@@ -27,6 +27,8 @@ import { VoteBallotComponent } from '../vote-ballot/vote-ballot.component';
   styleUrls: ['./vote-bundle-overview.component.scss'],
 })
 export class VoteBundleOverviewComponent extends PoliticalBusinessBundleOverviewComponent<VoteResultBundles> {
+  public readonly reviewProcedures: typeof VoteReviewProcedure = VoteReviewProcedure;
+
   public result?: VoteResultBundles;
   public isCreatingBundle: boolean = false;
 
@@ -90,12 +92,12 @@ export class VoteBundleOverviewComponent extends PoliticalBusinessBundleOverview
     return super.reviewBundle(bundle);
   }
 
-  public async succeedBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {
+  public async succeedBundleReview(bundles: PoliticalBusinessResultBundle[]): Promise<void> {
     if (this.result?.politicalBusinessResult.entryParams?.reviewProcedure !== VoteReviewProcedure.VOTE_REVIEW_PROCEDURE_PHYSICALLY) {
       return;
     }
 
-    return this.resultBundleService.succeedBundleReview(bundle.id);
+    return this.resultBundleService.succeedBundleReview(bundles.map(x => x.id));
   }
 
   public async rejectBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {

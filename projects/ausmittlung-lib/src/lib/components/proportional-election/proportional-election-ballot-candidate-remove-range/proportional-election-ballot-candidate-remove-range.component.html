@@ -6,6 +6,7 @@
   [(ngModel)]="start"
   (keydown.tab)="endInput.setFocus(); $event.preventDefault()"
   [label]="'ELECTION.BALLOT_DETAIL.REMOVE_RANGE.START' | translate"
+  [subscriptSizing]="'dynamic'"
 ></bc-text>
 <bc-text
   #endInput
@@ -14,4 +15,5 @@
   optionalText=""
   [(ngModel)]="end"
   [label]="'ELECTION.BALLOT_DETAIL.REMOVE_RANGE.END' | translate"
+  [subscriptSizing]="'dynamic'"
 ></bc-text>

@@ -27,6 +27,8 @@ import { MajorityElectionBallotComponent } from '../majority-election-ballot/maj
   styleUrls: ['./majority-election-bundle-overview.component.scss'],
 })
 export class MajorityElectionBundleOverviewComponent extends PoliticalBusinessBundleOverviewComponent<MajorityElectionResultBundles> {
+  public readonly reviewProcedures: typeof MajorityElectionReviewProcedure = MajorityElectionReviewProcedure;
+
   public result?: MajorityElectionResultBundles;
   public isCreatingBundle: boolean = false;
 
@@ -90,7 +92,7 @@ export class MajorityElectionBundleOverviewComponent extends PoliticalBusinessBu
     return super.reviewBundle(bundle);
   }
 
-  public async succeedBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {
+  public async succeedBundleReview(bundles: PoliticalBusinessResultBundle[]): Promise<void> {
     if (
       this.result?.politicalBusinessResult.entryParams?.reviewProcedure !==
       MajorityElectionReviewProcedure.MAJORITY_ELECTION_REVIEW_PROCEDURE_PHYSICALLY
@@ -98,7 +100,7 @@ export class MajorityElectionBundleOverviewComponent extends PoliticalBusinessBu
       return;
     }
 
-    return this.resultBundleService.succeedBundleReview(bundle.id);
+    return this.resultBundleService.succeedBundleReview(bundles.map(x => x.id));
   }
 
   public async rejectBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {

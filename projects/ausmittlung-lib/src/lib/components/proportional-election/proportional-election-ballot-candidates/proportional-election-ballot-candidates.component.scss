@@ -6,7 +6,7 @@
   grid-template-columns: repeat(3, auto) minmax(6.5rem, auto) repeat(3, auto) minmax(6.5rem, auto);
   align-items: center;
   overflow-y: auto;
-  max-height: 31rem;
+  max-height: 26rem;
 
   .title {
     align-self: start;
@@ -62,5 +62,9 @@
         cursor: pointer !important;
       }
     }
+  }
+
+  ::ng-deep bc-button .mat-mdc-button {
+    height: 30px;
   }
 }

@@ -5,9 +5,9 @@
  */
 
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Contest } from '../../models';
 import { VOTING_BASIS_WEBAPP_URL } from '../../tokens';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'vo-ausm-contest-past-unlock-dialog',

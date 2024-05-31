@@ -1,4 +1,4 @@
-@forward '~normalize.css/normalize';
+@forward '../../../../node_modules/normalize.css/normalize.css';
 @forward '@abraxas/voting-lib/style';
 @forward 'detailIconLink';
 @forward 'stateColors';
@@ -8,6 +8,8 @@
 @forward 'flex';
 @forward 'table';
 @forward 'iconButton';
+@forward 'radioButton';
+@forward 'switch';
 
 .page > .container > .content {
   overflow: hidden;

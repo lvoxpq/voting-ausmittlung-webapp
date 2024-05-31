@@ -7,7 +7,8 @@
         [label]="'CONTEST.DETAIL.ELECTORATE.DOMAIN_OF_INFLUENCE_TYPES' | translate"
         [disabled]="true"
         [required]="true"
-        [value]="electorateLabelByIndex.get(index)"></bc-text>
+        [value]="electorateLabelByIndex.get(index)"
+        [subscriptSizing]="'dynamic'"></bc-text>
       <bc-button
         *ngIf="!readonly; else empty"
         variant="tertiary"

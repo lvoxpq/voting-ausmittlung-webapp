@@ -6,23 +6,27 @@
 
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import {
   dataSourceToPropertyPrefix,
+  DoubleProportionalResultApportionmentState,
   groupBySingle,
   ProportionalElectionCandidateEndResult,
   ProportionalElectionCandidateEndResultState,
   ProportionalElectionEndResult,
   ProportionalElectionEndResultLotDecision,
   ProportionalElectionListEndResult,
+  ProportionalElectionMandateAlgorithm,
   ProportionalElectionResultService,
+  ProportionalElectionService,
+  ProportionalElectionUnionResultService,
   SecondFactorTransactionService,
   sum,
   SwissAbroadVotingRight,
   VotingDataSource,
 } from 'ausmittlung-lib';
-import { Subscription } from 'rxjs';
+import { combineLatest, debounceTime, map, Subscription } from 'rxjs';
 import {
   ProportionalElectionLotDecisionDialogComponent,
   ProportionalElectionLotDecisionDialogData,
@@ -44,6 +48,7 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
 
   public loading: boolean = true;
   public finalizing: boolean = false;
+  public dpResultIncomplete?: boolean;
   public endResult?: ProportionalElectionEndResult;
   public swissAbroadVotingRights: typeof SwissAbroadVotingRight = SwissAbroadVotingRight;
   public hasLotDecisions: boolean = false;
@@ -52,18 +57,34 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
   public candidateEndResults: ProportionalElectionCandidateEndResult[] = [];
   public listColumns: string[] = [];
   public candidateColumns: string[] = [];
+  public isPartialResult = false;
+  public isNonUnionDoubleProportional = false;
 
   private readonly routeSubscription: Subscription;
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly resultService: ProportionalElectionResultService,
+    private readonly unionResultService: ProportionalElectionUnionResultService,
     private readonly dialogService: DialogService,
     private readonly i18n: TranslateService,
     private readonly toast: SnackbarService,
     private readonly secondFactorTransactionService: SecondFactorTransactionService,
   ) {
-    this.routeSubscription = this.route.params.subscribe(({ politicalBusinessId }) => this.loadData(politicalBusinessId));
+    this.routeSubscription = combineLatest([this.route.params, this.route.queryParams])
+      .pipe(
+        debounceTime(10), // could fire twice if both params change at the same time
+        map(results => ({
+          politicalBusinessId: results[0].politicalBusinessId,
+          politicalBusinessUnionId: results[0].politicalBusinessUnionId,
+          isPartialResult: results[1].partialResult,
+        })),
+      )
+      .subscribe(({ politicalBusinessId, politicalBusinessUnionId, isPartialResult }) => {
+        this.isPartialResult = isPartialResult;
+        this.loadData(politicalBusinessId, politicalBusinessUnionId);
+      });
   }
 
   public async ngOnDestroy(): Promise<void> {
@@ -176,10 +197,42 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
     this.candidateEndResults = this.selectedListEndResult.candidateEndResults;
   }
 
-  private async loadData(proportionalElectionId: string): Promise<void> {
+  public async viewDpResult(): Promise<void> {
+    await this.router.navigate(['double-proportional-results'], { relativeTo: this.route });
+  }
+
+  private async loadData(proportionalElectionId: string, politicalBusinessUnionId: string): Promise<void> {
     this.loading = true;
+
     try {
-      this.endResult = await this.resultService.getEndResult(proportionalElectionId);
+      const endResult = this.isPartialResult
+        ? await this.resultService.getPartialEndResult(proportionalElectionId)
+        : await this.resultService.getEndResult(proportionalElectionId);
+      this.isNonUnionDoubleProportional = ProportionalElectionService.isNonUnionDoubleProportional(endResult.election.mandateAlgorithm);
+
+      // load the union info before setting the end result to the component prop,
+      // otherwise the end result type selector does not set the disabled state.
+      if (
+        !this.isPartialResult &&
+        !!politicalBusinessUnionId &&
+        (endResult.election.mandateAlgorithm ===
+          ProportionalElectionMandateAlgorithm.PROPORTIONAL_ELECTION_MANDATE_ALGORITHM_DOUBLE_PROPORTIONAL_N_DOIS_5_DOI_OR_3_TOT_QUORUM ||
+          endResult.election.mandateAlgorithm ===
+            ProportionalElectionMandateAlgorithm.PROPORTIONAL_ELECTION_MANDATE_ALGORITHM_DOUBLE_PROPORTIONAL_N_DOIS_5_DOI_QUORUM)
+      ) {
+        try {
+          const dpResult = await this.unionResultService.getDoubleProportionalResult(politicalBusinessUnionId);
+          this.dpResultIncomplete =
+            dpResult.subApportionmentState !==
+            DoubleProportionalResultApportionmentState.DOUBLE_PROPORTIONAL_RESULT_APPORTIONMENT_STATE_COMPLETED;
+        } catch (err) {
+          this.dpResultIncomplete = true;
+        }
+      } else {
+        this.dpResultIncomplete = undefined;
+      }
+
+      this.endResult = endResult;
       this.hasLotDecisions = this.endResult.listEndResults.some(le => le.candidateEndResults.some(x => x.lotDecisionEnabled));
       this.hasOpenRequiredLotDecisions = this.endResult.listEndResults.some(l => l.hasOpenRequiredLotDecisions);
       this.refreshTableColumns();
@@ -251,7 +304,13 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
         this.listColumns.push('nrOfMandates');
       }
     }
-    this.listColumns.push('listUnion', 'subListUnion');
+
+    if (
+      this.endResult?.election.mandateAlgorithm ===
+      ProportionalElectionMandateAlgorithm.PROPORTIONAL_ELECTION_MANDATE_ALGORITHM_HAGENBACH_BISCHOFF
+    ) {
+      this.listColumns.push('listUnion', 'subListUnion');
+    }
 
     this.candidateColumns = ['number', 'lastName', 'firstName'];
     if (this.endResult?.finalized) {

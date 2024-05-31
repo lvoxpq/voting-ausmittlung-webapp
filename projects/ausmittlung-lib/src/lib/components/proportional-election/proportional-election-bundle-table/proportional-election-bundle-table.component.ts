@@ -10,25 +10,31 @@ import { ProportionalElectionResultBundle } from '../../../models';
 import { PermissionService } from '../../../services/permission.service';
 import { UserService } from '../../../services/user.service';
 import { ResultBundleTableComponent } from '../../result-bundle-table/result-bundle-table-component.directive';
+import { EnumUtil } from '@abraxas/voting-lib';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'vo-ausm-proportional-election-bundle-table',
   templateUrl: './proportional-election-bundle-table.component.html',
+  styleUrls: ['./proportional-election-bundle-table.component.scss'],
 })
 export class ProportionalElectionBundleTableComponent
   extends ResultBundleTableComponent<ProportionalElectionResultBundle>
   implements AfterViewInit
 {
+  public readonly listShortDescriptionColumn = 'listShortDescription';
+  public readonly listOrderNumberColumn = 'listOrderNumber';
   public readonly columns = [
-    'number',
-    'bundleSize',
-    'listOrderNumber',
-    'listShortDescription',
-    'createdBy',
-    'countOfBallots',
-    'state',
-    'reviewedBy',
-    'actions',
+    this.selectColumn,
+    this.numberColumn,
+    this.bundleSizeColumn,
+    this.listOrderNumberColumn,
+    this.listShortDescriptionColumn,
+    this.createdByColumn,
+    this.countOfBallotsColumn,
+    this.stateColumn,
+    this.reviewedByColumn,
+    this.actionsColumn,
   ];
   public readonly reviewProcedures: typeof ProportionalElectionReviewProcedure = ProportionalElectionReviewProcedure;
 
@@ -38,8 +44,8 @@ export class ProportionalElectionBundleTableComponent
   @Input()
   public newZhFeaturesEnabled: boolean = false;
 
-  constructor(userService: UserService, roleService: PermissionService) {
-    super(userService, roleService);
+  constructor(userService: UserService, roleService: PermissionService, enumUtil: EnumUtil, private readonly i18n: TranslateService) {
+    super(userService, roleService, enumUtil);
   }
 
   public override ngAfterViewInit(): void {
@@ -48,9 +54,25 @@ export class ProportionalElectionBundleTableComponent
     if (!this.enableActions) {
       this.columns.splice(this.columns.length - 1, 1);
     }
+
+    if (!this.enableReviewMultiple) {
+      this.columns.splice(0, 1);
+    }
   }
 
   protected isReviewProcedureElectronically(): boolean {
     return this.reviewProcedure === ProportionalElectionReviewProcedure.PROPORTIONAL_ELECTION_REVIEW_PROCEDURE_ELECTRONICALLY;
+  }
+
+  protected dataAccessor(data: ProportionalElectionResultBundle, filterId: string): string | number | Date {
+    if (filterId === this.listOrderNumberColumn) {
+      return data.list?.orderNumber ?? 0;
+    }
+
+    if (filterId === this.listShortDescriptionColumn) {
+      return data.list ? data.list.shortDescription : this.i18n.instant('PROPORTIONAL_ELECTION.BALLOT_WITHOUT_LIST_SHORT');
+    }
+
+    return super.dataAccessor(data, filterId);
   }
 }

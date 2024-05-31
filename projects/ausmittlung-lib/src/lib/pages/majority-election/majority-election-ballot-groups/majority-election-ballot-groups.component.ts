@@ -6,23 +6,33 @@
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
 import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MajorityElectionBallotGroupResult, MajorityElectionBallotGroupResults } from '../../../models';
 import { MajorityElectionResultService } from '../../../services/majority-election-result.service';
 import { PermissionService } from '../../../services/permission.service';
 import { sum } from '../../../services/utils/array.utils';
 import { NumberComponent } from '@abraxas/base-components';
 import { Permissions } from '../../../models/permissions.model';
+import { HasUnsavedChanges } from '../../../services/guards/has-unsaved-changes.guard';
 
 @Component({
   selector: 'vo-ausm-majority-election-ballot-groups',
   templateUrl: './majority-election-ballot-groups.component.html',
   styleUrls: ['./majority-election-ballot-groups.component.scss'],
 })
-export class MajorityElectionBallotGroupsComponent implements OnInit, OnDestroy {
+export class MajorityElectionBallotGroupsComponent implements OnInit, OnDestroy, HasUnsavedChanges {
+  @HostListener('window:beforeunload')
+  public beforeUnload(): boolean {
+    if (!this.newZhFeaturesEnabled) {
+      return true;
+    }
+
+    return !this.hasChanges;
+  }
+
   @ViewChildren(NumberComponent)
   public ballotGroupComponents?: QueryList<NumberComponent>;
 
@@ -60,17 +70,12 @@ export class MajorityElectionBallotGroupsComponent implements OnInit, OnDestroy 
     this.canEdit = await this.permissionService.hasPermission(Permissions.PoliticalBusinessResult.EnterResults);
   }
 
-  public async back(): Promise<void> {
-    if (!this.hasChanges) {
-      await this.navigateToContestDetail();
-      return;
-    }
+  public get hasUnsavedChanges(): boolean {
+    return this.hasChanges;
+  }
 
-    if (
-      await this.dialog.confirm(this.i18n.instant('APP.CHANGES.TITLE'), this.i18n.instant('APP.CHANGES.MSG'), this.i18n.instant('APP.NEXT'))
-    ) {
-      await this.navigateToContestDetail();
-    }
+  public async back(): Promise<void> {
+    await this.navigateToContestDetail();
   }
 
   public async save(): Promise<void> {

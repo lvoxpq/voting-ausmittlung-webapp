@@ -1,3 +1,7 @@
 bc-button.full-width ::ng-deep button {
   width: 100% !important;
 }
+
+bc-button {
+  margin-left: 0 !important;
+}

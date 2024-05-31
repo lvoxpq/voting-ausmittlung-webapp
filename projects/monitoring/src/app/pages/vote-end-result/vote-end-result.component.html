@@ -1,5 +1,6 @@
 <app-end-result-page [loading]="loading"
                      [contest]="endResult?.contest"
+                     [isPartialResult]="isPartialResult"
                      [countOfVotersInformation]="endResult?.countOfVotersInformation"
                      [votingCards]="endResult?.votingCards"
                      [domainOfInfluenceType]="endResult?.vote?.domainOfInfluence?.type"
@@ -22,7 +23,7 @@
                              position="right">
         <app-end-result-type-selector [finalized]="endResult.finalized"
                                       (finalizedChange)="setFinalized($event)"
-                                      [disabled]="!endResult.allCountingCirclesDone || endResult.contest.locked || finalizing"></app-end-result-type-selector>
+                                      [disabled]="!endResult.allCountingCirclesDone || endResult.contest.locked || finalizing || isPartialResult"></app-end-result-type-selector>
       </vo-lib-inline-spinner>
     </div>
     <div *ngFor="let ballotEndResult of endResult.ballotEndResults">

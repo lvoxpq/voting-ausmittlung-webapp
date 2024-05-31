@@ -2,28 +2,18 @@
   <div left class="pr-2">
     <h4 translate>RESULT_IMPORT.SELECT_FILE</h4>
 
-    <bc-dropdown [label]="'RESULT_IMPORT.E_CH_STANDARD' | translate"
-                 [items]="echTypes"
-                 [(value)]="selectedEchType"
-                 [clearable]="false"
-                 [required]="true"
-                 displayExpr="description"
-                 valueExpr="value"
-                 class="mb-2">
+    <bc-dropdown [label]="'RESULT_IMPORT.E_CH_STANDARD' | translate" [items]="echTypes" [(value)]="selectedEchType"
+      [clearable]="false" [required]="true" displayExpr="description" valueExpr="value" class="mb-2"
+      [subscriptSizing]="'dynamic'">
     </bc-dropdown>
 
     <div class="file-container" [class.dragging]="draggingFiles">
       <div>
         <p translate>RESULT_IMPORT.DRAG_FILE</p>
         <p translate>RESULT_IMPORT.OR</p>
-        <input #fileInput
-               type="file"
-               (change)="setFileFromEvent($event)"
-               accept=".xml"
-               [multiple]="true">
-        <bc-button (buttonClick)="fileInput.click()"
-                   variant="primary"
-                   [label]="'RESULT_IMPORT.CHOOSE_FILE' | translate">
+        <input #fileInput type="file" (change)="setFileFromEvent($event)" accept=".xml" [multiple]="true">
+        <bc-button (buttonClick)="fileInput.click()" variant="primary"
+          [label]="'RESULT_IMPORT.CHOOSE_FILE' | translate">
         </bc-button>
       </div>
     </div>
@@ -31,28 +21,30 @@
 
   <div right class="pl-2">
     <h4 translate>RESULT_IMPORT.CHOSEN_FILES</h4>
-    <bc-advanced-table [dataSource]="selectedFiles">
-      <ng-container bcColumnDef="name">
-        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.FILENAME' | translate }}</th>
-        <td bc-cell *bcCellDef="let element">{{ element.file.name }}</td>
+    <bc-table [dataSource]="selectedFiles">
+      <ng-container columnDef="name">
+        <bc-header-cell *headerCellDef>{{ 'RESULT_IMPORT.FILENAME' | translate }}</bc-header-cell>
+        <bc-data-cell *dataCellDef="let element">{{ element.file.name }}</bc-data-cell>
       </ng-container>
-      <ng-container bcColumnDef="type">
-        <th bc-header-cell *bcHeaderCellDef>{{ 'RESULT_IMPORT.E_CH_STANDARD' | translate }}</th>
-        <td bc-cell *bcCellDef="let element">
+
+      <ng-container columnDef="type">
+        <bc-header-cell *headerCellDef>{{ 'RESULT_IMPORT.E_CH_STANDARD' | translate }}</bc-header-cell>
+        <bc-data-cell *dataCellDef="let element">
           <div class="truncate mr-4">
             {{ 'RESULT_IMPORT.E_CH_TYPES.' + element.echType | translate }}
           </div>
-        </td>
-      </ng-container>
-      <ng-container bcColumnDef="actions">
-        <th bc-header-cell class="actions-header" *bcHeaderCellDef></th>
-        <td bc-cell *bcCellDef="let element">
-          <bc-icon (click)="removeFile(element)" icon="remove"></bc-icon>
-        </td>
+        </bc-data-cell>
       </ng-container>
 
-      <tr bc-header-row *bcHeaderRowDef="['name', 'type', 'actions']"></tr>
-      <tr bc-advanced-table-row *bcRowDef="let row; columns: ['name', 'type', 'actions']"></tr>
-    </bc-advanced-table>
+      <ng-container columnDef="actions">
+        <bc-header-cell *headerCellDef class="actions-header"></bc-header-cell>
+        <bc-data-cell *dataCellDef="let element">
+          <bc-icon (click)="removeFile(element)" icon="remove"></bc-icon>
+        </bc-data-cell>
+      </ng-container>
+
+      <bc-header-row *headerRowDef="let row; columns: ['name', 'type', 'actions']"></bc-header-row>
+      <bc-data-row *dataRowDef="let row; columns: ['name', 'type', 'actions']; let i = index"></bc-data-row>
+      </bc-table>
   </div>
 </vo-lib-split-screen>

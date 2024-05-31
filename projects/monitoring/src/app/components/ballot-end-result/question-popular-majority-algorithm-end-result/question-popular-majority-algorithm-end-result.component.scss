@@ -18,6 +18,6 @@ p {
   display: flex;
 
   > :not(:first-child) {
-    @extend .ml-5;
+    @extend .ml-4;
   }
 }

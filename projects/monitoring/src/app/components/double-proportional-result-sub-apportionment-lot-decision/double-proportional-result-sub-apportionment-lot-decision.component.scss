@@ -1,0 +1,8 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.buttons {
+  @extend .mt-4;
+
+  display: flex;
+  flex-direction: row-reverse;
+}

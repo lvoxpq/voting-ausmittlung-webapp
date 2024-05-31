@@ -17,7 +17,7 @@
                                   [totalCountOfVoters]="resultDetail.totalCountOfVoters"
                                   [participationLabel]="'ELECTION.VOTER_PARTICIPATION'"
                                   [countOfVoters]="resultDetail.countOfVoters"
-                                  (countOfVotersChange)="hasEdits = true; updateCountOfVotersValid()"></vo-ausm-ballot-count-input>
+                                  (countOfVotersChange)="updateCountOfVotersValid(); updateUnsavedChanges()"></vo-ausm-ballot-count-input>
 
       <div [class.detail]="!newZhFeaturesEnabled">
         <ng-container *ngIf="newZhFeaturesEnabled; else oldUi">
@@ -67,7 +67,7 @@
 
     <vo-ausm-contest-political-business-detail-footer *ngIf="!contestLocked
                                                         && (!contentReadonly || isResponsibleMonitorAuthority)
-                                                        && (canAudit || (canFinishSubmission && (result.state === states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING || result.state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION)))"
+                                                        && (canAudit || canFinishSubmissionAndAudit || (canFinishSubmission && (result.state === states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING || result.state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION)))"
                                                       editEntryText="PROPORTIONAL_ELECTION.RESULT_ENTRY.EDIT"
                                                       entryDescription=""
                                                       (selectResultEntry)="selectResultEntry = true"
@@ -78,10 +78,13 @@
                                                       [isResponsibleMonitorAuthority]="isResponsibleMonitorAuthority"
                                                       [isActionExecuting]="isActionExecuting"
                                                       [state]="result.state"
-                                                      [canValidateAndSave]="!contentReadonly && hasEdits && countOfVotersValid"
+                                                      [canValidateAndSave]="!contentReadonly && hasUnsavedChanges && countOfVotersValid"
                                                       [canValidate]="!contentReadonly && countOfVotersValid"
                                                       [canSave]="!contentReadonly && countOfVotersValid"
-                                                      [canSubmit]="!contentReadonly && !hasEdits">
+                                                      [canSubmit]="!contentReadonly && !hasUnsavedChanges"
+                                                      [contestId]="resultDetail.election.contestId"
+                                                      [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
+                                                      [statePlausibilisedDisabled]="contestCantonDefaults?.statePlausibilisedDisabled">
     </vo-ausm-contest-political-business-detail-footer>
   </ng-template>
 </ng-container>

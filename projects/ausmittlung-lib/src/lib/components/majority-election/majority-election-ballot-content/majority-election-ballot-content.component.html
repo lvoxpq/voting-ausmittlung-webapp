@@ -18,6 +18,8 @@
           [(ngModel)]="toggleCandidateValue"
           [hint]="'ELECTION.BALLOT_DETAIL.EDIT_CANDIDATE_HINT' | translate"
           (ngModelChange)="tryToggleCandidate($event)"
+          [optionalText]="''"
+          [subscriptSizing]="'dynamic'"
         ></bc-text>
       </div>
     </div>
@@ -32,6 +34,7 @@
       [error]="ballot.invalidVoteCount < 0 || ballot.invalidVoteCount > ballot.election.numberOfMandates"
       [value]="ballot.invalidVoteCount"
       (valueChange)="setInvalidVoteCount(+$event)"
+      [subscriptSizing]="'dynamic'"
     ></bc-number>
     <bc-number
       [label]="'MAJORITY_ELECTION.INDIVIDUAL' | translate"
@@ -44,6 +47,7 @@
       [value]="ballot.individualVoteCount"
       (valueChange)="setIndividualVoteCount(+$event)"
       (keydown.enter)="emptyVoteFormfield.readonly ? contentCompleted.emit($event) : undefined"
+      [subscriptSizing]="'dynamic'"
     ></bc-number>
     <bc-number
       #emptyVoteFormfield
@@ -58,6 +62,7 @@
       (valueChange)="updateManualEmptyVoteCount(+$event)"
       [tabIndex]="readonly || automaticEmptyVoteCounting ? -1 : 0"
       (keydown.enter)="contentCompleted.emit($event)"
+      [subscriptSizing]="'dynamic'"
     ></bc-number>
   </div>
   <div class="spacer"></div>

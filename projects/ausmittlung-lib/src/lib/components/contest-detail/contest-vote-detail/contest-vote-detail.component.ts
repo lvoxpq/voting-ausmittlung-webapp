@@ -5,14 +5,13 @@
  */
 
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
-import { DialogService, SnackbarService } from '@abraxas/voting-lib';
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
+import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep, isEqual } from 'lodash';
 import {
   BallotQuestionResult,
   ContestCountingCircleDetails,
-  StateChange,
   TieBreakQuestionResult,
   updateCountOfVotersCalculatedFields,
   ValidationSummary,
@@ -27,6 +26,8 @@ import { AbstractContestPoliticalBusinessDetailComponent } from '../contest-poli
 import { ContestPoliticalBusinessDetailComponent } from '../contest-political-business-detail/contest-political-business-detail.component';
 import { ContestVoteDetailBallotComponent } from './contest-vote-detail-ballot/contest-vote-detail-ballot.component';
 import { ContestVoteDetailDetailedComponent } from './contest-vote-detail-detailed/contest-vote-detail-detailed.component';
+import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL } from '../../../tokens';
 
 @Component({
   selector: 'vo-ausm-contest-vote-detail',
@@ -35,7 +36,6 @@ import { ContestVoteDetailDetailedComponent } from './contest-vote-detail-detail
 export class ContestVoteDetailComponent extends AbstractContestPoliticalBusinessDetailComponent<VoteResult, VoteResultService> {
   public readonly entryVariants: typeof VoteResultEntry = VoteResultEntry;
 
-  public lastSavedVoteResult?: VoteResult;
   public countOfVotersValid: boolean = true;
 
   @ViewChild(ContestVoteDetailBallotComponent)
@@ -45,6 +45,7 @@ export class ContestVoteDetailComponent extends AbstractContestPoliticalBusiness
   private contestVoteDetailDetailedComponent?: ContestVoteDetailDetailedComponent;
 
   constructor(
+    @Inject(VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL) votingAusmittlungMonitoringWebAppUrl: string,
     parent: ContestPoliticalBusinessDetailComponent,
     i18n: TranslateService,
     toast: SnackbarService,
@@ -54,12 +55,27 @@ export class ContestVoteDetailComponent extends AbstractContestPoliticalBusiness
     secondFactorTransactionService: SecondFactorTransactionService,
     politicalBusinessResultService: PoliticalBusinessResultService,
     cd: ChangeDetectorRef,
+    themeService: ThemeService,
+    unsavedChangesService: UnsavedChangesService,
   ) {
-    super(i18n, toast, voteResultService, dialog, secondFactorTransactionService, politicalBusinessResultService, cd, roleService, parent);
+    super(
+      votingAusmittlungMonitoringWebAppUrl,
+      i18n,
+      toast,
+      voteResultService,
+      dialog,
+      secondFactorTransactionService,
+      politicalBusinessResultService,
+      cd,
+      roleService,
+      themeService,
+      unsavedChangesService,
+      parent,
+    );
   }
 
   public get hasUnsavedChanges(): boolean {
-    return !isEqual(this.resultDetail, this.lastSavedVoteResult);
+    return !isEqual(this.resultDetail, this.lastSavedResultDetail);
   }
 
   public async save(): Promise<void> {
@@ -79,8 +95,9 @@ export class ContestVoteDetailComponent extends AbstractContestPoliticalBusiness
       } else {
         await this.resultService.enterCountOfVoters(this.resultDetail);
       }
-      this.lastSavedVoteResult = cloneDeep(this.resultDetail);
+      this.lastSavedResultDetail = cloneDeep(this.resultDetail);
       this.toast.success(this.i18n.instant('APP.SAVED'));
+      this.unsavedChangesService.removeUnsavedChange(this.resultDetail.id);
     } finally {
       this.isActionExecuting = false;
     }
@@ -151,17 +168,6 @@ export class ContestVoteDetailComponent extends AbstractContestPoliticalBusiness
     } else {
       return await this.resultService.validateEnterCountOfVoters(this.resultDetail!);
     }
-  }
-
-  protected async executeStateUpdate(result: VoteResult, stateChange: StateChange): Promise<void> {
-    await super.executeStateUpdate(result, stateChange);
-    this.lastSavedVoteResult!.state = stateChange.newState;
-  }
-
-  protected async loadData(): Promise<VoteResult> {
-    const detailedResult = await super.loadData();
-    this.lastSavedVoteResult = cloneDeep(detailedResult);
-    return detailedResult;
   }
 
   private resetQuestionResults(questionResults: BallotQuestionResult[] | TieBreakQuestionResult[], isDetailedEntry: boolean): void {

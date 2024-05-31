@@ -13,8 +13,7 @@
     <ng-container *voAusmPermission="deleteBallotPermission">
       <bc-button
         *ngIf="!readonly"
-        class="mb-2"
-        color="error"
+        color="warn"
         variant="tertiary"
         [disabled]="disabled || actionExecuting || !canDeleteBallot"
         [label]="labelDelete | translate"

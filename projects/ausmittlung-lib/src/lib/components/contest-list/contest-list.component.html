@@ -1,25 +1,25 @@
-<bc-advanced-table [dataSource]="contests">
-  <ng-container bcColumnDef="date">
-    <th bc-header-cell *bcHeaderCellDef>{{ 'CONTEST.DATE' | translate }}</th>
-    <td bc-cell *bcCellDef="let element">{{ element.date | date }}</td>
+<bc-table selection [dataSource]="contests">
+  <ng-container columnDef="date">
+    <bc-header-cell *headerCellDef>{{ 'CONTEST.DATE' | translate }}</bc-header-cell>
+    <bc-data-cell *dataCellDef="let element">{{ element.date | date }}</bc-data-cell>
   </ng-container>
 
-  <ng-container bcColumnDef="endOfTestingPhase">
-    <th bc-header-cell *bcHeaderCellDef>{{ 'CONTEST.END_OF_TESTING_PHASE' | translate }}</th>
-    <td bc-cell *bcCellDef="let element">{{ element.endOfTestingPhase | date:'short' }}</td>
+  <ng-container columnDef="endOfTestingPhase">
+    <bc-header-cell *headerCellDef>{{ 'CONTEST.END_OF_TESTING_PHASE' | translate }}</bc-header-cell>
+    <bc-data-cell *dataCellDef="let element">{{ element.endOfTestingPhase | date:'short' }}</bc-data-cell>
   </ng-container>
 
-  <ng-container bcColumnDef="contestEntriesDetails">
-    <th bc-header-cell *bcHeaderCellDef>{{ 'CONTEST.POLITICAL_BUSINESSES' | translate }}</th>
-    <td bc-cell *bcCellDef="let element">
+  <ng-container columnDef="contestEntriesDetails">
+    <bc-header-cell *headerCellDef>{{ 'CONTEST.POLITICAL_BUSINESSES' | translate }}</bc-header-cell>
+    <bc-data-cell *dataCellDef="let element">
       <div class="my-1" *ngFor="let detail of element.contestEntriesDetails">
         {{'DOMAIN_OF_INFLUENCE_TYPES.' + detail.domainOfInfluenceType | translate}}: {{detail.contestEntriesCount}}
       </div>
-    </td>
+    </bc-data-cell>
   </ng-container>
 
-  <tr bc-header-row *bcHeaderRowDef="columns"></tr>
-  <tr bc-advanced-table-row *bcRowDef="let row; columns: columns"
-      [selectable]="true"
-      (rowSelected)="openDetail.emit(row)"></tr>
-</bc-advanced-table>
+  <bc-header-row *headerRowDef="let row; columns: columns"></bc-header-row>
+  <bc-data-row *dataRowDef="let row; columns: columns; let i = index" selectionToggle [selectionToggleValue]="row"
+    selectionRow [selectionRowValue]="row" (click)="openDetail.emit(row)">
+  </bc-data-row>
+</bc-table>

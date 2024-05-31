@@ -1,0 +1,45 @@
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+:host {
+  display: block;
+}
+
+.super-apportionment-header {
+  @extend .pb-2;
+
+  text-align: right;
+
+  vo-ausm-admonition {
+    display: inline-block;
+  }
+}
+
+.super-apportionment-table {
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 0;
+  margin: 0.5rem auto;
+  width: 100%;
+  align-items: center;
+
+  // styles copy pasted from bc-table
+  .super-apportionment-table-entry {
+    @extend .p-1;
+
+    display: flex;
+    align-items: center;
+    padding: 10px 4px;
+    height: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+    border-bottom: 1px solid rgb(0 0 0 / 12%);
+
+    &.bold {
+      border-bottom: 2px solid rgb(0 0 0 / 36%);
+    }
+
+    &.header {
+      color: #7b7b7b;
+    }
+  }
+}

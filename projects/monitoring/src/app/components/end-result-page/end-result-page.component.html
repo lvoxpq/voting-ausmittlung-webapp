@@ -2,15 +2,16 @@
              [enableSidebar]="!newZhFeaturesEnabled"
              [sidebarTemplate]="sidebar"
              [sidebarOpen]="!newZhFeaturesEnabled"
-             header="END_RESULT.OVERVIEW">
+             [header]="'END_RESULT.OVERVIEW' + (isPartialResult ? '_PARTIAL_RESULT' : '')">
 
   <vo-lib-page-header header>
     <div left>
       <bc-breadcrumbs>
-        <bc-breadcrumb-item link="../../contests">{{'CONTEST.DETAIL.CONTESTS_TITLE' | translate}}</bc-breadcrumb-item>
-        <bc-breadcrumb-item [link]="'../../contests/' + contest?.id">
+        <bc-breadcrumb-item [link]="(!hasPoliticalBusinessUnionContext ? '../../' : '../../../../') + 'contests'">{{'CONTEST.DETAIL.CONTESTS_TITLE' | translate}}</bc-breadcrumb-item>
+        <bc-breadcrumb-item [link]="(!hasPoliticalBusinessUnionContext ? '../../' : '../../../../') + 'contests/' + contest?.id">
           {{'MONITORING_COCKPIT.TITLE' | translate}}
         </bc-breadcrumb-item>
+        <bc-breadcrumb-item *ngIf="hasPoliticalBusinessUnionContext" link="../../">{{'END_RESULT.OVERVIEW' | translate}}</bc-breadcrumb-item>
         <bc-breadcrumb-item>{{'END_RESULT.OVERVIEW' | translate}}</bc-breadcrumb-item>
       </bc-breadcrumbs>
     </div>

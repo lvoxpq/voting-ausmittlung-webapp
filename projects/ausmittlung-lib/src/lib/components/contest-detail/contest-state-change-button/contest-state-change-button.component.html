@@ -1,8 +1,8 @@
 <vo-lib-inline-spinner [loading]="isActionExecuting" position="right">
   <!-- only show this button when at least one menu item is shown (via ngIf) -->
   <bc-button
-    *ngIf="showSetAllAuditedTentatively
-      || (showResetResultsInTestingPhase && !resultList.contest.testingPhaseEnded)
+    *ngIf="(showSetAllAuditedTentatively && canSetAllToAuditedTentatively)
+      || (showResetResultsInTestingPhase && !resultList.contest.testingPhaseEnded && canResetResultsInTestingPhase)
       || (!contentReadonly && !resultList?.contest.locked && resultList.currentTenantIsResponsible && (canResetResults || canFinishSubmission))"
     variant="tertiary"
     [label]="buttonText | translate"
@@ -14,7 +14,7 @@
       *ngIf="showSetAllAuditedTentatively"
       [disabled]="!canSetAllToAuditedTentatively || isActionExecuting"
       (click)="setAllResponsibleAuditedTentatively()">
-      {{ 'CONTEST.DETAIL.STATE_ACTION.ALL_TO_AUDIT_TENTATIVELY' | translate }}
+      {{ 'CONTEST.DETAIL.STATE_ACTION.ALL_TO_AUDIT_TENTATIVELY' | translate: { state: stateDescriptionsByState[states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY] ?? 'COUNTING_CIRCLE_RESULT_STATE.' + states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY | translate } }}
     </button>
     <button
       mat-menu-item

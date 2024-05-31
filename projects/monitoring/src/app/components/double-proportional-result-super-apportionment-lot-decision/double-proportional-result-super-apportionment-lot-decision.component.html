@@ -1,0 +1,43 @@
+<div class="mb-4" *ngIf="!initialLoading; else spinner">
+  <h3 translate="DOUBLE_PROPORTIONAL_RESULT.SUPER_APPORTIONMENT.LOT_DECISION.TITLE"></h3>
+  <p>{{ 'DOUBLE_PROPORTIONAL_RESULT.SUPER_APPORTIONMENT.LOT_DECISION.SUB_TITLE' | translate }}</p>
+
+
+  <bc-table #selection="selection"
+            selection
+            [dataSource]="lotDecisions"
+            (selectionChange)="lotDecisionChange($event.after.length > 0 ? $event.after[0].value : undefined)">
+    <ng-container columnDef="lot">
+      <bc-header-cell *headerCellDef>{{ 'DOUBLE_PROPORTIONAL_RESULT.SUPER_APPORTIONMENT.LOT_DECISION.LOT' | translate }}</bc-header-cell>
+      <bc-data-cell *dataCellDef="let element">{{ element.number }}</bc-data-cell>
+    </ng-container>
+
+    <ng-container *ngFor="let lotDecisionColumnDef of lotDecisionColumnDefs" [columnDef]="lotDecisionColumnDef">
+      <bc-header-cell *headerCellDef>{{ lotDecisionColumnDef }}</bc-header-cell>
+      <bc-data-cell *dataCellDef="let element">{{ getNumberOfMandatesByColumnDef(element, lotDecisionColumnDef) }}</bc-data-cell>
+    </ng-container>
+
+    <bc-header-row *headerRowDef="let row; columns: columns"></bc-header-row>
+    <bc-data-row *dataRowDef="let row; columns: columns; let i = index"
+                 #rowSelection="selectionToggle"
+                 selectionToggle
+                 [selectionToggleValue]="row"
+                 selectionRow
+                 [selectionRowValue]="row"
+                 (click)="rowSelection.toggle()"></bc-data-row>
+  </bc-table>
+
+  <div class="buttons">
+    <vo-lib-inline-spinner *ngIf="newLotDecisionSelected && !doubleProportionalResult.contest.locked" [loading]="saving">
+      <bc-button variant="primary"
+                 [disabled]="saving"
+                 [label]="'APP.CONFIRM' | translate"
+                 (buttonClick)="updateLotDecision()">
+      </bc-button>
+    </vo-lib-inline-spinner>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <bc-spinner></bc-spinner>
+</ng-template>

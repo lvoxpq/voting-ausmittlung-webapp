@@ -57,7 +57,8 @@ export function updateCountOfVotersCalculatedFields(
     return;
   }
 
-  countOfVoters.voterParticipation = countOfVoters.totalReceivedBallots / totalCountOfVoters;
+  // round to 6 decimal places has to be in sync with backend
+  countOfVoters.voterParticipation = Math.round((countOfVoters.totalReceivedBallots / totalCountOfVoters) * 1000000) / 1000000;
 }
 
 export function mapToNullableCountOfVoters(

@@ -1,9 +1,8 @@
 <p>
-  <bc-icon [icon]="result.isOptional ? 'exclamation-circle' : result.isValid ? 'check-circle' : 'times-circle'"
-
+  <bc-icon [icon]="result.isOptional ? 'exclamation-circle' : result.isValid ? 'check-circle' : 'remove'"
            [class.invalid]="!result.isValid"
            [class.optional]="result.isOptional"></bc-icon>
-  <span>{{ 'VALIDATION.VALUES.' + result.translationId + '.' + (result.isValid ? 'VALID' : 'INVALID') | translate : result.data }}</span>
+  <span class="ml-1">{{ 'VALIDATION.VALUES.' + result.translationId + '.' + (result.isValid ? 'VALID' : 'INVALID') | translate : result.data }}</span>
 </p>
 
 <ul *ngIf="result.translationListItemsCount" class="my-0">

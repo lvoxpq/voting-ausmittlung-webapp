@@ -1,5 +1,6 @@
 <app-end-result-page [loading]="loading"
                      [contest]="endResult?.contest"
+                     [isPartialResult]="isPartialResult"
                      [countOfVotersInformation]="endResult?.countOfVotersInformation"
                      [votingCards]="endResult?.votingCards"
                      [domainOfInfluenceType]="endResult?.election?.domainOfInfluence?.type"
@@ -42,9 +43,9 @@
         <app-end-result-type-selector *ngIf="endResult"
                                       [finalized]="endResult.finalized"
                                       (finalizedChange)="setFinalized($event)"
-                                      [disabled]="!endResult.allCountingCirclesDone || endResult.contest.locked || hasOpenRequiredLotDecisions || finalizing"></app-end-result-type-selector>
+                                      [disabled]="!endResult.allCountingCirclesDone || endResult.contest.locked || hasOpenRequiredLotDecisions || finalizing || isPartialResult"></app-end-result-type-selector>
       </vo-lib-inline-spinner>
-      <bc-button *ngIf="hasLotDecisions && endResult.allCountingCirclesDone && !endResult.contest.locked"
+      <bc-button *ngIf="hasLotDecisions && endResult.allCountingCirclesDone && !endResult.contest.locked && !isPartialResult"
                  [label]="'END_RESULT.ELECTION.LOT_DECISION.OPEN' | translate"
                  (buttonClick)="openUpdateLotDecisions()">
       </bc-button>

@@ -7,7 +7,6 @@
 import {
   AppHeaderBarIamModule,
   AppHeaderBarModule,
-  AppLayoutModule,
   AuthenticationModule,
   AuthorizationModule,
   BreadcrumbItemModule,
@@ -22,12 +21,15 @@ import {
   NumberModule,
   RadioButtonModule,
   RoleModule,
+  SegmentedControlGroupModule,
   SnackbarModule,
   SpinnerModule,
+  SwitchModule,
   TableModule,
   TabsModule,
   TenantModule,
   TextModule,
+  TooltipModule,
   UserModule,
 } from '@abraxas/base-components';
 import { ENV_INJECTION_TOKEN, GRPC_INTERCEPTORS, VotingLibModule } from '@abraxas/voting-lib';
@@ -82,6 +84,18 @@ import { BreadcrumbsService } from './services/breadcrumbs.service';
 import { WebpackTranslateLoader } from './services/webpack-translate-loader';
 import { ExportCockpitPoliticalBusinessesComponent } from './components/export-cockpit-political-businesses/export-cockpit-political-businesses.component';
 import { ProportionalElectionManualEndResultDialogComponent } from './components/proportional-election-manual-end-result-dialog/proportional-election-manual-end-result-dialog.component';
+import { MonitoringPoliticalBusinessesOverviewComponent } from './components/monitoring-political-businesses-overview/monitoring-political-businesses-overview.component';
+import { ProportionalElectionUnionEndResultComponent } from './pages/proportional-election-union-end-result/proportional-election-union-end-result.component';
+import { ProportionalElectionUnionDoubleProportionalResultComponent } from './pages/proportional-election-union-double-proportional-result/proportional-election-union-double-proportional-result.component';
+import { DoubleProportionalResultSubApportionmentComponent } from './components/double-proportional-result-sub-apportionment/double-proportional-result-sub-apportionment.component';
+import { DoubleProportionalResultSuperApportionmentComponent } from './components/double-proportional-result-super-apportionment/double-proportional-result-super-apportionment.component';
+import { ProportionalElectionDoubleProportionalResultComponent } from './pages/proportional-election-double-proportional-result/proportional-election-double-proportional-result.component';
+import { MonitoringCockpitGridStatusBarComponent } from './components/monitoring-cockpit-grid-status-bar/monitoring-cockpit-grid-status-bar.component';
+import { MatTooltip } from '@angular/material/tooltip';
+import { DoubleProportionalResultSuperApportionmentLotDecisionComponent } from './components/double-proportional-result-super-apportionment-lot-decision/double-proportional-result-super-apportionment-lot-decision.component';
+import { DoubleProportionalResultSubApportionmentLotDecisionComponent } from './components/double-proportional-result-sub-apportionment-lot-decision/double-proportional-result-sub-apportionment-lot-decision.component';
+import { PoliticalBusinessTableComponent } from './components/political-business-table/political-business-table.component';
+import { CountingCircleTableComponent } from './components/counting-circle-table/counting-circle-table.component';
 
 registerLocaleData(localeDeCh);
 
@@ -115,6 +129,17 @@ registerLocaleData(localeDeCh);
     ResultImportListDialogComponent,
     ExportCockpitDialogComponent,
     ExportCockpitPoliticalBusinessesComponent,
+    MonitoringPoliticalBusinessesOverviewComponent,
+    ProportionalElectionUnionEndResultComponent,
+    ProportionalElectionUnionDoubleProportionalResultComponent,
+    DoubleProportionalResultSuperApportionmentComponent,
+    DoubleProportionalResultSuperApportionmentLotDecisionComponent,
+    DoubleProportionalResultSubApportionmentLotDecisionComponent,
+    DoubleProportionalResultSubApportionmentComponent,
+    MonitoringCockpitGridStatusBarComponent,
+    ProportionalElectionDoubleProportionalResultComponent,
+    PoliticalBusinessTableComponent,
+    CountingCircleTableComponent,
   ],
   imports: [
     BrowserModule,
@@ -151,9 +176,12 @@ registerLocaleData(localeDeCh);
     NumberModule,
     LabelModule,
     TabsModule,
-    AppLayoutModule,
     AppHeaderBarIamModule,
     AppHeaderBarModule,
+    TooltipModule,
+    SegmentedControlGroupModule,
+    MatTooltip,
+    SwitchModule,
   ],
   providers: [
     ...getCommonProviders(),

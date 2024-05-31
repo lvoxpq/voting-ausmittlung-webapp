@@ -5,8 +5,8 @@
  */
 
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CountingCircle } from '../../models';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'vo-ausm-select-counting-circle-dialog',

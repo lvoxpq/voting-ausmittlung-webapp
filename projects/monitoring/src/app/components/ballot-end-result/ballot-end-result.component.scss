@@ -16,5 +16,10 @@
   .ballot-results {
     flex: 2;
     margin-left: 2rem;
+
+    .question-results {
+      display: flex;
+      column-gap: 1.25rem;
+    }
   }
 }

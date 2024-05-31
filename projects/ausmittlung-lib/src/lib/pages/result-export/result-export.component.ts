@@ -9,7 +9,6 @@ import { Contest, CountingCircle, ProtocolExport, ProtocolExportStateChange, Res
 import { ExportService } from '../../services/export.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ResultExportService } from '../../services/result-export.service';
 import { BreadcrumbItem, BreadcrumbsService } from '../../services/breadcrumbs.service';
@@ -17,6 +16,7 @@ import { ProtocolExportState } from '@abraxas/voting-ausmittlung-service-proto/g
 import { DialogService } from '@abraxas/voting-lib';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
+import { TableDataSource } from '@abraxas/base-components';
 
 enum Tabs {
   PROTOCOLS,
@@ -46,7 +46,7 @@ export class ResultExportComponent implements OnInit, OnDestroy {
 
   public contest?: Contest;
   public countingCircle?: CountingCircle;
-  public templates: MatTableDataSource<ResultExportTemplate> = new MatTableDataSource<ResultExportTemplate>();
+  public templates: TableDataSource<ResultExportTemplate> = new TableDataSource<ResultExportTemplate>();
   public selectedTemplates = new SelectionModel<ResultExportTemplate>(true, []);
   public allTemplatesSelected: boolean = false;
 

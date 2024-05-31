@@ -8,15 +8,16 @@ import { ContestServicePromiseClient } from '@abraxas/voting-ausmittlung-service
 import { ContestState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/contest_pb';
 import {
   GetAccessibleCountingCirclesRequest,
+  GetCantonDefaultsRequest,
   GetContestRequest,
   ListContestSummariesRequest,
-  ListPoliticalBusinessUnionsRequest,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/contest_requests_pb';
 import { GrpcBackendService, GrpcEnvironment, GrpcService } from '@abraxas/voting-lib';
 import { Inject, Injectable } from '@angular/core';
-import { CountingCircle, DomainOfInfluenceCantonDefaults, PoliticalBusinessUnion } from '../models';
-import { Contest, ContestProto, ContestSummary, ContestSummaryProto } from '../models/contest.model';
+import { ContestCantonDefaults, CountingCircle } from '../models';
+import { Contest, ContestCantonDefaultsProto, ContestProto, ContestSummary, ContestSummaryProto } from '../models/contest.model';
 import { GRPC_ENV_INJECTION_TOKEN } from './tokens';
+import { groupBySingle } from './utils/array.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,7 @@ export class ContestService extends GrpcService<ContestServicePromiseClient> {
       eVotingFrom: data.getEVotingFrom()?.toDate(),
       eVotingTo: data.getEVotingTo()?.toDate(),
       locked: state === ContestState.CONTEST_STATE_PAST_LOCKED || state === ContestState.CONTEST_STATE_ARCHIVED,
+      cantonDefaults: ContestService.mapToCantonDefaults(data.getCantonDefaults()!),
     };
   }
 
@@ -71,15 +73,24 @@ export class ContestService extends GrpcService<ContestServicePromiseClient> {
     );
   }
 
-  public listPoliticalBusinessUnions(contestId: string): Promise<PoliticalBusinessUnion[]> {
-    const req = new ListPoliticalBusinessUnionsRequest();
-    req.setContestId(contestId);
-
+  public getCantonDefaults(request: GetCantonDefaultsRequest): Promise<ContestCantonDefaults> {
     return this.request(
-      c => c.listPoliticalBusinessUnions,
-      req,
-      r => r.toObject().unionsList,
+      c => c.getCantonDefaults,
+      request,
+      r => ContestService.mapToCantonDefaults(r),
     );
+  }
+
+  private static mapToCantonDefaults(data: ContestCantonDefaultsProto): ContestCantonDefaults {
+    const descriptions = data.getCountingCircleResultStateDescriptionsList().map(x => x.toObject());
+    return {
+      ...data.toObject(),
+      countingCircleResultStateDescriptionsByState: groupBySingle(
+        descriptions,
+        x => x.state,
+        x => x.description,
+      ),
+    };
   }
 
   private mapToContestSummaries(data: ContestSummaryProto[]): ContestSummary[] {
@@ -102,6 +113,7 @@ export class ContestService extends GrpcService<ContestServicePromiseClient> {
       eVotingTo: data.getEVotingTo()?.toDate(),
       state,
       locked: state === ContestState.CONTEST_STATE_PAST_LOCKED || state === ContestState.CONTEST_STATE_ARCHIVED,
+      cantonDefaults: ContestService.mapToCantonDefaults(data.getCantonDefaults()!),
     };
   }
 }

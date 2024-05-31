@@ -162,9 +162,9 @@ export class VoteResultBundleService extends GrpcService<VoteResultBundleService
     await this.requestEmptyResp(c => c.bundleCorrectionFinished, req);
   }
 
-  public async succeedBundleReview(bundleId: string): Promise<void> {
+  public async succeedBundleReview(bundleIds: string[]): Promise<void> {
     const req = new SucceedVoteBundleReviewRequest();
-    req.setBundleId(bundleId);
+    req.setBundleIdsList(bundleIds);
     await this.requestEmptyResp(c => c.succeedBundleReview, req);
   }
 

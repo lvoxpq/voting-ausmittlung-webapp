@@ -4,8 +4,8 @@
  * For license information see LICENSE file.
  */
 
-import { DialogService, SnackbarService } from '@abraxas/voting-lib';
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
+import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   ContestCountingCircleDetails,
@@ -23,6 +23,9 @@ import { AbstractContestPoliticalBusinessDetailComponent } from '../contest-poli
 import { ContestPoliticalBusinessDetailComponent } from '../contest-political-business-detail/contest-political-business-detail.component';
 import { ContestMajorityElectionDetailDetailedComponent } from './contest-majority-election-detail-detailed/contest-majority-election-detail-detailed.component';
 import { ContestMajorityElectionDetailFinalResultsComponent } from './contest-majority-election-detail-final-results/contest-majority-election-detail-final-results.component';
+import { UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { cloneDeep } from 'lodash';
+import { VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL } from '../../../tokens';
 
 @Component({
   selector: 'vo-ausm-contest-majority-election-detail',
@@ -34,11 +37,6 @@ export class ContestMajorityElectionDetailComponent extends AbstractContestPolit
 > {
   public readonly entryVariants: typeof MajorityElectionResultEntry = MajorityElectionResultEntry;
 
-  // set has edits to true by default
-  // since for majority elections save and validate needs to be clicked before submit should be available
-  // and validations should be ran in the frontend before submitting
-  public hasEdits: boolean = true;
-
   public candidateResultsValid: boolean = true;
   public countOfVotersValid: boolean = true;
 
@@ -49,6 +47,7 @@ export class ContestMajorityElectionDetailComponent extends AbstractContestPolit
   private contestMajorityElectionDetailFinalResultsComponent?: ContestMajorityElectionDetailFinalResultsComponent;
 
   constructor(
+    @Inject(VOTING_AUSMITTLUNG_MONITORING_WEBAPP_URL) votingAusmittlungMonitoringWebAppUrl: string,
     parent: ContestPoliticalBusinessDetailComponent,
     i18n: TranslateService,
     toast: SnackbarService,
@@ -58,8 +57,11 @@ export class ContestMajorityElectionDetailComponent extends AbstractContestPolit
     secondFactorTransactionService: SecondFactorTransactionService,
     politicalBusinessResultService: PoliticalBusinessResultService,
     cd: ChangeDetectorRef,
+    themeService: ThemeService,
+    unsavedChangesService: UnsavedChangesService,
   ) {
     super(
+      votingAusmittlungMonitoringWebAppUrl,
       i18n,
       toast,
       resultService,
@@ -68,6 +70,8 @@ export class ContestMajorityElectionDetailComponent extends AbstractContestPolit
       politicalBusinessResultService,
       cd,
       permissionService,
+      themeService,
+      unsavedChangesService,
       parent,
     );
   }
@@ -99,8 +103,9 @@ export class ContestMajorityElectionDetailComponent extends AbstractContestPolit
       } else {
         await this.resultService.enterCountOfVoters(this.resultDetail.id, this.resultDetail.countOfVoters);
       }
+      this.lastSavedResultDetail = cloneDeep(this.resultDetail);
       this.toast.success(this.i18n.instant('APP.SAVED'));
-      this.hasEdits = false;
+      this.unsavedChangesService.removeUnsavedChange(this.resultDetail.id);
     } finally {
       this.isActionExecuting = false;
     }

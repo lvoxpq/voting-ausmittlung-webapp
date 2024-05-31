@@ -4,35 +4,47 @@
 
   <div class="ballot-results">
     <div *ngFor="let questionEndResult of endResult.questionEndResults">
-      <app-question-popular-majority-algorithm-end-result *ngIf="isPopularMajorityAlgorithm; else countingCircleAlgorithm"
-                                                          [eVoting]="eVoting"
-                                                          [isTieBreakQuestion]="false"
-                                                          [ballotNumberOfQuestions]="endResult.questionEndResults.length"
-                                                          [endResult]="questionEndResult">
-      </app-question-popular-majority-algorithm-end-result>
-      <ng-template #countingCircleAlgorithm>
-        <app-question-counting-circle-algorithm-end-result [isTieBreakQuestion]="false"
+      <p class="whitespace-pre-wrap mb-2">
+        {{ questionEndResult.question | translateVoteQuestion: false:'question':endResult.questionEndResults.length }}
+      </p>
+      <div class="question-results">
+        <app-question-popular-majority-algorithm-end-result *ngIf="isPopularMajorityAlgorithm"
+                                                            [eVoting]="eVoting"
+                                                            [isTieBreakQuestion]="false"
+                                                            [ballotNumberOfQuestions]="endResult.questionEndResults.length"
+                                                            [endResult]="questionEndResult">
+        </app-question-popular-majority-algorithm-end-result>
+
+        <app-question-counting-circle-algorithm-end-result *ngIf="isCountingCircleAlgorithmAlgorithm"
+                                                           [isTieBreakQuestion]="false"
                                                            [ballotNumberOfQuestions]="endResult.questionEndResults.length"
                                                            [endResult]="questionEndResult"
-                                                           [voteResultAlgorithm]="voteResultAlgorithm">
+                                                           [voteResultAlgorithm]="voteResultAlgorithm"
+                                                           [showAcceptedLabel]="!isPopularMajorityAlgorithm || !isCountingCircleAlgorithmAlgorithm">
         </app-question-counting-circle-algorithm-end-result>
-      </ng-template>
+      </div>
     </div>
 
     <div *ngFor="let tieBreakQuestionEndResult of endResult.tieBreakQuestionEndResults">
-      <app-question-popular-majority-algorithm-end-result *ngIf="isPopularMajorityAlgorithm; else countingCircleAlgorithm"
-                                                          [eVoting]="eVoting"
-                                                          [isTieBreakQuestion]="true"
-                                                          [ballotNumberOfQuestions]="endResult.questionEndResults.length"
-                                                          [endResult]="tieBreakQuestionEndResult">
-      </app-question-popular-majority-algorithm-end-result>
-      <ng-template #countingCircleAlgorithm>
-        <app-question-counting-circle-algorithm-end-result [isTieBreakQuestion]="true"
+      <p class="whitespace-pre-wrap mb-2">
+        {{ tieBreakQuestionEndResult.question | translateVoteQuestion: true:'question':endResult.questionEndResults.length }}
+      </p>
+      <div class="question-results">
+        <app-question-popular-majority-algorithm-end-result *ngIf="isPopularMajorityAlgorithm"
+                                                            [eVoting]="eVoting"
+                                                            [isTieBreakQuestion]="true"
+                                                            [ballotNumberOfQuestions]="endResult.questionEndResults.length"
+                                                            [endResult]="tieBreakQuestionEndResult">
+        </app-question-popular-majority-algorithm-end-result>
+
+        <app-question-counting-circle-algorithm-end-result *ngIf="isCountingCircleAlgorithmAlgorithm"
+                                                           [isTieBreakQuestion]="true"
                                                            [ballotNumberOfQuestions]="endResult.questionEndResults.length"
                                                            [endResult]="tieBreakQuestionEndResult"
-                                                           [voteResultAlgorithm]="voteResultAlgorithm">
+                                                           [voteResultAlgorithm]="voteResultAlgorithm"
+                                                           [showAcceptedLabel]="!isPopularMajorityAlgorithm || !isCountingCircleAlgorithmAlgorithm">
         </app-question-counting-circle-algorithm-end-result>
-      </ng-template>
+      </div>
     </div>
   </div>
 </div>

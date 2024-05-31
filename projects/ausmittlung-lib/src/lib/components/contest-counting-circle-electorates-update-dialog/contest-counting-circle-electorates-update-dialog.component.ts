@@ -4,10 +4,9 @@
  * For license information see LICENSE file.
  */
 
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { CountingCircleElectorate } from '../../models';
 import { TranslateService } from '@ngx-translate/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { flatten } from '../../../public-api';
 import {
   ContestCountingCircleElectorateAssignDialogComponent,
@@ -16,6 +15,7 @@ import {
 } from '../contest-counting-circle-electorate-assign-dialog/contest-counting-circle-electorate-assign-dialog.component';
 import { ConfirmDialogComponent, ConfirmDialogData, ConfirmDialogResult, DialogService, SnackbarService } from '@abraxas/voting-lib';
 import { ContestCountingCircleElectorateService } from '../../services/contest-counting-circle-electorate.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'vo-ausm-contest-counting-circle-electorates-update-dialog',

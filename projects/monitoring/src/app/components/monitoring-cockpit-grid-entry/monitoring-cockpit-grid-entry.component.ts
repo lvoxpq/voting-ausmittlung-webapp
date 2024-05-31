@@ -6,6 +6,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ResultOverviewCountingCircleResult } from 'ausmittlung-lib';
+import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
 
 @Component({
   selector: 'app-monitoring-cockpit-grid-entry',
@@ -13,8 +14,21 @@ import { ResultOverviewCountingCircleResult } from 'ausmittlung-lib';
   styleUrls: ['./monitoring-cockpit-grid-entry.component.scss'],
 })
 export class MonitoringCockpitGridEntryComponent {
+  public readonly states: typeof CountingCircleResultState = CountingCircleResultState;
+
   @Input()
-  public result?: ResultOverviewCountingCircleResult;
+  public set results(results: ResultOverviewCountingCircleResult[]) {
+    if (results.length == 0) {
+      return;
+    }
+
+    if (results.length == 1) {
+      this.result = results[0];
+      return;
+    }
+
+    this.result = results.reduce((x, y) => (x.state < y.state ? x : y));
+  }
 
   @Input()
   public showDetails: boolean = false;
@@ -24,4 +38,18 @@ export class MonitoringCockpitGridEntryComponent {
 
   @Input()
   public newZhFeaturesEnabled: boolean = false;
+
+  @Input()
+  public stateDescriptionsByState: Record<number, string> = {};
+
+  @Input()
+  public disabled: boolean = false;
+
+  @Input()
+  public showPublishSwitch: boolean = false;
+
+  @Output()
+  public publishedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  public result?: ResultOverviewCountingCircleResult;
 }

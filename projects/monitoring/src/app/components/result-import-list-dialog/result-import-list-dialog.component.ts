@@ -6,10 +6,10 @@
 
 import { DialogService, SnackbarService } from '@abraxas/voting-lib';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ResultImport, ResultImportService } from 'ausmittlung-lib';
 import { ResultImportDialogComponent } from '../result-import-dialog/result-import-dialog.component';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export type ResultImportListDialogResult = 'imported' | 'deleted' | undefined;
 

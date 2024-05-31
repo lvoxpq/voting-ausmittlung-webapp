@@ -1,37 +1,43 @@
-<div class="cockpit-grid" [ngStyle]="{gridTemplateColumns: gridTemplateColumns}">
-  <div class="tabs-wrapper"
-    [class.tabs-disabled]="plausibiliseLoading"
-    [ngStyle]="{gridColumn: '3 / span ' + (filteredPoliticalBusinesses.length || 1)}">
-    <bc-tab-bar [selectedIndex]="selectedTabIndex" (selectedChange)="onlyCorrectedFilterSelected($event === 1)">
-      <bc-tab [label]="'MONITORING_COCKPIT.TAB_TO_CHECK' | translate:{count: countNotCorrected}"></bc-tab>
-      <bc-tab [label]="'MONITORING_COCKPIT.TAB_CHECKED' | translate:{count: countCorrected}"></bc-tab>
-    </bc-tab-bar>
-  </div>
-  <div class="pl-1 skip-col-1 counting-circle-filter">
+<div *ngIf="gridTemplateColumns" class="cockpit-grid" [ngStyle]="{gridTemplateColumns: gridTemplateColumns}">
+  <div class="col-span-2 counting-circle-filter">
     <bc-dropdown class="full-width"
+                 [label]="'MONITORING_COCKPIT.FILTER_COUNTING_CIRCLE' | translate"
                  [items]="countingCircles"
                  [value]="countingCircleFilter"
                  [clearable]="true"
+                 [optionalText]="''"
                  (valueChange)="countingCircleFilterSelected($event)"
                  [disabled]="plausibiliseLoading"
                  [typeaheadDebounceInterval]="250"
-                 displayExpr="name"></bc-dropdown>
+                 displayExpr="name"
+                 [subscriptSizing]="'dynamic'"></bc-dropdown>
   </div>
-  <ng-container *ngIf="filteredPoliticalBusinesses.length > 0; else noData">
+  <div [ngStyle]="{gridColumn: '3 / span ' + ((filteredPoliticalBusinesses.length + filteredPoliticalBusinessUnions.length + (notOwnedPoliticalBusinessIds.length > 0 && !politicalBusinessFilter && !politicalBusinessUnionFilter && !domainOfInfluenceTypeFilter ? 1 : 0)) || 1)}">
+    <bc-label [label]="'MONITORING_COCKPIT.FILTER_STATE.TITLE' | translate"></bc-label>
+    <bc-segmented-control-group [items]="allStateFilters" [value]="stateFilter" (valueChange)="stateFilterSelected($event)" width="100%"></bc-segmented-control-group>
+  </div>
+  <div class="col-span-2"></div>
+  <ng-container *ngIf="filteredPoliticalBusinesses.length > 0 || filteredPoliticalBusinessUnions.length > 0; else noData">
 
     <!-- CC Filter and DomainOfInfluenceTypes Row -->
     <div *ngFor="let type of filteredDomainOfInfluenceTypes"
          class="filter large"
-         [class.active]="type === domainOfInfluenceTypeFilter && !politicalBusinessFilter"
+         [class.active]="type === domainOfInfluenceTypeFilter && !politicalBusinessFilter && !politicalBusinessUnionFilter"
          (click)="domainOfInfluenceTypeFilterClicked(type)"
-         [ngStyle]="{gridColumn: 'span ' + filteredPoliticalBusinessesByDoiType[type].length}">
+         [ngStyle]="{gridColumn: 'span ' + ((filteredPoliticalBusinessesByDoiType[type]?.length ?? 0) + (filteredPoliticalBusinessUnionsByDoiType[type]?.length ?? 0))}">
       <div></div>
       <span>{{'DOMAIN_OF_INFLUENCE_TYPES.' + type | translate}}</span>
       <bc-icon icon="filter" ></bc-icon>
     </div>
+    <div *ngIf="notOwnedPoliticalBusinessIds.length > 0 && !politicalBusinessFilter && !politicalBusinessUnionFilter && !domainOfInfluenceTypeFilter"
+         class="filter large not-clickable">
+      <div></div>
+      <span translate>MONITORING_COCKPIT.NOT_OWNED_POLITICAL_BUSINESS.TITLE</span>
+      <div></div>
+    </div>
 
     <!-- Political Business Filter Row -->
-    <div class="skip-col-1" translate>MONITORING_COCKPIT.FILTER_COUNTING_CIRCLE</div>
+    <div class="col-span-2"></div>
     <ng-container *ngFor="let type of filteredDomainOfInfluenceTypes">
       <ng-container *ngFor="let politicalBusiness of filteredPoliticalBusinessesByDoiType[type]">
         <div *ngIf="!politicalBusinessFilter || politicalBusiness === politicalBusinessFilter"
@@ -42,7 +48,43 @@
           <bc-icon icon="filter"></bc-icon>
         </div>
       </ng-container>
+
+      <ng-container *ngFor="let politicalBusinessUnion of filteredPoliticalBusinessUnionsByDoiType[type]">
+        <div *ngIf="!politicalBusinessUnionFilter || politicalBusinessUnion === politicalBusinessUnionFilter"
+             (click)="politicalBusinessUnionFilterClicked(politicalBusinessUnion, type)"
+             [class.active]="politicalBusinessUnionFilter === politicalBusinessUnion"
+             class="filter">
+          <span class="truncate">{{ politicalBusinessUnion.description }}</span>
+          <bc-icon icon="filter"></bc-icon>
+        </div>
+      </ng-container>
     </ng-container>
+    <div *ngIf="notOwnedPoliticalBusinessIds.length > 0 && !politicalBusinessFilter && !politicalBusinessUnionFilter && !domainOfInfluenceTypeFilter"
+         class="filter not-clickable" translate>MONITORING_COCKPIT.NOT_OWNED_POLITICAL_BUSINESS.TITLE</div>
+
+    <!-- Statusbar Row -->
+    <div class="col-span-2"></div>
+    <ng-container *ngFor="let type of filteredDomainOfInfluenceTypes">
+      <ng-container *ngFor="let politicalBusiness of filteredPoliticalBusinessesByDoiType[type]">
+        <app-monitoring-cockpit-grid-status-bar
+          [filteredCountingCircleResults]="filteredCountingCircleResults"
+          [statePlausibilisedDisabled]="contestCantonDefaults?.statePlausibilisedDisabled"
+          [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
+          [politicalBusinessId]="politicalBusiness.id">
+        </app-monitoring-cockpit-grid-status-bar>
+      </ng-container>
+
+      <ng-container *ngFor="let politicalBusinessUnion of filteredPoliticalBusinessUnionsByDoiType[type]">
+        <app-monitoring-cockpit-grid-status-bar
+          [filteredCountingCircleResults]="filteredCountingCircleResults"
+          [statePlausibilisedDisabled]="contestCantonDefaults?.statePlausibilisedDisabled"
+          [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
+          [politicalBusinessUnionId]="politicalBusinessUnion.id">
+        </app-monitoring-cockpit-grid-status-bar>
+      </ng-container>
+    </ng-container>
+
+    <div *ngIf="notOwnedPoliticalBusinessIds.length > 0 && !politicalBusinessFilter && !politicalBusinessUnionFilter && !domainOfInfluenceTypeFilter"></div>
 
     <!-- CC Result Rows -->
     <ng-container *ngFor="let result of filteredCountingCircleResults">
@@ -56,26 +98,54 @@
             *ngIf="!politicalBusinessFilter || politicalBusiness === politicalBusinessFilter"
             (openDetail)="openDetail(result.countingCircle, politicalBusiness)"
             [showDetails]="showDetails"
-            [result]="result.resultsByPoliticalBusinessId[politicalBusiness.id]"
-            [newZhFeaturesEnabled]="newZhFeaturesEnabled">
+            [results]="[result.resultsByPoliticalBusinessId[politicalBusiness.id]]"
+            [newZhFeaturesEnabled]="newZhFeaturesEnabled"
+            [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
+            [disabled]="publishing"
+            [showPublishSwitch]="publishResultsEnabled && politicalBusiness.domainOfInfluence.type < domainOfInfluenceTypes.DOMAIN_OF_INFLUENCE_TYPE_MU"
+            (publishedChanged)="updatePublished($event, politicalBusiness.businessType, [result.resultsByPoliticalBusinessId[politicalBusiness.id]])">
+          </app-monitoring-cockpit-grid-entry>
+        </ng-container>
+        <ng-container *ngFor="let politicalBusinessUnion of filteredPoliticalBusinessUnionsByDoiType[type]">
+          <app-monitoring-cockpit-grid-entry
+            *ngIf="!politicalBusinessUnionFilter || politicalBusinessUnion === politicalBusinessUnionFilter"
+            (openDetail)="openDetail(result.countingCircle, undefined)"
+            [showDetails]="showDetails"
+            [results]="result.resultsByPoliticalBusinessUnionId[politicalBusinessUnion.id]"
+            [newZhFeaturesEnabled]="newZhFeaturesEnabled"
+            [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
+            [disabled]="publishing"
+            [showPublishSwitch]="publishResultsEnabled && politicalBusinessUnion.politicalBusinesses[0].domainOfInfluence.type < domainOfInfluenceTypes.DOMAIN_OF_INFLUENCE_TYPE_MU"
+            (publishedChanged)="updatePublished($event, politicalBusinessUnion.politicalBusinesses[0].businessType, result.resultsByPoliticalBusinessUnionId[politicalBusinessUnion.id])">
           </app-monitoring-cockpit-grid-entry>
         </ng-container>
       </ng-container>
+
+      <div *ngIf="notOwnedPoliticalBusinessIds.length > 0 && !politicalBusinessFilter && !politicalBusinessUnionFilter && !domainOfInfluenceTypeFilter">
+        <div *ngIf="result.resultsByCountingCircleId[result.countingCircle.id] as results"
+             class="not-owned-political-business-container"
+             (click)="openDetail(result.countingCircle, undefined)">
+          <span>{{ ('MONITORING_COCKPIT.NOT_OWNED_POLITICAL_BUSINESS.' + (results.length > 1 ? 'MULTIPLE' : 'SINGLE')) | translate: { count: results.length } }}</span>
+        </div>
+      </div>
     </ng-container>
 
     <!-- Footer Row -->
-    <app-monitoring-cockpit-grid-footer *ngIf="!countingCircleFilter"
+    <app-monitoring-cockpit-grid-footer *ngIf="!countingCircleFilter && stateFilter.length === 0"
                                         [readOnly]="readOnly"
                                         (loadingChange)="plausibiliseLoading = $event"
                                         [filteredDomainOfInfluenceTypes]="filteredDomainOfInfluenceTypes"
                                         [filteredPoliticalBusinessesByDoiType]="filteredPoliticalBusinessesByDoiType"
+                                        [filteredPoliticalBusinessUnionsByDoiType]="filteredPoliticalBusinessUnionsByDoiType"
+                                        [politicalBusinessUnionByPoliticalBusinessId]="politicalBusinessUnionByPoliticalBusinessId"
                                         [countingCircleResults]="countingCircleResults"
-                                        [filteredCountingCircleResults]="filteredCountingCircleResults">
+                                        [filteredCountingCircleResults]="filteredCountingCircleResults"
+                                        [contestCantonDefaults]="contestCantonDefaults">
     </app-monitoring-cockpit-grid-footer>
   </ng-container>
   <ng-template #noData>
-    <div class="no-data"
-         [ngStyle]="{gridColumn: 'span ' + filteredPoliticalBusinesses.length}"
+    <div class="no-data ml-1 mt-2"
+         [ngStyle]="{gridColumn: 'span 0'}"
          translate>MONITORING_COCKPIT.NO_DATA</div>
   </ng-template>
 </div>

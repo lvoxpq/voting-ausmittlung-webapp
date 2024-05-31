@@ -6,10 +6,10 @@
 
 import { Component, Inject } from '@angular/core';
 import { CountingCircle, DomainOfInfluence, ResultList } from '../../models';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { cloneDeep } from 'lodash';
 import { ContactPersonEditDialogResult } from '../contest-detail/contest-detail-sidebar/contact-person-edit-dialog/contact-person-edit-dialog.component';
 import { ContestCountingCircleContactPersonService } from '../../services/contest-counting-circle-contact-person.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'vo-ausm-contact-dialog',

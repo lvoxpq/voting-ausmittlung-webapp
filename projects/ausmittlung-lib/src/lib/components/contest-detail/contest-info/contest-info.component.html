@@ -12,14 +12,15 @@
   </vo-ausm-info-panel-entry>
   <vo-ausm-info-panel-entry label="APP.STATE">
     <div class="state-container">
-      <vo-ausm-result-state-box [state]="resultList.state" [newZhFeaturesEnabled]="false"></vo-ausm-result-state-box>
+      <vo-ausm-result-state-box [state]="resultList.state" [newZhFeaturesEnabled]="false" [stateDescriptionsByState]="stateDescriptionsByState"></vo-ausm-result-state-box>
       <vo-ausm-contest-state-change-button
         [contentReadonly]="contentReadonly"
         [resultList]="resultList"
         [showResetResultsInTestingPhase]="showResetResultsInTestingPhase"
         [showSetAllAuditedTentatively]="showSetAllAuditedTentatively"
         (finishSubmission)="finishSubmission.emit()"
-        [buttonText]="'CONTEST.DETAIL.STATE_ACTION.LABEL_OLD'"></vo-ausm-contest-state-change-button>
+        [buttonText]="'CONTEST.DETAIL.STATE_ACTION.LABEL_OLD'"
+        [stateDescriptionsByState]="stateDescriptionsByState"></vo-ausm-contest-state-change-button>
     </div>
   </vo-ausm-info-panel-entry>
 </vo-ausm-info-panel>

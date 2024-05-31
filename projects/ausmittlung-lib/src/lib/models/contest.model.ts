@@ -9,6 +9,8 @@ import {
   ContestState,
   ContestSummary as ContestSummaryProto,
   ContestSummaryEntryDetails as ContestSummaryEntryDetailsProto,
+  ContestCantonDefaults as ContestCantonDefaultsProto,
+  CountingCircleResultStateDescription as CountingCircleResultStateDescriptionProto,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/contest_pb';
 import { SwissAbroadVotingRight as SwissAbroadVotingRightProto } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/swiss_abroad_voting_right_pb';
 
@@ -27,6 +29,7 @@ export type Contest = {
   eVotingTo?: Date;
   state: ContestState;
   locked: boolean;
+  cantonDefaults: ContestCantonDefaults;
 };
 export { ContestSummaryProto };
 export type ContestSummary = Contest & {
@@ -34,3 +37,8 @@ export type ContestSummary = Contest & {
 };
 export type ContestSummaryEntryDetails = ContestSummaryEntryDetailsProto.AsObject;
 export { SwissAbroadVotingRightProto as SwissAbroadVotingRight };
+export { ContestCantonDefaultsProto };
+export interface ContestCantonDefaults extends Omit<ContestCantonDefaultsProto.AsObject, 'countingCircleResultStateDescriptions'> {
+  countingCircleResultStateDescriptionsByState: Record<number, string>;
+}
+export type CountingCircleResultStateDescription = CountingCircleResultStateDescriptionProto.AsObject;
