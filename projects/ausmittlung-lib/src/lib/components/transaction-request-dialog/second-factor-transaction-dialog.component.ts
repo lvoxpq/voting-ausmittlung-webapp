@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -15,12 +15,15 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class SecondFactorTransactionDialogComponent {
   public hasError: boolean = false;
   public code: string;
+  public showQrCode: boolean = false;
+  public qrCode: string;
 
   constructor(
     private readonly dialogRef: MatDialogRef<SecondFactorTransactionDialogData>,
     @Inject(MAT_DIALOG_DATA) dialogData: SecondFactorTransactionDialogData,
   ) {
     this.code = dialogData.code;
+    this.qrCode = dialogData.qrCode;
   }
 
   public cancel(): void {
@@ -30,4 +33,5 @@ export class SecondFactorTransactionDialogComponent {
 
 export interface SecondFactorTransactionDialogData {
   code: string;
+  qrCode: string;
 }

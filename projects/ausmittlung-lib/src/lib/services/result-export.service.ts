@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -52,20 +52,15 @@ export class ResultExportService {
   }
 
   public async downloadResultBundleReviewExport(
-    templateKey: string,
+    protocolExportId: string,
     contestId: string,
-    countingCircleId: string,
-    politicalBusinessResultBundleId: string,
-    politicalBusinessId: string,
+    countingCircleId: string | undefined,
   ): Promise<void> {
-    const req: GenerateResultBundleReviewExportRequest = {
-      templateKey,
+    const req: FetchProtocolExportsRequest = {
       contestId,
       countingCircleId,
-      politicalBusinessResultBundleId,
-      politicalBusinessId,
+      protocolExportIds: [protocolExportId],
     };
-    const url = `${this.apiUrl}/bundle_review`;
-    return this.fileDownloadService.postDownloadFile(url, req);
+    return await this.fileDownloadService.postDownloadFile(`${this.apiUrl}/bundle_review`, req);
   }
 }

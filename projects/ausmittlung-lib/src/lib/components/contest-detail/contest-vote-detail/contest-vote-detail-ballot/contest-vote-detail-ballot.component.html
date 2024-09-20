@@ -7,13 +7,26 @@
                               [countOfVoters]="ballotResult.countOfVoters"
                               (countOfVotersChange)="countOfVotersChange.emit()"></vo-ausm-ballot-count-input>
   <div [class.vote-result-ballot-detail]="!newZhFeaturesEnabled">
-    <h4 class="mb-2">{{ (newZhFeaturesEnabled ? 'POLITICAL_BUSINESS.SUBMISSION' : 'VOTE.BALLOT.TITLE') | translate }}</h4>
+    <h4 class="mb-2">
+      <ng-container *ngIf="newZhFeaturesEnabled; else ballotTitle">
+        <ng-container *ngIf="!ballotResult.ballot.ballotSubType; else ballotSubType">
+          {{ 'POLITICAL_BUSINESS.SUBMISSION' | translate }}
+        </ng-container>
+      </ng-container>
+      <ng-template #ballotTitle>
+        {{ 'VOTE.BALLOT.TITLE' | translate }}
+      </ng-template>
+      <ng-template #ballotSubType>
+        {{ 'VOTE.BALLOT_SUB_TYPE.TYPES.' + ballotResult.ballot.ballotSubType | translate }}
+      </ng-template>
+    </h4>
     <div *ngFor="let questionResult of ballotResult.questionResults"
          class="mb-4">
       <vo-ausm-contest-vote-detail-question [eVoting]="eVoting"
                                             [readonly]="readonly"
                                             [ballotNumberOfQuestions]="ballotResult.questionResults.length"
                                             [result]="questionResult"
+                                            [ballotSubType]="ballotResult.ballot.ballotSubType"
                                             (countOfAnswersChanged)="countOfAnswersChanged.emit()"></vo-ausm-contest-vote-detail-question>
     </div>
     <div *ngFor="let tieBreakQuestionResult of ballotResult.tieBreakQuestionResults"

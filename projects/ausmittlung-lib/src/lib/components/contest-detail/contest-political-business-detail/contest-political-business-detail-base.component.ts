@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -171,7 +171,8 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
       this.isActionExecuting = true;
 
       const isAuditedTentativelyForSelfOwnedBusinesses =
-        event.oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING &&
+        (event.oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING ||
+          event.oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION) &&
         event.newState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY;
 
       if (
@@ -188,17 +189,24 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
       }
 
       await this.executeStateUpdate(this.resultDetail, event);
+      this.lastSavedResultDetail!.state = event.newState;
       this.toast.success(this.i18n.instant('APP.SAVED'));
       this.result.state = this.resultDetail.state = event.newState;
 
       switch (this.result.state) {
         case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING:
-        case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION:
           this.result.submissionDoneTimestamp = undefined;
           break;
+        case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION:
+          this.result.submissionDoneTimestamp = undefined;
+          this.result.readyForCorrectionTimestamp = new Date();
+          break;
         case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE:
+          this.result.submissionDoneTimestamp = new Date();
+          break;
         case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE:
           this.result.submissionDoneTimestamp = new Date();
+          this.result.readyForCorrectionTimestamp = undefined;
           break;
         case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY:
           this.result.auditedTentativelyTimestamp = new Date();
@@ -230,12 +238,19 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
       validationSummaries: [validationSummary],
       canEmitSave: !(isFinishingOperation && !validationSummary.isValid),
       header: `VALIDATION.${validationSummary.isValid ? 'VALID' : 'INVALID'}`,
-      saveLabel: isAuditedTentativelyForSelfOwnedBusinesses
-        ? 'ACTIONS.FINISH_SUBMISSION_AND_AUDIT_TENTATIVELY'
-        : isFinishingOperation && !validationSummary.isValid
-        ? 'APP.CONTINUE'
-        : 'COMMON.SAVE',
-      saveIcon: isAuditedTentativelyForSelfOwnedBusinesses ? 'external-link' : undefined,
+      saveLabel:
+        isAuditedTentativelyForSelfOwnedBusinesses && validationSummary.isValid
+          ? this.contestCantonDefaults?.newZhFeaturesEnabled
+            ? 'ACTIONS.SUBMIT_RESULTS_AND_AUDIT_TENTATIVELY.TITLE'
+            : 'ACTIONS.FINISH_SUBMISSION_AND_AUDIT_TENTATIVELY'
+          : isFinishingOperation && !validationSummary.isValid
+          ? 'APP.CONTINUE'
+          : 'COMMON.SAVE',
+      saveIcon: isAuditedTentativelyForSelfOwnedBusinesses && validationSummary.isValid ? 'external-link' : undefined,
+      hintLabel:
+        isAuditedTentativelyForSelfOwnedBusinesses && validationSummary.isValid && this.contestCantonDefaults?.newZhFeaturesEnabled
+          ? 'ACTIONS.SUBMIT_RESULTS_AND_AUDIT_TENTATIVELY.HINT'
+          : undefined,
     };
 
     const result = await this.dialog.openForResult<ValidationOverviewDialogComponent, ValidationOverviewDialogResult>(
@@ -247,7 +262,6 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
   }
 
   protected async executeStateUpdate({ id }: T, { oldState, newState, comment }: StateChange): Promise<void> {
-    this.lastSavedResultDetail!.state = newState;
     switch (newState) {
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE: {
         if (oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY) {
@@ -266,6 +280,7 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
         await this.secondFactorTransactionService.showDialogAndExecuteVerifyAction(
           () => this.resultService.submissionFinished(id, secondFactorTransaction.getId()),
           secondFactorTransaction.getCode(),
+          secondFactorTransaction.getQrCode(),
         );
         break;
       }
@@ -285,6 +300,7 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
         await this.secondFactorTransactionService.showDialogAndExecuteVerifyAction(
           () => this.resultService.correctionFinished(id, comment, secondFactorTransaction.getId()),
           secondFactorTransaction.getCode(),
+          secondFactorTransaction.getQrCode(),
         );
         break;
       }
@@ -296,12 +312,13 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
 
         if (oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING) {
           await this.resultService.submissionFinishedAndAuditedTentatively(id);
+          this.openMonitoring();
+          break;
+        }
 
-          const politicalBusinessTypeUrl = this.getPoliticalBusinessTypeUrl(this.resultDetail?.politicalBusiness.politicalBusinessType);
-          window.open(
-            `${this.votingAusmittlungMonitoringWebAppUrl}/${this.themeService.theme$.value}/${politicalBusinessTypeUrl}/${this.resultDetail?.politicalBusinessId}`,
-            '_blank',
-          );
+        if (oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION) {
+          await this.resultService.correctionFinishedAndAuditedTentatively(id);
+          this.openMonitoring();
           break;
         }
 
@@ -367,7 +384,7 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
     }
   }
 
-  private getPoliticalBusinessTypeUrl(politicalBusinessType?: PoliticalBusinessType) {
+  private getPoliticalBusinessTypeUrl(politicalBusinessType?: PoliticalBusinessType): string {
     switch (politicalBusinessType) {
       case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_VOTE:
         return 'vote-end-results';
@@ -375,6 +392,18 @@ export abstract class AbstractContestPoliticalBusinessDetailComponent<
         return 'majority-election-end-results';
       case PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_PROPORTIONAL_ELECTION:
         return 'proportional-election-end-results';
+      default:
+        throw new Error('invalid political business type');
     }
+  }
+
+  private openMonitoring(): void {
+    const politicalBusinessTypeUrl = this.getPoliticalBusinessTypeUrl(this.resultDetail?.politicalBusiness.politicalBusinessType);
+    const url =
+      `${this.votingAusmittlungMonitoringWebAppUrl}/${this.themeService.theme$.value}/` +
+      (this.contestCantonDefaults?.endResultFinalizeDisabled
+        ? `contests/${this.resultDetail?.politicalBusiness.contestId}/exports`
+        : `${politicalBusinessTypeUrl}/${this.resultDetail?.politicalBusinessId}`);
+    window.open(url, '_blank');
   }
 }

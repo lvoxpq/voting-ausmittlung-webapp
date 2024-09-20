@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -24,9 +24,10 @@ const RETRY_COUNT = 5;
 export class SecondFactorTransactionService {
   constructor(private readonly dialog: DialogService) {}
 
-  public showDialogAndExecuteVerifyAction<T>(action: () => Observable<T>, code: string): Promise<void> {
+  public showDialogAndExecuteVerifyAction<T>(action: () => Observable<T>, code: string, qrCode: string): Promise<void> {
     const data: SecondFactorTransactionDialogData = {
       code: code,
+      qrCode: qrCode,
     };
     const dialogRef = this.dialog.open<SecondFactorTransactionDialogComponent>(SecondFactorTransactionDialogComponent, data);
 

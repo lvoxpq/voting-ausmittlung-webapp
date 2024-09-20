@@ -1,10 +1,10 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ContactPerson } from '../../models';
 
 @Component({
@@ -18,4 +18,7 @@ export class ContactPersonEditComponent {
 
   @Input()
   public readonly: boolean = false;
+
+  @Output()
+  public contentChanged: EventEmitter<void> = new EventEmitter<void>();
 }

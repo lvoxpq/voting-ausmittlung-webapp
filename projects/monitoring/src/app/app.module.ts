@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -31,6 +31,7 @@ import {
   TextModule,
   TooltipModule,
   UserModule,
+  StatusLabelModule,
 } from '@abraxas/base-components';
 import { ENV_INJECTION_TOKEN, GRPC_INTERCEPTORS, VotingLibModule } from '@abraxas/voting-lib';
 import { registerLocaleData } from '@angular/common';
@@ -61,7 +62,6 @@ import { QuestionCountingCircleAlgorithmEndResultComponent } from './components/
 import { QuestionEndResultEntryComponent } from './components/ballot-end-result/question-end-result-entry/question-end-result-entry.component';
 import { QuestionPopularMajorityAlgorithmEndResultComponent } from './components/ballot-end-result/question-popular-majority-algorithm-end-result/question-popular-majority-algorithm-end-result.component';
 import { EndResultPageComponent } from './components/end-result-page/end-result-page.component';
-import { EndResultTypeSelectorComponent } from './components/end-result-type-selector/end-result-type-selector.component';
 import { ExportCockpitDialogComponent } from './components/export-cockpit-dialog/export-cockpit-dialog.component';
 import { ImportFileSelectComponent } from './components/result-import-dialog/import-file-select/import-file-select.component';
 import { MajorityElectionEndResultCandidatesListComponent } from './components/majority-election-end-result-candidates-list/majority-election-end-result-candidates-list.component';
@@ -96,6 +96,7 @@ import { DoubleProportionalResultSuperApportionmentLotDecisionComponent } from '
 import { DoubleProportionalResultSubApportionmentLotDecisionComponent } from './components/double-proportional-result-sub-apportionment-lot-decision/double-proportional-result-sub-apportionment-lot-decision.component';
 import { PoliticalBusinessTableComponent } from './components/political-business-table/political-business-table.component';
 import { CountingCircleTableComponent } from './components/counting-circle-table/counting-circle-table.component';
+import { EndResultStepActionBarComponent } from './components/end-result-step-action-bar/end-result-step-action-bar.component';
 
 registerLocaleData(localeDeCh);
 
@@ -123,7 +124,6 @@ registerLocaleData(localeDeCh);
     ProportionalElectionLotDecisionDialogComponent,
     ProportionalElectionManualEndResultDialogComponent,
     MonitoringCockpitGridFooterButtonsComponent,
-    EndResultTypeSelectorComponent,
     ImportFileSelectComponent,
     ResultImportDialogComponent,
     ResultImportListDialogComponent,
@@ -140,6 +140,7 @@ registerLocaleData(localeDeCh);
     ProportionalElectionDoubleProportionalResultComponent,
     PoliticalBusinessTableComponent,
     CountingCircleTableComponent,
+    EndResultStepActionBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -182,6 +183,7 @@ registerLocaleData(localeDeCh);
     SegmentedControlGroupModule,
     MatTooltip,
     SwitchModule,
+    StatusLabelModule,
   ],
   providers: [
     ...getCommonProviders(),

@@ -1,11 +1,12 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
 
 import { Component, Input } from '@angular/core';
 import { BallotResult } from '../../../../models';
+import { BallotSubType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/vote_pb';
 
 @Component({
   selector: 'vo-ausm-contest-vote-detail-results-graph',

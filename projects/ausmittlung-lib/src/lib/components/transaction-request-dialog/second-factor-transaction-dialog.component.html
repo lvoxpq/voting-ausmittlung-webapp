@@ -7,6 +7,17 @@
         {{ 'SECOND_FACTOR_TRANSACTION.INFO' | translate: { code } }}
       </p>
       <bc-spinner class="my-5" *ngIf="!hasError"></bc-spinner>
+      <bc-button
+        *ngIf="!showQrCode; else qrCodeContainer"
+        class="mb-3"
+        [variant]="'tertiary'"
+        [label]="'SECOND_FACTOR_TRANSACTION.NO_PUSH_NOTIFICATION' | translate"
+        (buttonClick)="showQrCode = true"
+      ></bc-button>
+      <ng-template #qrCodeContainer>
+        <p>{{ 'SECOND_FACTOR_TRANSACTION.QR_CODE' | translate }}</p>
+        <img [src]="qrCode" [alt]="'SECOND_FACTOR_TRANSACTION.QR_CODE_ALT' | translate"/>
+      </ng-template>
     </ng-container>
   </div>
 
@@ -16,5 +27,5 @@
 </vo-lib-dialog>
 
 <ng-template #error>
-  <vo-ausm-admonition class="my-5" [type]="'error'" [title]="'SECOND_FACTOR_TRANSACTION.ERROR' | translate"></vo-ausm-admonition>
+  <vo-ausm-admonition class="my-5" [type]="'error'" [titleText]="'SECOND_FACTOR_TRANSACTION.ERROR' | translate"></vo-ausm-admonition>
 </ng-template>

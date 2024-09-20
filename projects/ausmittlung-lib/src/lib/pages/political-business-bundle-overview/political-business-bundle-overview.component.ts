@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -7,7 +7,7 @@
 import { BallotBundleState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/ballot_bundle_pb';
 import { CountingCircleResultState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/counting_circle_pb';
 import { DialogService, SnackbarService, ThemeService } from '@abraxas/voting-lib';
-import { OnDestroy, OnInit, Directive } from '@angular/core';
+import { Directive, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
@@ -25,6 +25,10 @@ import { ResultExportService } from '../../services/result-export.service';
 import { PermissionService } from '../../services/permission.service';
 import { groupBy, groupBySingle } from '../../services/utils/array.utils';
 import { Permissions } from '../../models/permissions.model';
+import { ExportService } from '../../services/export.service';
+import { ProtocolExportState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/export_pb';
+import { DatePipe } from '@angular/common';
+import { PoliticalBusinessType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/political_business_pb';
 
 @Directive()
 export abstract class PoliticalBusinessBundleOverviewComponent<
@@ -46,6 +50,7 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
   private routeParamsSubscription?: Subscription;
   private routeDataSubscription: Subscription;
   private bundleStateChangesSubscription?: Subscription;
+  private stateChangesSubscription?: Subscription;
 
   protected constructor(
     protected readonly permissionService: PermissionService,
@@ -56,6 +61,8 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
     protected readonly router: Router,
     protected readonly themeService: ThemeService,
     protected readonly resultExportService: ResultExportService,
+    protected readonly exportService: ExportService,
+    private readonly datePipe: DatePipe,
   ) {
     this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
       this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
@@ -71,6 +78,7 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
     this.routeParamsSubscription?.unsubscribe();
     this.routeDataSubscription.unsubscribe();
     this.bundleStateChangesSubscription?.unsubscribe();
+    this.stateChangesSubscription?.unsubscribe();
   }
 
   public async back(): Promise<void> {
@@ -135,9 +143,47 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
     this.dialog.open(ShortcutDialogComponent, data);
   }
 
+  public async generateBundleReviewExport(bundle: PoliticalBusinessResultBundle): Promise<void> {
+    if (!this.result) {
+      return;
+    }
+
+    if (!(await this.confirmGenerationIfNeeded(bundle.protocolExport))) {
+      return;
+    }
+
+    // set state immediately to generating to show the loading bar
+    bundle.protocolExport = {
+      state: ProtocolExportState.PROTOCOL_EXPORT_STATE_GENERATING,
+      started: new Date(),
+      fileName: '',
+      exportTemplateId: '',
+      protocolExportId: '',
+      description: '',
+      entityDescription: '',
+    };
+
+    bundle.protocolExport.protocolExportId = await this.exportService.startBundleReviewExport(bundle.id, this.politicalBusinessType);
+  }
+
+  public async downloadBundleReviewExport(bundle: PoliticalBusinessResultBundle): Promise<void> {
+    if (!this.result) {
+      return;
+    }
+
+    const contestId = this.result.politicalBusinessResult.politicalBusiness.contestId;
+    const countingCircleId = this.result.politicalBusinessResult.countingCircleId;
+
+    await this.resultExportService.downloadResultBundleReviewExport(bundle.protocolExport!.protocolExportId, contestId, countingCircleId);
+  }
+
   protected abstract deleteBundleById(bundleId: string): Promise<void>;
 
   protected abstract loadBundles(resultId: string, params: Params): Promise<T>;
+
+  protected abstract get politicalBusinessType(): PoliticalBusinessType;
+
+  protected abstract get resultId(): string | undefined;
 
   protected abstract startChangesListener(
     resultId: string,
@@ -160,6 +206,7 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
     this.loading = true;
     try {
       this.bundleStateChangesSubscription?.unsubscribe();
+      this.stateChangesSubscription?.unsubscribe();
       this.result = await this.loadBundles(params.resultId, params);
 
       this.bundlesById = groupBySingle(
@@ -180,6 +227,18 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
           params,
           this.onChangesListenerRetry.bind(this, params),
         ).subscribe(x => this.bundleUpdated(x));
+
+        if (!this.resultId) {
+          return;
+        }
+
+        this.stateChangesSubscription = this.exportService
+          .getBundleReviewExportStateChanges(
+            this.resultId,
+            this.politicalBusinessType,
+            this.onBundleReviewExportStateChangeListenerRetry.bind(this, params),
+          )
+          .subscribe(changed => this.bundleReviewExportStateChanged(changed));
       }
     } finally {
       this.loading = false;
@@ -284,5 +343,56 @@ export abstract class PoliticalBusinessBundleOverviewComponent<
     }
 
     throw new Error('Bad bundle state parameter');
+  }
+
+  private bundleReviewExportStateChanged(changed: ProtocolExportStateChange): void {
+    const bundle = this.openBundles.find(t => t.protocolExport?.protocolExportId === changed.protocolExportId);
+
+    if (!bundle || !bundle.protocolExport) {
+      return;
+    }
+
+    bundle.protocolExport.state = changed.newState;
+    bundle.protocolExport.started = changed.started;
+    bundle.protocolExport.fileName = changed.fileName;
+  }
+
+  private async onBundleReviewExportStateChangeListenerRetry(params: Params): Promise<void> {
+    if (!this.stateChangesSubscription || !this.result) {
+      return;
+    }
+
+    // When the change listener fails, it is being retried with an exponential backoff
+    // During that retry backoff, changes aren't being delivered -> we need to poll for them
+    const result = await this.loadBundles(params.resultId, params);
+    for (const bundle of result.bundles) {
+      if (!bundle.protocolExport) {
+        continue;
+      }
+
+      const syntheticStateChange: ProtocolExportStateChange = {
+        exportTemplateId: bundle.protocolExport.exportTemplateId,
+        protocolExportId: bundle.protocolExport.protocolExportId,
+        newState: bundle.protocolExport.state,
+        started: bundle.protocolExport.started,
+        fileName: bundle.protocolExport.fileName,
+      };
+      this.bundleReviewExportStateChanged(syntheticStateChange);
+    }
+  }
+
+  private async confirmGenerationIfNeeded(protocolExport?: ProtocolExport): Promise<boolean> {
+    if (
+      !protocolExport ||
+      (protocolExport.state !== ProtocolExportState.PROTOCOL_EXPORT_STATE_GENERATING &&
+        protocolExport.state !== ProtocolExportState.PROTOCOL_EXPORT_STATE_COMPLETED)
+    ) {
+      return true;
+    }
+
+    const i18nPrefix = 'EXPORTS.CONFIRM_GENERATE_AGAIN';
+    const started = this.datePipe.transform(protocolExport.started, 'dd.MM.yyyy, HH:mm')!;
+    const message = this.i18n.instant(`${i18nPrefix}.MESSAGE.${protocolExport.state}`, { started });
+    return await this.dialog.confirm(`${i18nPrefix}.TITLE`, message, `${i18nPrefix}.CONFIRM`);
   }
 }

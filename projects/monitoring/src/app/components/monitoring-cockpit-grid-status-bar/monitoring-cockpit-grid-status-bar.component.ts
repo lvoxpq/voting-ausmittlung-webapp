@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -52,7 +52,7 @@ export class MonitoringCockpitGridStatusBarComponent implements OnChanges {
       .map(x =>
         !this.politicalBusinessUnionId
           ? x.resultsByPoliticalBusinessId[this.politicalBusinessId!]
-          : x.resultsByPoliticalBusinessUnionId[this.politicalBusinessUnionId!].reduce((x, y) => (x.state < y.state ? x : y)),
+          : x.resultsByPoliticalBusinessUnionId[this.politicalBusinessUnionId!]?.reduce((x, y) => (x.state < y.state ? x : y)),
       )
       .filter(x => !!x);
 

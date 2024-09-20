@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -42,6 +42,9 @@ export class ContestStateChangeButtonComponent implements OnDestroy, OnChanges, 
 
   @Input()
   public stateDescriptionsByState: Record<number, string> = {};
+
+  @Input()
+  public newZhFeaturesEnabled: boolean = false;
 
   @Output()
   public finishSubmission: EventEmitter<void> = new EventEmitter<void>();

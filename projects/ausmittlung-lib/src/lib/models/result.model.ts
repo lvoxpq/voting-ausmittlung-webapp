@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -36,6 +36,7 @@ export interface ResultOverview {
   countingCircleResults: ResultOverviewCountingCircleResults[];
   currentTenantIsContestManager: boolean;
   politicalBusinessUnions: PoliticalBusinessUnion[];
+  hasPartialResults: boolean;
 }
 
 export interface ResultOverviewCountingCircleResults {
@@ -46,9 +47,10 @@ export interface ResultOverviewCountingCircleResults {
 export interface ResultOverviewCountingCircleResult
   extends Omit<
     ResultOverviewCountingCircleResultProto.AsObject,
-    'submissionDoneTimestamp' | 'auditedTentativelyTimestamp' | 'plausibilisedTimestamp'
+    'submissionDoneTimestamp' | 'readyForCorrectionTimestamp' | 'auditedTentativelyTimestamp' | 'plausibilisedTimestamp'
   > {
   submissionDoneTimestamp?: Date;
+  readyForCorrectionTimestamp?: Date;
   auditedTentativelyTimestamp?: Date;
   plausibilisedTimestamp?: Date;
 }
@@ -73,6 +75,7 @@ export interface ResultListResult {
   politicalBusiness: SimplePoliticalBusiness;
   state: CountingCircleResultState;
   submissionDoneTimestamp?: Date;
+  readyForCorrectionTimestamp?: Date;
   auditedTentativelyTimestamp?: Date;
   plausibilisedTimestamp?: Date;
   hasComments: boolean;

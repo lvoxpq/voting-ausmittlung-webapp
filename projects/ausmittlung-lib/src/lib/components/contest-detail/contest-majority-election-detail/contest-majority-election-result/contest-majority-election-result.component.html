@@ -22,12 +22,14 @@
           <ng-container *ngTemplateOutlet="votePercentIndicator; context: {$implicit: candidate.voteCount}"></ng-container>
         </ng-container>
 
-        <span translate class="candidate-candidacy">MAJORITY_ELECTION.INDIVIDUAL</span>
-        <span><!-- party --></span>
-        <span *ngIf="eVotingValue" class="candidate-vote-count">{{result.conventionalSubTotal.individualVoteCount | number}}</span>
-        <span *ngIf="eVotingValue" class="candidate-vote-count">{{result.eVotingSubTotal.individualVoteCount | number}}</span>
-        <span class="candidate-vote-count">{{result.individualVoteCount | number}}</span>
-        <ng-container *ngTemplateOutlet="votePercentIndicator; context: {$implicit: result.individualVoteCount}"></ng-container>
+        <ng-container *ngIf="!result.election.individualCandidatesDisabled">
+          <span translate class="candidate-candidacy">MAJORITY_ELECTION.INDIVIDUAL</span>
+          <span><!-- party --></span>
+          <span *ngIf="eVotingValue" class="candidate-vote-count">{{result.conventionalSubTotal.individualVoteCount | number}}</span>
+          <span *ngIf="eVotingValue" class="candidate-vote-count">{{result.eVotingSubTotal.individualVoteCount | number}}</span>
+          <span class="candidate-vote-count">{{result.individualVoteCount | number}}</span>
+          <ng-container *ngTemplateOutlet="votePercentIndicator; context: {$implicit: result.individualVoteCount}"></ng-container>
+        </ng-container>
       </div>
     </div>
     <ng-container [ngTemplateOutlet]="buttonsTemplate" [ngTemplateOutletContext]="{electionId:result.election.id}"></ng-container>

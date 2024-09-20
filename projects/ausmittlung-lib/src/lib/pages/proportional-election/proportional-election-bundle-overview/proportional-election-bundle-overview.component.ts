@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -21,6 +21,9 @@ import { ResultExportService } from '../../../services/result-export.service';
 import { PermissionService } from '../../../services/permission.service';
 import { PoliticalBusinessBundleOverviewComponent } from '../../political-business-bundle-overview/political-business-bundle-overview.component';
 import { ProportionalElectionBallotComponent } from '../proportional-election-ballot/proportional-election-ballot.component';
+import { ExportService } from '../../../services/export.service';
+import { DatePipe } from '@angular/common';
+import { PoliticalBusinessType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/political_business_pb';
 
 @Component({
   selector: 'vo-ausm-proportional-election-bundle-overview',
@@ -39,9 +42,11 @@ export class ProportionalElectionBundleOverviewComponent extends PoliticalBusine
     router: Router,
     themeService: ThemeService,
     resultExportService: ResultExportService,
+    exportService: ExportService,
+    datePipe: DatePipe,
     private readonly resultBundleService: ProportionalElectionResultBundleService,
   ) {
-    super(permissionService, i18n, toast, dialog, route, router, themeService, resultExportService);
+    super(permissionService, i18n, toast, dialog, route, router, themeService, resultExportService, exportService, datePipe);
   }
 
   @HostListener('document:keydown.control.alt.q')
@@ -78,7 +83,7 @@ export class ProportionalElectionBundleOverviewComponent extends PoliticalBusine
       this.result?.politicalBusinessResult.entryParams?.reviewProcedure ===
       ProportionalElectionReviewProcedure.PROPORTIONAL_ELECTION_REVIEW_PROCEDURE_PHYSICALLY
     ) {
-      return this.exportBundleReview(bundle);
+      return;
     }
     return super.reviewBundle(bundle);
   }
@@ -105,6 +110,28 @@ export class ProportionalElectionBundleOverviewComponent extends PoliticalBusine
     return this.resultBundleService.rejectBundleReview(bundle.id);
   }
 
+  public async generateBundleReviewExport(bundle: PoliticalBusinessResultBundle): Promise<void> {
+    if (
+      this.result?.politicalBusinessResult.entryParams?.reviewProcedure !==
+      ProportionalElectionReviewProcedure.PROPORTIONAL_ELECTION_REVIEW_PROCEDURE_PHYSICALLY
+    ) {
+      return;
+    }
+
+    return super.generateBundleReviewExport(bundle);
+  }
+
+  public async downloadBundleReviewExport(bundle: PoliticalBusinessResultBundle): Promise<void> {
+    if (
+      this.result?.politicalBusinessResult.entryParams?.reviewProcedure !==
+      ProportionalElectionReviewProcedure.PROPORTIONAL_ELECTION_REVIEW_PROCEDURE_PHYSICALLY
+    ) {
+      return;
+    }
+
+    return super.downloadBundleReviewExport(bundle);
+  }
+
   protected deleteBundleById(bundleId: string): Promise<void> {
     return this.resultBundleService.deleteBundle(bundleId);
   }
@@ -117,18 +144,11 @@ export class ProportionalElectionBundleOverviewComponent extends PoliticalBusine
     return this.resultBundleService.getBundleChanges(resultId, onRetry);
   }
 
-  private async exportBundleReview(bundle: PoliticalBusinessResultBundle): Promise<void> {
-    if (!this.result) {
-      return;
-    }
-    const contestId = this.result.politicalBusinessResult.politicalBusiness.contestId;
-    const countingCircleId = this.result.politicalBusinessResult.countingCircleId;
-    await this.resultExportService.downloadResultBundleReviewExport(
-      'proportional_election_result_bundle_review',
-      contestId,
-      countingCircleId,
-      bundle.id,
-      this.result.politicalBusinessResult.politicalBusinessId,
-    );
+  protected get politicalBusinessType(): PoliticalBusinessType {
+    return PoliticalBusinessType.POLITICAL_BUSINESS_TYPE_PROPORTIONAL_ELECTION;
+  }
+
+  protected get resultId(): string | undefined {
+    return this.result?.politicalBusinessResult.id;
   }
 }

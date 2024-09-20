@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -78,6 +78,9 @@ export class MajorityElectionWriteInMappingComponent implements OnChanges {
 
   @Input()
   public supportsInvalidVotes: boolean = false;
+
+  @Input()
+  public supportsIndividualVotes: boolean = false;
 
   @Input()
   public canShowNextElection: boolean = false;
@@ -304,7 +307,10 @@ export class MajorityElectionWriteInMappingComponent implements OnChanges {
         candidates.push(this.createFakeCandidate(emptyCandidateId, emptyCandidateNr, 'RESULT_IMPORT.WRITE_INS.EMPTY_VOTES'));
       }
 
-      candidates.push(this.createFakeCandidate(individualCandidateId, individualCandidateNr, 'MAJORITY_ELECTION.INDIVIDUAL'));
+      if (this.supportsIndividualVotes) {
+        candidates.push(this.createFakeCandidate(individualCandidateId, individualCandidateNr, 'MAJORITY_ELECTION.INDIVIDUAL'));
+      }
+
       candidates.push(this.createFakeCandidate(invalidBallotId, invalidBallotNr, 'RESULT_IMPORT.WRITE_INS.INVALID_BALLOT'));
 
       this.candidatesWithMappings = candidates.map(candidate => ({

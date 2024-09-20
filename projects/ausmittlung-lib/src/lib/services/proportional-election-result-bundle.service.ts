@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -36,6 +36,8 @@ import {
   ProportionalElectionResultBundleProto,
   ProportionalElectionResultBundles,
   ProportionalElectionResultBundlesProto,
+  ProtocolExport,
+  ProtocolExportProto,
 } from '../models';
 import { ProportionalElectionResultBallotProto } from '../models/proportional-election-result.model';
 import { ProportionalElectionBallotListPosition, ProportionalElectionBallotUiData } from './proportional-election-ballot-ui.service';
@@ -203,6 +205,7 @@ export class ProportionalElectionResultBundleService extends GrpcService<Proport
       ...obj,
       createdBy: obj.createdBy!,
       ballotNumbersToReview: obj.ballotNumbersToReviewList,
+      protocolExport: this.mapToProtocolExport(proto.getProtocolExport()),
     };
   }
 
@@ -244,5 +247,16 @@ export class ProportionalElectionResultBundleService extends GrpcService<Proport
     req.setPosition(position);
     req.setOnList(onList);
     return req;
+  }
+
+  private mapToProtocolExport(response?: ProtocolExportProto): ProtocolExport | undefined {
+    if (!response) {
+      return undefined;
+    }
+
+    return {
+      ...response.toObject(),
+      started: response.getStarted()!.toDate(),
+    };
   }
 }

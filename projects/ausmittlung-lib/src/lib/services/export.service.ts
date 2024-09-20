@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -14,6 +14,8 @@ import {
   UpdatePoliticalBusinessExportMetadataRequest,
   UpdateResultExportConfigurationRequest,
   GetProtocolExportStateChangesRequest,
+  StartBundleReviewExportRequest,
+  GetBundleReviewExportStateChangesRequest,
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/requests/export_requests_pb';
 import { GrpcBackendService, GrpcEnvironment, GrpcService, retryForeverWithBackoff } from '@abraxas/voting-lib';
 import { Inject, Injectable } from '@angular/core';
@@ -34,6 +36,7 @@ import {
 } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/export_pb';
 import { ContestService } from './contest.service';
 import { Observable } from 'rxjs';
+import { PoliticalBusinessType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/political_business_pb';
 
 @Injectable({
   providedIn: 'root',
@@ -158,6 +161,34 @@ export class ExportService extends GrpcService<ExportServicePromiseClient> {
     }
 
     return this.requestEmptyResp(x => x.triggerResultExport, req);
+  }
+
+  public startBundleReviewExport(politicalBusinessResultBundleId: string, politicalBusinessType: PoliticalBusinessType): Promise<string> {
+    const req = new StartBundleReviewExportRequest();
+    req.setPoliticalBusinessResultBundleId(politicalBusinessResultBundleId);
+    req.setPoliticalBusinessType(politicalBusinessType);
+
+    return this.request(
+      c => c.startBundleReviewExport,
+      req,
+      r => r.getProtocolExportId(),
+    );
+  }
+
+  public getBundleReviewExportStateChanges(
+    politicalBusinessResultId: string,
+    politicalBusinessType: PoliticalBusinessType,
+    onRetry: () => {},
+  ): Observable<ProtocolExportStateChange> {
+    const req = new GetBundleReviewExportStateChangesRequest();
+    req.setPoliticalBusinessResultId(politicalBusinessResultId);
+    req.setPoliticalBusinessType(politicalBusinessType);
+
+    return this.requestServerStream(
+      c => c.getBundleReviewExportStateChanges,
+      req,
+      r => this.mapToProtocolExportStateChange(r),
+    ).pipe(retryForeverWithBackoff(onRetry));
   }
 
   private mapToMetadataMap(metadata: [string, PoliticalBusinessExportMetadata][]): Map<string, PoliticalBusinessExportMetadata> {

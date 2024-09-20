@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -121,7 +121,7 @@ export class MonitoringCockpitGridFooterButtonsComponent implements OnInit, OnCh
       flatten(
         this.filteredCountingCircleResults.map(ccResult =>
           !!this.politicalBusinessUnionValue
-            ? ccResult.resultsByPoliticalBusinessUnionId[this.politicalBusinessUnionValue.id]
+            ? ccResult.resultsByPoliticalBusinessUnionId[this.politicalBusinessUnionValue.id] ?? []
             : [ccResult.resultsByPoliticalBusinessId[this.politicalBusiness.id]],
         ),
       )
@@ -154,7 +154,7 @@ export class MonitoringCockpitGridFooterButtonsComponent implements OnInit, OnCh
     const allPlausibilisedInPoliticalBusiness = flatten(
       this.countingCircleResults.map(cc =>
         !!this.politicalBusinessUnionValue
-          ? cc.resultsByPoliticalBusinessUnionId[this.politicalBusinessUnionValue.id]
+          ? cc.resultsByPoliticalBusinessUnionId[this.politicalBusinessUnionValue.id] ?? []
           : [cc.resultsByPoliticalBusinessId[this.politicalBusiness.id]],
       ),
     )

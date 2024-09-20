@@ -5,7 +5,7 @@
     <div class="input-container">
       <bc-label *ngIf="eVoting && newZhFeaturesEnabled && ballotNumberOfQuestions > 1" class="source-label" [label]="'VOTING_DATA_SOURCE.CONVENTIONAL' | translate"></bc-label>
       <bc-number class="label-no-wrap" [class.label-space]="newZhFeaturesEnabled"
-                    [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+                    [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions:ballotSubType"
                     [min]="0"
                     [required]="true"
                     [disabled]="readonly"
@@ -14,7 +14,7 @@
                     (valueChange)="updateTotal()"
                     [subscriptSizing]="'dynamic'"></bc-number>
       <bc-number class="label-no-wrap" [class.label-space]="newZhFeaturesEnabled"
-                    [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions"
+                    [label]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions:ballotSubType"
                     [min]="0"
                     [required]="true"
                     [disabled]="readonly"
@@ -99,6 +99,7 @@
         <vo-ausm-vote-results-graph
           [countLeft]="result.totalCountOfAnswer1"
           [countRight]="result.totalCountOfAnswer2"
+          [equalityRightWins]="!isTieBreakQuestion"
           [resultLabelLeft]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
           [resultLabelRight]="result.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions">
         </vo-ausm-vote-results-graph>

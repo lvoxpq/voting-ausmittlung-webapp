@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -22,6 +22,7 @@ import {
   MajorityElectionLotDecisionDialogData,
   MajorityElectionLotDecisionDialogResult,
 } from '../../components/majority-election-lot-decision-dialog/majority-election-lot-decision-dialog.component';
+import { EndResultStep } from '../../models/end-result-step.model';
 
 @Component({
   selector: 'app-majority-election-end-result',
@@ -30,12 +31,14 @@ import {
 })
 export class MajorityElectionEndResultComponent implements OnDestroy {
   public loading: boolean = true;
-  public finalizing: boolean = false;
+  public stepActionLoading: boolean = false;
   public endResult?: MajorityElectionEndResult;
   public swissAbroadVotingRights: typeof SwissAbroadVotingRight = SwissAbroadVotingRight;
   public hasLotDecisions: boolean = false;
   public hasOpenRequiredLotDecisions: boolean = false;
   public isPartialResult = false;
+  public endResultStep?: EndResultStep;
+  public finalizeEnabled = false;
 
   private readonly routeSubscription: Subscription;
 
@@ -62,46 +65,61 @@ export class MajorityElectionEndResultComponent implements OnDestroy {
     this.routeSubscription.unsubscribe();
   }
 
+  public async handleEndResultStepChange(newStep: EndResultStep): Promise<void> {
+    if (!this.endResultStep || !this.endResult) {
+      return;
+    }
+
+    try {
+      this.stepActionLoading = true;
+
+      if (newStep === EndResultStep.AllCountingCirclesDone) {
+        await this.setFinalized(false);
+      }
+
+      if (newStep === EndResultStep.Finalized) {
+        await this.setFinalized(true);
+      }
+
+      this.endResultStep = newStep;
+    } finally {
+      this.stepActionLoading = false;
+    }
+  }
+
   public async setFinalized(finalize: boolean): Promise<void> {
     if (!this.endResult || finalize === this.endResult.finalized) {
       return;
     }
 
-    try {
-      this.finalizing = true;
+    if (finalize) {
+      this.endResult.finalized = true;
 
-      if (finalize) {
-        // This is necessary to force the "bc-radio-button-group" component to update the value back to its previous value
-        // if an error occurs or the action is cancelled.
-        this.endResult.finalized = true;
-
-        const confirmed = await this.dialogService.confirm(
-          'END_RESULT.MAJORITY_ELECTION.CONFIRM.TITLE',
-          'END_RESULT.MAJORITY_ELECTION.CONFIRM.MESSAGE',
-          'APP.CONFIRM',
-        );
-        if (!confirmed) {
-          this.endResult!.finalized = false;
-          return;
-        }
-
-        const majorityElectionId = this.endResult.election.id;
-        const secondFactorTransaction = await this.resultService.prepareFinalizeEndResult(majorityElectionId);
-
-        await this.secondFactorTransactionService
-          .showDialogAndExecuteVerifyAction(
-            () => this.resultService.finalizeEndResult(majorityElectionId, secondFactorTransaction.getId()),
-            secondFactorTransaction.getCode(),
-          )
-          .catch(err => {
-            this.endResult!.finalized = false;
-            throw err;
-          });
-      } else {
-        await this.resultService.revertEndResultFinalization(this.endResult.election.id);
+      const confirmed = await this.dialogService.confirm(
+        'END_RESULT.MAJORITY_ELECTION.CONFIRM.TITLE',
+        'END_RESULT.MAJORITY_ELECTION.CONFIRM.MESSAGE',
+        'APP.CONFIRM',
+      );
+      if (!confirmed) {
+        this.endResult!.finalized = false;
+        return;
       }
-    } finally {
-      this.finalizing = false;
+
+      const majorityElectionId = this.endResult.election.id;
+      const secondFactorTransaction = await this.resultService.prepareFinalizeEndResult(majorityElectionId);
+
+      await this.secondFactorTransactionService
+        .showDialogAndExecuteVerifyAction(
+          () => this.resultService.finalizeEndResult(majorityElectionId, secondFactorTransaction.getId()),
+          secondFactorTransaction.getCode(),
+          secondFactorTransaction.getQrCode(),
+        )
+        .catch(err => {
+          this.endResult!.finalized = false;
+          throw err;
+        });
+    } else {
+      await this.resultService.revertEndResultFinalization(this.endResult.election.id);
     }
 
     this.toast.success(this.i18n.instant('APP.SAVED'));
@@ -131,6 +149,7 @@ export class MajorityElectionEndResultComponent implements OnDestroy {
       this.endResult = this.isPartialResult
         ? await this.resultService.getPartialEndResult(majorityElectionId)
         : await this.resultService.getEndResult(majorityElectionId);
+      this.finalizeEnabled = !this.endResult.contest.cantonDefaults.endResultFinalizeDisabled;
 
       const secondaryCandidateEndResults = Array.prototype.concat.apply(
         [],
@@ -143,6 +162,11 @@ export class MajorityElectionEndResultComponent implements OnDestroy {
       this.hasOpenRequiredLotDecisions =
         !!this.endResult.candidateEndResults.find(x => x.lotDecisionRequired && !x.lotDecision) ||
         !!secondaryCandidateEndResults.find(x => x.lotDecisionRequired && !x.lotDecision);
+      this.endResultStep = !this.endResult.allCountingCirclesDone
+        ? EndResultStep.CountingCirclesCounting
+        : !this.endResult.finalized || !this.finalizeEnabled
+        ? EndResultStep.AllCountingCirclesDone
+        : EndResultStep.Finalized;
     } finally {
       this.loading = false;
     }
@@ -183,6 +207,5 @@ export class MajorityElectionEndResultComponent implements OnDestroy {
     }
 
     this.hasOpenRequiredLotDecisions = false;
-    this.endResult.finalized = false;
   }
 }

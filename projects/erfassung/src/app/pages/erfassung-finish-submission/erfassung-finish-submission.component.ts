@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -18,12 +18,13 @@ import {
   ResultListResult,
   ResultService,
   SecondFactorTransactionService,
+  splitArray,
   ValidationOverviewDialogComponent,
   ValidationOverviewDialogData,
   ValidationOverviewDialogResult,
 } from 'ausmittlung-lib';
 import { TranslateService } from '@ngx-translate/core';
-import { TableDataSource } from '@abraxas/base-components';
+import { AuthorizationService, TableDataSource, Tenant } from '@abraxas/base-components';
 
 @Component({
   selector: 'app-erfassung-finish-submission',
@@ -52,6 +53,7 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
 
   public breadcrumbs: BreadcrumbItem[] = [];
   public newZhFeaturesEnabled: boolean = false;
+  public tenant?: Tenant;
 
   private routeDataSubscription: Subscription;
   private routeParamsSubscription: Subscription = Subscription.EMPTY;
@@ -70,10 +72,11 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
     private readonly secondFactorTransactionService: SecondFactorTransactionService,
     private readonly toast: SnackbarService,
     private readonly i18n: TranslateService,
+    private readonly auth: AuthorizationService,
   ) {
-    this.breadcrumbs = this.breadcrumbsService.forFinishSubmission();
     this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
       this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
+      this.breadcrumbs = this.breadcrumbsService.forFinishSubmission(this.newZhFeaturesEnabled);
     });
   }
 
@@ -131,8 +134,15 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
       }
 
       await this.finishSubmission(contestId, ccId, resultIds);
+      const results = splitArray(
+        this.selectedResults.selected,
+        x => this.tenant?.id === x.politicalBusiness!.domainOfInfluence!.secureConnectId,
+      );
+      for (const result of results[0]) {
+        result.state = CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY;
+      }
 
-      for (const result of this.selectedResults.selected) {
+      for (const result of results[1]) {
         result.state = CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE;
       }
 
@@ -148,6 +158,7 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
 
     try {
       this.selectedResults.clear();
+      this.tenant = await this.auth.getActiveTenant();
 
       const data = await this.resultService.getList(this.contestId, this.countingCircleId!);
       this.resultsDataSource.data = data.results;
@@ -202,6 +213,7 @@ export class ErfassungFinishSubmissionComponent implements OnInit, OnDestroy {
     await this.secondFactorTransactionService.showDialogAndExecuteVerifyAction(
       () => this.resultService.submissionFinished(contestId, countingCircleId, resultIds, secondFactorTransaction.getId()),
       secondFactorTransaction.getCode(),
+      secondFactorTransaction.getQrCode(),
     );
   }
 }

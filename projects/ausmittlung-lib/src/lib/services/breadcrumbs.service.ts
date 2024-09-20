@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -33,8 +33,11 @@ export class BreadcrumbsService {
     return [{ name: 'CONTEST.DETAIL.TITLE', link: ['..'] }, { name: 'EXPORTS.BREADCRUMB_TITLE' }];
   }
 
-  public forFinishSubmission(): BreadcrumbItem[] {
-    return [{ name: 'CONTEST.DETAIL.TITLE', link: ['..'] }, { name: 'SUBMISSION_DONE.BREADCRUMB_TITLE' }];
+  public forFinishSubmission(newZhFeaturesEnabled: boolean): BreadcrumbItem[] {
+    return [
+      { name: 'CONTEST.DETAIL.TITLE', link: ['..'] },
+      { name: newZhFeaturesEnabled ? 'SUBMISSION_DONE.BREADCRUMB_TITLE' : 'SUBMISSION_DONE.BREADCRUMB_TITLE_OLD' },
+    ];
   }
 }
 

@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -20,7 +20,7 @@ export interface ProtocolExport extends Omit<ProtocolExportProto.AsObject, 'star
 }
 export type ResultExportTemplate = DataExportTemplateProto.AsObject | ProtocolExportProto.AsObject;
 export type PoliticalBusinessExportMetadata = PoliticalBusinessExportMetadataProto.AsObject;
-export { ExportFileFormat };
+export { ExportFileFormat, ProtocolExportProto };
 
 export type ResultExportTemplateContainer = {
   contest: Contest;

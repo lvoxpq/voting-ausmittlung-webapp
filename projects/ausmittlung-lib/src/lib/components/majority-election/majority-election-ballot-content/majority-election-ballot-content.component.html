@@ -37,6 +37,7 @@
       [subscriptSizing]="'dynamic'"
     ></bc-number>
     <bc-number
+      *ngIf="showIndividualVotes"
       [label]="'MAJORITY_ELECTION.INDIVIDUAL' | translate"
       [min]="0"
       [max]="ballot.election.numberOfMandates"

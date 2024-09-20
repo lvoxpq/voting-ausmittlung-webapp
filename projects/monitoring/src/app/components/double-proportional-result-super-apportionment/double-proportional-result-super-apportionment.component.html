@@ -1,7 +1,7 @@
 <div *ngIf="doubleProportionalResult">
   <div class="super-apportionment-header">
     <vo-ausm-admonition *ngIf="doubleProportionalResult.superApportionmentState > 1"
-                        [title]="'DOUBLE_PROPORTIONAL_RESULT.SUPER_APPORTIONMENT.STATES.' + doubleProportionalResult.superApportionmentState | translate"
+                        [titleText]="'DOUBLE_PROPORTIONAL_RESULT.SUPER_APPORTIONMENT.STATES.' + doubleProportionalResult.superApportionmentState | translate"
                         [type]="doubleProportionalResult.superApportionmentState === dpResultApportionmentState.DOUBLE_PROPORTIONAL_RESULT_APPORTIONMENT_STATE_COMPLETED ? 'info' : 'warning'"
     ></vo-ausm-admonition>
   </div>

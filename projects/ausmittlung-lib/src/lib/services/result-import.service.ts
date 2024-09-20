@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -163,6 +163,7 @@ export class ResultImportService extends GrpcService<ResultImportServicePromiseC
     return {
       election: PoliticalBusinessService.mapToPoliticalBusiness(proto.getElection()!),
       invalidVotes: obj.invalidVotes,
+      individualVotes: obj.individualVotes,
       writeInMappings: obj.writeInMappingsList.map(writeIn => ({
         ...writeIn,
         selected: false,

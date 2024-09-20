@@ -23,13 +23,13 @@
         <ng-container *ngIf="newZhFeaturesEnabled; else oldUi">
           <h4 translate>POLITICAL_BUSINESS.SUBMISSION</h4>
           <vo-ausm-contest-detail-submission-tile
-            [title]="'PROPORTIONAL_ELECTION.UNMODIFIED_LISTS' | translate"
+            [titleText]="'PROPORTIONAL_ELECTION.UNMODIFIED_LISTS' | translate"
             [text]="(!resultDetail?.conventionalSubTotal.totalCountOfUnmodifiedLists ? 'PROPORTIONAL_ELECTION.NO_UNMODIFIED_LISTS' : 'PROPORTIONAL_ELECTION.UNMODIFIED_LISTS_COUNT') | translate: { count: resultDetail?.conventionalSubTotal.totalCountOfUnmodifiedLists }"
             [disabled]="!canReadListResults"
             (buttonClick)="openUnmodifiedLists()">
           </vo-ausm-contest-detail-submission-tile>
           <vo-ausm-contest-detail-submission-tile
-            [title]="'PROPORTIONAL_ELECTION.MODIFIED_LISTS' | translate"
+            [titleText]="'PROPORTIONAL_ELECTION.MODIFIED_LISTS' | translate"
             [text]="(!resultDetail?.conventionalSubTotal.totalCountOfBallots ? 'ELECTION.NO_BUNDLES' : 'ELECTION.BALLOT_COUNT') | translate: { count: resultDetail?.conventionalSubTotal.totalCountOfBallots }"
             (buttonClick)="openModifiedLists()">
           </vo-ausm-contest-detail-submission-tile>
@@ -52,7 +52,7 @@
       <div *ngIf="canReadListResults && newZhFeaturesEnabled">
         <h4 translate>POLITICAL_BUSINESS.RESULT</h4>
         <vo-ausm-contest-detail-submission-tile
-          [title]="'PROPORTIONAL_ELECTION.SHOW_RESULTS' | translate"
+          [titleText]="'PROPORTIONAL_ELECTION.SHOW_RESULTS' | translate"
           [buttonText]="'APP.OPEN'"
           (buttonClick)="navigateToResults()">
         </vo-ausm-contest-detail-submission-tile>

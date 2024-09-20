@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -37,6 +37,8 @@ export abstract class PoliticalBusinessResultBaseService<
   public abstract resetToAuditedTentatively(resultIds: string[]): Promise<void>;
 
   public abstract submissionFinishedAndAuditedTentatively(resultId: string): Promise<void>;
+
+  public abstract correctionFinishedAndAuditedTentatively(resultId: string): Promise<void>;
 
   public abstract publish(resultIds: string[]): Promise<void>;
 

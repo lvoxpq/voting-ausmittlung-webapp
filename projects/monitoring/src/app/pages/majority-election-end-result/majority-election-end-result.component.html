@@ -37,14 +37,12 @@
       </vo-ausm-info-panel-entry>
     </vo-ausm-info-panel>
 
+    <app-end-result-step-action-bar [step]="endResultStep"
+                                    (stepChange)="handleEndResultStepChange($event)"
+                                    [showFinalize]="finalizeEnabled"
+                                    [disabled]="stepActionLoading || isPartialResult"></app-end-result-step-action-bar>
+
     <div class="additional-infos">
-      <vo-lib-inline-spinner [loading]="finalizing"
-                             position="right">
-        <app-end-result-type-selector *ngIf="endResult"
-                                      [finalized]="endResult.finalized"
-                                      (finalizedChange)="setFinalized($event)"
-                                      [disabled]="!endResult.allCountingCirclesDone || endResult.contest.locked || hasOpenRequiredLotDecisions || finalizing || isPartialResult"></app-end-result-type-selector>
-      </vo-lib-inline-spinner>
       <bc-button *ngIf="hasLotDecisions && endResult.allCountingCirclesDone && !endResult.contest.locked && !isPartialResult"
                  [label]="'END_RESULT.ELECTION.LOT_DECISION.OPEN' | translate"
                  (buttonClick)="openUpdateLotDecisions()">

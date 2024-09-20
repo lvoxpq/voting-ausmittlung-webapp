@@ -1,0 +1,6 @@
+// need a fix height to make cockpit grid footer sticky
+::ng-deep .mat-mdc-tab-body-content {
+  overflow: auto !important;
+  height: calc(100vh - 15rem) !important;
+  padding-right: 0.5rem;
+}

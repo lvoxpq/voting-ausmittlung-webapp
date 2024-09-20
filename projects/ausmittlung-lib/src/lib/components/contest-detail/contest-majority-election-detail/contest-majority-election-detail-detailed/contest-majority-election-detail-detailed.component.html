@@ -11,19 +11,19 @@
     <ng-container *ngIf="newZhFeaturesEnabled; else oldUi">
       <h4 translate>POLITICAL_BUSINESS.SUBMISSION</h4>
       <vo-ausm-contest-detail-submission-tile
-        [title]="'MAJORITY_ELECTION.BY_BALLOT_GROUPS' | translate"
+        [titleText]="'MAJORITY_ELECTION.BY_BALLOT_GROUPS' | translate"
         [text]="(!resultDetail?.conventionalCountOfBallotGroupVotes ? 'MAJORITY_ELECTION.NO_BALLOT_GROUPS' : 'MAJORITY_ELECTION.BALLOT_GROUPS_COUNT') | translate: { count: resultDetail?.conventionalCountOfBallotGroupVotes }"
         [disabled]="!canReadBallotGroups"
         (buttonClick)="openBallotGroups()">
       </vo-ausm-contest-detail-submission-tile>
       <vo-ausm-contest-detail-submission-tile
-        [title]="'MAJORITY_ELECTION.BY_BUNDLE' | translate"
+        [titleText]="'MAJORITY_ELECTION.BY_BUNDLE' | translate"
         [text]="(!resultDetail?.conventionalCountOfDetailedEnteredBallots ? 'ELECTION.NO_BUNDLES' : 'ELECTION.BALLOT_COUNT') | translate: { count: resultDetail?.conventionalCountOfDetailedEnteredBallots }"
         (buttonClick)="openBundles()">
       </vo-ausm-contest-detail-submission-tile>
       <vo-ausm-contest-detail-submission-tile
         *ngIf="!readonly && eVoting"
-        [title]="'MAJORITY_ELECTION.MAP_WRITE_INS' | translate"
+        [titleText]="'MAJORITY_ELECTION.MAP_WRITE_INS' | translate"
         [buttonText]="'MAJORITY_ELECTION.MAP'"
         (buttonClick)="openWriteIns(resultDetail.election.id)">
       </vo-ausm-contest-detail-submission-tile>
@@ -92,7 +92,7 @@
   <div *ngIf="!readonly && eVoting">
     <h4 translate>POLITICAL_BUSINESS.SUBMISSION</h4>
     <vo-ausm-contest-detail-submission-tile
-      [title]="'MAJORITY_ELECTION.MAP_WRITE_INS' | translate"
+      [titleText]="'MAJORITY_ELECTION.MAP_WRITE_INS' | translate"
       [buttonText]="'MAJORITY_ELECTION.MAP'"
       (buttonClick)="openWriteIns(electionId)">
     </vo-ausm-contest-detail-submission-tile>

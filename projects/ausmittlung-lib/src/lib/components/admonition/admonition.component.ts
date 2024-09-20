@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -18,7 +18,7 @@ export class AdmonitionComponent {
   public type: AdmonitionType = AdmonitionType.info;
 
   @Input()
-  public title: string = '';
+  public titleText: string = '';
 
   public get icon(): string {
     switch (this.type) {

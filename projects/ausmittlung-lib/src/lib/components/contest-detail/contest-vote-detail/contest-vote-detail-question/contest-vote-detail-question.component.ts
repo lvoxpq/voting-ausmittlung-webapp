@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { BallotQuestionResult, TieBreakQuestionResult } from '../../../../models';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { BallotSubType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/vote_pb';
 
 @Component({
   selector: 'vo-ausm-contest-vote-detail-question',
@@ -29,6 +30,9 @@ export class ContestVoteDetailQuestionComponent implements OnDestroy {
 
   @Input()
   public readonly: boolean = true;
+
+  @Input()
+  public ballotSubType?: BallotSubType;
 
   @Output()
   public countOfAnswersChanged: EventEmitter<void> = new EventEmitter<void>();

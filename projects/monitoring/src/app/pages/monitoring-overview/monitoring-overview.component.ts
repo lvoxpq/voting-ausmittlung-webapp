@@ -1,11 +1,11 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
 
 import { DialogService } from '@abraxas/voting-lib';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResultOverview, ResultService } from 'ausmittlung-lib';
 import { Subscription } from 'rxjs';
@@ -18,33 +18,42 @@ import {
   ResultImportListDialogData,
   ResultImportListDialogResult,
 } from '../../components/result-import-list-dialog/result-import-list-dialog.component';
+import { AuthorizationService, Tenant } from '@abraxas/base-components';
 
 @Component({
   selector: 'app-monitoring-overview',
   templateUrl: './monitoring-overview.component.html',
   styleUrls: ['./monitoring-overview.component.scss'],
 })
-export class MonitoringOverviewComponent implements OnDestroy {
+export class MonitoringOverviewComponent implements OnInit, OnDestroy {
   public loading: boolean = true;
   public resultOverview?: ResultOverview;
   public newZhFeaturesEnabled: boolean = false;
   public publishResultsEnabled: boolean = false;
+  public publishResultsBeforeAuditedTentatively: boolean = false;
   public contestId?: string;
 
   private readonly routeParamsSubscription: Subscription;
   private readonly routeDataSubscription: Subscription;
+  private tenant?: Tenant;
 
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly resultService: ResultService,
     private readonly dialogService: DialogService,
+    private readonly auth: AuthorizationService,
   ) {
     this.routeParamsSubscription = this.route.params.subscribe(({ contestId }) => this.loadData(contestId));
     this.routeDataSubscription = route.data.subscribe(async ({ contestCantonDefaults }) => {
       this.newZhFeaturesEnabled = contestCantonDefaults.newZhFeaturesEnabled;
       this.publishResultsEnabled = contestCantonDefaults.publishResultsEnabled;
+      this.publishResultsBeforeAuditedTentatively = contestCantonDefaults.publishResultsBeforeAuditedTentatively;
     });
+  }
+
+  public async ngOnInit(): Promise<void> {
+    this.tenant = await this.auth.getActiveTenant();
   }
 
   public async ngOnDestroy(): Promise<void> {
@@ -71,9 +80,13 @@ export class MonitoringOverviewComponent implements OnDestroy {
       return;
     }
 
+    const ownedPoliticalBusinesses = this.resultOverview.politicalBusinesses.filter(
+      x => x.domainOfInfluence?.secureConnectId === this.tenant?.id,
+    );
+
     const data: ExportCockpitDialogData = {
       contestId: this.resultOverview.contest.id,
-      politicalBusinesses: this.resultOverview.politicalBusinesses,
+      politicalBusinesses: ownedPoliticalBusinesses,
     };
 
     this.dialogService.open(ExportCockpitDialogComponent, data);

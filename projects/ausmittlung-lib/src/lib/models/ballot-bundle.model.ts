@@ -1,11 +1,12 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
 
 import { BallotBundleState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/ballot_bundle_pb';
 import { User } from './user.model';
+import { ProtocolExport } from './export.model';
 
 export { BallotBundleState };
 
@@ -28,6 +29,7 @@ export interface PoliticalBusinessResultBundle {
   createdBy: User;
   reviewedBy?: User;
   ballotNumbersToReview: number[];
+  protocolExport?: ProtocolExport;
 }
 
 export interface PoliticalBusinessResultBallot {

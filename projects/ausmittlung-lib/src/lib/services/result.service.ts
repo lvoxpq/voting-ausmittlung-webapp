@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -164,6 +164,7 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
       hasComments: data.getHasComments(),
       state: data.getState(),
       submissionDoneTimestamp: data.getSubmissionDoneTimestamp()?.toDate(),
+      readyForCorrectionTimestamp: data.getReadyForCorrectionTimestamp()?.toDate(),
       auditedTentativelyTimestamp: data.getAuditedTentativelyTimestamp()?.toDate(),
       plausibilisedTimestamp: data.getPlausibilisedTimestamp()?.toDate(),
       politicalBusiness: PoliticalBusinessService.mapToPoliticalBusiness(data.getPoliticalBusiness()!),
@@ -177,6 +178,7 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
       countingCircleResults: data.getCountingCircleResultsList().map(x => this.mapToResultOverviewCountingCircleResults(x)),
       currentTenantIsContestManager: data.getCurrentTenantIsContestManager(),
       politicalBusinessUnions: data.getPoliticalBusinessUnionsList().map(x => PoliticalBusinessUnionService.mapToPoliticalBusinessUnion(x)),
+      hasPartialResults: data.getHasPartialResults(),
     };
   }
 
@@ -192,6 +194,7 @@ export class ResultService extends GrpcStreamingService<ResultServicePromiseClie
     return {
       ...obj,
       submissionDoneTimestamp: data.getSubmissionDoneTimestamp()?.toDate(),
+      readyForCorrectionTimestamp: data.getReadyForCorrectionTimestamp()?.toDate(),
       auditedTentativelyTimestamp: data.getAuditedTentativelyTimestamp()?.toDate(),
       plausibilisedTimestamp: data.getPlausibilisedTimestamp()?.toDate(),
     };

@@ -30,13 +30,13 @@
                    (buttonClick)="validate.emit()"></bc-button>
         <bc-button *ngIf="state === states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING"
                    variant="primary"
-                   [label]="(newZhFeaturesEnabled ? (isResponsibleMonitorAuthority ? 'ACTIONS.FINISH_SUBMISSION' : 'ACTIONS.SUBMIT_RESULTS') : 'ACTIONS.SUBMISSION_DONE') | translate"
+                   [label]="(newZhFeaturesEnabled ? 'ACTIONS.SUBMIT_RESULTS' : 'ACTIONS.SUBMISSION_DONE') | translate"
                    (buttonClick)="newZhFeaturesEnabled && isResponsibleMonitorAuthority ? finishSubmissionAndAuditTentatively() : updateState(states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE)"
                    [disabled]="isActionExecuting || !canSubmit"></bc-button>
         <bc-button *ngIf="state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION"
                    variant="primary"
                    [label]="(newZhFeaturesEnabled ? 'ACTIONS.SUBMIT_RESULTS' : 'ACTIONS.CORRECTION_DONE') | translate"
-                   (buttonClick)="updateState(states.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE)"
+                   (buttonClick)="newZhFeaturesEnabled && isResponsibleMonitorAuthority ? finishCorrectionAndAuditTentatively() : updateState(states.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE)"
                    [disabled]="isActionExecuting || !canSubmit"></bc-button>
         <bc-button *ngIf="newZhFeaturesEnabled && isResponsibleMonitorAuthority && state === states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY"
                    variant="tertiary"

@@ -8,7 +8,7 @@
       </div>
 
       <h3 translate>ELECTION.BUNDLE_TABLES.OPEN</h3>
-      <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: openBundles, enableReviewMultiple: result.politicalBusinessResult.entryParams?.reviewProcedure === reviewProcedures.MAJORITY_ELECTION_REVIEW_PROCEDURE_PHYSICALLY}"></ng-container>
+      <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: openBundles, isReviewProcedurePhysically: result.politicalBusinessResult.entryParams?.reviewProcedure === reviewProcedures.MAJORITY_ELECTION_REVIEW_PROCEDURE_PHYSICALLY}"></ng-container>
 
       <h3 translate>ELECTION.BUNDLE_TABLES.REVIEWED</h3>
       <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: reviewedBundles}"></ng-container>
@@ -16,7 +16,7 @@
       <h3 translate>ELECTION.BUNDLE_TABLES.DELETED</h3>
       <ng-container *ngTemplateOutlet="bundleTable; context: {bundles: deletedBundles}"></ng-container>
 
-      <ng-template #bundleTable let-bundles="bundles" let-enableReviewMultiple="enableReviewMultiple">
+      <ng-template #bundleTable let-bundles="bundles" let-isReviewProcedurePhysically="isReviewProcedurePhysically">
         <vo-ausm-majority-election-bundle-table [bundles]="bundles"
                                                 [bundleSize]="result.politicalBusinessResult.entryParams!.ballotBundleSize"
                                                 [rowSelectable]="true"
@@ -30,9 +30,12 @@
                                                 (succeedBundleReview)="succeedBundleReview($event)"
                                                 (rejectBundleReview)="rejectBundleReview($event)"
                                                 (deleteBundle)="deleteBundle($event)"
+                                                (generateBundleReviewExport)="generateBundleReviewExport($event)"
+                                                (downloadBundleReviewExport)="downloadBundleReviewExport($event)"
                                                 [reviewProcedure]="result.politicalBusinessResult.entryParams?.reviewProcedure"
                                                 [newZhFeaturesEnabled]="newZhFeaturesEnabled"
-                                                [enableReviewMultiple]="enableReviewMultiple">
+                                                [enableReviewMultiple]="isReviewProcedurePhysically"
+                                                [enableReviewColumn]="isReviewProcedurePhysically">
         </vo-ausm-majority-election-bundle-table>
       </ng-template>
     </div>

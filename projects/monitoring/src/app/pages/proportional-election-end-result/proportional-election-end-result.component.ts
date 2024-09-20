@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -37,6 +37,7 @@ import {
   ProportionalElectionManualEndResultDialogData,
   ProportionalElectionManualEndResultDialogResult,
 } from '../../components/proportional-election-manual-end-result-dialog/proportional-election-manual-end-result-dialog.component';
+import { EndResultStep } from '../../models/end-result-step.model';
 
 @Component({
   selector: 'app-proportional-election-end-result',
@@ -47,7 +48,7 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
   public dataPrefix?: string;
 
   public loading: boolean = true;
-  public finalizing: boolean = false;
+  public stepActionLoading: boolean = false;
   public dpResultIncomplete?: boolean;
   public endResult?: ProportionalElectionEndResult;
   public swissAbroadVotingRights: typeof SwissAbroadVotingRight = SwissAbroadVotingRight;
@@ -59,6 +60,9 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
   public candidateColumns: string[] = [];
   public isPartialResult = false;
   public isNonUnionDoubleProportional = false;
+  public endResultStep?: EndResultStep;
+  public finalizeEnabled = false;
+  public showMandateDistributionTrigger = false;
 
   private readonly routeSubscription: Subscription;
 
@@ -95,52 +99,91 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
     this.dataPrefix = dataSourceToPropertyPrefix(dataSource);
   }
 
+  public async handleEndResultStepChange(newStep: EndResultStep): Promise<void> {
+    if (!this.endResultStep || !this.endResult) {
+      return;
+    }
+
+    try {
+      this.stepActionLoading = true;
+
+      if (newStep > this.endResultStep) {
+        if (newStep === EndResultStep.MandateDistributionTriggered) {
+          await this.setMandateDistribution(true);
+        } else {
+          await this.setFinalized(true);
+        }
+      } else {
+        if (newStep === EndResultStep.AllCountingCirclesDone) {
+          await this.setMandateDistribution(false);
+        } else {
+          await this.setFinalized(false);
+        }
+      }
+
+      this.endResultStep = newStep;
+    } finally {
+      this.stepActionLoading = false;
+    }
+
+    this.refreshTableColumns();
+  }
+
+  public async setMandateDistribution(distribute: boolean): Promise<void> {
+    if (!this.endResult) {
+      return;
+    }
+
+    const proportionalElectionId = this.endResult.election.id;
+
+    if (distribute) {
+      await this.resultService.startEndResultMandateDistribution(proportionalElectionId);
+      this.endResult.mandateDistributionTriggered = true;
+    } else {
+      await this.resultService.revertEndResultMandateDistribution(proportionalElectionId);
+      this.endResult.mandateDistributionTriggered = false;
+    }
+
+    this.toast.success(this.i18n.instant('APP.SAVED'));
+  }
+
   public async setFinalized(finalize: boolean): Promise<void> {
     if (!this.endResult || finalize === this.endResult.finalized) {
       return;
     }
 
-    try {
-      this.finalizing = true;
+    if (finalize) {
+      this.endResult.finalized = true;
 
-      if (finalize) {
-        // This is necessary to force the "bc-radio-button-group" component to update the value back to its previous value
-        // if an error occurs or the action is cancelled.
-        this.endResult.finalized = true;
-
-        const confirmed = await this.dialogService.confirm(
-          'END_RESULT.PROPORTIONAL_ELECTION.CONFIRM.TITLE',
-          'END_RESULT.PROPORTIONAL_ELECTION.CONFIRM.MESSAGE',
-          'APP.CONFIRM',
-        );
-        if (!confirmed) {
-          this.endResult!.finalized = false;
-          return;
-        }
-
-        const proportionalElectionId = this.endResult.election.id;
-        const secondFactorTransaction = await this.resultService.prepareFinalizeEndResult(proportionalElectionId);
-
-        await this.secondFactorTransactionService
-          .showDialogAndExecuteVerifyAction(
-            () => this.resultService.finalizeEndResult(proportionalElectionId, secondFactorTransaction.getId()),
-            secondFactorTransaction.getCode(),
-          )
-          .catch(err => {
-            this.endResult!.finalized = false;
-            throw err;
-          });
-      } else {
-        await this.resultService.revertEndResultFinalization(this.endResult.election.id);
+      const confirmed = await this.dialogService.confirm(
+        'END_RESULT.PROPORTIONAL_ELECTION.CONFIRM.TITLE',
+        'END_RESULT.PROPORTIONAL_ELECTION.CONFIRM.MESSAGE',
+        'APP.CONFIRM',
+      );
+      if (!confirmed) {
         this.endResult.finalized = false;
+        return;
       }
-    } finally {
-      this.finalizing = false;
-      this.refreshTableColumns();
+
+      const proportionalElectionId = this.endResult.election.id;
+      const secondFactorTransaction = await this.resultService.prepareFinalizeEndResult(proportionalElectionId);
+
+      await this.secondFactorTransactionService
+        .showDialogAndExecuteVerifyAction(
+          () => this.resultService.finalizeEndResult(proportionalElectionId, secondFactorTransaction.getId()),
+          secondFactorTransaction.getCode(),
+          secondFactorTransaction.getQrCode(),
+        )
+        .catch(err => {
+          this.endResult!.finalized = false;
+          throw err;
+        });
+    } else {
+      await this.resultService.revertEndResultFinalization(this.endResult.election.id);
+      this.endResult.finalized = false;
     }
 
     this.toast.success(this.i18n.instant('APP.SAVED'));
-    this.endResult.finalized = finalize;
   }
 
   public async openUpdateLotDecisions(): Promise<void> {
@@ -181,10 +224,6 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
       ProportionalElectionManualEndResultDialogResult
     >(ProportionalElectionManualEndResultDialogComponent, data);
 
-    if (result?.hasChanges) {
-      this.endResult.finalized = false;
-    }
-
     for (const listEndResult of this.endResult.listEndResults) {
       listEndResult.numberOfMandates = listEndResult.candidateEndResults.filter(
         x => x.state === ProportionalElectionCandidateEndResultState.PROPORTIONAL_ELECTION_CANDIDATE_END_RESULT_STATE_ELECTED,
@@ -209,6 +248,12 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
         ? await this.resultService.getPartialEndResult(proportionalElectionId)
         : await this.resultService.getEndResult(proportionalElectionId);
       this.isNonUnionDoubleProportional = ProportionalElectionService.isNonUnionDoubleProportional(endResult.election.mandateAlgorithm);
+      this.finalizeEnabled = !endResult.contest.cantonDefaults.endResultFinalizeDisabled;
+
+      this.showMandateDistributionTrigger =
+        this.isNonUnionDoubleProportional ||
+        endResult.election.mandateAlgorithm ===
+          ProportionalElectionMandateAlgorithm.PROPORTIONAL_ELECTION_MANDATE_ALGORITHM_HAGENBACH_BISCHOFF;
 
       // load the union info before setting the end result to the component prop,
       // otherwise the end result type selector does not set the disabled state.
@@ -236,6 +281,13 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
       this.hasLotDecisions = this.endResult.listEndResults.some(le => le.candidateEndResults.some(x => x.lotDecisionEnabled));
       this.hasOpenRequiredLotDecisions = this.endResult.listEndResults.some(l => l.hasOpenRequiredLotDecisions);
       this.refreshTableColumns();
+      this.endResultStep = !endResult.allCountingCirclesDone
+        ? EndResultStep.CountingCirclesCounting
+        : !endResult.mandateDistributionTriggered
+        ? EndResultStep.AllCountingCirclesDone
+        : !endResult.finalized || !this.finalizeEnabled
+        ? EndResultStep.MandateDistributionTriggered
+        : EndResultStep.Finalized;
     } finally {
       this.loading = false;
     }
@@ -293,12 +345,11 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
     }
 
     this.hasOpenRequiredLotDecisions = this.endResult.listEndResults.some(l => l.hasOpenRequiredLotDecisions);
-    this.endResult.finalized = false;
   }
 
   private refreshTableColumns(): void {
     this.listColumns = ['orderNumber', 'description'];
-    if (this.endResult?.finalized) {
+    if (this.endResult?.mandateDistributionTriggered) {
       this.listColumns.push('listVotesCount', 'blankRowsCount', 'totalVoteCount');
       if (this.endResult?.allCountingCirclesDone) {
         this.listColumns.push('nrOfMandates');
@@ -313,13 +364,13 @@ export class ProportionalElectionEndResultComponent implements OnDestroy {
     }
 
     this.candidateColumns = ['number', 'lastName', 'firstName'];
-    if (this.endResult?.finalized) {
+    if (this.endResult?.mandateDistributionTriggered) {
       this.candidateColumns.push('voteCount');
-      if (this.endResult?.finalized && this.endResult?.allCountingCirclesDone) {
+      if (this.endResult?.mandateDistributionTriggered && this.endResult?.allCountingCirclesDone) {
         this.candidateColumns.push('rank');
       }
       this.candidateColumns.push('state');
-      if (this.endResult?.allCountingCirclesDone && this.hasLotDecisions && !this.hasOpenRequiredLotDecisions) {
+      if (this.endResult?.mandateDistributionTriggered && this.hasLotDecisions && !this.hasOpenRequiredLotDecisions) {
         this.candidateColumns.push('lotDecision');
       }
     }

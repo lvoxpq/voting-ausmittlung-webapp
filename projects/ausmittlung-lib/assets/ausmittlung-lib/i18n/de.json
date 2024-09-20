@@ -121,7 +121,8 @@
         "LABEL": "Status ändern",
         "ALL_TO_AUDIT_TENTATIVELY": "Alle auf {{state}}",
         "RESET_RESULTS": "Status zurücksetzen und Teilergebnisse löschen",
-        "SUBMIT_RESULTS": "Erfassung prüfen und beenden"
+        "SUBMIT_RESULTS": "Ergebnisse übermitteln",
+        "FINISH_SUBMISSION": "Erfassung prüfen und beenden"
       }
     }
   },
@@ -263,13 +264,45 @@
         }
       }
     },
+    "BALLOT_SUB_TYPE": {
+      "TYPES": {
+        "1": "Hauptvorlage (A)",
+        "2": "Gegenvorschlag 1 (B)",
+        "3": "Gegenvorschlag 2 (C)",
+        "4": "Variante 1 (B)",
+        "5": "Variante 2 (C)",
+        "6": "Stichfrage 1 (A oder B)",
+        "7": "Stichfrage 2 (A oder C)",
+        "8": "Stichfrage 3 (B oder C)"
+      },
+      "ANSWERS": {
+        "6": {
+          "ANSWER_1": "A",
+          "ANSWER_1_SHORT": "A",
+          "ANSWER_2": "B",
+          "ANSWER_2_SHORT": "B"
+        },
+        "7": {
+          "ANSWER_1": "A",
+          "ANSWER_1_SHORT": "A",
+          "ANSWER_2": "C",
+          "ANSWER_2_SHORT": "C"
+        },
+        "8": {
+          "ANSWER_1": "B",
+          "ANSWER_1_SHORT": "B",
+          "ANSWER_2": "C",
+          "ANSWER_2_SHORT": "C"
+        }
+      }
+    },
     "COUNT_OF_VOTES": {
       "UNKNOWN": "Stimmen",
       "E_VOTING": "E-Voting",
       "TOTAL": "Total"
     },
     "BY_BUNDLE": "Einzelne Stimmzettel erfassen und Bundkontrolle",
-    "NO_BUNDLES": "Es sind noch keine Bunde erfasst",
+    "NO_BUNDLES": "Es sind noch keine Bunde kontrolliert",
     "BALLOT_COUNT": "{{count}} Stimmzettel erfasst",
     "BUNDLE_OVERVIEW": "Bundeübersicht und einzelne Stimmzettel erfassen",
     "NEW_BUNDLE": "+ Neuen Bund erfassen",
@@ -362,6 +395,7 @@
     "BUNDLE_SIZE": "Bund-Grösse",
     "BUNDLE_CREATED_BY": "Erstellt von",
     "BUNDLE_REVIEWED_BY": "Kontrolliert von",
+    "BUNDLE_REVIEW": "Bundkontrolle",
     "BUNDLE_STATES": {
       "1": "In Bearbeitung",
       "2": "zur Kontrolle",
@@ -416,6 +450,7 @@
       "SUCCEED_REVIEW": "Bund auf kontrolliert",
       "SUCCEED_MULTIPLE": "Markierte auf kontrolliert",
       "GENERATE": "Kontrollblatt generieren",
+      "START_GENERATE": "Generieren",
       "WITHOUT_LIST": "Wahlzettel ohne Parteibezeichnung",
       "REMOVE_RANGE": {
         "START": "Kandidat/in entfernen von",
@@ -450,12 +485,12 @@
     "VOTE_COUNT": "Stimmen",
     "VOTE_COUNT_E_VOTING": "Elektronisch",
     "VOTE_COUNT_CONVENTIONAL": "Konventionell",
-    "NO_BUNDLES": "Es sind noch keine Bunde erfasst",
+    "NO_BUNDLES": "Es sind noch keine Bunde kontrolliert",
     "BALLOT_COUNT": "{{count}} Wahlzettel erfasst"
   },
   "MAJORITY_ELECTION": {
     "TITLE": "Majorzwahl",
-    "BY_BALLOT_GROUPS": "Wahlzettelgruppen erfassen",
+    "BY_BALLOT_GROUPS": "Nach Wahlzettelgruppen erfassen",
     "BY_BALLOT_GROUPS_OLD": "Nach Wahlzettelgruppen erfassen",
     "BALLOT_GROUPS_COUNT": "{{count}} Wahlzettelgruppen erfasst",
     "NO_BALLOT_GROUPS": "Es sind noch keine Wahlzettelgruppen erfasst",
@@ -614,8 +649,11 @@
     "SAVE": "Speichern",
     "VALIDATE": "Prüfen",
     "SUBMIT_RESULTS": "Ergebnisse übermitteln",
-    "FINISH_SUBMISSION": "Erfassung beenden",
-    "FINISH_SUBMISSION_AND_AUDIT_TENTATIVELY": "Erfassung beenden und zum Schlussergebnis",
+    "SUBMIT_RESULTS_AND_AUDIT_TENTATIVELY": {
+      "TITLE": "Erfassung beenden und zu den Protokollen",
+      "HINT": "Absprung zu den Protokollen der kommunalen Geschäfte. Die Protokolle der eidgenössischen und kantonalen Geschäfte müssen in VOTING Ausmittlung Erfassung generiert werden."
+    },
+    "FINISH_SUBMISSION_AND_AUDIT_TENTATIVELY": "Erfassung beenden und zu den Protokollen",
     "CREATE_PROTOCOL": "Protokoll erstellen",
     "SUBMISSION_DONE": "Prüfen und Erfassung beenden",
     "CORRECTION_DONE": "Kontrolle beenden",
@@ -625,6 +663,11 @@
     "RESET_TO_SUBMISSION_DONE": "Status auf '{{state}}'",
     "RESET_TO_AUDIT_TENTATIVELY": "Vorläufig geprüft",
     "SUBMISSION_DONE_CONFIRM": {
+      "TITLE": "Ergebnisse übermitteln?",
+      "MSG": "Wenn Sie die Ergebnisse übermitteln, können die Ergebnisse nicht mehr geändert werden.",
+      "OK": "Ergebnisse übermitteln"
+    },
+    "SUBMISSION_DONE_CONFIRM_OLD": {
       "TITLE": "Erfassung beenden?",
       "MSG": "Wenn Sie die Erfassung beenden, werden die Ergebnisse dieses Geschäfts zur Prüfung an die zuständige Behörde übermittelt.\nDie Ergebnisse des Geschäfts können dann nicht mehr geändert werden.",
       "OK": "Erfassung beenden"
@@ -987,7 +1030,10 @@
   "SECOND_FACTOR_TRANSACTION": {
     "TITLE": "Transaktionsbestätigung",
     "INFO": "Bitte bestätigen Sie die Transaktion in Ihrer Authentifizierungs-App mit dem Code {{code}}.",
-    "ERROR": "Es ist ein Fehler aufgetreten. Bitte führen Sie die Aktion erneut aus."
+    "ERROR": "Es ist ein Fehler aufgetreten. Bitte führen Sie die Aktion erneut aus.",
+    "NO_PUSH_NOTIFICATION": "Keine Push-Benachrichtigung erhalten? klicken Sie hier für Bestätigung via App!",
+    "QR_CODE": "Scannen Sie den QR-Code mit Ihrer Authentifizierungs-App um die Transaktion zu bestätigen.",
+    "QR_CODE_ALT": "QR Code"
   },
   "ERROR_MESSAGES": {
     "SecondFactorTransactionDataChangedException": "Die Daten wurden in der Zwischenzeit geändert, somit muss die Aktion erneut ausgeführt werden.",

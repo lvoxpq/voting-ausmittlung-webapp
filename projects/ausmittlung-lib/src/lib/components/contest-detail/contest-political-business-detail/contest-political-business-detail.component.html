@@ -30,7 +30,7 @@
                icon="comment"></bc-icon>
     </div>
     <vo-ausm-result-state-box [state]="result.state"
-                              [timestamp]="(result.state === states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY ? result.auditedTentativelyTimestamp : (result.state === states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED ? result.plausibilisedTimestamp : result.submissionDoneTimestamp))"
+                              [timestamp]="(result.state === states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY ? result.auditedTentativelyTimestamp : (result.state === states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED ? result.plausibilisedTimestamp : (result.state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION ? result.readyForCorrectionTimestamp : result.submissionDoneTimestamp)))"
                               [newZhFeaturesEnabled]="newZhFeaturesEnabled"
                               [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"></vo-ausm-result-state-box>
   </div>

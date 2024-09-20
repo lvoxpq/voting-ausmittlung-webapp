@@ -3,7 +3,8 @@
     "TITLE": {
       "default": "VOTING Ausmittlung Monitoring",
       "sg": "Ergebnisermittlung Monitoring"
-    }
+    },
+    "REVERT": "Rückgängig"
   },
   "MONITORING_COCKPIT": {
     "TITLE": "Monitoring Cockpit",
@@ -47,10 +48,11 @@
     },
     "POLITICAL_BUSINESS_TYPE": {
       "TITLE": "T",
-      "1": "SG",
-      "2": "WM",
-      "3": "WP",
-      "4": "WM"
+      "1-0": "SGS",
+      "1-1": "SGV",
+      "2-0": "WM",
+      "3-0": "WP",
+      "4-0": "WM"
     }
   },
   "CONTEST": {
@@ -82,6 +84,18 @@
     "COUNT_OF_VOTERS": "Stimmberechtigte",
     "COUNTING_DONE": "Ausgezählt",
     "COUNTING_DONE_OF": "{{countOfDoneCountingCircles}} von {{totalCountOfCountingCircles}}",
+    "STEP_ACTIONS": {
+      "CURRENT_STEP": "Aktueller Stand",
+      "NEXT_STEP": "Nächster Schritt",
+      "START_MANDATE_DISTRIBUTION": "Sitzverteilung auslösen",
+      "FINALIZE": "Schlussergebnis setzen"
+    },
+    "STEPS": {
+      "0": "Es sind noch nicht alle Gemeinden ausgezählt",
+      "1": "Alle Gemeinden sind ausgezählt",
+      "2": "Sitzverteilung ist ausgelöst",
+      "3": "Schlussergebnis ist gesetzt"
+    },
     "ELECTION": {
       "LOT_DECISION": {
         "OPEN": "Losentscheide fällen",
@@ -109,8 +123,8 @@
     },
     "PROPORTIONAL_ELECTION": {
       "CONFIRM": {
-        "TITLE": "Schlussergebnis setzen und Sitzverteilung auslösen?",
-        "MESSAGE": "Mit der Bestätigung lösen Sie die Sitzverteilung aus. Der Ausmittlungsstand \"Schlussergebnis\" wird in verschiedenen Exports ausgewiesen."
+        "TITLE": "Schlussergebnis setzen?",
+        "MESSAGE": "Mit der Bestätigung wird das Wahlergebnis sowie der Ausmittlungsstand in den Exports als \"Schlussergebnis\" ausgewiesen."
       }
     },
     "DOUBLE_PROPORTIONAL_RESULT": {
@@ -139,7 +153,7 @@
     },
     "PROPORTIONAL_ELECTION": {
       "CONFIRM": {
-        "TITLE": "Schlussergebnis setzen und Sitzverteilung auslösen?",
+        "TITLE": "Sitzverteilung auslösen?",
         "MESSAGE": "Mit der Bestätigung lösen Sie die Sitzverteilung aus."
       }
     }

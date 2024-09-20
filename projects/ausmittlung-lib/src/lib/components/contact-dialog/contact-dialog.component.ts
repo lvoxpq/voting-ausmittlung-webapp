@@ -1,32 +1,51 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
 
-import { Component, Inject } from '@angular/core';
-import { CountingCircle, DomainOfInfluence, ResultList } from '../../models';
-import { cloneDeep } from 'lodash';
+import { Component, HostListener, Inject, OnDestroy } from '@angular/core';
+import { ContactPerson, CountingCircle, DomainOfInfluence, ResultList } from '../../models';
+import { cloneDeep, isEqual } from 'lodash';
 import { ContactPersonEditDialogResult } from '../contest-detail/contest-detail-sidebar/contact-person-edit-dialog/contact-person-edit-dialog.component';
 import { ContestCountingCircleContactPersonService } from '../../services/contest-counting-circle-contact-person.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
+import { DialogService } from '@abraxas/voting-lib';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'vo-ausm-contact-dialog',
   templateUrl: './contact-dialog.component.html',
   styleUrls: ['./contact-dialog.component.scss'],
 })
-export class ContactDialogComponent {
+export class ContactDialogComponent implements OnDestroy {
+  @HostListener('window:beforeunload')
+  public beforeUnload(): boolean {
+    return !this.hasChanges;
+  }
+
+  @HostListener('window:keyup.esc')
+  public async keyUpEscape(): Promise<void> {
+    await this.closeWithUnsavedChangesCheck();
+  }
+
   public readonly domainOfInfluences: DomainOfInfluence[];
   public readonly resultList: ResultList;
   public readonly countingCircle: CountingCircle;
   public readonly readonly: boolean;
   public readonly showCancel: boolean;
   public saving: boolean = false;
+  public hasChanges: boolean = false;
+  public originalCountingCircle: CountingCircle;
+
+  public readonly backdropClickSubscription: Subscription;
 
   constructor(
     private readonly dialogRef: MatDialogRef<ContactDialogResult>,
     private readonly contactPersonService: ContestCountingCircleContactPersonService,
+    private readonly dialogService: DialogService,
+    private readonly i18n: TranslateService,
     @Inject(MAT_DIALOG_DATA) dialogData: ContactDialogComponentData,
   ) {
     this.domainOfInfluences = dialogData.domainOfInfluences;
@@ -34,6 +53,14 @@ export class ContactDialogComponent {
     this.countingCircle = this.resultList.countingCircle;
     this.readonly = dialogData.readonly;
     this.showCancel = dialogData.showCancel;
+    this.originalCountingCircle = cloneDeep(this.resultList.countingCircle);
+
+    this.dialogRef.disableClose = true;
+    this.backdropClickSubscription = this.dialogRef.backdropClick().subscribe(async () => this.closeWithUnsavedChangesCheck());
+  }
+
+  public ngOnDestroy(): void {
+    this.backdropClickSubscription.unsubscribe();
   }
 
   public async save(): Promise<void> {
@@ -58,6 +85,31 @@ export class ContactDialogComponent {
 
   public cancel(): void {
     this.dialogRef.close();
+  }
+
+  public contentChanged(): void {
+    this.hasChanges = !isEqual(this.countingCircle, this.originalCountingCircle);
+  }
+
+  public async closeWithUnsavedChangesCheck(): Promise<void> {
+    if (await this.leaveDialogOpen()) {
+      return;
+    }
+
+    this.dialogRef.close();
+  }
+
+  public setContactPersonSameDuringEventAsAfter(value: boolean): void {
+    this.countingCircle.contactPersonSameDuringEventAsAfter = value;
+    if (!value) {
+      this.countingCircle.contactPersonAfterEvent = {} as ContactPerson;
+    }
+
+    this.contentChanged();
+  }
+
+  private async leaveDialogOpen(): Promise<boolean> {
+    return this.hasChanges && !(await this.dialogService.confirm('APP.CHANGES.TITLE', this.i18n.instant('APP.CHANGES.MSG'), 'APP.YES'));
   }
 
   private async createContactPerson(): Promise<void> {

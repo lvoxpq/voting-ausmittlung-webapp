@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -57,5 +57,5 @@ export interface MajorityElectionBallotGroup {
 export interface MajorityElectionBallotGroupEntry {
   election: MajorityElection | SecondaryMajorityElection;
   candidates: MajorityElectionCandidate[];
-  hasIndividualCandidate: boolean;
+  individualCandidatesVoteCount: number;
 }

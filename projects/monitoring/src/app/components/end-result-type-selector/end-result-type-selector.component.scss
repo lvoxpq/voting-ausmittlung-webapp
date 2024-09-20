@@ -1,7 +1,0 @@
-@use '@abraxas/voting-lib/style/spacing' as *;
-
-:host {
-  @extend .mr-2; // mr is required since otherwise the focus box would overlap
-
-  display: block;
-}

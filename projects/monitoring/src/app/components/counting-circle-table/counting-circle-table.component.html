@@ -7,7 +7,7 @@
     <bc-data-cell *dataCellDef="let element">
       <div class="state-colorbox"
            [ngClass]="'result-state-' + element.state">
-        {{ (element.state === countingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY ? element.auditedTentativelyTimestamp : (element.state === countingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED ? element.plausibilisedTimestamp : element.submissionDoneTimestamp)) | date: 'mediumTime' }}
+        {{ (element.state === countingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY ? element.auditedTentativelyTimestamp : (element.state === countingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED ? element.plausibilisedTimestamp : (element.state === countingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION ? element.readyForCorrectionTimestamp : element.submissionDoneTimestamp))) | date: 'mediumTime' }}
       </div>
     </bc-data-cell>
   </ng-container>

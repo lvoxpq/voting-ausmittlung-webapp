@@ -103,6 +103,7 @@
             [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
             [disabled]="publishing"
             [showPublishSwitch]="publishResultsEnabled && politicalBusiness.domainOfInfluence.type < domainOfInfluenceTypes.DOMAIN_OF_INFLUENCE_TYPE_MU"
+            [publishResultsBeforeAuditedTentatively]="publishResultsBeforeAuditedTentatively"
             (publishedChanged)="updatePublished($event, politicalBusiness.businessType, [result.resultsByPoliticalBusinessId[politicalBusiness.id]])">
           </app-monitoring-cockpit-grid-entry>
         </ng-container>
@@ -111,12 +112,13 @@
             *ngIf="!politicalBusinessUnionFilter || politicalBusinessUnion === politicalBusinessUnionFilter"
             (openDetail)="openDetail(result.countingCircle, undefined)"
             [showDetails]="showDetails"
-            [results]="result.resultsByPoliticalBusinessUnionId[politicalBusinessUnion.id]"
+            [results]="result.resultsByPoliticalBusinessUnionId[politicalBusinessUnion.id] ?? []"
             [newZhFeaturesEnabled]="newZhFeaturesEnabled"
             [stateDescriptionsByState]="contestCantonDefaults?.countingCircleResultStateDescriptionsByState"
             [disabled]="publishing"
             [showPublishSwitch]="publishResultsEnabled && politicalBusinessUnion.politicalBusinesses[0].domainOfInfluence.type < domainOfInfluenceTypes.DOMAIN_OF_INFLUENCE_TYPE_MU"
-            (publishedChanged)="updatePublished($event, politicalBusinessUnion.politicalBusinesses[0].businessType, result.resultsByPoliticalBusinessUnionId[politicalBusinessUnion.id])">
+            [publishResultsBeforeAuditedTentatively]="publishResultsBeforeAuditedTentatively"
+            (publishedChanged)="updatePublished($event, politicalBusinessUnion.politicalBusinesses[0].businessType, result.resultsByPoliticalBusinessUnionId[politicalBusinessUnion.id] ?? [])">
           </app-monitoring-cockpit-grid-entry>
         </ng-container>
       </ng-container>

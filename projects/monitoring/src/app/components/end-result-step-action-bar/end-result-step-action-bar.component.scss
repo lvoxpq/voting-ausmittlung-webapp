@@ -1,0 +1,28 @@
+@use '@abraxas/voting-lib/style/color' as *;
+@use '@abraxas/voting-lib/style/spacing' as *;
+
+.step-action-bar {
+  @extend .mt-4;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  .step-action-bar-item {
+    display: flex;
+    flex-direction: column;
+
+    &:not(:last-child) {
+      @extend .mr-4;
+    }
+
+    .label {
+      color: $color-grey-2;
+
+      @extend .mb-1;
+    }
+
+    .content {
+      margin-top: auto;
+    }
+  }
+}

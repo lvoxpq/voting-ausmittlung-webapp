@@ -21,7 +21,7 @@
                     filterDisplayExpr="description" filterValueExpr="value" sort *headerCellDef>
       {{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.POLITICAL_BUSINESS_TYPE.TITLE' | translate }}
     </bc-header-cell>
-    <bc-data-cell *dataCellDef="let element">{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.POLITICAL_BUSINESS_TYPE.' + element.businessType | translate }}</bc-data-cell>
+    <bc-data-cell *dataCellDef="let element">{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.POLITICAL_BUSINESS_TYPE.' + element.businessType + '-' + element.businessSubType | translate }}</bc-data-cell>
   </ng-container>
   <ng-container [columnDef]="politicalBusinessNumberColumn">
     <bc-header-cell filter filterType="text" sort *headerCellDef>{{ 'MONITORING_POLITICAL_BUSINESSES_OVERVIEW.NUMBER' | translate }}</bc-header-cell>

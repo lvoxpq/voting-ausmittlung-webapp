@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -119,6 +119,7 @@ export class ProportionalElectionUnionEndResultComponent implements OnDestroy {
           .showDialogAndExecuteVerifyAction(
             () => this.resultService.finalizeEndResult(unionId, secondFactorTransaction.getId()),
             secondFactorTransaction.getCode(),
+            secondFactorTransaction.getQrCode(),
           )
           .catch(err => {
             this.endResult!.finalized = false;

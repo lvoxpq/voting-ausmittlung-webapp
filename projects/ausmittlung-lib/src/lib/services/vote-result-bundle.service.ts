@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -33,6 +33,7 @@ import { Observable } from 'rxjs';
 import {
   BallotQuestionAnswer,
   PoliticalBusinessResultBundle,
+  ProtocolExport,
   TieBreakQuestionAnswer,
   VoteResultBallot,
   VoteResultBallotProto,
@@ -42,6 +43,7 @@ import {
   VoteResultBundleProto,
   VoteResultBundles,
   VoteResultBundlesProto,
+  ProtocolExportProto,
 } from '../models';
 import { GRPC_ENV_INJECTION_TOKEN } from './tokens';
 import { VoteResultService } from './vote-result.service';
@@ -196,6 +198,7 @@ export class VoteResultBundleService extends GrpcService<VoteResultBundleService
       ...obj,
       createdBy: obj.createdBy!,
       ballotNumbersToReview: obj.ballotNumbersToReviewList,
+      protocolExport: this.mapToProtocolExport(proto.getProtocolExport()),
     };
   }
 
@@ -237,5 +240,16 @@ export class VoteResultBundleService extends GrpcService<VoteResultBundleService
     req.setQuestionNumber(ballotAnswer.question.number);
     req.setAnswer(ballotAnswer.answer ?? TieBreakQuestionAnswer.TIE_BREAK_QUESTION_ANSWER_UNSPECIFIED);
     return req;
+  }
+
+  private mapToProtocolExport(response?: ProtocolExportProto): ProtocolExport | undefined {
+    if (!response) {
+      return undefined;
+    }
+
+    return {
+      ...response.toObject(),
+      started: response.getStarted()!.toDate(),
+    };
   }
 }

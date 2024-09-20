@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -153,8 +153,20 @@ export class ContestPoliticalBusinessDetailFooterComponent implements OnInit, On
     this.stateUpdate.emit(stateChange);
   }
 
+  public finishCorrectionAndAuditTentatively(): void {
+    const stateChange: StateChange = {
+      newState: CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY,
+      oldState: this.state,
+      comment: '',
+    };
+    this.stateUpdate.emit(stateChange);
+  }
+
   public createProtocol(): void {
-    window.open(`${this.votingAusmittlungMonitoringWebAppUrl}/${this.themeService.theme$.value}/contests/${this.contestId}`, '_blank');
+    window.open(
+      `${this.votingAusmittlungMonitoringWebAppUrl}/${this.themeService.theme$.value}/contests/${this.contestId}/exports`,
+      '_blank',
+    );
   }
 
   private async confirmStateUpdate(stateChange: StateChange): Promise<ConfirmCommentDialogResult> {
@@ -193,7 +205,7 @@ export class ContestPoliticalBusinessDetailFooterComponent implements OnInit, On
         if (stateChange.oldState === CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY) {
           return;
         }
-        return 'ACTIONS.SUBMISSION_DONE_CONFIRM';
+        return this.newZhFeaturesEnabled ? 'ACTIONS.SUBMISSION_DONE_CONFIRM' : 'ACTIONS.SUBMISSION_DONE_CONFIRM_OLD';
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE:
         return 'ACTIONS.CORRECTION_DONE_CONFIRM';
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION:

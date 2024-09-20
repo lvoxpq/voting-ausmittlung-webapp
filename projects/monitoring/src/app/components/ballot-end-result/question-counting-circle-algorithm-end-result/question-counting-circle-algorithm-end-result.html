@@ -1,8 +1,8 @@
 <div class="counting-circle-results-container">
-  <app-question-end-result-entry title="VOTE_END_RESULT.COUNTING_CIRCLE_TITLE"
-                                 [labelLeft]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions"
+  <app-question-end-result-entry titleText="VOTE_END_RESULT.COUNTING_CIRCLE_TITLE"
+                                 [labelLeft]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer1Short':ballotNumberOfQuestions:ballotSubType"
                                  [voteCountLeft]="endResult.countOfCountingCircle1"
-                                 [labelRight]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions"
+                                 [labelRight]="endResult.question | translateVoteQuestion: isTieBreakQuestion:'answer2Short':ballotNumberOfQuestions:ballotSubType"
                                  [voteCountRight]="endResult.countOfCountingCircle2">
   </app-question-end-result-entry>
 

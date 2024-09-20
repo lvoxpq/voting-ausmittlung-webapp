@@ -26,7 +26,8 @@
         [showResetResultsInTestingPhase]="showResetResultsInTestingPhase"
         [showSetAllAuditedTentatively]="showSetAllAuditedTentatively"
         (finishSubmission)="finishSubmission()"
-        [stateDescriptionsByState]="resultList.contest.cantonDefaults.countingCircleResultStateDescriptionsByState"></vo-ausm-contest-state-change-button>
+        [stateDescriptionsByState]="resultList.contest.cantonDefaults.countingCircleResultStateDescriptionsByState"
+        [newZhFeaturesEnabled]="newZhFeaturesEnabled"></vo-ausm-contest-state-change-button>
       <bc-button *ngIf="showExport" variant="tertiary" (buttonClick)="export()" [label]="'CONTEST.DETAIL.EXPORT' | translate"></bc-button>
     </div>
   </vo-lib-page-header>
@@ -62,7 +63,8 @@
         [electorateSummary]="resultList.electorateSummary"
         [readonly]="contentReadonly
         || sidebarReadonly
-        || !resultList?.currentTenantIsResponsible"
+        || !resultList?.currentTenantIsResponsible
+        || !canEditCountingCircleDetails"
         (saved)="updateCountOfVoters($event)">
       </vo-ausm-contest-detail-info>
 

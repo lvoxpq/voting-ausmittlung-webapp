@@ -5,13 +5,14 @@
   <div class="ballot-results">
     <div *ngFor="let questionEndResult of endResult.questionEndResults">
       <p class="whitespace-pre-wrap mb-2">
-        {{ questionEndResult.question | translateVoteQuestion: false:'question':endResult.questionEndResults.length }}
+        {{ questionEndResult.question | translateVoteQuestion: false:'question':endResult.questionEndResults.length:endResult.ballot.ballotSubType }}
       </p>
       <div class="question-results">
         <app-question-popular-majority-algorithm-end-result *ngIf="isPopularMajorityAlgorithm"
                                                             [eVoting]="eVoting"
                                                             [isTieBreakQuestion]="false"
                                                             [ballotNumberOfQuestions]="endResult.questionEndResults.length"
+                                                            [ballotSubType]="endResult.ballot.ballotSubType"
                                                             [endResult]="questionEndResult">
         </app-question-popular-majority-algorithm-end-result>
 
@@ -19,6 +20,7 @@
                                                            [isTieBreakQuestion]="false"
                                                            [ballotNumberOfQuestions]="endResult.questionEndResults.length"
                                                            [endResult]="questionEndResult"
+                                                           [ballotSubType]="endResult.ballot.ballotSubType"
                                                            [voteResultAlgorithm]="voteResultAlgorithm"
                                                            [showAcceptedLabel]="!isPopularMajorityAlgorithm || !isCountingCircleAlgorithmAlgorithm">
         </app-question-counting-circle-algorithm-end-result>

@@ -25,6 +25,7 @@
         [readOnly]="saving"
         [election]="selectedElection"
         [supportsInvalidVotes]="hasInvalidVotes"
+        [supportsIndividualVotes]="hasIndividualVotes"
         [writeInMappings]="mappings"
         (writeInMappingsChange)="setMappings($event)"
         (showNextElection)="selectedElectionChange(selectedElectionIndex + 1)"

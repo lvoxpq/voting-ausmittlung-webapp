@@ -18,14 +18,11 @@
         {{'END_RESULT.COUNTING_DONE_OF' | translate: endResult}}
       </vo-ausm-info-panel-entry>
     </vo-ausm-info-panel>
-    <div class="align-right">
-      <vo-lib-inline-spinner [loading]="finalizing"
-                             position="right">
-        <app-end-result-type-selector [finalized]="endResult.finalized"
-                                      (finalizedChange)="setFinalized($event)"
-                                      [disabled]="!endResult.allCountingCirclesDone || endResult.contest.locked || finalizing || isPartialResult"></app-end-result-type-selector>
-      </vo-lib-inline-spinner>
-    </div>
+
+    <app-end-result-step-action-bar [step]="endResultStep"
+                                    (stepChange)="handleEndResultStepChange($event)"
+                                    [showFinalize]="finalizeEnabled"
+                                    [disabled]="stepActionLoading || isPartialResult"></app-end-result-step-action-bar>
     <div *ngFor="let ballotEndResult of endResult.ballotEndResults">
       <app-ballot-end-result [endResult]="ballotEndResult"
                              [eVoting]="endResult.contest.eVoting"

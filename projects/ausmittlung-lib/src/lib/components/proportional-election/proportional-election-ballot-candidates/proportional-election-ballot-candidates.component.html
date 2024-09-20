@@ -52,7 +52,7 @@
     </ng-template>
 
     <ng-template #emptyRowSlot let-isReplacementCandidate="isReplacementCandidate">
-      <bc-checkbox class="m-0 candidate-toggle clickable"
+      <bc-checkbox class="m-0 candidate-toggle clickable" #positionElement
                    [tabIndex]="-1"
                    [checked]="true"
                    [disabled]="true"

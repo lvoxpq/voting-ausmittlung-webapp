@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -47,6 +47,9 @@ export class MonitoringCockpitGridEntryComponent {
 
   @Input()
   public showPublishSwitch: boolean = false;
+
+  @Input()
+  public publishResultsBeforeAuditedTentatively: boolean = false;
 
   @Output()
   public publishedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();

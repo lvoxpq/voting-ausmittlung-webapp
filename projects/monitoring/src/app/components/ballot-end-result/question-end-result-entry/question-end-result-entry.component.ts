@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -13,7 +13,7 @@ import { Component, Input } from '@angular/core';
 })
 export class QuestionEndResultEntryComponent {
   @Input()
-  public title: string = '';
+  public titleText: string = '';
 
   @Input()
   public labelLeft: string = '';

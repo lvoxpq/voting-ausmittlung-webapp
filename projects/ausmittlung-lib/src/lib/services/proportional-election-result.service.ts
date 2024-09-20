@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -28,6 +28,7 @@ import {
   GetProportionalElectionResultRequest,
   GetProportionalElectionUnmodifiedListResultsRequest,
   ProportionalElectionResultAuditedTentativelyRequest,
+  ProportionalElectionResultCorrectionFinishedAndAuditedTentativelyRequest,
   ProportionalElectionResultCorrectionFinishedRequest,
   ProportionalElectionResultFlagForCorrectionRequest,
   ProportionalElectionResultPrepareCorrectionFinishedRequest,
@@ -39,6 +40,8 @@ import {
   ProportionalElectionResultSubmissionFinishedAndAuditedTentativelyRequest,
   ProportionalElectionResultSubmissionFinishedRequest,
   RevertProportionalElectionEndResultFinalizationRequest,
+  RevertProportionalElectionEndResultMandateDistributionRequest,
+  StartProportionalElectionEndResultMandateDistributionRequest,
   UpdateProportionalElectionDoubleProportionalResultSuperApportionmentLotDecisionRequest,
   UpdateProportionalElectionEndResultLotDecisionRequest,
   UpdateProportionalElectionListEndResultLotDecisionsRequest,
@@ -267,6 +270,12 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     return this.requestEmptyResp(c => c.submissionFinishedAndAuditedTentatively, req);
   }
 
+  public correctionFinishedAndAuditedTentatively(proportionalElectionResultId: string): Promise<void> {
+    const req = new ProportionalElectionResultCorrectionFinishedAndAuditedTentativelyRequest();
+    req.setElectionResultId(proportionalElectionResultId);
+    return this.requestEmptyResp(c => c.correctionFinishedAndAuditedTentatively, req);
+  }
+
   public publish(proportionalElectionResultIds: string[]): Promise<void> {
     const req = new ProportionalElectionResultPublishRequest();
     req.setElectionResultIdsList(proportionalElectionResultIds);
@@ -360,6 +369,18 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
     );
   }
 
+  public startEndResultMandateDistribution(proportionalElectionId: string): Promise<void> {
+    const req = new StartProportionalElectionEndResultMandateDistributionRequest();
+    req.setProportionalElectionId(proportionalElectionId);
+    return this.requestEmptyResp(c => c.startEndResultMandateDistribution, req);
+  }
+
+  public revertEndResultMandateDistribution(proportionalElectionId: string): Promise<void> {
+    const req = new RevertProportionalElectionEndResultMandateDistributionRequest();
+    req.setProportionalElectionId(proportionalElectionId);
+    return this.requestEmptyResp(c => c.revertEndResultMandateDistribution, req);
+  }
+
   public finalizeEndResult(proportionalElectionId: string, secondFactorTransactionId: string): Observable<void> {
     const req = new FinalizeProportionalElectionEndResultRequest();
     req.setProportionalElectionId(proportionalElectionId);
@@ -420,6 +441,7 @@ export class ProportionalElectionResultService extends PoliticalBusinessResultBa
       listEndResults: this.mapToListEndResults(data.getListEndResultsList()),
       finalized: data.getFinalized(),
       manualEndResultRequired: data.getManualEndResultRequired(),
+      mandateDistributionTriggered: data.getMandateDistributionTriggered(),
     };
   }
 

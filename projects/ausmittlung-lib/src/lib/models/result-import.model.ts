@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -33,6 +33,7 @@ export {
 export interface MajorityElectionWriteInMappings {
   election: SimplePoliticalBusiness;
   invalidVotes: boolean;
+  individualVotes: boolean;
   writeInMappings: MajorityElectionWriteInMapping[];
 }
 

@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -21,6 +21,7 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
   public loading: boolean = true;
 
   public hasInvalidVotes: boolean = false;
+  public hasIndividualVotes: boolean = false;
   public mappings: MajorityElectionWriteInMapping[] = [];
 
   public selectedElection?: SimplePoliticalBusiness;
@@ -32,6 +33,7 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
   public elections: SimplePoliticalBusiness[] = [];
 
   private hasInvalidVotesByElectionId: Record<string, boolean> = {};
+  private hasIndividualVotesByElectionId: Record<string, boolean> = {};
   private mappingsByElectionId: Record<string, MajorityElectionWriteInMapping[]> = {};
 
   private electionsById: Record<string, SimplePoliticalBusiness> = {};
@@ -74,6 +76,12 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
         contestWriteIns.writeInGroups,
         x => x.election.id,
         x => x.invalidVotes,
+      );
+
+      this.hasIndividualVotesByElectionId = groupBySingle(
+        contestWriteIns.writeInGroups,
+        x => x.election.id,
+        x => x.individualVotes,
       );
 
       this.mappingsByElectionId = groupBySingle(
@@ -159,6 +167,7 @@ export class MajorityElectionWriteInMappingDialogComponent implements OnInit {
     this.selectedElection = this.elections[index];
     this.mappings = this.mappingsByElectionId[this.selectedElection.id];
     this.hasInvalidVotes = this.hasInvalidVotesByElectionId[this.selectedElection.id];
+    this.hasIndividualVotes = this.hasIndividualVotesByElectionId[this.selectedElection.id];
   }
 }
 

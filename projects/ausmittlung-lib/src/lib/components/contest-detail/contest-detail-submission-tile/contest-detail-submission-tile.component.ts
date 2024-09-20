@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -13,7 +13,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ContestDetailSubmissionTileComponent {
   @Input()
-  public title?: string;
+  public titleText?: string;
 
   @Input()
   public text?: string;

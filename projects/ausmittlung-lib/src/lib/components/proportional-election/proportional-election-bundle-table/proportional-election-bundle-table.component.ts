@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -12,6 +12,7 @@ import { UserService } from '../../../services/user.service';
 import { ResultBundleTableComponent } from '../../result-bundle-table/result-bundle-table-component.directive';
 import { EnumUtil } from '@abraxas/voting-lib';
 import { TranslateService } from '@ngx-translate/core';
+import { ProtocolExportState } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/export_pb';
 
 @Component({
   selector: 'vo-ausm-proportional-election-bundle-table',
@@ -34,9 +35,11 @@ export class ProportionalElectionBundleTableComponent
     this.countOfBallotsColumn,
     this.stateColumn,
     this.reviewedByColumn,
+    this.reviewColumn,
     this.actionsColumn,
   ];
   public readonly reviewProcedures: typeof ProportionalElectionReviewProcedure = ProportionalElectionReviewProcedure;
+  public readonly protocolExportStates: typeof ProtocolExportState = ProtocolExportState;
 
   @Input()
   public reviewProcedure?: ProportionalElectionReviewProcedure;
@@ -50,6 +53,10 @@ export class ProportionalElectionBundleTableComponent
 
   public override ngAfterViewInit(): void {
     super.ngAfterViewInit();
+
+    if (!this.enableReviewColumn) {
+      this.columns.splice(this.columns.length - 2, 1);
+    }
 
     if (!this.enableActions) {
       this.columns.splice(this.columns.length - 1, 1);

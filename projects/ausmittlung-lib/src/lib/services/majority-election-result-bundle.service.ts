@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -38,6 +38,8 @@ import {
   MajorityElectionResultBundles,
   MajorityElectionResultBundlesProto,
   PoliticalBusinessResultBundle,
+  ProtocolExport,
+  ProtocolExportProto,
 } from '../models';
 import { MajorityElectionResultBallotProto } from '../models/majority-election-result.model';
 import { MajorityElectionResultService } from './majority-election-result.service';
@@ -197,6 +199,7 @@ export class MajorityElectionResultBundleService extends GrpcService<MajorityEle
       ...obj,
       createdBy: obj.createdBy!,
       ballotNumbersToReview: obj.ballotNumbersToReviewList,
+      protocolExport: this.mapToProtocolExport(proto.getProtocolExport()),
     };
   }
 
@@ -254,6 +257,17 @@ export class MajorityElectionResultBundleService extends GrpcService<MajorityEle
         election: electionByIds[seb.electionId],
         candidates: seb.candidatesList,
       })),
+    };
+  }
+
+  private mapToProtocolExport(response?: ProtocolExportProto): ProtocolExport | undefined {
+    if (!response) {
+      return undefined;
+    }
+
+    return {
+      ...response.toObject(),
+      started: response.getStarted()!.toDate(),
     };
   }
 }

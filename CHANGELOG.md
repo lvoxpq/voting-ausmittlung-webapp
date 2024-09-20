@@ -1,4 +1,4 @@
-# ✨ Changelog (`v2.7.0`)
+# ✨ Changelog (`v2.15.5`)
 
 All notable changes to this project will be documented in this file.
 
@@ -8,11 +8,200 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version Info
 
 ```text
-This version -------- v2.7.0
-Previous version ---- v1.72.0
+This version -------- v2.15.5
+Previous version ---- v2.7.0
 Initial version ----- v1.25.0
-Total commits ------- 37
+Total commits ------- 32
 ```
+
+## [v2.15.5] - 2024-09-06
+
+### 🔄 Changed
+
+- result submission finished to audited tentatively for owned results
+
+## [v2.15.4] - 2024-09-04
+
+### 🔄 Changed
+
+- migrate from gcr to harbor
+
+## [v2.15.3] - 2024-09-04
+
+fix(VOTING-4850): only consider states of owned political businesses for the summary state in monitoring
+
+## [v2.15.2] - 2024-09-04
+
+### 🔄 Changed
+
+- cancel 2FA should not disabled submission finish button
+
+## [v2.15.1] - 2024-09-04
+
+### 🔄 Changed
+
+- change submit results and audit tentatively label
+
+## [v2.15.0] - 2024-09-04
+
+### 🆕 Added
+
+- add correction finished and audited tentatively endpoint
+
+## [v2.14.4] - 2024-09-03
+
+### 🆕 Added
+
+- add validation hint for audited and self owned businesses
+
+## [v2.14.3] - 2024-09-03
+
+### 🔄 Changed
+
+- sort counting circles in monitoring cockpit when live reload
+
+## [v2.14.2] - 2024-08-28
+
+### 🔄 Changed
+
+- show mandate distribution trigger only with correct mandate algorithm
+
+## [v2.14.1] - 2024-08-28
+
+### 🔄 Changed
+
+- create protocol link changed
+
+## [v2.14.0] - 2024-08-28
+
+### 🆕 Added
+
+- optional individual candidates on majority elections
+
+## [v2.13.2] - 2024-08-28
+
+🔄 Changed
+
+update bug bounty template reference
+patch ci-cd template version, align with new defaults
+
+## [v2.13.1] - 2024-08-22
+
+### 🔄 Changed
+
+- show empty votes always for secondary majority election
+
+## [v2.13.0] - 2024-08-20
+
+### 🆕 Added
+
+- add 2fa fallback qr code
+
+## [v2.12.2] - 2024-08-16
+
+### 🔄 Changed
+
+- monitoring cockpit grid footer sticky
+
+## [v2.12.1] - 2024-08-14
+
+### 🔄 Changed
+
+- scroll added candidate into view
+
+## [v2.12.0] - 2024-08-14
+
+### 🆕 Added
+
+- add asynchronous bundle review
+
+## [v2.11.1] - 2024-08-09
+
+### 🔄 Changed
+
+- vote question result equality total count of no should win
+
+## [v2.11.0] - 2024-08-08
+
+### :new: Added
+
+- added political business and ballot sub type
+
+## [v2.10.2] - 2024-08-06
+
+### 🔄 Changed
+
+- readonly counting circle details if the user does not have the permissions
+
+## [v2.10.1] - 2024-08-05
+
+### 🔄 Changed
+
+- submission done text
+
+## [v2.10.0] - 2024-07-19
+
+### 🆕 Added
+
+- canton settings with publish results before audited tentatively
+
+## [v2.9.2] - 2024-07-15
+
+### 🔄 Changed
+
+- index.html set default language to german and disable google translation
+
+## [v2.9.1] - 2024-06-25
+
+### 🔄 Changed
+
+- show only owned political businesses in export cockpit
+
+## [v2.9.0] - 2024-06-21
+
+### 🆕 Added
+
+- explicit election mandate distribution
+
+### 🔄 Changed
+
+- end result workflow
+
+## [v2.8.3] - 2024-06-21
+
+### 🆕 Added
+
+- add unsaved changes dialog to contact person dialog
+
+## [v2.8.2] - 2024-06-20
+
+### 🔄 Changed
+
+- replace submission finish with submit results everywhere
+
+## [v2.8.1] - 2024-06-20
+
+### 🆕 Added
+
+- add partial results to result overview
+
+## [v2.8.0] - 2024-06-07
+
+### 🆕 Added
+
+- add ready for correction timestamp
+
+## [v2.7.2] - 2024-06-07
+
+### 🔄 Changed
+
+- change no bundles text
+
+## [v2.7.1] - 2024-06-06
+
+### :arrows_counterclockwise: Changed
+
+- update voting lib to fix outdated access tokens on server streaming retries
 
 ## [v2.7.0] - 2024-05-29
 
@@ -122,13 +311,9 @@ Total commits ------- 37
 
 - rework monitoring cockpit overview
 
-## [v2.1.0] - 2024-04-23
-
 ### 🆕 Added
 
 - non cantonal double proportional result
-
-## [v2.0.0] - 2024-04-19
 
 BREAKING CHANGE: update to Angular 17 version
 
@@ -136,25 +321,17 @@ BREAKING CHANGE: update to Angular 17 version
 
 - Angular Update to version 17
 
-## [v1.76.0] - 2024-04-19
-
 ### 🆕 Added
 
 - add state plausibilised disabled canton setting
-
-## [v1.75.1] - 2024-04-18
 
 ### 🔄 Changed
 
 - ballot navigation icon buttons
 
-## [v1.75.0] - 2024-04-18
-
 ### 🆕 Added
 
 - add counting circle result state descriptions
-
-## [v1.74.0] - 2024-04-15
 
 ### 🔄 Changed
 
@@ -176,13 +353,9 @@ BREAKING CHANGE: update to Angular 17 version
 
 - add political business unions to result overview
 
-## [v1.73.1] - 2024-03-20
-
 ### 🔄 Changed
 
 - voting cards order
-
-## [v1.73.0] - 2024-03-14
 
 ### 🔄 Changed
 
@@ -210,85 +383,57 @@ BREAKING CHANGE: update to Angular 17 version
 
 - proportional election candidate choose queryable adjusted
 
-## [v1.72.1] - 2024-02-28
-
 ### :arrows_counterclockwise: Changed
 
 - fix write in mapping candidate width
-
-## [v1.72.0] - 2024-02-28
 
 ### :new: Added
 
 - live updates of write in mapping changes
 
-## [v1.71.0] - 2024-02-27
-
 ### :arrows_counterclockwise: Changed
 
 - adjust write in mappings
-
-## [v1.70.1] - 2024-02-20
 
 ### 🔄 Changed
 
 - Enable electorates for non-zh
 
-## [v1.70.0] - 2024-02-19
-
 ### 🔄 Changed
 
 - change majority election ballot group description
-
-## [v1.69.1] - 2024-02-14
 
 ### 🔄 Changed
 
 - disallow empty lists with party in proportional elections
 
-## [v1.69.0] - 2024-02-14
-
 ### 🔄 Changed
 
 - set order of domain of influence types
-
-## [v1.68.1] - 2024-02-07
 
 ### 🔄 Changed
 
 - adjust state box colors
 
-## [v1.68.0] - 2024-02-06
-
 ### 🆕 Added
 
 - Double proportional election mandate algorithms
-
-## [v1.67.3] - 2024-02-05
 
 ### 🔄 Changed
 
 - voting card labels for canton TG
 
-## [v1.67.2] - 2024-02-05
-
 ### :arrows_counterclockwise: Changed
 
 - fall back to polling when state change listeners do not work
-
-## [v1.67.1] - 2024-02-02
 
 ### 🔄 Changed
 
 - update voting-lib to v2.6.3
 
-## [v1.67.0] - 2024-01-31
-
 ### 🆕 Added
 
 - Added counting circle electorate
-
-## [v1.66.0] - 2024-01-29
 
 ### 🔄 Changed
 
@@ -731,6 +876,178 @@ This reverts commit 60ee4e312750c5b9d82b3ab87107bccc48cb7971.
 ### 🔄 Changed
 
 - Adjusted page title of the vote review bundle page
+
+## [v2.1.0] - 2024-04-23
+
+### 🆕 Added
+
+- non cantonal double proportional result
+
+## [v2.0.0] - 2024-04-19
+
+BREAKING CHANGE: update to Angular 17 version
+
+### 🔄 Changed
+
+- Angular Update to version 17
+
+## [v1.76.0] - 2024-04-19
+
+### 🆕 Added
+
+- add state plausibilised disabled canton setting
+
+## [v1.75.1] - 2024-04-18
+
+### 🔄 Changed
+
+- ballot navigation icon buttons
+
+## [v1.75.0] - 2024-04-18
+
+### 🆕 Added
+
+- add counting circle result state descriptions
+
+## [v1.74.0] - 2024-04-15
+
+### 🔄 Changed
+
+- group validation results by validity
+
+### :new: Added
+
+- added partial end results
+
+### ❌ Removed
+
+- remove unions from election endresults
+
+### 🆕 Added
+
+- cantonal proportional election union results
+
+### 🆕 Added
+
+- add political business unions to result overview
+
+## [v1.73.1] - 2024-03-20
+
+### 🔄 Changed
+
+- voting cards order
+
+## [v1.73.0] - 2024-03-14
+
+### 🔄 Changed
+
+- fix count representation of filtered counting circles in monitoring
+
+### 🆕 Added
+
+- add monitoring political business overview
+
+### 🆕 Added
+
+- add vote result algorithm popular and counting circle majority
+
+### :arrows_counterclockwise: Changed
+
+- adjust a few permissions checks
+
+- add submission finish and audit tentatively for self owned businesses
+
+### 🆕 Added
+
+- add unsaved changes guard and unload host listener
+
+### 🔄 Changed
+
+- proportional election candidate choose queryable adjusted
+
+## [v1.72.1] - 2024-02-28
+
+### :arrows_counterclockwise: Changed
+
+- fix write in mapping candidate width
+
+## [v1.72.0] - 2024-02-28
+
+### :new: Added
+
+- live updates of write in mapping changes
+
+## [v1.71.0] - 2024-02-27
+
+### :arrows_counterclockwise: Changed
+
+- adjust write in mappings
+
+## [v1.70.1] - 2024-02-20
+
+### 🔄 Changed
+
+- Enable electorates for non-zh
+
+## [v1.70.0] - 2024-02-19
+
+### 🔄 Changed
+
+- change majority election ballot group description
+
+## [v1.69.1] - 2024-02-14
+
+### 🔄 Changed
+
+- disallow empty lists with party in proportional elections
+
+## [v1.69.0] - 2024-02-14
+
+### 🔄 Changed
+
+- set order of domain of influence types
+
+## [v1.68.1] - 2024-02-07
+
+### 🔄 Changed
+
+- adjust state box colors
+
+## [v1.68.0] - 2024-02-06
+
+### 🆕 Added
+
+- Double proportional election mandate algorithms
+
+## [v1.67.3] - 2024-02-05
+
+### 🔄 Changed
+
+- voting card labels for canton TG
+
+## [v1.67.2] - 2024-02-05
+
+### :arrows_counterclockwise: Changed
+
+- fall back to polling when state change listeners do not work
+
+## [v1.67.1] - 2024-02-02
+
+### 🔄 Changed
+
+- update voting-lib to v2.6.3
+
+## [v1.67.0] - 2024-01-31
+
+### 🆕 Added
+
+- Added counting circle electorate
+
+## [v1.66.0] - 2024-01-29
+
+### 🔄 Changed
+
+- allow creator of a bundle to print preview
 
 ## [v1.65.0] - 2024-01-29
 

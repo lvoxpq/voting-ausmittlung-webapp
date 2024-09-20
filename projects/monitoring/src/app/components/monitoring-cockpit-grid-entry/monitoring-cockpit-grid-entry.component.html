@@ -8,19 +8,26 @@
     matTooltipPosition="above"
     matTooltipShowDelay="600"
   >
-    <span *ngIf="result.submissionDoneTimestamp">{{
+    <span *ngIf="result.submissionDoneTimestamp || result.readyForCorrectionTimestamp">{{
         (result.state === states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY
             ? result.auditedTentativelyTimestamp
             : result.state === states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED
               ? result.plausibilisedTimestamp
-              : result.submissionDoneTimestamp
+              : result.state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION
+                ? result.readyForCorrectionTimestamp
+                : result.submissionDoneTimestamp
         ) | date: 'mediumTime'
       }}</span>
     <bc-switch
       *ngIf="
         showPublishSwitch &&
         (result.state === states.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY ||
-        result.state === states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED)
+        result.state === states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED ||
+          (publishResultsBeforeAuditedTentatively && (
+            result.state === states.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE ||
+            result.state === states.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE)
+          )
+        )
       "
       [checked]="result.published"
       (checkedChange)="publishedChanged.emit($event)"
@@ -43,7 +50,9 @@
             ? result.auditedTentativelyTimestamp
             : result.state === states.COUNTING_CIRCLE_RESULT_STATE_PLAUSIBILISED
               ? result.plausibilisedTimestamp
-              : result.submissionDoneTimestamp
+              : result.state === states.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION
+                ? result.readyForCorrectionTimestamp
+                : result.submissionDoneTimestamp
         ) | date: 'shortTime'
       }}</span>
   </div>

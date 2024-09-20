@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SecondFactorTransactionService, SwissAbroadVotingRight, VoteEndResult, VoteResultService } from 'ausmittlung-lib';
 import { combineLatest, debounceTime, map, Subscription } from 'rxjs';
+import { EndResultStep } from '../../models/end-result-step.model';
 
 @Component({
   selector: 'app-vote-end-result',
@@ -18,10 +19,12 @@ import { combineLatest, debounceTime, map, Subscription } from 'rxjs';
 })
 export class VoteEndResultComponent implements OnDestroy {
   public loading: boolean = true;
-  public finalizing: boolean = false;
+  public stepActionLoading: boolean = false;
   public endResult?: VoteEndResult;
   public swissAbroadVotingRights: typeof SwissAbroadVotingRight = SwissAbroadVotingRight;
   public isPartialResult = false;
+  public endResultStep?: EndResultStep;
+  public finalizeEnabled = false;
 
   private readonly routeSubscription: Subscription;
 
@@ -48,41 +51,57 @@ export class VoteEndResultComponent implements OnDestroy {
     this.routeSubscription.unsubscribe();
   }
 
+  public async handleEndResultStepChange(newStep: EndResultStep): Promise<void> {
+    if (!this.endResultStep || !this.endResult) {
+      return;
+    }
+
+    try {
+      this.stepActionLoading = true;
+
+      if (newStep === EndResultStep.AllCountingCirclesDone) {
+        await this.setFinalized(false);
+      }
+
+      if (newStep === EndResultStep.Finalized) {
+        await this.setFinalized(true);
+      }
+
+      this.endResultStep = newStep;
+    } finally {
+      this.stepActionLoading = false;
+    }
+  }
+
   public async setFinalized(finalize: boolean): Promise<void> {
     if (!this.endResult || finalize === this.endResult.finalized) {
       return;
     }
 
-    try {
-      this.finalizing = true;
-      if (finalize) {
-        // This is necessary to force the "bc-radio-button-group" component to update the value back to its previous value
-        // if an error occurs or the action is cancelled.
-        this.endResult.finalized = true;
+    if (finalize) {
+      this.endResult.finalized = true;
 
-        const confirmed = await this.dialog.confirm('VOTE_END_RESULT.CONFIRM.TITLE', 'VOTE_END_RESULT.CONFIRM.MESSAGE', 'APP.CONFIRM');
-        if (!confirmed) {
-          this.endResult!.finalized = false;
-          return;
-        }
-
-        const voteId = this.endResult.vote.id;
-        const secondFactorTransaction = await this.resultService.prepareFinalizeEndResult(voteId);
-
-        await this.secondFactorTransactionService
-          .showDialogAndExecuteVerifyAction(
-            () => this.resultService.finalizeEndResult(voteId, secondFactorTransaction.getId()),
-            secondFactorTransaction.getCode(),
-          )
-          .catch(err => {
-            this.endResult!.finalized = false;
-            throw err;
-          });
-      } else {
-        await this.resultService.revertEndResultFinalization(this.endResult.vote.id);
+      const confirmed = await this.dialog.confirm('VOTE_END_RESULT.CONFIRM.TITLE', 'VOTE_END_RESULT.CONFIRM.MESSAGE', 'APP.CONFIRM');
+      if (!confirmed) {
+        this.endResult!.finalized = false;
+        return;
       }
-    } finally {
-      this.finalizing = false;
+
+      const voteId = this.endResult.vote.id;
+      const secondFactorTransaction = await this.resultService.prepareFinalizeEndResult(voteId);
+
+      await this.secondFactorTransactionService
+        .showDialogAndExecuteVerifyAction(
+          () => this.resultService.finalizeEndResult(voteId, secondFactorTransaction.getId()),
+          secondFactorTransaction.getCode(),
+          secondFactorTransaction.getQrCode(),
+        )
+        .catch(err => {
+          this.endResult!.finalized = false;
+          throw err;
+        });
+    } else {
+      await this.resultService.revertEndResultFinalization(this.endResult.vote.id);
     }
 
     this.toast.success(this.i18n.instant('APP.SAVED'));
@@ -95,6 +114,12 @@ export class VoteEndResultComponent implements OnDestroy {
       this.endResult = this.isPartialResult
         ? await this.resultService.getPartialEndResult(voteId)
         : await this.resultService.getEndResult(voteId);
+      this.finalizeEnabled = !this.endResult.contest.cantonDefaults.endResultFinalizeDisabled;
+      this.endResultStep = !this.endResult.allCountingCirclesDone
+        ? EndResultStep.CountingCirclesCounting
+        : !this.endResult.finalized
+        ? EndResultStep.AllCountingCirclesDone
+        : EndResultStep.Finalized;
     } finally {
       this.loading = false;
     }

@@ -1,11 +1,12 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
 
 import { Component, Input, OnInit } from '@angular/core';
 import { BallotQuestionEndResult, TieBreakQuestionEndResult, VoteResultAlgorithm } from 'ausmittlung-lib';
+import { BallotSubType } from '@abraxas/voting-ausmittlung-service-proto/grpc/models/vote_pb';
 
 @Component({
   selector: 'app-question-counting-circle-algorithm-end-result',
@@ -27,6 +28,9 @@ export class QuestionCountingCircleAlgorithmEndResultComponent implements OnInit
 
   @Input()
   public showAcceptedLabel: boolean = true;
+
+  @Input()
+  public ballotSubType?: BallotSubType;
 
   public resultLabel: string = '';
   public isAccepted: boolean = false;

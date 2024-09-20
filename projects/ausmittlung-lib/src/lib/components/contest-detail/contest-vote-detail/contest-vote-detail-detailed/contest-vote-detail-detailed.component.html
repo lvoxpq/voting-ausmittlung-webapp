@@ -16,7 +16,7 @@
                                   [countOfVoters]="ballotResult.countOfVoters"
                                   (countOfVotersChange)="countOfVotersChange.emit()"></vo-ausm-ballot-count-input>
       <vo-ausm-contest-detail-submission-tile
-        [title]="'VOTE.BY_BUNDLE' | translate"
+        [titleText]="'VOTE.BY_BUNDLE' | translate"
         [text]="(!ballotResult.conventionalCountOfDetailedEnteredBallots ? 'VOTE.NO_BUNDLES' : 'VOTE.BALLOT_COUNT') | translate: { count: ballotResult.conventionalCountOfDetailedEnteredBallots }"
         (buttonClick)="openBundles(resultDetail.id, ballotResult.id)">
       </vo-ausm-contest-detail-submission-tile>

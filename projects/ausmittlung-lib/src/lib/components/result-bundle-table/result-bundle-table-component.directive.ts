@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -28,6 +28,7 @@ export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResu
   public readonly selectColumn = 'select';
   public readonly countOfBallotsColumn = 'countOfBallots';
   public readonly stateColumn = 'state';
+  public readonly reviewColumn = 'review';
   public readonly actionsColumn = 'actions';
 
   @Input()
@@ -60,6 +61,9 @@ export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResu
   @Input()
   public enableReviewMultiple: boolean = false;
 
+  @Input()
+  public enableReviewColumn: boolean = false;
+
   @Output()
   public openDetail: EventEmitter<T> = new EventEmitter<T>();
 
@@ -74,6 +78,12 @@ export abstract class ResultBundleTableComponent<T extends PoliticalBusinessResu
 
   @Output()
   public rejectBundleReview: EventEmitter<T> = new EventEmitter<T>();
+
+  @Output()
+  public generateBundleReviewExport: EventEmitter<T> = new EventEmitter<T>();
+
+  @Output()
+  public downloadBundleReviewExport: EventEmitter<T> = new EventEmitter<T>();
 
   @ViewChild(PaginatorComponent)
   public paginator?: PaginatorComponent;

@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -25,6 +25,7 @@ import {
   TextModule,
   DividerModule,
   PaginatorIntl,
+  TooltipModule,
 } from '@abraxas/base-components';
 import { VotingLibModule } from '@abraxas/voting-lib';
 import { CommonModule } from '@angular/common';
@@ -150,6 +151,7 @@ import { TranslatedPaginatorIntl } from './providers/translatedPaginatorIntl';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { BooleanStatusLabelComponent } from './components/boolean-status-label/boolean-status-label.component';
 import { ValidValidationPipe } from './pipes/valid-validation.pipe';
+import { ButtonBarComponent } from './components/button-bar/button-bar.component';
 
 @NgModule({
   declarations: [
@@ -262,6 +264,7 @@ import { ValidValidationPipe } from './pipes/valid-validation.pipe';
     ContestCountingCircleElectorateAssignDialogComponent,
     BooleanStatusLabelComponent,
     ValidValidationPipe,
+    ButtonBarComponent,
   ],
   imports: [
     CommonModule,
@@ -294,6 +297,7 @@ import { ValidValidationPipe } from './pipes/valid-validation.pipe';
     MatMenuModule,
     MatButtonModule,
     DividerModule,
+    TooltipModule,
   ],
   exports: [
     ContestDetailComponent,

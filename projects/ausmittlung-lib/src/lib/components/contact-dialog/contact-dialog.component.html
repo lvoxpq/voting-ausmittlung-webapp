@@ -35,6 +35,7 @@
         class="form"
         [readonly]="readonly"
         [contactPerson]="countingCircle.contactPersonDuringEvent"
+        (contentChanged)="contentChanged()"
       ></vo-ausm-contact-person-edit>
 
       <h3 class="mb-1 mt-4" translate>CONTEST.DETAIL.CONTACT_DATA.TITLE</h3>
@@ -43,7 +44,8 @@
         class="my-2"
         [label]="'CONTEST.DETAIL.CONTACT_DATA.SAME_CONTACT_PERSON' | translate"
         [disabled]="readonly"
-        [(checked)]="countingCircle.contactPersonSameDuringEventAsAfter"
+        [checked]="countingCircle.contactPersonSameDuringEventAsAfter"
+        (checkedChange)="setContactPersonSameDuringEventAsAfter($event)"
       >
       </bc-checkbox>
       <vo-ausm-contact-person-edit
@@ -51,6 +53,7 @@
         class="form"
         [readonly]="readonly"
         [contactPerson]="countingCircle.contactPersonAfterEvent"
+        (contentChanged)="contentChanged()"
       ></vo-ausm-contact-person-edit>
     </div>
   </div>

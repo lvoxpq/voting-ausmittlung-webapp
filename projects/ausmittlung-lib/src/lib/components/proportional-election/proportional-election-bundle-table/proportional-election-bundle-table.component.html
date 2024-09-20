@@ -80,6 +80,39 @@
       <bc-data-cell *dataCellDef="let element">{{ element.reviewedBy?.fullName }}</bc-data-cell>
     </ng-container>
 
+    <ng-container [columnDef]="reviewColumn">
+      <bc-header-cell *headerCellDef>{{ 'ELECTION.BUNDLE_REVIEW' | translate }}</bc-header-cell>
+      <bc-data-cell *dataCellDef="let bundle">
+        <ng-container *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW">
+          <bc-button *ngIf="!bundle.protocolExport; else bundleReview" [label]="'ELECTION.BALLOT_DETAIL.START_GENERATE' | translate"
+                     [variant]="'tertiary'" (buttonClick)="generateBundleReviewExport.emit(bundle); $event.preventDefault(); $event.stopPropagation()">
+          </bc-button>
+        </ng-container>
+
+        <ng-template #bundleReview>
+          <ng-container [ngSwitch]="bundle.protocolExport.state">
+            <bc-loading-bar *ngSwitchCase="protocolExportStates.PROTOCOL_EXPORT_STATE_GENERATING"></bc-loading-bar>
+            <ng-container *ngSwitchCase="protocolExportStates.PROTOCOL_EXPORT_STATE_COMPLETED">
+              <bc-icon icon="download" class="clickable-icon ml-2"
+                       (click)="downloadBundleReviewExport.emit(bundle); $event.preventDefault(); $event.stopPropagation()">
+              </bc-icon>
+              <ng-container *ngTemplateOutlet="generateBundleReview"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="protocolExportStates.PROTOCOL_EXPORT_STATE_FAILED">
+              <bc-icon icon="exclamation-circle" iconColor="error" class="ml-2"></bc-icon>
+              <ng-container *ngTemplateOutlet="generateBundleReview"></ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-template>
+
+        <ng-template #generateBundleReview>
+          <bc-icon *ngIf="bundle.protocolExport.state !== protocolExportStates.PROTOCOL_EXPORT_STATE_GENERATING" icon="turn-left"
+                   class="clickable-icon ml-4" (click)="generateBundleReviewExport.emit(bundle); $event.preventDefault(); $event.stopPropagation()">
+          </bc-icon>
+        </ng-template>
+      </bc-data-cell>
+    </ng-container>
+
     <ng-container [columnDef]="actionsColumn">
       <bc-header-cell *headerCellDef class="actions-header"></bc-header-cell>
       <bc-data-cell *dataCellDef="let bundle">
@@ -102,9 +135,10 @@
           </vo-lib-action-menu-item>
           <vo-lib-action-menu-item *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
             && canReviewBundle
-            && reviewProcedure === reviewProcedures.PROPORTIONAL_ELECTION_REVIEW_PROCEDURE_PHYSICALLY" icon="print"
-                                   [text]="bundle.createdBy.secureConnectId !== currentUser?.secureConnectId ? 'ELECTION.BALLOT_DETAIL.REVIEW' : 'ELECTION.BALLOT_DETAIL.GENERATE'"
-                                   (click)="reviewBundle.emit(bundle)">
+            && reviewProcedure === reviewProcedures.PROPORTIONAL_ELECTION_REVIEW_PROCEDURE_PHYSICALLY"
+                                   icon="turn-left"
+                                   [text]="'ELECTION.BALLOT_DETAIL.GENERATE'"
+                                   (click)="generateBundleReviewExport.emit(bundle)">
           </vo-lib-action-menu-item>
           <ng-container *ngIf="bundle.state === bundleStates.BALLOT_BUNDLE_STATE_READY_FOR_REVIEW
             && canReviewBundle

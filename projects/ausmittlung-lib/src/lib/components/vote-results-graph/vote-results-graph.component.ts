@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -24,6 +24,9 @@ export class VoteResultsGraphComponent {
   @Input()
   public countRight: number = 0;
 
+  @Input()
+  public equalityRightWins: boolean = false;
+
   public get sum(): number {
     return this.countLeft + this.countRight;
   }
@@ -42,5 +45,9 @@ export class VoteResultsGraphComponent {
 
   public get rightWins(): boolean {
     return this.countLeft < this.countRight;
+  }
+
+  public get equality(): boolean {
+    return this.countLeft === this.countRight;
   }
 }

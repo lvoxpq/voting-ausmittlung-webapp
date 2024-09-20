@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -18,6 +18,7 @@ export class ValidationOverviewDialogComponent {
   public readonly saveIcon?: string;
   public readonly header: string;
   public readonly canEmitSave: boolean;
+  public readonly hintLabel?: string;
 
   constructor(private readonly dialogRef: MatDialogRef<boolean>, @Inject(MAT_DIALOG_DATA) dialogData: ValidationOverviewDialogData) {
     this.validationSummaries = dialogData.validationSummaries;
@@ -25,6 +26,7 @@ export class ValidationOverviewDialogComponent {
     this.saveIcon = dialogData.saveIcon;
     this.header = dialogData.header;
     this.canEmitSave = dialogData.canEmitSave;
+    this.hintLabel = dialogData.hintLabel;
   }
 
   public close(): void {
@@ -45,6 +47,7 @@ export interface ValidationOverviewDialogData {
   canEmitSave: boolean;
   saveLabel: string;
   saveIcon?: string;
+  hintLabel?: string;
   header: string;
 }
 

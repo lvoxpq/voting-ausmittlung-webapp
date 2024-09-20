@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -42,6 +42,12 @@ export class MajorityElectionEndResultCandidatesListComponent {
   @Input()
   public set endResult(v: MajorityElectionEndResult | SecondaryMajorityElectionEndResult) {
     this.endResultValue = v;
+
+    if (this.endResultValue.election.individualCandidatesDisabled) {
+      this.candidateResults = v.candidateEndResults;
+      return;
+    }
+
     this.candidateResults = [
       ...v.candidateEndResults,
       {

@@ -35,19 +35,20 @@
     </vo-ausm-info-panel>
   </ng-container>
 
+  <app-end-result-step-action-bar *ngIf="endResult"
+                                  [step]="endResultStep"
+                                  (stepChange)="handleEndResultStepChange($event)"
+                                  [showFinalize]="finalizeEnabled"
+                                  [disabled]="stepActionLoading || isPartialResult"
+                                  [showMandateDistributionTrigger]="showMandateDistributionTrigger"></app-end-result-step-action-bar>
+
   <div class="additional-infos" *ngIf="endResult">
-    <bc-button *ngIf="isNonUnionDoubleProportional && endResult.allCountingCirclesDone && !isPartialResult"
+    <bc-button *ngIf="isNonUnionDoubleProportional && endResult.mandateDistributionTriggered && !isPartialResult"
                (click)="viewDpResult()"
                class="mr-4"
                [label]="'END_RESULT.DOUBLE_PROPORTIONAL_RESULT.REDIRECT' | translate">
     </bc-button>
 
-    <vo-lib-inline-spinner [loading]="finalizing" position="right">
-      <app-end-result-type-selector [finalized]="endResult.finalized" (finalizedChange)="setFinalized($event)"
-                                    [disabled]="hasOpenRequiredLotDecisions || !endResult.allCountingCirclesDone || endResult.contest.locked || dpResultIncomplete === true || finalizing || isPartialResult"
-                                    finalizedLabel="PROPORTIONAL_ELECTION.END_RESULTS.FINALIZED"
-                                    notFinalizedLabel="PROPORTIONAL_ELECTION.END_RESULTS.NOT_FINALIZED"></app-end-result-type-selector>
-    </vo-lib-inline-spinner>
     <bc-button *ngIf="hasLotDecisions && endResult.allCountingCirclesDone && !endResult.contest.locked && !isPartialResult"
                [label]="'END_RESULT.ELECTION.LOT_DECISION.OPEN' | translate" (buttonClick)="openUpdateLotDecisions()">
     </bc-button>

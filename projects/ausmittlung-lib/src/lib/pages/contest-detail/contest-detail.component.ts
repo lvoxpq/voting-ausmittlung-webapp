@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -96,6 +96,7 @@ export class ContestDetailComponent implements OnInit, AfterViewInit, OnDestroy 
   public canEditContactPerson: boolean = false;
   public canEditElectorates: boolean = false;
   public canMapWriteIns: boolean = false;
+  public canEditCountingCircleDetails: boolean = false;
   private canReadWriteIns: boolean = false;
   public readonly sidebarWith: string = '21rem';
 
@@ -134,6 +135,7 @@ export class ContestDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     this.canReadWriteIns = await this.permissionService.hasPermission(Permissions.MajorityElectionWriteIn.Read);
     this.canEditContactPerson = await this.permissionService.hasPermission(Permissions.CountingCircleContactPerson.Update);
     this.canEditElectorates = await this.permissionService.hasPermission(Permissions.ContestCountingCircleElectorate.Update);
+    this.canEditCountingCircleDetails = await this.permissionService.hasPermission(Permissions.ContestCountingCircleDetails.Update);
   }
 
   public async mapWriteIns(): Promise<void> {
@@ -235,12 +237,18 @@ export class ContestDetailComponent implements OnInit, AfterViewInit, OnDestroy 
 
     switch (result.state) {
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_ONGOING:
-      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION:
         result.submissionDoneTimestamp = undefined;
         break;
+      case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_READY_FOR_CORRECTION:
+        result.submissionDoneTimestamp = undefined;
+        result.readyForCorrectionTimestamp = new Date();
+        break;
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_SUBMISSION_DONE:
+        result.submissionDoneTimestamp = new Date();
+        break;
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_CORRECTION_DONE:
         result.submissionDoneTimestamp = new Date();
+        result.readyForCorrectionTimestamp = undefined;
         break;
       case CountingCircleResultState.COUNTING_CIRCLE_RESULT_STATE_AUDITED_TENTATIVELY:
         result.auditedTentativelyTimestamp = new Date();

@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -27,6 +27,7 @@ import {
   GetMajorityElectionPartialEndResultRequest,
   GetMajorityElectionResultRequest,
   MajorityElectionResultAuditedTentativelyRequest,
+  MajorityElectionResultCorrectionFinishedAndAuditedTentativelyRequest,
   MajorityElectionResultCorrectionFinishedRequest,
   MajorityElectionResultFlagForCorrectionRequest,
   MajorityElectionResultPrepareCorrectionFinishedRequest,
@@ -297,6 +298,12 @@ export class MajorityElectionResultService extends PoliticalBusinessResultBaseSe
     return this.requestEmptyResp(c => c.submissionFinishedAndAuditedTentatively, req);
   }
 
+  public correctionFinishedAndAuditedTentatively(majorityElectionResultId: string): Promise<void> {
+    const req = new MajorityElectionResultCorrectionFinishedAndAuditedTentativelyRequest();
+    req.setElectionResultId(majorityElectionResultId);
+    return this.requestEmptyResp(c => c.correctionFinishedAndAuditedTentatively, req);
+  }
+
   public publish(majorityElectionResultIds: string[]): Promise<void> {
     const req = new MajorityElectionResultPublishRequest();
     req.setElectionResultIdsList(majorityElectionResultIds);
@@ -403,7 +410,7 @@ export class MajorityElectionResultService extends PoliticalBusinessResultBaseSe
           entries: x.ballotGroup!.entriesList.map(y => ({
             election: (y.election || y.secondaryElection)!,
             candidates: y.candidatesList,
-            hasIndividualCandidate: y.hasIndividualCandidate,
+            individualCandidatesVoteCount: y.individualCandidatesVoteCount,
           })),
         },
       })),

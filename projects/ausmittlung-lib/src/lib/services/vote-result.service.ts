@@ -1,5 +1,5 @@
 /**
- * (c) Copyright 2024 by Abraxas Informatik AG
+ * (c) Copyright by Abraxas Informatik AG
  *
  * For license information see LICENSE file.
  */
@@ -27,6 +27,7 @@ import {
   ValidateEnterVoteResultCountOfVotersRequest,
   ValidateEnterVoteResultsRequest,
   VoteResultAuditedTentativelyRequest,
+  VoteResultCorrectionFinishedAndAuditedTentativelyRequest,
   VoteResultCorrectionFinishedRequest,
   VoteResultFlagForCorrectionRequest,
   VoteResultPrepareCorrectionFinishedRequest,
@@ -302,6 +303,12 @@ export class VoteResultService extends PoliticalBusinessResultBaseService<
     const req = new VoteResultSubmissionFinishedAndAuditedTentativelyRequest();
     req.setVoteResultId(voteResultId);
     return this.requestEmptyResp(c => c.submissionFinishedAndAuditedTentatively, req);
+  }
+
+  public correctionFinishedAndAuditedTentatively(voteResultId: string): Promise<void> {
+    const req = new VoteResultCorrectionFinishedAndAuditedTentativelyRequest();
+    req.setVoteResultId(voteResultId);
+    return this.requestEmptyResp(c => c.correctionFinishedAndAuditedTentatively, req);
   }
 
   public publish(voteResultIds: string[]): Promise<void> {
