@@ -2,15 +2,34 @@
   "version": "2.3.0",
   "summary": {
     "title": "New Threat Model",
-    "owner": "me",
-    "description": "qwdwq",
+    "owner": "",
+    "description": "",
     "id": 0
   },
   "detail": {
     "contributors": [],
-    "diagrams": [],
-    "diagramTop": 0,
-    "reviewer": "rev",
+    "diagrams": [
+      {
+        "id": 1,
+        "title": "New CIA diagram",
+        "diagramType": "CIA",
+        "placeholder": "New CIA diagram description",
+        "thumbnail": "./public/content/images/thumbnail.cia.jpg",
+        "version": "2.3.0",
+        "cells": []
+      },
+      {
+        "id": 2,
+        "title": "New STRIDE diagram",
+        "diagramType": "STRIDE",
+        "placeholder": "New STRIDE diagram description",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "2.3.0",
+        "cells": []
+      }
+    ],
+    "diagramTop": 3,
+    "reviewer": "",
     "threatTop": 0
   }
 }
